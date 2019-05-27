@@ -1,14 +1,14 @@
-define(['base/js/namespace', 'base/js/dialog', 'jquery', 'base/js/utils'], function(Jupyter, dialog, $, utils, mc) {
+define(['base/js/namespace', 'base/js/dialog', 'jquery', 'base/js/utils'], function (Jupyter, dialog, $, utils, mc) {
 
     var basePathRegex = "^(\/.+)+\/(tree|notebooks|edit|terminals)";
-    var basePath = (window.location.pathname.match(basePathRegex) == null) ?  "" : (window.location.pathname.match(basePathRegex)[1]+'/');
+    var basePath = (window.location.pathname.match(basePathRegex) == null) ? "" : (window.location.pathname.match(basePathRegex)[1] + '/');
     if (!basePath) {
         basePath = "/"
     }
 
     var dir = window.document.body.dataset.notebookPath;
     var dirname = '/' + dir
-    
+
     let tools = [{
             "id": "vnc-link",
             "name": "VNC",
@@ -94,11 +94,10 @@ define(['base/js/namespace', 'base/js/dialog', 'jquery', 'base/js/utils'], funct
                 body: openPortDialog(),
                 title: 'Access a workspace internal port',
                 buttons: {
-                    'Close': {
-                    },
-                    'Open':{
+                    'Close': {},
+                    'Open': {
                         class: "btn-primary",
-                        click: function() {
+                        click: function () {
                             portInput = $('#port-input').val()
                             if (!portInput) {
                                 alert("Please input a valid port!")
