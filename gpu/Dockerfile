@@ -1,4 +1,4 @@
-FROM docker.wdf.sap.corp:51150/com.sap.sapai.research/research-workspace:latest
+FROM mltooling/ml-workspace:latest
 USER root
 
 ### NVIDIA CUDA BASE ###
