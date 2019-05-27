@@ -1,0 +1,12 @@
+{
+    // Sidebar
+    // @jupyterlab/application-extension:sidebar
+    // Sidebar layout settings.
+    // *****************************************
+
+    // Overrides
+    // Overrides for where to show sidebar items
+    "overrides": {
+      "jp-Tensorboards": "right"
+    }
+}

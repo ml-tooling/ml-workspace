@@ -1,0 +1,296 @@
+#
+####### Basics #######
+#
+# numpy==1.16.2 Updated in conda
+# scipy==1.2.1 Updated in conda
+# matplotlib Updated in conda
+# requests==2.22.0 Updated in conda
+# urllib3==1.25.2 Updated in conda
+# cython Updated in conda
+tqdm==4.32.1 # A fast, extensible progress bar for Python and CLI
+pandas==0.24.2
+
+## Compatibility
+six==1.12.0 # Python 2 and 3 compatibility utilities
+future==0.17.1 # Clean single-source support for Python 3 and 2
+
+## Object Serialization
+cloudpickle==1.1.1 # Extended pickling support for Python objects
+joblib==0.13.2 # Lightweight pipelining: using Python functions as pipeline jobs.
+dill==0.2.9 # dill can be used to store python objects to a file
+msgpack==0.6.1 # MessagePack (de)serializer.
+msgpack-numpy==0.4.4.3 # Numpy data serialization using msgpack
+marshmallow==2.19.2 # A lightweight library for converting complex datatypes to and from native Python datatype
+jsonpickle==1.2 # Python library for serializing any arbitrary object graph into JSON
+
+## Utilities
+boltons==19.1.0 # When they're not builtins, they're boltons.
+toolz==0.9.0 # A functional standard library for Python.
+cysignals==1.10.2 # Interrupt and signal handling for Cython
+python-crontab==2.3.6 # Python Crontab API
+yapf==0.27.0 # formatter for Python files
+memory_profiler==0.55.0 # A module for monitoring memory usage of a python program
+cytoolz==0.9.0.1 # Cython implementation of Toolz: High performance functional utilities
+arrow==0.13.2 # Better dates & times for Python 
+python-dateutil==2.8.0 # Extensions to the standard Python datetime module
+click==7.0.0 # Composable command line interface toolkit
+psutil==5.6.2 # Cross-platform lib for process and system monitoring in Python.
+jmespath==0.9.4 # JSON Matching Expressions
+marisa-trie==0.7.5 # Static memory-efficient and fast Trie-like structures for Python.
+tabulate==0.8.3 # Pretty-print tabular data in Python
+patool==1.12 # portable archive file manager - supports various compression formats
+smart-open==1.8.3 # Utils for streaming large files (S3, HDFS, gzip, bz2...)
+
+####### Data Science Libs #######
+#
+
+## ML Frameworks
+# installed via conda for mkl support: tensorflow==1.13.1 # TensorFlow is an open source machine learning framework for everyone.
+keras==2.2.4 # Deep Learning for humans
+fastai==1.0.52 # The fastai library simplifies training fast and accurate neural nets using modern best practices.
+catboost==0.14.2 ; python_version > '2.7' # State-of-the-art open-source gradient boosting on decision trees library.
+lightgbm==2.2.3 # A fast, distributed, high performance gradient boosting framework
+xgboost==0.90 # Scalable, Portable and Distributed Gradient Boosting
+theano==1.0.4 # Optimizing compiler for evaluating mathematical expressions on CPUs and GPUs.
+chainer==6.0.0 # A flexible framework of neural networks
+tflearn==0.3.2 # Deep Learning Library featuring a higher-level API for TensorFlow
+dm-sonnet==1.32 # Sonnet is a library for building neural networks in TensorFlow.
+statsmodels==0.9.0 # Statistical computations and models for Python
+cntk==2.7 # CNTK is an open-source, commercial-grade deep learning framework.
+# already installed from conda: scikit-learn==0.20.3
+
+## Data Handling and Persistence
+csvkit==1.0.4 # A suite of command-line tools for working with CSV, the king of tabular file formats.
+feather-format==0.4.0 # Feather: fast, interoperable binary data frame storage for Python, R, and more powered by Apache Arrow
+pyarrow==0.13.0 # cross-language development platform for in-memory data.
+sklearn-pandas==1.8.0 # Pandas integration with sklearn
+pandas-datareader==0.7.0 # Data readers extracted from the pandas codebase,should be compatible with recent pandas versions
+pandasql==0.7.3 # Allows you to query pandas DataFrames using SQL syntax
+category_encoders==2.0.0 # A collection sklearn transformers to encode categorical variables as numeric
+blaze==0.10.1 # Blaze translates a subset of modified NumPy and Pandas-like syntax to databases and other computing systems. 
+geojson==2.4.1 # Python bindings and utilities for GeoJSON
+annoy==1.15.2 # Approximate Nearest Neighbors in C++/Python optimized for memory usage and loading/saving to disk.
+easydict==1.9 # Access dict values as attributes (works recursively).
+
+## Text Processing / NLP
+spacy==2.1.4 ; python_version > '2.7'
+gensim==3.7.3 # Python framework for fast Vector Space Modelling
+pyfasttext==0.4.6 # cysignals has to be install manually before pyfasttext to avoid compile errors; installing cysignals in this requirements.txt still causes compile error
+fuzzywuzzy==0.17.0 #Fuzzy string matching like a boss. It uses Levenshtein Distance to calculate the differences between sequences in a simple-to-use package.
+beautifulsoup4==4.7.1 # Beautiful Soup is a library that makes it easy to scrape information from web pages.
+nltk==3.4.1 # Natural Language Toolkit
+torchtext==0.3.1 # Data loaders and abstractions for text and NLP
+textacy==0.7.0 # Higher-level text processing, built on spaCy
+textblob==0.15.3 # Simple, Pythonic text processing. Sentiment analysis, part-of-speech tagging, noun phrase parsing, and more.
+flashtext==2.7 # Fast Extract/Replaces keywords in sentences.
+scattertext==0.0.2.52 # Beautiful visualizations of how language differs among document types.
+sentencepiece==0.1.82  # Unsupervised text tokenizer for Neural Network-based text generation.
+langid==1.1.6 # Stand-alone language identification system
+scrapy==1.6.0 #A high-level Web Crawling and Web Scraping framework
+flair==0.4.1 # A very simple framework for state-of-the-art NLP
+pyahocorasick==1.4.0 # a fast and memory efficient library for exact or approximate multi-pattern string search.
+ftfy==5.5.1 # Fixes some problems with Unicode text after the fact
+stop-words==2018.7.23 # Get list of common stop words in various languages in Python
+stanfordnlp==0.2.0 # Official Stanford NLP Python Library
+newspaper3k==0.2.8 ; python_version > '2.7' # Simplified python article discovery & extraction.
+
+## Image Processing
+ImageHash==4.0 # Image Hashing library
+Pillow==6.0.0 # provides extensive file format support, an efficient internal representation, and fairly powerful image processing capabilities.
+imgaug==0.2.9 # Image augmentation library for machine learning
+scikit-image==0.15.0 # Image processing routines for SciPy - version 0.14.1 is not compatible with numpy 16
+imageio==2.5.0 # Library for reading and writing a wide range of image, video, scientific, and volumetric data formats.
+
+## Audio/Speech Processing
+librosa==0.6.3 # Python module for audio and music processing
+
+## Graph
+networkx==2.3 # Data structures for graphs, digraphs, and multigraphs
+dgl==0.2 # Deep Graph Library
+graph-nets==1.0.4 # Library for building graph networks in Tensorflow and Sonnet.
+deepwalk==1.0.3 # DeepWalk online learning of social representations.
+torch-cluster==1.3.0 # PyTorch Extension Library of Optimized Graph Cluster Algorithms
+torch-geometric==1.2.1 # Geometric Deep Learning Extension Library for PyTorch
+torchbiggraph==1.dev1 # A distributed system to learn embeddings of large graphs
+
+# Reinforcement learning
+tensorforce==0.4.3 # Reinforcement learning for TensorFlow
+gym==0.12.4 # The OpenAI Gym: A toolkit for developing and comparing your reinforcement learning agents.
+dopamine-rl==2.0.3 # Dopamine: A framework for flexible Reinforcement Learning research
+trfl==1.0.1 # trfl is a library of building blocks for reinforcement learning algorithms.
+
+## Time Series
+tsfresh==0.11.2 # tsfresh extracts relevant characteristics from time series
+
+## Recommender Systems
+scikit-surprise==1.0.6 # An easy-to-use library for recommender systems.
+lightfm==1.15 # A Python implementation of LightFM, a hybrid recommendation algorithm.
+implicit==0.3.8 # Collaborative Filtering for Implicit Datasets
+tensorrec==0.26.2 # A TensorFlow recommendation algorithm and framework in Python.
+
+## Hyperparameter Optimization
+hyperopt==0.1.2 # Distributed Asynchronous Hyperparameter Optimization - 0.1.2 has a problem with tqdm write
+talos==0.4.9  # Talos Hyperparameter Scanner for Keras 
+scikit-optimize==0.5.2 # Sequential model-based optimization toolbox.
+optuna==0.11.0 # A hyperparameter optimization framework
+tpot==0.10.1 # Tree-based Pipeline Optimization Tool
+hpbandster==0.7.4 # HyPerBAND on STERoids, a distributed Hyperband implementation with lots of room for improvement
+dragonfly-opt==0.1.3 # Scalable Bayesian optimisation.
+
+## Parallization and Distribution
+dask==1.2.2 # Parallel PyData with Task Scheduling
+dask-ml==0.13.0 # A library for distributed and parallel machine learning
+deap==1.2.2 # Distributed Evolutionary Algorithms in Python
+mpi4py==3.0.1 # Python bindings for MPI
+# Too big? ray==0.6.4 # > 200 MB A system for parallel and distributed Python that unifies the ML ecosystem.
+# does not install horovod==0.16.0 # Distributed training framework for TensorFlow, Keras, PyTorch, and MXNet.
+# incompatible modin==0.4.0 # Modin: Make your pandas code run faster by changing one line of code.
+
+## ML Workflow 
+sacred==0.7.4 # tool to help you configure, organize, log and reproduce experiments 
+mlflow==0.9.1 # MLflow: An ML Workflow Tool
+
+## AutoML
+ludwig==0.1.2 # A deep learning experimentation toolbox
+adanet==0.6.2 # adanet is a lightweight and scalable TensorFlow AutoML framework for training and deploying adaptive neural networks using the AdaNet algorithm
+# incompatible autokeras==0.3.7 # AutoML for deep learning based on Keras
+# incompatible auto-sklearn==0.5.0 # 3MB - Automated machine learning based on sklearn.
+
+## Tensorflow Utils
+tensorflow-probability==0.6.0 # Probabilistic modeling and statistical inference in TensorFlow
+tensorflow-datasets==1.0.2 # tensorflow/datasets is a library of datasets ready to use with TensorFlow.
+tensorpack==0.9.5 # Neural Network Toolbox on TensorFlow
+tensor2tensor==1.13.4 # Library of deep learning models and datasets designed to make deep learning more accessible and accelerate ML research.
+tensorflow-hub==0.4.0 # TensorFlow Hub is a library to foster the publication, discovery, and consumption of reusable parts of machine learning models.
+tensorflow-graphics==1.0.0 # A library that contains well defined, reusable and cleanly written graphics related ops and utility functions for TensorFlow.
+
+## Pytorch Ecosystem: https://pytorch.org/ecosystem
+pytorch-ignite==0.2.0 # High-level library to help with training neural networks in PyTorch
+fairseq==0.6.2 # Facebook AI Research Sequence-to-Sequence Toolkit
+adabound==0.0.5 # AdaBound optimization algorithm, build on PyTorch.
+pytorch-pretrained-bert==0.6.2 # PyTorch version of Google AI BERT model with script to load Google pre-trained models
+pyro-ppl==0.3.3 # Deep universal probabilistic programming with Python and PyTorch 
+torch-sparse==0.4.0 # PyTorch Extension Library of Optimized Autograd Sparse Matrix Opjaxerations
+torch-scatter==1.2.0 # PyTorch Extension Library of Optimized Scatter Operations
+syft==0.1.13a1 # A Library for Private, Secure Deep Learning
+gpytorch==0.3.2 # An implementation of Gaussian Processes in Pytorch
+
+## Others
+onnx==1.5.0 # Open Neural Network Exchange
+onnxruntime==0.4.0 # ONNX Runtime Python bindings
+nevergrad==0.2.1 # A Python toolbox for performing gradient-free optimization
+sklearn-contrib-lightning==0.5.0 # Large-scale sparse linear classification, regression and ranking in Python
+scikit-multilearn==0.2.0 # Scikit-multilearn is a BSD-licensed library for multi-label classification that is built on top of the well-known scikit-learn ecosystem.
+featuretools==0.8.0 # A framework for automated feature engineering
+vecstack==0.3.0 # Python package for stacking (machine learning technique)
+mlens==0.2.3 # Machine Learning Ensemble Library
+geopy==1.20.0 # Python Geocoding Toolbox
+jax==0.1.35 # GPU- and TPU-backed NumPy with differentiation and JIT compilation.
+jaxlib==0.1.16 # XLA library for JAX - required for jax
+tensorly==0.4.3 # making tensor learning simple and accessible
+mmdnn==0.2.5 # Deep learning model converter, visualization and editor.
+
+#
+####### Visualization Libs #######
+#
+## General Visualization Libs
+bokeh==1.1.0 # interactive visualization library that targets modern web browsers for presentation - 20MB
+plotly==3.9.0 # interactive visualizations - 34MB
+seaborn==0.9.0 # Python visualization library based on matplotlib
+holoviews==1.12.3 # Stop plotting your data - annotate your data and let it visualize itself.
+chartify==2.6.0 ; python_version > '2.7' # Python library to make plotting simpler for data scientists
+
+## Vega/Altair Ecosystem
+altair==3.0.1 # A declarative statistical visualization library for Python.
+vega==2.1.0 # IPyVega: An IPython/Jupyter widget for Vega 3 and Vega-Lite 2
+vega_datasets==0.7.0 # A Python package for offline access to Vega datasets
+pdvega==0.1 # Pandas plotting interface to Vega and Vega-Lite
+nx-altair==0.1.4 ; python_version > '2.7' # Draw NetworkX graphs with Altair
+
+# Dash Ecosystem
+dash==0.43.0 # The core dash backend
+dash-html-components==0.16.0 # HTML components
+dash-core-components==0.48.0 # Supercharged components
+dash-table==3.7.0 # Interactive DataTable component (new!)
+
+## Pandas Visualization Tools
+pandas-profiling==1.4.2 # Generate profile report for pandas DataFrame
+missingno==0.4.1 # Missing data visualization module for Python.
+
+## Tensorboard Visualization Tools
+# Already installed via conda: tensorboard==1.13.1 # Tensorboard - newest version
+tensorboard_logger==0.1.0 ; python_version > '2.7'
+tensorboardX==1.7 ; python_version > '2.7'
+
+## ML Model Exploration
+yellowbrick==0.9.1 # A suite of visual analysis and diagnostic tools for machine learning.
+eli5==0.8.2 # Debug machine learning classifiers and explain their predictions
+shap==0.29.1 # A unified approach to explain and visualize the output of any machine learning model.
+lime==0.1.1.34 # Local Interpretable Model-Agnostic Explanations for machine learning classifiers
+scikit-plot==0.3.7 # An intuitive library to add plotting functionality to scikit-learn objects.
+visualdl==1.3.0 # Visualize Deep Learning
+pyldavis==2.1.2 # Interactive topic model visualization
+alibi==0.2.0 # Algorithms for monitoring and explaining machine learning models
+
+## Task-specific Visualization Libs
+umap-learn==0.3.8 # Uniform Manifold Approximation and Projection
+wordcloud==1.5.0 # A little word cloud generator
+folium==0.9.1 # Make beautiful maps with Leaflet.js & Python
+visdom==0.1.8.8 # A tool for visualizing live, rich data for Torch and Numpy
+
+#
+####### Database Libs #######
+#
+dataset==1.1.2 # Toolkit for Python-based database access.
+minio==4.0.17 # S3 client
+pymongo==3.8.0 # Mongo Client
+pyhdb==0.3.4  # SAP HANA Database Client for Python
+db.py==0.5.3 # easier way to interact with your databases, support for  PostgreSQL, MySQL, SQLite, Redshift, MS SQL Server, Oracle
+elasticsearch==7.0.1 # Python client for Elasticsearch
+neo4j-driver==1.7.4 ; python_version > '2.7' # Neo4j Bolt driver for Python
+lazydata==1.0.19 ; python_version > '2.7'  # Scalable data dependencies
+redis==3.2.1 # Python client for Redis key-value store
+SQLAlchemy==1.3.3 # Database Abstraction Library
+cx-Oracle==7.1.3 # Python interface to Oracle
+kafka-python==1.4.6 # Pure Python client for Apache Kafka
+tinydb==3.13.0 # TinyDB is a tiny, document oriented database optimized for your happiness :)
+PyMySQL==0.9.3 # Pure Python MySQL Driver
+
+#
+####### Others #######
+#
+
+
+#
+####### Deprecated/Removed #######
+#
+# > 40 MB - cassandra-driver==3.17.1 # Python driver for Cassandra
+# > 200 MB - pymagnitude==0.1.120 # A fast, efficient universal vector embedding utility package.
+# deprecated geoplotlib==0.3.2 # python toolbox for geographic visualizations
+# deprecated perfume-bench==0.1.6 ; python_version > '2.7' # Interactive performance benchmarking in Jupyter
+# deprecated hypertools==0.5.1 # A Python toolbox for gaining geometric insights into high-dimensional data
+# failed during installation geoviews==1.5.3 # GeoViews is a Python library that makes it easy to explore and visualize geographical, meteorological, and oceanographic datasets
+# candidates: vispy, lightning-viz, pysal, datashader
+# doesnt install: vaex==0.3.10 # Veax is a graphical tool to visualize and explore large tabular datasets.
+# incompatible pytext-nlp==0.1.4 # pytorch modeling framework and model zoo for text models
+# Incopatible with numpy and requests version mxnet==1.3.0.post0 # MXNet is an ultra-scalable deep learning framework. This version uses openblas.
+# does not install currently, c core is missing - igraph-python==0.7.4 # High performance graph data structures and algorithms
+# does not install sympy==1.3 # Computer algebra system (CAS) in Python
+# currently incompatible with sklearn kmodes==0.9 # implementations of the k-modes and k-prototypes clustering algorithms for clustering categorical data.
+# currently incompatible with urllib kaggle==1.5.0 # Official API for Kaggle accessible using a command line tool implemented in Python. 
+# do not install, too big - pystan==2.18.0.0 # Python interface to Stan, a package for Bayesian inference - Requirement for prophet # 55 MB
+# do not install, too big - fbprophet==0.2.1 # Automatic Forecasting Procedure - 64 MB
+# does not work? BeautifulSoup==3.2.1 # HTML/XML parser for quick-turnaround applications like screen-scraping.
+# Installed in dockerfile: skorch==0.4.0 # A scikit-learn compatible neural network library that wraps pytorch
+# has some dependency problems. allennlp==0.5.1 #An open-source NLP research library, built on PyTorch.
+# does not work - fixes https://github.com/uber/horovod/blob/master/docs/troubleshooting.md horovod==0.15.2 #Distributed training framework for TensorFlow, Keras, and PyTorch.
+# not active anymore: polyglot
+# Deprecated!! fasttext==0.8.3 # A Python interface for Facebook fastText library
+# incompatible pymc3==3.6 # Probabilistic Programming in Python: Bayesian Modeling and Probabilistic Machine Learning with Theano
+# does not install mlbox==0.5.3 # A powerful Automated Machine Learning python library.
+# cannot be updated certifi==2018.10.15 # Python package for providing Mozilla's CA Bundle.
+# cannot be updated with anaconda 5.2 PyYAML==3.13 # YAML parser and emitter for Python
+# does not install pattern==3.6 # Web mining module for Python, with tools for scraping, natural language processing, machine learning, network analysis and visualization. 
+# already installed by conda: h5py==2.9.0 # Read and write HDF5 files from Python
+# PyQt5==5.12.2 # > 20MB - required for spyder Python bindings for the Qt cross platform UI and application toolkit
+# already in anaconda sphinx==2.0.1 # Python documentation generator
