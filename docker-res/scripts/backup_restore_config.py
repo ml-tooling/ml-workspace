@@ -91,7 +91,7 @@ elif args.mode == "schedule":
     with open(environment_file, 'w') as fp:
         for env in os.environ:
             if env != "LS_COLORS":
-                fp.write("export " + env + "=" + os.environ[env] + "\n")
+                fp.write("export " + env + "=\"" + os.environ[env] + "\"\n")
 
     os.chmod(environment_file, 0o777)
 
