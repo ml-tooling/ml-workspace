@@ -530,13 +530,6 @@ RUN \
     # Make matplotlib output in Jupyter notebooks display correctly
     mkdir -p /etc/ipython/ && echo "c = get_config(); c.IPKernelApp.matplotlib = 'inline'" > /etc/ipython/ipython_config.py
 
-# Configure SSH
-RUN \
-    echo "PermitUserEnvironment yes" | sudo tee -a /etc/ssh/sshd_config && \
-    # Alive Interval will make SSH connection more stable 
-    echo "ClientAliveInterval 60" | sudo tee -a /etc/ssh/sshd_config && \
-    echo "ClientAliveCountMax 10" | sudo tee -a /etc/ssh/sshd_config
-
 # Basic VNC Settings - no password
 ENV \
     VNC_PW=vncpassword \
@@ -567,6 +560,8 @@ COPY \
 COPY docker-res/config/90assumeyes /etc/apt/apt.conf.d/
 
 # Copy some configuration files
+COPY docker-res/config/ssh_config /root/.ssh/config
+COPY docker-res/config/sshd_config /etc/ssh/sshd_config
 COPY docker-res/config/nginx.conf /etc/nginx/nginx.conf
 COPY docker-res/config/mimeapps.list /root/.config/mimeapps.list
 COPY docker-res/config/chromium-browser.init /root/.chromium-browser.init

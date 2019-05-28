@@ -1,0 +1,5 @@
+# Allow transfer of user environment variables
+PermitUserEnvironment yes
+# Alive Interval will make SSH connection more stable 
+ClientAliveInterval 60
+ClientAliveCountMax 10
