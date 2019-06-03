@@ -1,3 +1,17 @@
+# ssh(1) obtains configuration data from the following sources in the following order:
+#
+#       1.   command-line options
+#       2.   user's configuration file (~/.ssh/config)
+#       3.   system-wide configuration file (/etc/ssh/ssh_config)
+#
+# For each parameter, the first obtained value will be used.  The configuration files contain sections separated
+# by “Host” specifications, and that section is only applied for hosts that match one of the patterns given in the
+# specification.  The matched host name is the one given on the command line.
+#
+# Since the first obtained value for each parameter is used, more host-specific declarations should be given near
+# the beginning of the file, and general defaults at the end.
+# https://gist.github.com/vrillusions/9538779
+
 Host *
     # Set IP4 as default
     AddressFamily inet
