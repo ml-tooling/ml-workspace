@@ -291,7 +291,8 @@ RUN \
         netcat \
         # already installed via anaconda: uuid-dev \
         iproute && \
-    echo | bash -c "$(curl -Ss https://my-netdata.io/kickstart.sh)" && \
+    wget --quiet https://my-netdata.io/kickstart.sh -O $RESOURCES_PATH/netdata-install.sh && \
+    /bin/bash $RESOURCES_PATH/netdata-install.sh --dont-wait --dont-start-it --stable-channel --disable-telemetry && \
      # Create desktop icon
     echo "[Desktop Entry]\nVersion=1.0\nType=Link\nName=Netdata\nComment=Hardware Monitoring\nCategories=System;Utility;Development;\nIcon=/resources/icons/netdata-icon.png\nURL=http://localhost:8091/tools/netdata" > /usr/share/applications/netdata.desktop && \
     chmod +x /usr/share/applications/netdata.desktop && \
