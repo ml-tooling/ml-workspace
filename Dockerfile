@@ -262,11 +262,11 @@ RUN \
 RUN \
     apt-get update --fix-missing && \
     apt-get install --yes openssl && \
-    wget --quiet https://github.com/cdr/code-server/releases/download/1.1099-vsc1.33.1/code-server1.1099-vsc1.33.1-linux-x64.tar.gz -O ./vscode-web.tar.gz && \
+    wget --quiet https://github.com/cdr/code-server/releases/download/1.1119-vsc1.33.1/code-server1.1119-vsc1.33.1-linux-x64.tar.gz -O ./vscode-web.tar.gz && \
     tar xfz ./vscode-web.tar.gz && \
-    mv ./code-server1.1099-vsc1.33.1-linux-x64/code-server /usr/local/bin && \
+    mv ./code-server1.1119-vsc1.33.1-linux-x64/code-server /usr/local/bin && \
     rm ./vscode-web.tar.gz && \
-    rm -rf ./code-server1.1099-vsc1.33.1-linux-x64 && \
+    rm -rf ./code-server1.1119-vsc1.33.1-linux-x64 && \
     # Cleanup
     /resources/clean_layer.sh
 
