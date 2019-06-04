@@ -32,7 +32,7 @@ The ML workspace is an all-in-one web-based IDE specialized for machine learning
 
 - 💫 Jupyter, JupyterLab, and Visual Studio Code web-based IDEs.
 - 🗃 Pre-installed with many popular data science libraries & tools.
-- 🖥 Full Linux desktop GUI accesible via web browser.
+- 🖥 Full Linux desktop GUI accessible via web browser.
 - 🔀 Seamless Git integration optimized for notebooks.
 - 🚪 Access from anywhere via Web, SSH, or VNC under a single port.
 - 🐳 Easy to deploy on Mac, Linux, and Windows via Docker.
@@ -43,17 +43,17 @@ The ML workspace is an all-in-one web-based IDE specialized for machine learning
 
 The Workspace requires **Docker** 🐳 to be installed on your machine ([Installation Guide](https://docs.docker.com/install/#supported-platforms)).
 
-> 📖 _If you are new to Docker, we recommend to take a look at [this wonderful beginner guide](https://docker-curriculum.com/)._
+> 📖 _If you are new to Docker, we recommend taking a look at [this awesome beginner guide](https://docker-curriculum.com/)._
 
 ### Start single instance
 
 Deploying a single Workspace instance is as simple as:
 
 ```bash
-docker run -d --name ml-workspace -p 8091:8091 --restart always mltooling/ml-workspace:latest
+docker run -d -p 8091:8091 --restart always mltooling/ml-workspace:latest
 ```
 
-Voilà, that was easy 😌 Now, Docker will pull the latest workspace image to your machine. This may take a few minutes depending on your internet speed. Grab a coffee ☕ and dream about all the exciting things you can built with Machine Learning 🦄. Once the workspace is started, you can access it via: http://localhost:8091. 
+Voilà, that was easy 😌 Now, Docker will pull the latest workspace image to your machine. This may take a few minutes, depending on your internet speed. Grab a coffee ☕ and dream about all the exciting things you can build with Machine Learning 🦄. Once the workspace is started, you can access it via: http://localhost:8091. 
 
 > ☝️ _If started on a remote machine or with a different port, make sure to use the machines IP/DNS and/or the exposed port._
 
@@ -73,28 +73,61 @@ The container can be configured with following environment variables (`--env`):
     </tr>
     <tr>
         <td>WORKSPACE_BASE_URL</td>
-        <td>The base URL under which the notebook server is reachable. E.g. setting it to /workspace, the workspace would be reachable under /workspace/tree</td>
+        <td>The base URL under which the notebook server is reachable. E.g. setting it to /my-workspace, the workspace would be reachable under /my-workspace/tree.</td>
         <td>/</td>
     </tr>
     <tr>
-        <td colspan="3">Jupyter Configuration:</td>
+        <td>WORKSPACE_CONFIG_BACKUP</td>
+        <td>Automatically backup and restore user configuration to the persisted /workspace folder, such as the .ssh, .jupyter, or .gitconfig from the users home directory.</td>
+        <td>true</td>
     </tr>
     <tr>
-        <td colspan="3">VNC Configuration:</td>
+        <td>WORKSPACE_AUTH_USER</td>
+        <td>Basic auth user name. To enable basic auth, both the user and password needs to be set.</td>
+        <td></td>
+    </tr>
+    <tr>
+        <td>WORKSPACE_AUTH_PASSWORD</td>
+        <td>Basic auth user password. To enable basic auth, both the user and password needs to be set.</td>
+        <td></td>
+    </tr>
+    <tr>
+        <td>WORKSPACE_SSL_ENABLED</td>
+        <td>Enable or disable SSL. When set to true, either certificates (cert.crt) must be mounted to /resources/ssl or, if not, the container generates self-signed certificates.</td>
+        <td>false</td>
+    </tr>
+    <tr>
+        <td colspan="3"><b>Jupyter Configuration:</b></td>
+    </tr>
+    <tr>
+        <td>NOTEBOOK_ARGS</td>
+        <td>Add and overwrite Jupyter configuration options via command line args. Refer to <a href="https://jupyter-notebook.readthedocs.io/en/stable/config.html">this overview</a> for all options.</td>
+        <td></td>
+    </tr>
+    <tr>
+        <td colspan="3"><b>Hardware Optimization:</b></td>
+    </tr>
+    <tr>
+        <td>OMP_NUM_THREADS</td>
+        <td>Number of threads used for MKL computations.</td>
+        <td>8</td>
+    </tr>
+    <tr>
+        <td colspan="3"><b>VNC Configuration:</b></td>
     </tr>
     <tr>
         <td>VNC_PW</td>
-        <td>Password of VNC Connection</td>
+        <td>Password of VNC Connection.</td>
         <td>vncpassword</td>
     </tr>
     <tr>
         <td>VNC_RESOLUTION</td>
-        <td>Desktop Resolution of VNC Connection</td>
+        <td>Desktop Resolution of VNC Connection.</td>
         <td>1600x900</td>
     </tr>
     <tr>
         <td>VNC_COL_DEPTH</td>
-        <td>Color Depth of VNC Connection</td>
+        <td>Color Depth of VNC Connection.</td>
         <td>24</td>
     </tr>
 </table>
@@ -111,9 +144,7 @@ The container can be configured with following environment variables (`--env`):
 
 <details>
 
-<summary>Development information for contributors (click to expand...)</summary>
-
-
+<summary>Development instructions for contributors (click to expand...)</summary>
 
 ### Build
 
@@ -123,7 +154,7 @@ Execute this command in the project root folder to build the docker container:
 python build.py --version={MAJOR.MINOR.PATCH-TAG}
 ```
 
-The version has to be provided. The version format should follow the [Semantic Versioning](https://semver.org/) standard (MAJOR.MINOR.PATCH). For additional script options:
+The version is optional and should follow the [Semantic Versioning](https://semver.org/) standard (MAJOR.MINOR.PATCH). For additional script options:
 
 ```bash
 python build.py --help
