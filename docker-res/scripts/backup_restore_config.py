@@ -42,6 +42,7 @@ if args.mode == "restore":
 
     if not os.path.exists(WORKSPACE_CONFIG_BACKUP_FOLDER) or len(os.listdir(WORKSPACE_CONFIG_BACKUP_FOLDER)) == 0:
         log.info("Nothing to restore. Config backup folder is empty.")
+        sys.exit()
     
     # set verbose? -v
     rsync_restore =  "rsync -a -r -t -z -E -X -A " + WORKSPACE_CONFIG_BACKUP_FOLDER + " " + USER_HOME
