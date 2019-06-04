@@ -1,5 +1,6 @@
 <h1 align="center">
-    <img width=50% alt="" src="./docs/images/ml-workspace-logo.png">
+    <a href="https://github.com/ml-tooling/ml-workspace" title="ML Workspace Home">
+    <img width=50% alt="" src="./docs/images/ml-workspace-logo.png"> </a>
     <br>
 </h1>
 
@@ -20,8 +21,8 @@
   <a href="#getting-started">Getting Started</a> •
   <a href="#highlights">Highlights</a> •
   <a href="#features">Features</a> •
-  <a href="#screenshots">Screenshots</a> •
   <a href="#-where-to-ask-questions">Support</a> •
+  <a href="https://github.com/ml-tooling/ml-workspace/issues/new?labels=bug&template=---bug-report.md">Report a Bug</a> •
   <a href="#contribution">Contribution</a>
 </p>
 
@@ -40,13 +41,13 @@ The ML workspace is an all-in-one web-based IDE specialized for machine learning
 
 ### Prerequisites
 
-The Workspace requires **Docker** 🐳 to be installed on your machine ([Installation Guide](https://docs.docker.com/install/#supported-platforms)).
+The workspace requires **Docker** 🐳 to be installed on your machine ([Installation Guide](https://docs.docker.com/install/#supported-platforms)).
 
 > 📖 _If you are new to Docker, we recommend taking a look at [this awesome beginner guide](https://docker-curriculum.com/)._
 
 ### Start single instance
 
-Deploying a single Workspace instance is as simple as:
+Deploying a single workspace instance is as simple as:
 
 ```bash
 docker run -d -p 8091:8091 --restart always mltooling/ml-workspace:latest
@@ -131,9 +132,15 @@ The container can be configured with following environment variables (`--env`):
     </tr>
 </table>
 
+_WIP_ Add Examples
+
 ### Run multiple instances
 
+_WIP_
+
 ## Features
+
+_WIP_
 
 ## 💬 Where to ask questions
 
