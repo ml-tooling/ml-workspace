@@ -35,6 +35,7 @@ The ML workspace is an all-in-one web-based IDE specialized for machine learning
 - 🖥 Full Linux desktop GUI accessible via web browser.
 - 🔀 Seamless Git integration optimized for notebooks.
 - 🚪 Access from anywhere via Web, SSH, or VNC under a single port.
+- 🎛 Modular: Workspaces can be added to others as remote runtimes.
 - 🐳 Easy to deploy on Mac, Linux, and Windows via Docker.
 
 ## Getting Started

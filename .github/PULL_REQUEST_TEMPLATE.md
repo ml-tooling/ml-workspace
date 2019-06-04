@@ -13,7 +13,7 @@ Thank you for creating a pull request 🙌 ❤️
 - [ ] Other, please describe:
 
 **Description:**
-<!--- Use this section to describe your changes.  Why is this change required? What problem does it solve? If your test fixes a bug reported in an issue, don't forget to include the issue number. If your PR is still a work in progress, that's totally fine – just include a note to let us know. -->
+<!--- Use this section to describe your changes.  Why is this change required? What problem does it solve? If your test fixes a specific issue, don't forget to reference the issue number. If your PR is still a work in progress, that's totally fine – just include a note to let us know. -->
 
 **Checklist:**
 <!--- Before you submit the PR, go over this checklist and make sure you can
