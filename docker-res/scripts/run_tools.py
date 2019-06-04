@@ -51,5 +51,7 @@ call(SCRIPTS_DIR + "/start_vscode.sh " + str(8054) + " &", shell=True)
 if ENV_WORKSPACE_TYPE == 'gpu':
     # The 'find' command is only relevant for the GPU container. 
     call("find / -name *nvidia* -exec sudo chmod -R a+rwx {} +", shell=True)
-call(SCRIPTS_DIR + "/start_netdata.sh " + str(8050) + " &", shell=True)
+
+# Start netdata with provided netdata config on port 8050
+call("/usr/sbin/netdata", shell=True)
 

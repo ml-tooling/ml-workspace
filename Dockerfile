@@ -293,7 +293,7 @@ RUN \
         iproute && \
     wget --quiet https://my-netdata.io/kickstart.sh -O $RESOURCES_PATH/netdata-install.sh && \
     /bin/bash $RESOURCES_PATH/netdata-install.sh --dont-wait --dont-start-it --stable-channel --disable-telemetry && \
-     # Create desktop icon
+    # Create desktop icon
     echo "[Desktop Entry]\nVersion=1.0\nType=Link\nName=Netdata\nComment=Hardware Monitoring\nCategories=System;Utility;Development;\nIcon=/resources/icons/netdata-icon.png\nURL=http://localhost:8091/tools/netdata" > /usr/share/applications/netdata.desktop && \
     chmod +x /usr/share/applications/netdata.desktop && \
     # Cleanup
@@ -564,6 +564,7 @@ COPY docker-res/config/90assumeyes /etc/apt/apt.conf.d/
 COPY docker-res/config/ssh_config /root/.ssh/config
 COPY docker-res/config/sshd_config /etc/ssh/sshd_config
 COPY docker-res/config/nginx.conf /etc/nginx/nginx.conf
+COPY docker-res/config/netdata.conf /etc/netdata/netdata.conf
 COPY docker-res/config/mimeapps.list /root/.config/mimeapps.list
 COPY docker-res/config/chromium-browser.init /root/.chromium-browser.init
 COPY docker-res/jupyter/sidebar.jupyterlab-settings /root/.jupyter/lab/user-settings/@jupyterlab/application-extension/
