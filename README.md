@@ -11,8 +11,8 @@
     <a href="https://hub.docker.com/r/mltooling/ml-workspace" title="Docker Image Version"><img src="https://images.microbadger.com/badges/version/mltooling/ml-workspace.svg"></a>
     <a href="https://hub.docker.com/r/mltooling/ml-workspace" title="Docker Pulls"><img src="https://img.shields.io/docker/pulls/mltooling/ml-workspace.svg"></a>
     <a href="https://hub.docker.com/r/mltooling/ml-workspace" title="Docker Image Metadata"><img src="https://images.microbadger.com/badges/image/mltooling/ml-workspace.svg"></a>
-    <a href="https://github.com/ml-tooling/ml-workspace/issues" title="Open Issues"><img src="https://img.shields.io/github/issues-raw/ml-tooling/ml-workspace.svg"></a>
     <a href="https://github.com/ml-tooling/ml-workspace/blob/master/LICENSE" title="ML Workspace License"><img src="https://img.shields.io/badge/License-Apache%202.0-green.svg"></a>
+    <a href="https://gitter.im/ml-tooling/ml-workspace" title="Chat on Gitter"><img src="https://badges.gitter.im/ml-tooling/ml-workspace.svg"></a>
     <a href="https://twitter.com/mltooling" title="ML Tooling on Twitter"><img src="https://img.shields.io/twitter/follow/mltooling.svg?style=social"></a>
 </p>
 
@@ -23,7 +23,7 @@
   <a href="#screenshots">Screenshots</a> •
   <a href="#usage">Usage</a> •
   <a href="#contribution">Contribution</a> •
-  <a href="#faq">FAQ</a>
+  <a href="#where-to-ask-questions">Support</a>
 </p>
 
 The ML workspace is an all-in-one web-based IDE specialized for machine learning and data science. It is simple to deploy and gets you started within minutes to productively built ML solutions on your own machines. This workspace is the ultimate tool for developers preloaded with a variety of popular data science libraries (e.g., Tensorflow, PyTorch, Keras, Sklearn) and dev tools (e.g., Jupyter, VS Code, Tensorboard) perfectly configured, optimized, and integrated.
@@ -137,6 +137,21 @@ The container can be configured with following environment variables (`--env`):
 ## Features
 
 ### Screenshots
+
+## 💬 Where to ask questions
+
+The ML Workspace project is maintained by [@LukasMasuch](https://twitter.com/LukasMasuch)
+and [@raethlein](https://twitter.com/raethlein). Please understand that we won't be able
+to provide individual support via email. We also believe that help is much more
+valuable if it's shared publicly, so that more people can benefit from it.
+
+| Type                     | Channel                                              |
+| ------------------------ | ------------------------------------------------------ |
+| 🚨 **Bug Reports**       | <a href="https://github.com/ml-tooling/ml-workspace/issues" title="Open Bug Report"><img src="https://img.shields.io/github/issues/ml-tooling/ml-workspace/bug.svg"></a>                                 |
+| 🎁 **Feature Requests**  | <a href="https://github.com/ml-tooling/ml-workspace/issues?q=is%3Aopen+is%3Aissue+label%3Afeature-request+sort%3Areactions-%2B1-desc" title="Open Feature Request"><img src="https://img.shields.io/github/issues/ml-tooling/ml-workspace/feature-request.svg?label=feature%20requests"></a>                                 |
+| 👩‍💻 **Usage Questions**   |  <a href="https://stackoverflow.com/questions/tagged/ml-tooling" title="Open Question on Stackoverflow"><img src="https://img.shields.io/badge/stackoverflow-ml--tooling-orange.svg"></a> <a href="https://gitter.im/ml-tooling/ml-workspace" title="Chat on Gitter"><img src="https://badges.gitter.im/ml-tooling/ml-workspace.svg"></a> |
+| 🗯 **General Discussion** | <a href="https://gitter.im/ml-tooling/ml-workspace" title="Chat on Gitter"><img src="https://badges.gitter.im/ml-tooling/ml-workspace.svg"></a>                   |
+
 
 ## Contribution
  
