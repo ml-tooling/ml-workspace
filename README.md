@@ -21,9 +21,8 @@
   <a href="#highlights">Highlights</a> •
   <a href="#features">Features</a> •
   <a href="#screenshots">Screenshots</a> •
-  <a href="#usage">Usage</a> •
-  <a href="#contribution">Contribution</a> •
-  <a href="#where-to-ask-questions">Support</a>
+  <a href="#-where-to-ask-questions">Support</a> •
+  <a href="#contribution">Contribution</a>
 </p>
 
 The ML workspace is an all-in-one web-based IDE specialized for machine learning and data science. It is simple to deploy and gets you started within minutes to productively built ML solutions on your own machines. This workspace is the ultimate tool for developers preloaded with a variety of popular data science libraries (e.g., Tensorflow, PyTorch, Keras, Sklearn) and dev tools (e.g., Jupyter, VS Code, Tensorboard) perfectly configured, optimized, and integrated.
@@ -154,8 +153,6 @@ valuable if it's shared publicly, so that more people can benefit from it.
 
 
 ## Contribution
- 
-## Develop
 
 <details>
 
