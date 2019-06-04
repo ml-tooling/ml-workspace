@@ -22,6 +22,6 @@ Before opening a new issue, make sure that we do not have any duplicates already
 
 - Workspace version <!-- run `echo $WORKSPACE_VERSION` inside the workspace -->: 
 - Docker version <!-- run `docker version` on host machine -->: 
-- Host Machine OS (windows/linux/mac): 
+- Host Machine OS (Windows/Linux/Mac): 
 - Command used to start the workspace <!-- e.g. `docker run -p 8091:8091 mltooling/ml-workspace:latest` -->:
-- Browser (chrome/firefox/safari):
+- Browser (Chrome/Firefox/Safari):
