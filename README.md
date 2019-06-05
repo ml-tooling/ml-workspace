@@ -144,7 +144,7 @@ _WIP_
 The ML Workspace project is maintained by [@LukasMasuch](https://twitter.com/LukasMasuch)
 and [@raethlein](https://twitter.com/raethlein). Please understand that we won't be able
 to provide individual support via email. We also believe that help is much more
-valuable if it's shared publicly, so that more people can benefit from it.
+valuable if it's shared publicly so that more people can benefit from it.
 
 | Type                     | Channel                                              |
 | ------------------------ | ------------------------------------------------------ |
@@ -157,7 +157,17 @@ valuable if it's shared publicly, so that more people can benefit from it.
 
 ### Desktop GUI
 
-This workspace provides an HTTP-based VNC access to the workspace via [noVNC](https://github.com/novnc/noVNC). Thereby, you can access and work within the workspace with a fully featured desktop GUI. To access this desktop GUI, go to `Open Tools`, select `VNC`, and click the `Connect` button. In the case you are asked for a password, use `vncpassword`. Once you are connected, you will see a desktop GUI that allows you to install and use advanced tools such as PyCharm, Visual Studio Code, Spyder and many more. 
+This workspace provides an HTTP-based VNC access to the workspace via [noVNC](https://github.com/novnc/noVNC). Thereby, you can access and work within the workspace with a fully featured desktop GUI. To access this desktop GUI, go to `Open Tools`, select `VNC`, and click the `Connect` button. In the case you are asked for a password, use `vncpassword`.
+
+Once you are connected, you will see a desktop GUI that allows you to install and use advanced tools such as PyCharm, Visual Studio Code, Spyder and many more.
+
+<img src="./docs/images/feature-desktop-vnc.png"/>
+
+**Clipboard:** If you want to share the clipboard between your computer and the workspace, you can use the copy-paste functionality as described below:
+
+<img src="./docs/images/feature-desktop-vnc-clipboard.png"/>
+
+> ℹ️ _**Long-running tasks:** Use the desktop GUI for long-running Jupyter executions. By running notebooks from the browser of your workspace desktop GUI, all output will be synchronized to the notebook even if you have disconnected your computer from the notebook._
 
 ### Git Integration
 
@@ -173,7 +183,7 @@ This workspace provides an HTTP-based VNC access to the workspace via [noVNC](ht
 
 The workspace provides two preinstalled web-based tools to help developers during model training and other experimentation tasks to get insights into everything happening on the system and figure out performance bottlenecks.
 
-[Netdata](https://github.com/netdata/netdata) (`Open Tool -> Netdata`) is a real-time hardware and performance monitoring dashboard that visualise the processes and services on your Linux systems. It monitors metrics about CPU, GPU, memory, disks, networks, processes, and more. 
+[Netdata](https://github.com/netdata/netdata) (`Open Tool -> Netdata`) is a real-time hardware and performance monitoring dashboard that visualize the processes and services on your Linux systems. It monitors metrics about CPU, GPU, memory, disks, networks, processes, and more.
 
 <img src="./docs/images/feature-netdata.png" />
 
@@ -183,7 +193,7 @@ The workspace provides two preinstalled web-based tools to help developers durin
 
 ### Tensorboard
 
-[Tensorboard](https://www.tensorflow.org/tensorboard) provides a suite of visualization tools to make it easier to understand, debug, and optimize you experiment runs. It includes logging features for scalar, histogram, model structure, embeddings, and text & image visualization. The workspace comes preinstalled with [jupyter_tensorboard extension](https://github.com/lspvic/jupyter_tensorboard) that integrates Tensorboard into the Jupyter interface with functionalities to start, manage, and stop instances. You can open a new instance for a valid logs directory as shown below:
+[Tensorboard](https://www.tensorflow.org/tensorboard) provides a suite of visualization tools to make it easier to understand, debug, and optimize your experiment runs. It includes logging features for scalar, histogram, model structure, embeddings, and text & image visualization. The workspace comes preinstalled with [jupyter_tensorboard extension](https://github.com/lspvic/jupyter_tensorboard) that integrates Tensorboard into the Jupyter interface with functionalities to start, manage, and stop instances. You can open a new instance for a valid logs directory as shown below:
 
 <img src="./docs/images/feature-tensorboard-open.png" />
 
@@ -191,7 +201,7 @@ If you have opened a Tensorboard instance in a valid log directory, you will see
 
 <img src="./docs/images/feature-tensorboard-overview.png" />
 
-> ℹ️ _Tensorboard can be used in combination with many other ML frameworks besides Tensorflow. By using the [tensorboardX](https://github.com/lanpa/tensorboardX) library you can log basically from any python based library. Also, PyTorch has a direct tensorboard integration as described [here](https://pytorch.org/docs/stable/tensorboard.html)._
+> ℹ️ _Tensorboard can be used in combination with many other ML frameworks besides Tensorflow. By using the [tensorboardX](https://github.com/lanpa/tensorboardX) library you can log basically from any python based library. Also, PyTorch has a direct Tensorboard integration as described [here](https://pytorch.org/docs/stable/tensorboard.html)._
 
 ### SSH Access
 
