@@ -42,7 +42,7 @@ The ML workspace is an all-in-one web-based IDE specialized for machine learning
 
 ### Prerequisites
 
-The workspace requires **Docker** 🐳 to be installed on your machine ([Installation Guide](https://docs.docker.com/install/#supported-platforms)).
+The workspace requires **Docker** to be installed on your machine ([Installation Guide](https://docs.docker.com/install/#supported-platforms)).
 
 > 📖 _If you are new to Docker, we recommend taking a look at [this awesome beginner guide](https://docker-curriculum.com/)._
 
@@ -56,7 +56,7 @@ docker run -d -p 8091:8091 --restart always mltooling/ml-workspace:latest
 
 Voilà, that was easy! Now, Docker will pull the latest workspace image to your machine. This may take a few minutes, depending on your internet speed. Once the workspace is started, you can access it via: http://localhost:8091. 
 
-> ☝️ _If started on a remote machine or with a different port, make sure to use the machines IP/DNS and/or the exposed port._
+> ℹ️ _If started on a remote machine or with a different port, make sure to use the machines IP/DNS and/or the exposed port._
 
 ### Persist Data
 
