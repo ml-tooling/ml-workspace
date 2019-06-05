@@ -20,7 +20,7 @@
 <p align="center">
   <a href="#getting-started">Getting Started</a> •
   <a href="#highlights">Highlights</a> •
-  <a href="#features">Features</a> •
+  <a href="#features">Features & Screenshots</a> •
   <a href="#-where-to-ask-questions">Support</a> •
   <a href="https://github.com/ml-tooling/ml-workspace/issues/new?labels=bug&template=01_bug-report.md">Report a Bug</a> •
   <a href="#contribution">Contribution</a>
@@ -54,7 +54,7 @@ Deploying a single workspace instance is as simple as:
 docker run -d -p 8091:8091 --restart always mltooling/ml-workspace:latest
 ```
 
-Voilà, that was easy 😌 Now, Docker will pull the latest workspace image to your machine. This may take a few minutes, depending on your internet speed. Grab a coffee ☕ and dream about all the exciting things you can build with Machine Learning 🦄. Once the workspace is started, you can access it via: http://localhost:8091. 
+Voilà, that was easy! Now, Docker will pull the latest workspace image to your machine. This may take a few minutes, depending on your internet speed. Once the workspace is started, you can access it via: http://localhost:8091. 
 
 > ☝️ _If started on a remote machine or with a different port, make sure to use the machines IP/DNS and/or the exposed port._
 
