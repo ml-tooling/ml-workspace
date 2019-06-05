@@ -36,7 +36,7 @@ The ML workspace is an all-in-one web-based IDE specialized for machine learning
 - 🔀 Seamless Git integration optimized for notebooks.
 - 📈 Integrated hardware & training monitoring via Tensoboard & Netdata.
 - 🚪 Access from anywhere via Web, SSH, or VNC under a single port.
-- 🎛 Modular: Workspaces can be added to others as remote runtimes.
+- 🎛 Usabel as remote kernel (Jupyter) or remote machine (VS Code) via SSH.
 - 🐳 Easy to deploy on Mac, Linux, and Windows via Docker.
 
 ## Getting Started
@@ -162,29 +162,45 @@ This workspace provides an HTTP-based VNC access to the workspace via [noVNC](ht
 
 <img src="./docs/images/feature-desktop-vnc.png"/>
 
-**Clipboard:** If you want to share the clipboard between your computer and the workspace, you can use the copy-paste functionality as described below:
+**Clipboard:** If you want to share the clipboard between your machine and the workspace, you can use the copy-paste functionality as described below:
 
 <img src="./docs/images/feature-desktop-vnc-clipboard.png"/>
 
-> ℹ️ _**Long-running tasks:** Use the desktop GUI for long-running Jupyter executions. By running notebooks from the browser of your workspace desktop GUI, all output will be synchronized to the notebook even if you have disconnected your computer from the notebook._
+> ℹ️ _**Long-running tasks:** Use the desktop GUI for long-running Jupyter executions. By running notebooks from the browser of your workspace desktop GUI, all output will be synchronized to the notebook even if you have disconnected your workspace from the notebook._
 
 ### Git Integration
 
 <img src="./docs/images/feature-git-integration.png"/>
 
-Version control is a crucial aspect for productive collaboration. To make this process as smooth as possible, we have integrated a custom-made Jupyter extension specialized on pushing single notebooks, a full-fledged web-based Git client ([ungit](https://github.com/FredrikNoren/ungit)), an awesome tool to open and edit plain text documents (e.g., `.py`, `.md`) as notebooks ([jupytext](https://github.com/mwouts/jupytext)), as well as a notebook merging tool ([nbdime](https://github.com/jupyter/nbdime)). Additionally, JupyterLab and VS Code also have GUI-based Git clients integrated.
+Version control is a crucial aspect for productive collaboration. To make this process as smooth as possible, we have integrated a custom-made Jupyter extension specialized on pushing single notebooks, a full-fledged web-based Git client ([ungit](https://github.com/FredrikNoren/ungit)), an awesome tool to open and edit plain text documents (e.g., `.py`, `.md`) as notebooks ([jupytext](https://github.com/mwouts/jupytext)), as well as a notebook merging tool ([nbdime](https://github.com/jupyter/nbdime)). Additionally, JupyterLab and VS Code also provide GUI-based Git clients.
 
 #### Clone Repository
 
 For cloning repositories via `https`, we recommend to use Ungit (`Open Tool -> Ungit`) as shown below. If authentication is required, you will get asked for your credentials.
 
+_WIP: Open Git client for the selected folder by pressing on the git button or selecting the folder..._
+
 <img src="./docs/images/feature-clone-repo.png"/>
 
 #### Push, Pull, Merge and Other Git Actions
 
+To commit and push a single notebook to the remote Git repository, we recommend to use the Git plugin integrated into Jupyter as shown below:
+
+<img src="./docs/images/feature-git-extension.png"/>
+
+The other tool for more advanced Git integrations is ungit. It offers a clean and intuitive web-based UI that makes it convenient to sync your code artifacts. With ungit, you can do most of the common git actions such as push, pull, merge, branch, tag, checkout, and many more.
+
 #### Solve Merge Conflicts
 
+_WIP: Add description for jupytext._
+
+This workspace is pre-installed with [nbdime](https://github.com/jupyter/nbdime), a tool for diffing and merging of Jupyter notebooks. Nbdime understands the structure of notebook documents and, therefore, can make intelligent decisions when diffing and merging notebooks. In the case you have merge conflicts, nbdime will make sure that the notebook is still readable by Jupyter.
+
+<img src="./docs/images/feature-git-merging.png"/>
+
 ### Visual Studio Code
+
+[Visual Studio Code](https://github.com/microsoft/vscode) (`Open Tool -> VS Code`) is an open-source lightweight but powerful code editor with built-in support for a variety of languages and a rich ecosystem of extensions. It combines the simplicity of a source code editor with powerful developer tooling, like IntelliSense code completion and debugging. The workspace integrates VS Code as a web-based application accesible through the browser based on the awesome [code-server](https://github.com/cdr/code-server) project. It allows you to customize every feature to your liking and install any number of third-party extensions.
 
 <p align="center"><img src="./docs/images/feature-vs-code.png"/></p>
 
@@ -219,6 +235,10 @@ If you have opened a Tensorboard instance in a valid log directory, you will see
 > ℹ️ _Tensorboard can be used in combination with many other ML frameworks besides Tensorflow. By using the [tensorboardX](https://github.com/lanpa/tensorboardX) library you can log basically from any python based library. Also, PyTorch has a direct Tensorboard integration as described [here](https://pytorch.org/docs/stable/tensorboard.html)._
 
 ### SSH Access
+
+### Remote Development
+
+_WIP: Remote Kernels and VS Code remote development_
 
 ## Contribution
 
