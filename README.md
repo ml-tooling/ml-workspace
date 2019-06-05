@@ -139,10 +139,6 @@ _WIP_ Add Examples
 
 _WIP_
 
-## Features
-
-_WIP_
-
 ## 💬 Where to ask questions
 
 The ML Workspace project is maintained by [@LukasMasuch](https://twitter.com/LukasMasuch)
@@ -157,6 +153,35 @@ valuable if it's shared publicly, so that more people can benefit from it.
 | 👩‍💻 **Usage Questions**   |  <a href="https://stackoverflow.com/questions/tagged/ml-tooling" title="Open Question on Stackoverflow"><img src="https://img.shields.io/badge/stackoverflow-ml--tooling-orange.svg"></a> <a href="https://gitter.im/ml-tooling/ml-workspace" title="Chat on Gitter"><img src="https://badges.gitter.im/ml-tooling/ml-workspace.svg"></a> |
 | 🗯 **General Discussion** | <a href="https://gitter.im/ml-tooling/ml-workspace" title="Chat on Gitter"><img src="https://badges.gitter.im/ml-tooling/ml-workspace.svg"></a>  <a href="https://twitter.com/mltooling" title="ML Tooling on Twitter"><img src="https://img.shields.io/twitter/follow/mltooling.svg?style=social"></a>                  |
 
+## Features
+
+### Desktop GUI
+
+### Git Integration
+
+### Visual Studio Code
+
+### JupyterLab
+
+[JupyterLab](https://github.com/jupyterlab/jupyterlab) (`Open Tool -> JupyterLab`) is the next-generation user interface for Project Jupyter. It offers all the familiar building blocks of the classic Jupyter Notebook (notebook, terminal, text editor, file browser, rich outputs, etc.) in a flexible and powerful user interface. This JupyterLab instance comes pre-installed with a few helpful extensions such as a the [jupyterlab-toc](https://github.com/jupyterlab/jupyterlab-toc), [jupyterlab-git](https://github.com/jupyterlab/jupyterlab-git), and [juptyterlab-tensorboard](https://github.com/chaoleili/jupyterlab_tensorboard).
+
+<img src="./docs/images/feature-jupyterlab.png" />
+
+### Hardware Monitoring
+
+The workspace provides two preinstalled web-based tools to help developers during model training and other experimentation tasks to get insights into everything happening on the system and figure out performance bottlenecks.
+
+[Netdata](https://github.com/netdata/netdata) (`Open Tool -> Netdata`) is a real-time hardware and performance monitoring dashboard that visualise the processes and services on your Linux systems. It monitors metrics about CPU, GPU, memory, disks, networks, processes, and more. 
+
+<img src="./docs/images/feature-netdata.png" />
+
+[Glances](https://github.com/nicolargo/glances) (`Open Tool -> Glances`) is a web-based hardware monitoring dashboard as well and can be used as an alternative to Netdata.
+
+> ℹ️ _Netdata and Glances will show you the hardware statistics for the entire machine on which the workspace container is running._
+
+### Tensorboard
+
+### SSH Access
 
 ## Contribution
 
