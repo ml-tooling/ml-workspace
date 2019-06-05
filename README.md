@@ -34,6 +34,7 @@ The ML workspace is an all-in-one web-based IDE specialized for machine learning
 - 🗃 Pre-installed with many popular data science libraries & tools.
 - 🖥 Full Linux desktop GUI accessible via web browser.
 - 🔀 Seamless Git integration optimized for notebooks.
+- 📈 Integrated hardware & training monitoring via Tensoboard & Netdata.
 - 🚪 Access from anywhere via Web, SSH, or VNC under a single port.
 - 🎛 Modular: Workspaces can be added to others as remote runtimes.
 - 🐳 Easy to deploy on Mac, Linux, and Windows via Docker.
@@ -157,9 +158,7 @@ valuable if it's shared publicly so that more people can benefit from it.
 
 ### Desktop GUI
 
-This workspace provides an HTTP-based VNC access to the workspace via [noVNC](https://github.com/novnc/noVNC). Thereby, you can access and work within the workspace with a fully featured desktop GUI. To access this desktop GUI, go to `Open Tools`, select `VNC`, and click the `Connect` button. In the case you are asked for a password, use `vncpassword`.
-
-Once you are connected, you will see a desktop GUI that allows you to install and use advanced tools such as PyCharm, Visual Studio Code, Spyder and many more.
+This workspace provides an HTTP-based VNC access to the workspace via [noVNC](https://github.com/novnc/noVNC). Thereby, you can access and work within the workspace with a fully featured desktop GUI. To access this desktop GUI, go to `Open Tools`, select `VNC`, and click the `Connect` button. In the case you are asked for a password, use `vncpassword`. Once you are connected, you will see a desktop GUI that allows you to install and use advanced tools such as PyCharm, Visual Studio Code, Spyder and many more.
 
 <img src="./docs/images/feature-desktop-vnc.png"/>
 
@@ -171,13 +170,29 @@ Once you are connected, you will see a desktop GUI that allows you to install an
 
 ### Git Integration
 
+<img src="./docs/images/feature-git-integration.png"/>
+
+Version control is a crucial aspect for productive collaboration. To make this process as smooth as possible, we have integrated a custom-made Jupyter extension specialized on pushing single notebooks, a full-fledged web-based Git client ([ungit](https://github.com/FredrikNoren/ungit)), an awesome tool to open and edit plain text documents (e.g., `.py`, `.md`) as notebooks ([jupytext](https://github.com/mwouts/jupytext)), as well as a notebook merging tool ([nbdime](https://github.com/jupyter/nbdime)). Additionally, JupyterLab and VS Code also have GUI-based Git clients integrated.
+
+#### Clone Repository
+
+For cloning repositories via `https`, we recommend to use Ungit (`Open Tool -> Ungit`) as shown below. If authentication is required, you will get asked for your credentials.
+
+<img src="./docs/images/feature-clone-repo.png"/>
+
+#### Push, Pull, Merge and Other Git Actions
+
+#### Solve Merge Conflicts
+
 ### Visual Studio Code
+
+<p align="center"><img src="./docs/images/feature-vs-code.png"/></p>
 
 ### JupyterLab
 
 [JupyterLab](https://github.com/jupyterlab/jupyterlab) (`Open Tool -> JupyterLab`) is the next-generation user interface for Project Jupyter. It offers all the familiar building blocks of the classic Jupyter Notebook (notebook, terminal, text editor, file browser, rich outputs, etc.) in a flexible and powerful user interface. This JupyterLab instance comes pre-installed with a few helpful extensions such as a the [jupyterlab-toc](https://github.com/jupyterlab/jupyterlab-toc), [jupyterlab-git](https://github.com/jupyterlab/jupyterlab-git), and [juptyterlab-tensorboard](https://github.com/chaoleili/jupyterlab_tensorboard).
 
-<img src="./docs/images/feature-jupyterlab.png" />
+<img src="./docs/images/feature-jupyterlab.png"/>
 
 ### Hardware Monitoring
 
