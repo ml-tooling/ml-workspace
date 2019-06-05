@@ -157,6 +157,8 @@ valuable if it's shared publicly, so that more people can benefit from it.
 
 ### Desktop GUI
 
+This workspace provides an HTTP-based VNC access to the workspace via [noVNC](https://github.com/novnc/noVNC). Thereby, you can access and work within the workspace with a fully featured desktop GUI. To access this desktop GUI, go to `Open Tools`, select `VNC`, and click the `Connect` button. In the case you are asked for a password, use `vncpassword`. Once you are connected, you will see a desktop GUI that allows you to install and use advanced tools such as PyCharm, Visual Studio Code, Spyder and many more. 
+
 ### Git Integration
 
 ### Visual Studio Code
@@ -180,6 +182,16 @@ The workspace provides two preinstalled web-based tools to help developers durin
 > ℹ️ _Netdata and Glances will show you the hardware statistics for the entire machine on which the workspace container is running._
 
 ### Tensorboard
+
+[Tensorboard](https://www.tensorflow.org/tensorboard) provides a suite of visualization tools to make it easier to understand, debug, and optimize you experiment runs. It includes logging features for scalar, histogram, model structure, embeddings, and text & image visualization. The workspace comes preinstalled with [jupyter_tensorboard extension](https://github.com/lspvic/jupyter_tensorboard) that integrates Tensorboard into the Jupyter interface with functionalities to start, manage, and stop instances. You can open a new instance for a valid logs directory as shown below:
+
+<img src="./docs/images/feature-tensorboard-open.png" />
+
+If you have opened a Tensorboard instance in a valid log directory, you will see the visualizations of your logged data.
+
+<img src="./docs/images/feature-tensorboard-overview.png" />
+
+> ℹ️ _Tensorboard can be used in combination with many other ML frameworks besides Tensorflow. By using the [tensorboardX](https://github.com/lanpa/tensorboardX) library you can log basically from any python based library. Also, PyTorch has a direct tensorboard integration as described [here](https://pytorch.org/docs/stable/tensorboard.html)._
 
 ### SSH Access
 
