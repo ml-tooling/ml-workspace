@@ -150,7 +150,7 @@ class SSHHandler(IPythonHandler):
                 HOSTNAME_RUNTIME = SSH_JUMPHOST_TARGET
                 HOSTNAME_MANAGER = HOSTNAME
                 PORT_MANAGER = PORT
-                PORT_RUNTIME = 22
+                PORT_RUNTIME = 8091
 
                 MANAGER_CONFIG_NAME = MANAGER_CONFIG_NAME + "{}-{}".format(HOSTNAME_MANAGER, PORT_MANAGER)
                 RUNTIME_CONFIG_NAME = RUNTIME_CONFIG_NAME + "{}-{}-{}".format(HOSTNAME_RUNTIME, HOSTNAME_MANAGER, PORT_MANAGER)
