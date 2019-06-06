@@ -156,6 +156,17 @@ valuable if it's shared publicly so that more people can benefit from it.
 
 ## Features
 
+<p align="center">
+  <a href="#jupyter">Jupyter</a> •
+  <a href="#desktop-gui">Desktop GUI</a> •
+  <a href="#visual-studio-code">VS Code</a> •
+  <a href="#git-integration">Git Integration</a> •
+  <a href="#jupyterlab">JupyterLab</a> •
+  <a href="#hardware-monitoring">Hardware Monitoring</a> •
+  <a href="#tensorboard">Tensorboard</a> •
+  <a href="#ssh-access">SSH Access</a>
+</p>
+
 The workspace is equipped with a selection of best-in-class open-source development tools to help with the machine learning workflow. Many of these tools can be started from the `Open Tool` menu from Jupyter (the main application of the workspace):
 
 <img src="./docs/images/feature-open-tools.png"/>
@@ -210,9 +221,11 @@ Version control is a crucial aspect for productive collaboration. To make this p
 
 #### Clone Repository
 
-For cloning repositories via `https`, we recommend to use Ungit (`Open Tool -> Ungit`) as shown below. If authentication is required, you will get asked for your credentials.
+For cloning repositories via `https`, we recommend to navigate to the desired root folder and to click on the `git` button as shown below:
 
-_WIP: Open Git client for the selected folder by pressing on the git button or selecting the folder..._
+<img src="./docs/images/feature-git-open.png"/>
+
+This might ask for some required settings and, subsequently, opens [ungit](https://github.com/FredrikNoren/ungit), a web-based Git client with a clean and intuitive UI that makes it convenient to sync your code artifacts. Within ungit, you can clone any repository. If authentication is required, you will get asked for your credentials.
 
 <img src="./docs/images/feature-clone-repo.png"/>
 
@@ -222,7 +235,7 @@ To commit and push a single notebook to a remote Git repository, we recommend to
 
 <img src="./docs/images/feature-git-extension.png"/>
 
-The other tool for more advanced Git integrations is [ungit](https://github.com/FredrikNoren/ungit). It offers a clean and intuitive web-based UI that makes it convenient to sync your code artifacts. With ungit, you can do most of the common git actions such as push, pull, merge, branch, tag, checkout, and many more.
+The other tool for more advanced Git integrations is [ungit](https://github.com/FredrikNoren/ungit). With ungit, you can do most of the common git actions such as push, pull, merge, branch, tag, checkout, and many more.
 
 #### Sharing, Diffing, and Merging Notebooks
 
@@ -252,6 +265,8 @@ The workspace provides two preinstalled web-based tools to help developers durin
 
 [Glances](https://github.com/nicolargo/glances) (`Open Tool -> Glances`) is a web-based hardware monitoring dashboard as well and can be used as an alternative to Netdata.
 
+<img src="./docs/images/feature-glances.png"/>
+
 > ℹ️ _Netdata and Glances will show you the hardware statistics for the entire machine on which the workspace container is running._
 
 ### Tensorboard
@@ -275,6 +290,8 @@ If you prefer to see the tensorboard directly within your notebook, you can make
 
 ### SSH Access
 
+_WIP_
+
 ### Remote Development
 
 _WIP: Remote Kernels and VS Code remote development_
@@ -289,6 +306,10 @@ The workspace is pre-installed with many popular runtimes, data science librarie
 The full list of installed tools can be found within the [Dockerfile](https://github.com/ml-tooling/ml-workspace/blob/master/Dockerfile).
 
 > 💡 _**An R-Runtime** installation script is provided in the `Tools` folder on the desktop of the VNC GUI._
+
+### GPU Support
+
+_WIP_
 
 ## Contribution
 
