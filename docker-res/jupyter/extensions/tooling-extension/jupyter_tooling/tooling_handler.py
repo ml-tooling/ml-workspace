@@ -163,7 +163,7 @@ class SSHHandler(IPythonHandler):
                 ssh_config_runtime = ssh_config_runtime \
                     .replace("{HOSTNAME_MANAGER}", HOSTNAME_MANAGER) \
                     .replace("{HOSTNAME_RUNTIME}", HOSTNAME_RUNTIME) \
-                    .replace("{PORT_RUNTIME}", PORT_RUNTIME) \
+                    .replace("{PORT_RUNTIME}", str(PORT_RUNTIME)) \
                     .replace("#ProxyCommand", "ProxyCommand") \
                     .replace("{MANAGER_CONFIG_NAME}", MANAGER_CONFIG_NAME)
                 
