@@ -156,17 +156,27 @@ valuable if it's shared publicly so that more people can benefit from it.
 
 ## Features
 
+The workspace is equipped with a selection of common tools to help with the data science and experimentation workflow. Many of these tools can be started from the `Open Tools` menu.
+
 ### Desktop GUI
 
-This workspace provides an HTTP-based VNC access to the workspace via [noVNC](https://github.com/novnc/noVNC). Thereby, you can access and work within the workspace with a fully featured desktop GUI. To access this desktop GUI, go to `Open Tools`, select `VNC`, and click the `Connect` button. In the case you are asked for a password, use `vncpassword`. Once you are connected, you will see a desktop GUI that allows you to install and use advanced tools such as PyCharm, Visual Studio Code, Spyder and many more.
+This workspace provides an HTTP-based VNC access to the workspace via [noVNC](https://github.com/novnc/noVNC). Thereby, you can access and work within the workspace with a fully featured desktop GUI. To access this desktop GUI, go to `Open Tools`, select `VNC`, and click the `Connect` button. In the case you are asked for a password, use `vncpassword`.
 
 <img src="./docs/images/feature-desktop-vnc.png"/>
+
+Once you are connected, you will see a desktop GUI that allows you to install and use any tool that is available for Ubuntu. Within the `Tools` folder on the desktop, you will find a collection of install scripts that makes it straightforward to install some of the most commonly used development tools, such as Atom, PyCharm, R-Runtime, R-Studio, or Postman (just double-click on the script).
 
 **Clipboard:** If you want to share the clipboard between your machine and the workspace, you can use the copy-paste functionality as described below:
 
 <img src="./docs/images/feature-desktop-vnc-clipboard.png"/>
 
-> ℹ️ _**Long-running tasks:** Use the desktop GUI for long-running Jupyter executions. By running notebooks from the browser of your workspace desktop GUI, all output will be synchronized to the notebook even if you have disconnected your workspace from the notebook._
+> 💡 _**Long-running tasks:** Use the desktop GUI for long-running Jupyter executions. By running notebooks from the browser of your workspace desktop GUI, all output will be synchronized to the notebook even if you have disconnected your workspace from the notebook._
+
+### Visual Studio Code
+
+[Visual Studio Code](https://github.com/microsoft/vscode) (`Open Tool -> VS Code`) is an open-source lightweight but powerful code editor with built-in support for a variety of languages and a rich ecosystem of extensions. It combines the simplicity of a source code editor with powerful developer tooling, like IntelliSense code completion and debugging. The workspace integrates VS Code as a web-based application accesible through the browser based on the awesome [code-server](https://github.com/cdr/code-server) project. It allows you to customize every feature to your liking and install any number of third-party extensions.
+
+<p align="center"><img src="./docs/images/feature-vs-code.png"/></p>
 
 ### Git Integration
 
@@ -182,27 +192,25 @@ _WIP: Open Git client for the selected folder by pressing on the git button or s
 
 <img src="./docs/images/feature-clone-repo.png"/>
 
-#### Push, Pull, Merge and Other Git Actions
+#### Push, Pull, Merge, and Other Git Actions
 
-To commit and push a single notebook to the remote Git repository, we recommend to use the Git plugin integrated into Jupyter as shown below:
+To commit and push a single notebook to a remote Git repository, we recommend to use the Git plugin integrated into Jupyter as shown below:
 
 <img src="./docs/images/feature-git-extension.png"/>
 
-The other tool for more advanced Git integrations is ungit. It offers a clean and intuitive web-based UI that makes it convenient to sync your code artifacts. With ungit, you can do most of the common git actions such as push, pull, merge, branch, tag, checkout, and many more.
+The other tool for more advanced Git integrations is [ungit](https://github.com/FredrikNoren/ungit). It offers a clean and intuitive web-based UI that makes it convenient to sync your code artifacts. With ungit, you can do most of the common git actions such as push, pull, merge, branch, tag, checkout, and many more.
 
-#### Solve Merge Conflicts
+#### Sharing, Diffing, and Merging Notebooks
 
-_WIP: Add description for jupytext._
-
-This workspace is pre-installed with [nbdime](https://github.com/jupyter/nbdime), a tool for diffing and merging of Jupyter notebooks. Nbdime understands the structure of notebook documents and, therefore, can make intelligent decisions when diffing and merging notebooks. In the case you have merge conflicts, nbdime will make sure that the notebook is still readable by Jupyter.
+Jupyter notebooks are great, but they often are huge files, with a very specific JSON file format. To enable seamless sharing, diffing, and merging via Git this workspace is pre-installed with [nbdime](https://github.com/jupyter/nbdime). Nbdime understands the structure of notebook documents and, therefore, automatically makes intelligent decisions when diffing and merging notebooks. In the case you have merge conflicts, nbdime will make sure that the notebook is still readable by Jupyter, as shown below:
 
 <img src="./docs/images/feature-git-merging.png"/>
 
-### Visual Studio Code
+Furthermore, the workspace comes pre-installed with [jupytext](https://github.com/mwouts/jupytext), a Jupyter plugin that reads and writes notebooks as plain text files. This allows you to open, edit, and run scripts or markdown files (e.g., `.py`, `.md`) as notebooks within Jupyter. In the following screenshot, we have opened this `README.md` file via Jupyter:
 
-[Visual Studio Code](https://github.com/microsoft/vscode) (`Open Tool -> VS Code`) is an open-source lightweight but powerful code editor with built-in support for a variety of languages and a rich ecosystem of extensions. It combines the simplicity of a source code editor with powerful developer tooling, like IntelliSense code completion and debugging. The workspace integrates VS Code as a web-based application accesible through the browser based on the awesome [code-server](https://github.com/cdr/code-server) project. It allows you to customize every feature to your liking and install any number of third-party extensions.
+<img src="./docs/images/feature-git-jupytext.png"/>
 
-<p align="center"><img src="./docs/images/feature-vs-code.png"/></p>
+In combination with Git, jupytext enables a clear diff history and easy merging of version conflicts. With both of those tools, collaborating on Jupyter notebooks with Git becomes straightforward.
 
 ### JupyterLab
 
@@ -233,6 +241,13 @@ If you have opened a Tensorboard instance in a valid log directory, you will see
 <img src="./docs/images/feature-tensorboard-overview.png" />
 
 > ℹ️ _Tensorboard can be used in combination with many other ML frameworks besides Tensorflow. By using the [tensorboardX](https://github.com/lanpa/tensorboardX) library you can log basically from any python based library. Also, PyTorch has a direct Tensorboard integration as described [here](https://pytorch.org/docs/stable/tensorboard.html)._
+
+If you prefer to see the tensorboard directly within your notebook, you can make use following Jupyter magic.
+
+```
+%load_ext tensorboard.notebook
+%tensorboard --logdir /workspace/path/to/logs
+```
 
 ### SSH Access
 
