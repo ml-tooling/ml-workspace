@@ -156,11 +156,11 @@ valuable if it's shared publicly so that more people can benefit from it.
 
 ## Features
 
-The workspace is equipped with a selection of best-in-class open-source development tools to help with the machine learning workflow. Many of these tools can be started from the `Open Tools` menu from Jupyter (the main application of the workspace):
+The workspace is equipped with a selection of best-in-class open-source development tools to help with the machine learning workflow. Many of these tools can be started from the `Open Tool` menu from Jupyter (the main application of the workspace):
 
 <img src="./docs/images/feature-open-tools.png"/>
 
-> ℹ️ _Within your workspace you have `full root & sudo access` to install any library or tool you need via terminal (e.g., `pip` or `apt-get`)_
+> ℹ️ _Within your workspace you have **full root & sudo access** to install any library or tool you need via terminal (e.g., `pip` or `apt-get`)_
 
 ### Jupyter
 
@@ -184,7 +184,7 @@ The Notebook allows code to be run in a range of different programming languages
 
 ### Desktop GUI
 
-This workspace provides an HTTP-based VNC access to the workspace via [noVNC](https://github.com/novnc/noVNC). Thereby, you can access and work within the workspace with a fully featured desktop GUI. To access this desktop GUI, go to `Open Tools`, select `VNC`, and click the `Connect` button. In the case you are asked for a password, use `vncpassword`.
+This workspace provides an HTTP-based VNC access to the workspace via [noVNC](https://github.com/novnc/noVNC). Thereby, you can access and work within the workspace with a fully featured desktop GUI. To access this desktop GUI, go to `Open Tool`, select `VNC`, and click the `Connect` button. In the case you are asked for a password, use `vncpassword`.
 
 <img src="./docs/images/feature-desktop-vnc.png"/>
 
@@ -198,7 +198,7 @@ Once you are connected, you will see a desktop GUI that allows you to install an
 
 ### Visual Studio Code
 
-[Visual Studio Code](https://github.com/microsoft/vscode) (`Open Tool -> VS Code`) is an open-source lightweight but powerful code editor with built-in support for a variety of languages and a rich ecosystem of extensions. It combines the simplicity of a source code editor with powerful developer tooling, like IntelliSense code completion and debugging. The workspace integrates VS Code as a web-based application accesible through the browser based on the awesome [code-server](https://github.com/cdr/code-server) project. It allows you to customize every feature to your liking and install any number of third-party extensions.
+[Visual Studio Code](https://github.com/microsoft/vscode) (`Open Tool -> VS Code`) is an open-source lightweight but powerful code editor with built-in support for a variety of languages and a rich ecosystem of extensions. It combines the simplicity of a source code editor with powerful developer tooling, like IntelliSense code completion and debugging. The workspace integrates VS Code as a web-based application accessible through the browser based on the awesome [code-server](https://github.com/cdr/code-server) project. It allows you to customize every feature to your liking and install any number of third-party extensions.
 
 <p align="center"><img src="./docs/images/feature-vs-code.png"/></p>
 
@@ -260,7 +260,7 @@ The workspace provides two preinstalled web-based tools to help developers durin
 
 <img src="./docs/images/feature-tensorboard-open.png" />
 
-If you have opened a Tensorboard instance in a valid log directory, you will see the visualizations of your logged data.
+If you have opened a Tensorboard instance in a valid log directory, you will see the visualizations of your logged data:
 
 <img src="./docs/images/feature-tensorboard-overview.png" />
 
@@ -279,9 +279,16 @@ If you prefer to see the tensorboard directly within your notebook, you can make
 
 _WIP: Remote Kernels and VS Code remote development_
 
-### Preinstalled Libraries 
+### Preinstalled Libraries and Runtimes
 
-_WIP:_
+The workspace is pre-installed with many popular runtimes, data science libraries, and ubuntu packages:
+
+- **Runtimes:** Anaconda 3 (Python 3.6), Java 8, NodeJS 11
+- **Python libraries:** Tensorflow, Keras, Pytorch, Sklearn, CNTK, XGBoost, Theano, Fastai, and [many more](https://github.com/ml-tooling/ml-workspace/blob/master/docker-res/requirements.txt)
+
+The full list of installed tools can be found within the [Dockerfile](https://github.com/ml-tooling/ml-workspace/blob/master/Dockerfile).
+
+> 💡 _**An R-Runtime** installation script is provided in the `Tools` folder on the desktop of the VNC GUI._
 
 ## Contribution
 
