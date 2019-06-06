@@ -156,7 +156,31 @@ valuable if it's shared publicly so that more people can benefit from it.
 
 ## Features
 
-The workspace is equipped with a selection of common tools to help with the data science and experimentation workflow. Many of these tools can be started from the `Open Tools` menu.
+The workspace is equipped with a selection of best-in-class open-source development tools to help with the machine learning workflow. Many of these tools can be started from the `Open Tools` menu from Jupyter (the main application of the workspace):
+
+<img src="./docs/images/feature-open-tools.png"/>
+
+> ℹ️ _Within your workspace you have `full root & sudo access` to install any library or tool you need via terminal (e.g., `pip` or `apt-get`)_
+
+### Jupyter
+
+[Jupyter Notebook](https://jupyter.org/) is a web-based interactive environment for writing and running code. The main building blocks of Jupyter are the file-browser, the notebook editor, and kernels. The file-browser provides an interactive file manager for all notebooks, files, and folders in the `/workspace` directory.
+
+<img src="./docs/images/feature-jupyter-tree.png"/>
+
+A new notebook can be created by clicking on the `New` drop-down button at the top of the list and selecting the desired language kernel.
+
+> 💡 _You can spawn interactive **terminal** instances as well by selecting `New -> Terminal` in the file-browser._
+
+<img src="./docs/images/feature-jupyter-notebook.png"/>
+
+The notebook editor enables users to author documents that include live code, markdown text, shell commands, LaTeX equations, interactive widgets, plots, and images. These notebook documents provide a complete and self-contained record of a computation that can be converted to various formats and shared with others.
+
+> ℹ️ _This workspace has a variety of **third-party Jupyter extensions** activated. You can configure these extensions in the nbextensions configurator: `nbextensions` tab on the file browser_
+
+The Notebook allows code to be run in a range of different programming languages. For each notebook document that a user opens, the web application starts a **kernel** that runs the code for that notebook and returns output. This workspace has a Python 3 and Python 2 kernel pre-installed. Additional Kernels can be installed to get access to other languages (e.g., R, Scala, Go) or additional computing resources (e.g., GPUs, CPUs, Memory).
+
+> ℹ️ _**Python 2** support is deprecated and not fully supported. Please only use Python 2 if necessary!_
 
 ### Desktop GUI
 
@@ -164,7 +188,7 @@ This workspace provides an HTTP-based VNC access to the workspace via [noVNC](ht
 
 <img src="./docs/images/feature-desktop-vnc.png"/>
 
-Once you are connected, you will see a desktop GUI that allows you to install and use any tool that is available for Ubuntu. Within the `Tools` folder on the desktop, you will find a collection of install scripts that makes it straightforward to install some of the most commonly used development tools, such as Atom, PyCharm, R-Runtime, R-Studio, or Postman (just double-click on the script).
+Once you are connected, you will see a desktop GUI that allows you to install and use full-fledged web-browsers or any other tool that is available for Ubuntu. Within the `Tools` folder on the desktop, you will find a collection of install scripts that makes it straightforward to install some of the most commonly used development tools, such as Atom, PyCharm, R-Runtime, R-Studio, or Postman (just double-click on the script).
 
 **Clipboard:** If you want to share the clipboard between your machine and the workspace, you can use the copy-paste functionality as described below:
 
@@ -242,7 +266,7 @@ If you have opened a Tensorboard instance in a valid log directory, you will see
 
 > ℹ️ _Tensorboard can be used in combination with many other ML frameworks besides Tensorflow. By using the [tensorboardX](https://github.com/lanpa/tensorboardX) library you can log basically from any python based library. Also, PyTorch has a direct Tensorboard integration as described [here](https://pytorch.org/docs/stable/tensorboard.html)._
 
-If you prefer to see the tensorboard directly within your notebook, you can make use following Jupyter magic.
+If you prefer to see the tensorboard directly within your notebook, you can make use following **Jupyter magic**:
 
 ```
 %load_ext tensorboard.notebook
@@ -254,6 +278,10 @@ If you prefer to see the tensorboard directly within your notebook, you can make
 ### Remote Development
 
 _WIP: Remote Kernels and VS Code remote development_
+
+### Preinstalled Libraries 
+
+_WIP:_
 
 ## Contribution
 
