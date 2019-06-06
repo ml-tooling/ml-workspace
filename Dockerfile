@@ -606,5 +606,5 @@ ENTRYPOINT ["/tini", "--", "python", "/resources/run.py"]
 # Port 22 is the SSH port
 # Port 5091 is the VNC port
 # Port 8090 is the Jupyter Notebook Server
-EXPOSE 8091
+EXPOSE 8091 22
 ###

@@ -72,6 +72,7 @@ setup(
     name='Jupyter-Tooling-Extension',
     version='0.1',
     packages=[EXTENSION_NAME],
+    include_package_data=True,
     cmdclass={
         'install': InstallCommand
     },
