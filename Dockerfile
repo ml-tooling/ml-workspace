@@ -618,10 +618,7 @@ ENTRYPOINT ["/tini", "--", "python", "/resources/run.py"]
 
 # Port 8091 is the main access port (also includes SSH)
 # Port 5091 is the VNC port
-<<<<<<< HEAD
-=======
 # Port 8090 is the Jupyter Notebook Server
 
->>>>>>> develop
 EXPOSE 8091
 ###
