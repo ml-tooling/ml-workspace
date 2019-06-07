@@ -11,3 +11,4 @@ GatewayPorts clientspecified
 
 # Do not allow password based authentication
 PasswordAuthentication no
+

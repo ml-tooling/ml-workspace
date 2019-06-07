@@ -600,9 +600,28 @@ ENV WORKSPACE_VERSION=$workspace_version
 # refresh ssh environment variables here again
 RUN printenv > $HOME/.ssh/environment
 
+# Overwrite & add Labels
+LABEL "io.k8s.description"="All-in-one web-based IDE specialized for machine learning and data science."
+LABEL "io.k8s.display-name"="Machine Learning Workspace"
+LABEL "io.openshift.expose-services"="8091:http, 5901:xvnc"
+LABEL "io.openshift.non-scalable"="true"
+LABEL "io.openshift.tags"="	vnc, ubuntu, xfce, workspace, machine learning"
+LABEL "io.openshift.min-memory"="1Gi"
+LABEL "workspace.version"=$workspace_version
+LABEL "workspace.type"=$WORKSPACE_TYPE
+
+# This assures we have a volume mounted even if the user forgot to do bind mount.
+# So that they do not lose their data if they delete the container.
+# TODO: VOLUME [ "/workspace" ]
+
 ENTRYPOINT ["/tini", "--", "python", "/resources/run.py"]
 
 # Port 8091 is the main access port (also includes SSH)
 # Port 5091 is the VNC port
+<<<<<<< HEAD
+=======
+# Port 8090 is the Jupyter Notebook Server
+
+>>>>>>> develop
 EXPOSE 8091
 ###

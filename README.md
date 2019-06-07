@@ -156,17 +156,62 @@ valuable if it's shared publicly so that more people can benefit from it.
 
 ## Features
 
+<p align="center">
+  <a href="#jupyter">Jupyter</a> •
+  <a href="#desktop-gui">Desktop GUI</a> •
+  <a href="#visual-studio-code">VS Code</a> •
+  <a href="#git-integration">Git Integration</a> •
+  <a href="#jupyterlab">JupyterLab</a> •
+  <a href="#hardware-monitoring">Hardware Monitoring</a> •
+  <a href="#tensorboard">Tensorboard</a> •
+  <a href="#ssh-access">SSH Access</a>
+</p>
+
+The workspace is equipped with a selection of best-in-class open-source development tools to help with the machine learning workflow. Many of these tools can be started from the `Open Tool` menu from Jupyter (the main application of the workspace):
+
+<img src="./docs/images/feature-open-tools.png"/>
+
+> ℹ️ _Within your workspace you have **full root & sudo access** to install any library or tool you need via terminal (e.g., `pip` or `apt-get`)_
+
+### Jupyter
+
+[Jupyter Notebook](https://jupyter.org/) is a web-based interactive environment for writing and running code. The main building blocks of Jupyter are the file-browser, the notebook editor, and kernels. The file-browser provides an interactive file manager for all notebooks, files, and folders in the `/workspace` directory.
+
+<img src="./docs/images/feature-jupyter-tree.png"/>
+
+A new notebook can be created by clicking on the `New` drop-down button at the top of the list and selecting the desired language kernel.
+
+> 💡 _You can spawn interactive **terminal** instances as well by selecting `New -> Terminal` in the file-browser._
+
+<img src="./docs/images/feature-jupyter-notebook.png"/>
+
+The notebook editor enables users to author documents that include live code, markdown text, shell commands, LaTeX equations, interactive widgets, plots, and images. These notebook documents provide a complete and self-contained record of a computation that can be converted to various formats and shared with others.
+
+> ℹ️ _This workspace has a variety of **third-party Jupyter extensions** activated. You can configure these extensions in the nbextensions configurator: `nbextensions` tab on the file browser_
+
+The Notebook allows code to be run in a range of different programming languages. For each notebook document that a user opens, the web application starts a **kernel** that runs the code for that notebook and returns output. This workspace has a Python 3 and Python 2 kernel pre-installed. Additional Kernels can be installed to get access to other languages (e.g., R, Scala, Go) or additional computing resources (e.g., GPUs, CPUs, Memory).
+
+> ℹ️ _**Python 2** support is deprecated and not fully supported. Please only use Python 2 if necessary!_
+
 ### Desktop GUI
 
-This workspace provides an HTTP-based VNC access to the workspace via [noVNC](https://github.com/novnc/noVNC). Thereby, you can access and work within the workspace with a fully featured desktop GUI. To access this desktop GUI, go to `Open Tools`, select `VNC`, and click the `Connect` button. In the case you are asked for a password, use `vncpassword`. Once you are connected, you will see a desktop GUI that allows you to install and use advanced tools such as PyCharm, Visual Studio Code, Spyder and many more.
+This workspace provides an HTTP-based VNC access to the workspace via [noVNC](https://github.com/novnc/noVNC). Thereby, you can access and work within the workspace with a fully featured desktop GUI. To access this desktop GUI, go to `Open Tool`, select `VNC`, and click the `Connect` button. In the case you are asked for a password, use `vncpassword`.
 
 <img src="./docs/images/feature-desktop-vnc.png"/>
+
+Once you are connected, you will see a desktop GUI that allows you to install and use full-fledged web-browsers or any other tool that is available for Ubuntu. Within the `Tools` folder on the desktop, you will find a collection of install scripts that makes it straightforward to install some of the most commonly used development tools, such as Atom, PyCharm, R-Runtime, R-Studio, or Postman (just double-click on the script).
 
 **Clipboard:** If you want to share the clipboard between your machine and the workspace, you can use the copy-paste functionality as described below:
 
 <img src="./docs/images/feature-desktop-vnc-clipboard.png"/>
 
-> ℹ️ _**Long-running tasks:** Use the desktop GUI for long-running Jupyter executions. By running notebooks from the browser of your workspace desktop GUI, all output will be synchronized to the notebook even if you have disconnected your workspace from the notebook._
+> 💡 _**Long-running tasks:** Use the desktop GUI for long-running Jupyter executions. By running notebooks from the browser of your workspace desktop GUI, all output will be synchronized to the notebook even if you have disconnected your workspace from the notebook._
+
+### Visual Studio Code
+
+[Visual Studio Code](https://github.com/microsoft/vscode) (`Open Tool -> VS Code`) is an open-source lightweight but powerful code editor with built-in support for a variety of languages and a rich ecosystem of extensions. It combines the simplicity of a source code editor with powerful developer tooling, like IntelliSense code completion and debugging. The workspace integrates VS Code as a web-based application accessible through the browser based on the awesome [code-server](https://github.com/cdr/code-server) project. It allows you to customize every feature to your liking and install any number of third-party extensions.
+
+<p align="center"><img src="./docs/images/feature-vs-code.png"/></p>
 
 ### Git Integration
 
@@ -176,33 +221,33 @@ Version control is a crucial aspect for productive collaboration. To make this p
 
 #### Clone Repository
 
-For cloning repositories via `https`, we recommend to use Ungit (`Open Tool -> Ungit`) as shown below. If authentication is required, you will get asked for your credentials.
+For cloning repositories via `https`, we recommend to navigate to the desired root folder and to click on the `git` button as shown below:
 
-_WIP: Open Git client for the selected folder by pressing on the git button or selecting the folder..._
+<img src="./docs/images/feature-git-open.png"/>
+
+This might ask for some required settings and, subsequently, opens [ungit](https://github.com/FredrikNoren/ungit), a web-based Git client with a clean and intuitive UI that makes it convenient to sync your code artifacts. Within ungit, you can clone any repository. If authentication is required, you will get asked for your credentials.
 
 <img src="./docs/images/feature-clone-repo.png"/>
 
-#### Push, Pull, Merge and Other Git Actions
+#### Push, Pull, Merge, and Other Git Actions
 
-To commit and push a single notebook to the remote Git repository, we recommend to use the Git plugin integrated into Jupyter as shown below:
+To commit and push a single notebook to a remote Git repository, we recommend to use the Git plugin integrated into Jupyter as shown below:
 
 <img src="./docs/images/feature-git-extension.png"/>
 
-The other tool for more advanced Git integrations is ungit. It offers a clean and intuitive web-based UI that makes it convenient to sync your code artifacts. With ungit, you can do most of the common git actions such as push, pull, merge, branch, tag, checkout, and many more.
+The other tool for more advanced Git integrations is [ungit](https://github.com/FredrikNoren/ungit). With ungit, you can do most of the common git actions such as push, pull, merge, branch, tag, checkout, and many more.
 
-#### Solve Merge Conflicts
+#### Sharing, Diffing, and Merging Notebooks
 
-_WIP: Add description for jupytext._
-
-This workspace is pre-installed with [nbdime](https://github.com/jupyter/nbdime), a tool for diffing and merging of Jupyter notebooks. Nbdime understands the structure of notebook documents and, therefore, can make intelligent decisions when diffing and merging notebooks. In the case you have merge conflicts, nbdime will make sure that the notebook is still readable by Jupyter.
+Jupyter notebooks are great, but they often are huge files, with a very specific JSON file format. To enable seamless sharing, diffing, and merging via Git this workspace is pre-installed with [nbdime](https://github.com/jupyter/nbdime). Nbdime understands the structure of notebook documents and, therefore, automatically makes intelligent decisions when diffing and merging notebooks. In the case you have merge conflicts, nbdime will make sure that the notebook is still readable by Jupyter, as shown below:
 
 <img src="./docs/images/feature-git-merging.png"/>
 
-### Visual Studio Code
+Furthermore, the workspace comes pre-installed with [jupytext](https://github.com/mwouts/jupytext), a Jupyter plugin that reads and writes notebooks as plain text files. This allows you to open, edit, and run scripts or markdown files (e.g., `.py`, `.md`) as notebooks within Jupyter. In the following screenshot, we have opened this `README.md` file via Jupyter:
 
-[Visual Studio Code](https://github.com/microsoft/vscode) (`Open Tool -> VS Code`) is an open-source lightweight but powerful code editor with built-in support for a variety of languages and a rich ecosystem of extensions. It combines the simplicity of a source code editor with powerful developer tooling, like IntelliSense code completion and debugging. The workspace integrates VS Code as a web-based application accesible through the browser based on the awesome [code-server](https://github.com/cdr/code-server) project. It allows you to customize every feature to your liking and install any number of third-party extensions.
+<img src="./docs/images/feature-git-jupytext.png"/>
 
-<p align="center"><img src="./docs/images/feature-vs-code.png"/></p>
+In combination with Git, jupytext enables a clear diff history and easy merging of version conflicts. With both of those tools, collaborating on Jupyter notebooks with Git becomes straightforward.
 
 ### JupyterLab
 
@@ -220,6 +265,8 @@ The workspace provides two preinstalled web-based tools to help developers durin
 
 [Glances](https://github.com/nicolargo/glances) (`Open Tool -> Glances`) is a web-based hardware monitoring dashboard as well and can be used as an alternative to Netdata.
 
+<img src="./docs/images/feature-glances.png"/>
+
 > ℹ️ _Netdata and Glances will show you the hardware statistics for the entire machine on which the workspace container is running._
 
 ### Tensorboard
@@ -228,17 +275,41 @@ The workspace provides two preinstalled web-based tools to help developers durin
 
 <img src="./docs/images/feature-tensorboard-open.png" />
 
-If you have opened a Tensorboard instance in a valid log directory, you will see the visualizations of your logged data.
+If you have opened a Tensorboard instance in a valid log directory, you will see the visualizations of your logged data:
 
 <img src="./docs/images/feature-tensorboard-overview.png" />
 
 > ℹ️ _Tensorboard can be used in combination with many other ML frameworks besides Tensorflow. By using the [tensorboardX](https://github.com/lanpa/tensorboardX) library you can log basically from any python based library. Also, PyTorch has a direct Tensorboard integration as described [here](https://pytorch.org/docs/stable/tensorboard.html)._
 
+If you prefer to see the tensorboard directly within your notebook, you can make use following **Jupyter magic**:
+
+```
+%load_ext tensorboard.notebook
+%tensorboard --logdir /workspace/path/to/logs
+```
+
 ### SSH Access
+
+_WIP_
 
 ### Remote Development
 
 _WIP: Remote Kernels and VS Code remote development_
+
+### Preinstalled Libraries and Runtimes
+
+The workspace is pre-installed with many popular runtimes, data science libraries, and ubuntu packages:
+
+- **Runtimes:** Anaconda 3 (Python 3.6), Java 8, NodeJS 11
+- **Python libraries:** Tensorflow, Keras, Pytorch, Sklearn, CNTK, XGBoost, Theano, Fastai, and [many more](https://github.com/ml-tooling/ml-workspace/blob/master/docker-res/requirements.txt)
+
+The full list of installed tools can be found within the [Dockerfile](https://github.com/ml-tooling/ml-workspace/blob/master/Dockerfile).
+
+> 💡 _**An R-Runtime** installation script is provided in the `Tools` folder on the desktop of the VNC GUI._
+
+### GPU Support
+
+_WIP_
 
 ## Contribution
 

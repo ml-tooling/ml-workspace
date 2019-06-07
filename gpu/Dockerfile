@@ -178,6 +178,8 @@ ENV \
     # TODO use temp as data environment to use temp folder?
     # DATA_ENVIRONMENT="temp"
 
+LABEL "workspace.type"=$WORKSPACE_TYPE
+
 USER $NB_USER
 # refresh ssh environment variables here again
 RUN \
