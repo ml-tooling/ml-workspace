@@ -204,7 +204,7 @@ class SSHHandler(IPythonHandler):
 
             #send_data(self, output)
             self.set_header('Content-Type', 'application/octet-stream')
-            self.set_header('Content-Disposition', 'attachment; filename=ssh_config_{}.sh'.format(HOSTNAME_RUNTIME))
+            self.set_header('Content-Disposition', 'attachment; filename=setup_ssh_{}-{}.sh'.format(HOSTNAME_RUNTIME, PORT))
             self.write(output)
             self.finish()
         except Exception as ex:
