@@ -585,6 +585,9 @@ RUN \
     chmod a+rwx /usr/local/bin/start-notebook.sh && \
     chmod a+rwx /usr/local/bin/start.sh
 
+# Set /workspace as default directory to navigate to as root user
+RUN echo  'cd '$WORKSPACE_HOME >> $HOME/.bashrc 
+
 # Set default values for environment variables
 ENV WORKSPACE_CONFIG_BACKUP="true"
 
