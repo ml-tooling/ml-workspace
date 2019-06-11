@@ -119,6 +119,98 @@ class GitInfoHandler(IPythonHandler):
             handle_error(self, 500, exception=ex)
             return
 
+class SSHHandler(IPythonHandler):
+    private_ssh_key_path = "/root/.ssh/id_ed25519"
+
+    def get(self):
+        try:
+            with open(self.private_ssh_key_path, "r") as f:
+                runtime_private_key = f.read()
+            
+            ssh_templates_path = os.path.dirname(os.path.abspath(__file__)) + "/setup_templates"
+            with open(ssh_templates_path + '/ssh_config_manager_template.txt', 'r') as file:
+                ssh_config_manager_template = file.read()
+
+            with open(ssh_templates_path + '/ssh_config_runtime_template.txt', 'r') as file:
+                ssh_config_runtime_template = file.read()
+
+            with open(ssh_templates_path + '/client_command.txt', 'r') as file:
+                client_command = file.read()
+
+            HOSTNAME = self.get_argument('hostname', None)
+            PORT = self.get_argument('port', None)
+            
+            SSH_JUMPHOST_TARGET = os.environ.get("SSH_JUMPHOST_TARGET", "")
+            is_runtime_manager_existing = False if SSH_JUMPHOST_TARGET == "" else True
+ 
+            MANAGER_CONFIG_NAME = "runtime-manager-"
+            RUNTIME_CONFIG_NAME = "runtime-"
+            ssh_config_runtime = ssh_config_runtime_template
+            if is_runtime_manager_existing:
+                HOSTNAME_RUNTIME = SSH_JUMPHOST_TARGET
+                HOSTNAME_MANAGER = HOSTNAME
+                PORT_MANAGER = PORT
+                PORT_RUNTIME = 8091
+
+                MANAGER_CONFIG_NAME = MANAGER_CONFIG_NAME + "{}-{}".format(HOSTNAME_MANAGER, PORT_MANAGER)
+                RUNTIME_CONFIG_NAME = RUNTIME_CONFIG_NAME + "{}-{}-{}".format(HOSTNAME_RUNTIME, HOSTNAME_MANAGER, PORT_MANAGER)
+
+                ssh_config_manager = ssh_config_manager_template \
+                    .replace("{HOSTNAME_MANAGER}", HOSTNAME_MANAGER) \
+                    .replace("{PORT_MANAGER}", str(PORT_MANAGER)) \
+                    .replace("{MANAGER_CONFIG_NAME}", MANAGER_CONFIG_NAME) # in the newest setup, the jumphost will scan all workspaces for a matching key. Hence, use the same key for connecting to the jumphost as for connecting to the workspace container
+
+                ssh_config_runtime = ssh_config_runtime \
+                    .replace("{HOSTNAME_MANAGER}", HOSTNAME_MANAGER) \
+                    .replace("{HOSTNAME_RUNTIME}", HOSTNAME_RUNTIME) \
+                    .replace("{PORT_RUNTIME}", str(PORT_RUNTIME)) \
+                    .replace("#ProxyCommand", "ProxyCommand") \
+                    .replace("{MANAGER_CONFIG_NAME}", MANAGER_CONFIG_NAME)
+                
+                client_command = client_command \
+                    .replace("{IS_RUNTIME_MANAGER_EXISTING}", "true") \
+                    .replace("{SSH_CONFIG_MANAGER}", ssh_config_manager) \
+                    .replace("{HOSTNAME_MANAGER}", HOSTNAME_MANAGER) \
+                    .replace("{PORT_MANAGER}", str(PORT_MANAGER))
+                
+                local_keyscan_replacement = "{}".format(HOSTNAME_RUNTIME)
+
+            else:
+                HOSTNAME_RUNTIME = HOSTNAME
+                PORT_RUNTIME = PORT
+                RUNTIME_CONFIG_NAME = RUNTIME_CONFIG_NAME + "{}-{}".format(HOSTNAME_RUNTIME, PORT_RUNTIME)
+
+                ssh_config_runtime = ssh_config_runtime \
+                    .replace("{HOSTNAME_RUNTIME}", HOSTNAME_RUNTIME) \
+                    .replace("{PORT_RUNTIME}", PORT_RUNTIME)
+                
+                local_keyscan_replacement = "[{}]:{}".format(HOSTNAME_RUNTIME, PORT_RUNTIME)            
+
+            # perform keyscan with localhost to get the runtime's keyscan result.
+            # Replace then the "localhost" part in the returning string with the actual RUNTIME_HOST_NAME
+            local_keyscan_entry = get_ssh_keyscan_results("localhost")
+            if local_keyscan_entry is not None:
+                local_keyscan_entry = local_keyscan_entry.replace(
+                    "localhost", local_keyscan_replacement)
+
+            output = client_command \
+                .replace("{PRIVATE_KEY_RUNTIME}", runtime_private_key) \
+                .replace("{SSH_CONFIG_RUNTIME}", ssh_config_runtime) \
+                .replace("{HOSTNAME_RUNTIME}", HOSTNAME_RUNTIME) \
+                .replace("{RUNTIME_KNOWN_HOST_ENTRY}", local_keyscan_entry) \
+                .replace("{MANAGER_CONFIG_NAME}", MANAGER_CONFIG_NAME) \
+                .replace("{RUNTIME_CONFIG_NAME}", RUNTIME_CONFIG_NAME) \
+                .replace("{RUNTIME_KEYSCAN_NAME}", local_keyscan_replacement.replace("[", "\[").replace("]", "\]"))
+
+            #send_data(self, output)
+            self.set_header('Content-Type', 'application/octet-stream')
+            self.set_header('Content-Disposition', 'attachment; filename=ssh_config_{}.sh'.format(HOSTNAME_RUNTIME))
+            self.write(output)
+            self.finish()
+        except Exception as ex:
+            handle_error(self, 500, exception=ex)
+            return
+
 
 # ------------- GIT FUNCTIONS ------------------------
 
@@ -268,6 +360,31 @@ def _resolve_path(path: str) -> str or None:
         return None
 
 
+# ------------- SSH Functions ------------------------
+
+def get_ssh_keyscan_results(host_name, host_port=22, key_format="ecdsa"):
+    """
+    Perform the keyscan command to get the certicicate fingerprint (of specified format [e.g. rsa256, ecdsa, ...]) of the container.
+
+    # Arguments
+      - host_name (string): hostname which to scan for a key
+      - host_port (int): port which to scan for a key
+      - key_format (string): type of the key to return. the `ssh-keyscan` command usually lists the fingerprint in different formats (e.g. ecdsa-sha2-nistp256, ssh-rsa, ssh-ed25519, ...). The ssh-keyscan result is grepped for the key_format, so already a part could match. In that case, the last match is used.
+
+    # Returns
+      The keyscan entry which can be added to the known_hosts file. If `key_format` matches multiple results of `ssh-keyscan`, the last match is returned. If no match exists, it returns empty
+    """
+
+    keyscan_result = subprocess.run(
+        ['ssh-keyscan', '-p', str(host_port), host_name], stdout=subprocess.PIPE)
+    keys = keyscan_result.stdout.decode("utf-8").split("\n")
+    keyscan_entry = ""
+    for key in keys:
+        if key_format in key:
+            keyscan_entry = key
+    return keyscan_entry
+
+
 # ------------- PLUGIN LOADER ------------------------
 
 
@@ -290,6 +407,9 @@ def load_jupyter_server_extension(nb_server_app) -> None:
     route_pattern = url_path_join(web_app.settings['base_url'], '/git/commit')
     web_app.add_handlers(host_pattern, [(route_pattern, GitCommitHandler)])
 
+    route_pattern = url_path_join(web_app.settings['base_url'], '/ssh/setup')
+    web_app.add_handlers(host_pattern, [(route_pattern, SSHHandler)])
+
     nb_server_app.log.info('Extension jupyter-tooling-widget loaded successfully.')
 
 
@@ -298,7 +418,8 @@ if __name__ == "__main__":
     application = tornado.web.Application([
         (r'/test', HelloWorldHandler),
         (r'/git/info', GitInfoHandler),
-        (r'/git/commit', GitCommitHandler)
+        (r'/git/commit', GitCommitHandler),
+        (r'/ssh/setup', SSHHandler)
     ])
 
     application.listen(555)

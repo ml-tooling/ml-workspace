@@ -54,7 +54,7 @@ define(['base/js/namespace', 'base/js/dialog', 'jquery', 'base/js/utils'], funct
         {
             "id": "ssh-access",
             "name": "SSH",
-            "url_path": "",
+            "url_path":  basePath + "ssh/setup?hostname=" + window.location.hostname + "&port=" + window.location.port,
             "description": "Setup SSH connection to the workspace"
         }
     ]
