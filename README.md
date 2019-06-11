@@ -52,7 +52,7 @@ The workspace requires **Docker** to be installed on your machine ([Installation
 Deploying a single workspace instance is as simple as:
 
 ```bash
-docker run -d -p 8091:8091 --restart always mltooling/ml-workspace:latest
+docker run -d -p 8091:8091 -v "${PWD}:/workspace" --restart always mltooling/ml-workspace:latest
 ```
 
 Voilà, that was easy! Now, Docker will pull the latest workspace image to your machine. This may take a few minutes, depending on your internet speed. Once the workspace is started, you can access it via: http://localhost:8091. 
@@ -97,6 +97,11 @@ The container can be configured with following environment variables (`--env`):
         <td>WORKSPACE_SSL_ENABLED</td>
         <td>Enable or disable SSL. When set to true, either certificates (cert.crt) must be mounted to /resources/ssl or, if not, the container generates self-signed certificates.</td>
         <td>false</td>
+    </tr>
+    <tr>
+        <td>WORKSPACE_INCLUDE_TUTORIALS</td>
+        <td>If true, tutorial and introduction notebooks will be added to the workspace folder.</td>
+        <td>true</td>
     </tr>
     <tr>
         <td colspan="3"><b>Jupyter Configuration:</b></td>
@@ -281,7 +286,7 @@ If you have opened a Tensorboard instance in a valid log directory, you will see
 
 > ℹ️ _Tensorboard can be used in combination with many other ML frameworks besides Tensorflow. By using the [tensorboardX](https://github.com/lanpa/tensorboardX) library you can log basically from any python based library. Also, PyTorch has a direct Tensorboard integration as described [here](https://pytorch.org/docs/stable/tensorboard.html)._
 
-If you prefer to see the tensorboard directly within your notebook, you can make use following **Jupyter magic**:
+If you prefer to see the tensorboard directly within your notebook, you can make use of following **Jupyter magic**:
 
 ```
 %load_ext tensorboard.notebook
