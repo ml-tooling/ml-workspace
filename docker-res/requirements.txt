@@ -31,7 +31,7 @@ python-crontab==2.3.6 # Python Crontab API
 yapf==0.27.0 # formatter for Python files
 memory_profiler==0.55.0 # A module for monitoring memory usage of a python program
 cytoolz==0.9.0.1 # Cython implementation of Toolz: High performance functional utilities
-arrow==0.13.2 # Better dates & times for Python 
+arrow==0.14.1 # Better dates & times for Python 
 python-dateutil==2.8.0 # Extensions to the standard Python datetime module
 click==7.0.0 # Composable command line interface toolkit
 psutil==5.6.2 # Cross-platform lib for process and system monitoring in Python.
@@ -39,7 +39,7 @@ jmespath==0.9.4 # JSON Matching Expressions
 marisa-trie==0.7.5 # Static memory-efficient and fast Trie-like structures for Python.
 tabulate==0.8.3 # Pretty-print tabular data in Python
 patool==1.12 # portable archive file manager - supports various compression formats
-smart-open==1.8.3 # Utils for streaming large files (S3, HDFS, gzip, bz2...)
+smart-open==1.8.4 # Utils for streaming large files (S3, HDFS, gzip, bz2...)
 
 ####### Data Science Libs #######
 #
@@ -48,7 +48,7 @@ smart-open==1.8.3 # Utils for streaming large files (S3, HDFS, gzip, bz2...)
 # installed via conda for mkl support: tensorflow==1.13.1 # TensorFlow is an open source machine learning framework for everyone.
 keras==2.2.4 # Deep Learning for humans
 fastai==1.0.52 # The fastai library simplifies training fast and accurate neural nets using modern best practices.
-catboost==0.14.2 ; python_version > '2.7' # State-of-the-art open-source gradient boosting on decision trees library.
+catboost==0.15.1 ; python_version > '2.7' # State-of-the-art open-source gradient boosting on decision trees library.
 lightgbm==2.2.3 # A fast, distributed, high performance gradient boosting framework
 xgboost==0.90 # Scalable, Portable and Distributed Gradient Boosting
 theano==1.0.4 # Optimizing compiler for evaluating mathematical expressions on CPUs and GPUs.
@@ -87,7 +87,7 @@ scattertext==0.0.2.52 # Beautiful visualizations of how language differs among d
 sentencepiece==0.1.82  # Unsupervised text tokenizer for Neural Network-based text generation.
 langid==1.1.6 # Stand-alone language identification system
 scrapy==1.6.0 #A high-level Web Crawling and Web Scraping framework
-flair==0.4.1 # A very simple framework for state-of-the-art NLP
+flair==0.4.2 # A very simple framework for state-of-the-art NLP
 pyahocorasick==1.4.0 # a fast and memory efficient library for exact or approximate multi-pattern string search.
 ftfy==5.5.1 # Fixes some problems with Unicode text after the fact
 stop-words==2018.7.23 # Get list of common stop words in various languages in Python
@@ -109,13 +109,13 @@ networkx==2.3 # Data structures for graphs, digraphs, and multigraphs
 dgl==0.2 # Deep Graph Library
 graph-nets==1.0.4 # Library for building graph networks in Tensorflow and Sonnet.
 deepwalk==1.0.3 # DeepWalk online learning of social representations.
-torch-cluster==1.3.0 # PyTorch Extension Library of Optimized Graph Cluster Algorithms
+torch-cluster==1.4.0 # PyTorch Extension Library of Optimized Graph Cluster Algorithms
 torch-geometric==1.2.1 # Geometric Deep Learning Extension Library for PyTorch
 torchbiggraph==1.dev1 # A distributed system to learn embeddings of large graphs
 
 # Reinforcement learning
 tensorforce==0.4.3 # Reinforcement learning for TensorFlow
-gym==0.12.4 # The OpenAI Gym: A toolkit for developing and comparing your reinforcement learning agents.
+gym==0.12.5 # The OpenAI Gym: A toolkit for developing and comparing your reinforcement learning agents.
 dopamine-rl==2.0.3 # Dopamine: A framework for flexible Reinforcement Learning research
 trfl==1.0.1 # trfl is a library of building blocks for reinforcement learning algorithms.
 
@@ -172,7 +172,7 @@ pytorch-pretrained-bert==0.6.2 # PyTorch version of Google AI BERT model with sc
 pyro-ppl==0.3.3 # Deep universal probabilistic programming with Python and PyTorch 
 torch-sparse==0.4.0 # PyTorch Extension Library of Optimized Autograd Sparse Matrix Opjaxerations
 torch-scatter==1.2.0 # PyTorch Extension Library of Optimized Scatter Operations
-syft==0.1.13a1 # A Library for Private, Secure Deep Learning
+syft==0.1.16a1 # A Library for Private, Secure Deep Learning
 gpytorch==0.3.2 # An implementation of Gaussian Processes in Pytorch
 
 ## Others
@@ -185,7 +185,7 @@ featuretools==0.8.0 # A framework for automated feature engineering
 vecstack==0.3.0 # Python package for stacking (machine learning technique)
 mlens==0.2.3 # Machine Learning Ensemble Library
 geopy==1.20.0 # Python Geocoding Toolbox
-jax==0.1.35 # GPU- and TPU-backed NumPy with differentiation and JIT compilation.
+jax==0.1.36 # GPU- and TPU-backed NumPy with differentiation and JIT compilation.
 jaxlib==0.1.16 # XLA library for JAX - required for jax
 tensorly==0.4.3 # making tensor learning simple and accessible
 mmdnn==0.2.5 # Deep learning model converter, visualization and editor.
@@ -194,8 +194,8 @@ mmdnn==0.2.5 # Deep learning model converter, visualization and editor.
 ####### Visualization Libs #######
 #
 ## General Visualization Libs
-bokeh==1.1.0 # interactive visualization library that targets modern web browsers for presentation - 20MB
-plotly==3.9.0 # interactive visualizations - 34MB
+bokeh==1.2.0 # interactive visualization library that targets modern web browsers for presentation - 20MB
+plotly==3.10.0 # interactive visualizations - 34MB
 seaborn==0.9.0 # Python visualization library based on matplotlib
 holoviews==1.12.3 # Stop plotting your data - annotate your data and let it visualize itself.
 chartify==2.6.0 ; python_version > '2.7' # Python library to make plotting simpler for data scientists
@@ -233,7 +233,7 @@ pyldavis==2.1.2 # Interactive topic model visualization
 alibi==0.2.0 # Algorithms for monitoring and explaining machine learning models
 
 ## Task-specific Visualization Libs
-umap-learn==0.3.8 # Uniform Manifold Approximation and Projection
+umap-learn==0.3.9 # Uniform Manifold Approximation and Projection
 wordcloud==1.5.0 # A little word cloud generator
 folium==0.9.1 # Make beautiful maps with Leaflet.js & Python
 visdom==0.1.8.8 # A tool for visualizing live, rich data for Torch and Numpy
@@ -246,11 +246,11 @@ minio==4.0.17 # S3 client
 pymongo==3.8.0 # Mongo Client
 pyhdb==0.3.4  # SAP HANA Database Client for Python
 db.py==0.5.3 # easier way to interact with your databases, support for  PostgreSQL, MySQL, SQLite, Redshift, MS SQL Server, Oracle
-elasticsearch==7.0.1 # Python client for Elasticsearch
+elasticsearch==7.0.2 # Python client for Elasticsearch
 neo4j-driver==1.7.4 ; python_version > '2.7' # Neo4j Bolt driver for Python
 lazydata==1.0.19 ; python_version > '2.7'  # Scalable data dependencies
 redis==3.2.1 # Python client for Redis key-value store
-SQLAlchemy==1.3.3 # Database Abstraction Library
+SQLAlchemy==1.3.4 # Database Abstraction Library
 cx-Oracle==7.1.3 # Python interface to Oracle
 kafka-python==1.4.6 # Pure Python client for Apache Kafka
 tinydb==3.13.0 # TinyDB is a tiny, document oriented database optimized for your happiness :)

@@ -1,0 +1,34 @@
+#!/bin/bash
+
+KEY_NAME={RUNTIME_CONFIG_NAME}
+
+echo "{PRIVATE_KEY_RUNTIME}" > ~/.ssh/$KEY_NAME; \
+chmod 700 ~/.ssh/$KEY_NAME; \
+touch ~/.ssh/config; \
+read -e -p "Provide a name for the ssh connection (press enter for '{RUNTIME_CONFIG_NAME}'): " SSH_CONNECTION_NAME; \
+if [[ $SSH_CONNECTION_NAME == "" ]]; then SSH_CONNECTION_NAME={RUNTIME_CONFIG_NAME}; fi; \
+if ! grep -q "Host $SSH_CONNECTION_NAME" ~/.ssh/config; 
+then 
+    echo "{SSH_CONFIG_RUNTIME}" >> ~/.ssh/config; 
+else
+    echo "A connection with the name $SSH_CONNECTION_NAME already exists in ~/.ssh/config. Try a different name."; \
+    exit 1;
+fi; \
+if ! grep -q "{RUNTIME_KEYSCAN_NAME}" ~/.ssh/known_hosts; then echo "{RUNTIME_KNOWN_HOST_ENTRY}" >> ~/.ssh/known_hosts; fi; \
+# print out some user information
+echo "The ssh configuration and remote runtime setup is completed. You can now select the new remote runtime in your Notebooks or ssh into the remote runtime container via 'ssh $SSH_CONNECTION_NAME'. If it does not work, please check the entries in the ~/.ssh/config file manually."
+
+# Runtime Manager Part (only execute when a runtime manager is setup before the runtime)
+if [ {IS_RUNTIME_MANAGER_EXISTING} = true ]; then
+    chmod 700 ~/.ssh/$KEY_NAME; \
+    if ! grep -q "Host {MANAGER_CONFIG_NAME}" ~/.ssh/config; then echo "{SSH_CONFIG_MANAGER}" >> ~/.ssh/config; fi;
+fi
+
+# Test the connection
+echo "Test the SSH connection."
+ssh -q $SSH_CONNECTION_NAME exit
+if [ $? == 0 ]; then 
+    echo "Connection successful!"
+else
+    echo "Connection not successful!"
+fi

@@ -262,11 +262,11 @@ RUN \
 RUN \
     apt-get update --fix-missing && \
     apt-get install --yes openssl && \
-    wget --quiet https://github.com/cdr/code-server/releases/download/1.1099-vsc1.33.1/code-server1.1099-vsc1.33.1-linux-x64.tar.gz -O ./vscode-web.tar.gz && \
+    wget --quiet https://github.com/cdr/code-server/releases/download/1.1119-vsc1.33.1/code-server1.1119-vsc1.33.1-linux-x64.tar.gz -O ./vscode-web.tar.gz && \
     tar xfz ./vscode-web.tar.gz && \
-    mv ./code-server1.1099-vsc1.33.1-linux-x64/code-server /usr/local/bin && \
+    mv ./code-server1.1119-vsc1.33.1-linux-x64/code-server /usr/local/bin && \
     rm ./vscode-web.tar.gz && \
-    rm -rf ./code-server1.1099-vsc1.33.1-linux-x64 && \
+    rm -rf ./code-server1.1119-vsc1.33.1-linux-x64 && \
     # Cleanup
     /resources/clean_layer.sh
 
@@ -291,8 +291,9 @@ RUN \
         netcat \
         # already installed via anaconda: uuid-dev \
         iproute && \
-    echo | bash -c "$(curl -Ss https://my-netdata.io/kickstart.sh)" && \
-     # Create desktop icon
+    wget --quiet https://my-netdata.io/kickstart.sh -O $RESOURCES_PATH/netdata-install.sh && \
+    /bin/bash $RESOURCES_PATH/netdata-install.sh --dont-wait --dont-start-it --stable-channel --disable-telemetry && \
+    # Create desktop icon
     echo "[Desktop Entry]\nVersion=1.0\nType=Link\nName=Netdata\nComment=Hardware Monitoring\nCategories=System;Utility;Development;\nIcon=/resources/icons/netdata-icon.png\nURL=http://localhost:8091/tools/netdata" > /usr/share/applications/netdata.desktop && \
     chmod +x /usr/share/applications/netdata.desktop && \
     # Cleanup
@@ -530,13 +531,6 @@ RUN \
     # Make matplotlib output in Jupyter notebooks display correctly
     mkdir -p /etc/ipython/ && echo "c = get_config(); c.IPKernelApp.matplotlib = 'inline'" > /etc/ipython/ipython_config.py
 
-# Configure SSH
-RUN \
-    echo "PermitUserEnvironment yes" | sudo tee -a /etc/ssh/sshd_config && \
-    # Alive Interval will make SSH connection more stable 
-    echo "ClientAliveInterval 60" | sudo tee -a /etc/ssh/sshd_config && \
-    echo "ClientAliveCountMax 10" | sudo tee -a /etc/ssh/sshd_config
-
 # Basic VNC Settings - no password
 ENV \
     VNC_PW=vncpassword \
@@ -567,7 +561,10 @@ COPY \
 COPY docker-res/config/90assumeyes /etc/apt/apt.conf.d/
 
 # Copy some configuration files
+COPY docker-res/config/ssh_config /root/.ssh/config
+COPY docker-res/config/sshd_config /etc/ssh/sshd_config
 COPY docker-res/config/nginx.conf /etc/nginx/nginx.conf
+COPY docker-res/config/netdata.conf /etc/netdata/netdata.conf
 COPY docker-res/config/mimeapps.list /root/.config/mimeapps.list
 COPY docker-res/config/chromium-browser.init /root/.chromium-browser.init
 COPY docker-res/jupyter/sidebar.jupyterlab-settings /root/.jupyter/lab/user-settings/@jupyterlab/application-extension/
@@ -588,6 +585,9 @@ RUN \
     chmod a+rwx /usr/local/bin/start-notebook.sh && \
     chmod a+rwx /usr/local/bin/start.sh
 
+# Set /workspace as default directory to navigate to as root user
+RUN echo  'cd '$WORKSPACE_HOME >> $HOME/.bashrc 
+
 # Set default values for environment variables
 ENV WORKSPACE_CONFIG_BACKUP="true"
 
@@ -603,11 +603,25 @@ ENV WORKSPACE_VERSION=$workspace_version
 # refresh ssh environment variables here again
 RUN printenv > $HOME/.ssh/environment
 
+# Overwrite & add Labels
+LABEL "io.k8s.description"="All-in-one web-based IDE specialized for machine learning and data science."
+LABEL "io.k8s.display-name"="Machine Learning Workspace"
+LABEL "io.openshift.expose-services"="8091:http, 5901:xvnc"
+LABEL "io.openshift.non-scalable"="true"
+LABEL "io.openshift.tags"="	vnc, ubuntu, xfce, workspace, machine learning"
+LABEL "io.openshift.min-memory"="1Gi"
+LABEL "workspace.version"=$workspace_version
+LABEL "workspace.type"=$WORKSPACE_TYPE
+
+# This assures we have a volume mounted even if the user forgot to do bind mount.
+# So that they do not lose their data if they delete the container.
+# TODO: VOLUME [ "/workspace" ]
+
 ENTRYPOINT ["/tini", "--", "python", "/resources/run.py"]
 
 # Port 8091 is the main access port (also includes SSH)
-# Port 22 is the SSH port
 # Port 5091 is the VNC port
 # Port 8090 is the Jupyter Notebook Server
+
 EXPOSE 8091
 ###

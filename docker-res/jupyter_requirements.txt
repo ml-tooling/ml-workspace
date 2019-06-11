@@ -22,6 +22,7 @@ widgetsnbextension==3.4.2 # IPython HTML widgets for Jupyter
 nbinteract==0.2.4 # Export interactive HTML pages from Jupyter Notebooks
 qgrid==1.1.1 # a Jupyter notebook widget which uses SlickGrid to render pandas DataFrames within a Jupyter notebook
 ipyaggrid==0.1.11 # Jupyter widget - ag-grid in the notebook
+pivottablejs==0.9.0 # PivotTable.js integration for Jupyter/IPython Notebook
 
 ## Jupyter Visualization Libs
 bqplot==0.11.5 # Plotting library for IPython/Jupyter Notebooks

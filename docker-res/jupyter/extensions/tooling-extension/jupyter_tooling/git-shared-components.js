@@ -17,7 +17,6 @@ define(['base/js/namespace', 'jquery', 'base/js/dialog', 'require', 'exports', '
                 beforeSend: function (xhr, settings) {
                     function getCookie(name) {
                         // Does exactly what you think it does.
-                        // Taken from https://github.wdf.sap.corp/SAPAI/jupyter-git/blob/develop/jupyter_git/git-widget.js
                         var cookieValue = null;
                         if (document.cookie && document.cookie != '') {
                             var cookies = document.cookie.split(';');
@@ -76,7 +75,7 @@ define(['base/js/namespace', 'jquery', 'base/js/dialog', 'require', 'exports', '
                         class: "btn-primary",
                         click: function () {
                             let ungitPath = "/workspace";
-                            if(Boolean(repoPath)) {
+                            if (Boolean(repoPath)) {
                                 ungitPath = repoPath;
                             }
 
@@ -89,7 +88,7 @@ define(['base/js/namespace', 'jquery', 'base/js/dialog', 'require', 'exports', '
 
         openSettingsDialog(name, email, directory, successCallback) {
             var that = this;
-            
+
             dialog.modal({
                 title: 'Please provide your user info',
                 body: this.configDialog(name, email),
@@ -111,7 +110,7 @@ define(['base/js/namespace', 'jquery', 'base/js/dialog', 'require', 'exports', '
 
         openCommitSingleDialog(filePath) {
             var that = this;
-            
+
 
             this.getGitInfo(filePath, function (data) {
                 console.log("git infor data:")
@@ -126,9 +125,10 @@ define(['base/js/namespace', 'jquery', 'base/js/dialog', 'require', 'exports', '
 
                 let name = data["userName"]
                 let email = data["userEmail"]
-                if(Boolean(name) == false || Boolean(email) == false){
+                if (Boolean(name) == false || Boolean(email) == false) {
                     that.openSettingsDialog(name, email, repoPath, function () {
-                        that.openCommitSingleDialog(filePath)});
+                        that.openCommitSingleDialog(filePath)
+                    });
                     return
                 }
 
@@ -140,7 +140,9 @@ define(['base/js/namespace', 'jquery', 'base/js/dialog', 'require', 'exports', '
                     // Hotkeys are disabled here so the user can enter a commit message without unwanted side effects
                     that.enableKeyboardManager(false);
                     // Disable keyboard manager after 1 sec, otherwise its not always diasabled
-                    window.setTimeout(function(){ that.enableKeyboardManager(false);}, 1000)
+                    window.setTimeout(function () {
+                        that.enableKeyboardManager(false);
+                    }, 1000)
                     dialog.modal({
                         title: 'Commit and push this notebook',
                         body: that.commitDialogSingle(data),
@@ -150,12 +152,15 @@ define(['base/js/namespace', 'jquery', 'base/js/dialog', 'require', 'exports', '
                             'Settings': {
                                 click: function () {
                                     that.openSettingsDialog(name, email, repoPath, function () {
-                                        that.openCommitSingleDialog(filePath)});
+                                        that.openCommitSingleDialog(filePath)
+                                    });
                                 }
                             },
-                            'Close': { click: function () {
-                                that.enableKeyboardManager(true);
-                            }},
+                            'Close': {
+                                click: function () {
+                                    that.enableKeyboardManager(true);
+                                }
+                            },
                             'Commit & Push': {
                                 class: "btn-primary", //btn-outline-success
                                 click: function () {
@@ -174,7 +179,9 @@ define(['base/js/namespace', 'jquery', 'base/js/dialog', 'require', 'exports', '
                                         $('#notification_area').prepend(push_btn)
                                         // Tree
                                         $('#gitTreeButton').before(push_btn);
-                                        window.setTimeout(function(){ $('#notification_push').remove()},7000)
+                                        window.setTimeout(function () {
+                                            $('#notification_push').remove()
+                                        }, 7000)
                                     })
                                 }
                             }
@@ -189,7 +196,7 @@ define(['base/js/namespace', 'jquery', 'base/js/dialog', 'require', 'exports', '
                 return
             }
 
-            if(enable) {
+            if (enable) {
                 Jupyter.keyboard_manager.enable();
             } else {
                 Jupyter.keyboard_manager.disable();
@@ -205,7 +212,7 @@ define(['base/js/namespace', 'jquery', 'base/js/dialog', 'require', 'exports', '
                 type: "POST",
                 data: JSON.stringify({
                     'filePath': filePath,
-                    'commitMsg': commitMsg 
+                    'commitMsg': commitMsg
                 }),
                 success: function (data) {
                     if (!data) {
@@ -237,12 +244,12 @@ define(['base/js/namespace', 'jquery', 'base/js/dialog', 'require', 'exports', '
             var that = this;
             $.ajaxSetup(this.ajaxCookieTokenHandling());
             var settings = {
-                url: basePath + 'git/info?path='+path,
+                url: basePath + 'git/info?path=' + path,
                 processData: false,
                 type: "POST",
                 data: JSON.stringify({
                     'email': email,
-                    'name': name 
+                    'name': name
                 }),
                 success: function (data) {
                     if (!data) {
@@ -269,7 +276,7 @@ define(['base/js/namespace', 'jquery', 'base/js/dialog', 'require', 'exports', '
             $.ajaxSetup(this.ajaxCookieTokenHandling());
             var that = this;
             var settings = {
-                url: basePath + 'git/info?path='+path,
+                url: basePath + 'git/info?path=' + path,
                 processData: false,
                 type: "GET",
                 success: function (data) {
@@ -296,11 +303,11 @@ define(['base/js/namespace', 'jquery', 'base/js/dialog', 'require', 'exports', '
         configDialog(name, email) {
             var div = $('<div/>');
             var form = $('<form/>');
-            if(!name) {
+            if (!name) {
                 name = ""
             }
 
-            if(!email) {
+            if (!email) {
                 email = ""
             }
             div.append('<label style="width: 50px">Name: </label><input type="text" id="name" value="' + name + '" style="width: 200px"><br>');

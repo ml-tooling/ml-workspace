@@ -1,0 +1,14 @@
+# Allow transfer of user environment variables
+PermitUserEnvironment yes
+
+# Alive Interval will make SSH connection more stable 
+ClientAliveInterval 60
+ClientAliveCountMax 10
+
+# Allow Remote Port forwarding to an address other than localhost
+# https://askubuntu.com/questions/50064/reverse-port-tunnelling
+GatewayPorts clientspecified
+
+# Do not allow password based authentication
+PasswordAuthentication no
+

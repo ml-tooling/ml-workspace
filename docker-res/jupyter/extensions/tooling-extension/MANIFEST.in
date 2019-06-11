@@ -1,0 +1,1 @@
+recursive-include jupyter_tooling/setup_templates *.txt

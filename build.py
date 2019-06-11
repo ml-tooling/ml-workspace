@@ -64,5 +64,5 @@ if args.deploy:
 
         call("docker push " + remote_latest_image)
 
-# TODO do not build for now
-# build("gpu")
+# Build GPU image based on cpu image
+build("gpu")

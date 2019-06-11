@@ -1,0 +1,7 @@
+
+Host $SSH_CONNECTION_NAME
+    Hostname {HOSTNAME_RUNTIME}
+    Port {PORT_RUNTIME}
+    User root
+    IdentityFile ~/.ssh/$KEY_NAME
+    #ProxyCommand ssh -W %h:%p {MANAGER_CONFIG_NAME}

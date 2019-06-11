@@ -1,4 +1,4 @@
-FROM docker.wdf.sap.corp:51150/com.sap.sapai.research/research-workspace:latest
+FROM mltooling/ml-workspace:latest
 USER root
 
 ### NVIDIA CUDA BASE ###
@@ -177,6 +177,8 @@ ENV \
     WORKSPACE_TYPE="gpu"
     # TODO use temp as data environment to use temp folder?
     # DATA_ENVIRONMENT="temp"
+
+LABEL "workspace.type"=$WORKSPACE_TYPE
 
 USER $NB_USER
 # refresh ssh environment variables here again
