@@ -1,13 +1,5 @@
 #!/bin/bash
 
-CONFIG_NAME_MANAGER={MANAGER_CONFIG_NAME}
-HOSTNAME_MANAGER={HOSTNAME_MANAGER}
-PORT_MANAGER={PORT_MANAGER}
-IS_MANAGER_EXISTING={IS_RUNTIME_MANAGER_EXISTING}
-
-HOSTNAME_RUNTIME={HOSTNAME_RUNTIME}
-PORT_RUNTIME={PORT_RUNTIME}
-
 read -e -p "Provide a name for the ssh connection (press enter for '{RUNTIME_CONFIG_NAME}'): " SSH_CONNECTION_NAME; \
 if [[ $SSH_CONNECTION_NAME == "" ]]; then SSH_CONNECTION_NAME={RUNTIME_CONFIG_NAME}; fi;
 
@@ -28,12 +20,12 @@ then
     # Setup ssh config information
     echo "
 Host $SSH_CONNECTION_NAME
-    Hostname $HOSTNAME_RUNTIME
-    Port $PORT_RUNTIME
+    Hostname {HOSTNAME_RUNTIME}
+    Port {PORT_RUNTIME}
     User root
     IdentityFile ~/.ssh/$SSH_CONNECTION_NAME
-    #ProxyCommand ssh -W %h:%p -i ~/.ssh/$SSH_CONNECTION_NAME $CONFIG_NAME_MANAGER
-    " >> ~/.ssh/config;
+    #ProxyCommand ssh -W %h:%p -i ~/.ssh/$SSH_CONNECTION_NAME {MANAGER_CONFIG_NAME}
+" >> ~/.ssh/config;
 
     # Setup private key of runtime
     echo "{PRIVATE_KEY_RUNTIME}" > ~/.ssh/$SSH_CONNECTION_NAME 
@@ -51,9 +43,14 @@ else
 fi;
 
 # Runtime Manager Part (only execute when a runtime manager is setup in front of the runtime)
-if [ $IS_MANAGER_EXISTING = true ]; then
+if [ {IS_RUNTIME_MANAGER_EXISTING} = true ]; then
     chmod 700 ~/.ssh/$SSH_CONNECTION_NAME
-    if ! grep -q "Host $CONFIG_NAME_MANAGER" ~/.ssh/config; then echo "{SSH_CONFIG_MANAGER}" >> ~/.ssh/config; fi;
+    if ! grep -q "Host {MANAGER_CONFIG_NAME}" ~/.ssh/config; then echo "
+Host {MANAGER_CONFIG_NAME}
+    Hostname {HOSTNAME_MANAGER}
+    User limited-user
+    Port {PORT_MANAGER}
+" >> ~/.ssh/config; fi;
 fi
 
 # Test the connection

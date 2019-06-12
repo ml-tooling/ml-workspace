@@ -128,8 +128,6 @@ class SSHHandler(IPythonHandler):
                 runtime_private_key = f.read()
             
             ssh_templates_path = os.path.dirname(os.path.abspath(__file__)) + "/setup_templates"
-            with open(ssh_templates_path + '/ssh_config_manager_template.txt', 'r') as file:
-                ssh_config_manager = file.read()
 
             with open(ssh_templates_path + '/client_command.txt', 'r') as file:
                 client_command = file.read()
@@ -154,7 +152,6 @@ class SSHHandler(IPythonHandler):
                 
                 client_command = client_command \
                     .replace("{IS_RUNTIME_MANAGER_EXISTING}", "true") \
-                    .replace("{SSH_CONFIG_MANAGER}", ssh_config_manager) \
                     .replace("{HOSTNAME_MANAGER}", HOSTNAME_MANAGER) \
                     .replace("{PORT_MANAGER}", str(PORT_MANAGER)) \
                     .replace("#ProxyCommand", "ProxyCommand")
