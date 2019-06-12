@@ -1,6 +1,0 @@
-
-Host {MANAGER_CONFIG_NAME}
-    Hostname {HOSTNAME_MANAGER}
-    User limited-user
-    Port {PORT_MANAGER}
-    IdentityFile ~/.ssh/$KEY_NAME

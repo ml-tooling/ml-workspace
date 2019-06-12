@@ -1,34 +1,80 @@
 #!/bin/bash
 
-KEY_NAME={RUNTIME_CONFIG_NAME}
-
-echo "{PRIVATE_KEY_RUNTIME}" > ~/.ssh/$KEY_NAME; \
-chmod 700 ~/.ssh/$KEY_NAME; \
-touch ~/.ssh/config; \
 read -e -p "Provide a name for the ssh connection (press enter for '{RUNTIME_CONFIG_NAME}'): " SSH_CONNECTION_NAME; \
-if [[ $SSH_CONNECTION_NAME == "" ]]; then SSH_CONNECTION_NAME={RUNTIME_CONFIG_NAME}; fi; \
+if [[ $SSH_CONNECTION_NAME == "" ]]; then SSH_CONNECTION_NAME={RUNTIME_CONFIG_NAME}; fi;
+
+# Check whether the name is valid. Not all names can be used, as for example a ssh config name cannot contain spaces
+naming_re='^[a-z0-9_-]+$'
+
+if ! [[ "$SSH_CONNECTION_NAME" =~ $naming_re ]]; then
+    echo "[WARNING] The entered name should only contain lowercased characters, numbers and - or _. Please run again and input a valid name.";
+    exit 1;
+fi
+
+# Create ssh folder in case it does not exist
+mkdir ~/.ssh && chmod 700 ~/.ssh
+touch ~/.ssh/config
+
 if ! grep -q "Host $SSH_CONNECTION_NAME" ~/.ssh/config; 
 then 
-    echo "{SSH_CONFIG_RUNTIME}" >> ~/.ssh/config; 
-else
-    echo "A connection with the name $SSH_CONNECTION_NAME already exists in ~/.ssh/config. Try a different name."; \
-    exit 1;
-fi; \
-if ! grep -q "{RUNTIME_KEYSCAN_NAME}" ~/.ssh/known_hosts; then echo "{RUNTIME_KNOWN_HOST_ENTRY}" >> ~/.ssh/known_hosts; fi; \
-# print out some user information
-echo "The ssh configuration and remote runtime setup is completed. You can now select the new remote runtime in your Notebooks or ssh into the remote runtime container via 'ssh $SSH_CONNECTION_NAME'. If it does not work, please check the entries in the ~/.ssh/config file manually."
+    # Setup ssh config information
+    echo "
+Host $SSH_CONNECTION_NAME
+    Hostname {HOSTNAME_RUNTIME}
+    Port {PORT_RUNTIME}
+    User root
+    IdentityFile ~/.ssh/$SSH_CONNECTION_NAME
+    #ProxyCommand ssh -W %h:%p -i ~/.ssh/$SSH_CONNECTION_NAME {MANAGER_CONFIG_NAME}
+" >> ~/.ssh/config;
 
-# Runtime Manager Part (only execute when a runtime manager is setup before the runtime)
+    # Setup private key of runtime
+    echo "{PRIVATE_KEY_RUNTIME}" > ~/.ssh/$SSH_CONNECTION_NAME 
+    chmod 700 ~/.ssh/$SSH_CONNECTION_NAME
+else
+    echo "[WARNING] A connection with the name $SSH_CONNECTION_NAME already exists in ~/.ssh/config. Try a different name."
+    exit 1
+fi;
+
+if ! grep -q "{RUNTIME_KEYSCAN_NAME}" ~/.ssh/known_hosts; 
+then 
+    echo "{RUNTIME_KNOWN_HOST_ENTRY}" >> ~/.ssh/known_hosts; 
+else
+    echo "[WARNING] A runtime with the same DNS and Port was already added to known hosts. If the connection test fails, you can try to add 'StrictHostKeyChecking no' to the 'Host $SSH_CONNECTION_NAME' in the ~/.ssh/config";
+fi;
+
+# Runtime Manager Part (only execute when a runtime manager is setup in front of the runtime)
 if [ {IS_RUNTIME_MANAGER_EXISTING} = true ]; then
-    chmod 700 ~/.ssh/$KEY_NAME; \
-    if ! grep -q "Host {MANAGER_CONFIG_NAME}" ~/.ssh/config; then echo "{SSH_CONFIG_MANAGER}" >> ~/.ssh/config; fi;
+    chmod 700 ~/.ssh/$SSH_CONNECTION_NAME
+    if ! grep -q "Host {MANAGER_CONFIG_NAME}" ~/.ssh/config; then echo "
+Host {MANAGER_CONFIG_NAME}
+    Hostname {HOSTNAME_MANAGER}
+    User limited-user
+    Port {PORT_MANAGER}
+" >> ~/.ssh/config; fi;
 fi
 
 # Test the connection
-echo "Test the SSH connection."
+echo "Testing the SSH connection via 'ssh $SSH_CONNECTION_NAME'"
 ssh -q $SSH_CONNECTION_NAME exit
 if [ $? == 0 ]; then 
     echo "Connection successful!"
+
+    # Setup jupyter remote kernel if remote_ikernel is installed
+    if hash remote_ikernel 2>/dev/null; then
+        while true; do
+            read -p "remote_ikernel was detected on your machine. Do you like to setup a Jupyter remote kernel (y/n)? " yn
+            case $yn in
+                [Yy]* ) remote_ikernel manage --add --interface=ssh --kernel_cmd="ipython kernel -f {connection_file}" --name="$SSH_CONNECTION_NAME" --host=$SSH_CONNECTION_NAME; break;;
+                [Nn]* ) break;;
+                * ) echo "Please answer yes or no.";;
+            esac
+        done
+    fi;
+
+    # TODO Add additional features: e.g. autossh port forwarding for main workspace port, sshfs folder mounting
+
+    # print out some user information
+    echo "The ssh configuration is completed successfully. You can now securly connect via 'ssh $SSH_CONNECTION_NAME'.";
 else
-    echo "Connection not successful!"
+    echo "[WARNING] Connection test not successful! Please check the ssh setup manually within the ~/.ssh/config"
 fi

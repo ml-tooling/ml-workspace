@@ -128,11 +128,6 @@ class SSHHandler(IPythonHandler):
                 runtime_private_key = f.read()
             
             ssh_templates_path = os.path.dirname(os.path.abspath(__file__)) + "/setup_templates"
-            with open(ssh_templates_path + '/ssh_config_manager_template.txt', 'r') as file:
-                ssh_config_manager_template = file.read()
-
-            with open(ssh_templates_path + '/ssh_config_runtime_template.txt', 'r') as file:
-                ssh_config_runtime_template = file.read()
 
             with open(ssh_templates_path + '/client_command.txt', 'r') as file:
                 client_command = file.read()
@@ -145,7 +140,6 @@ class SSHHandler(IPythonHandler):
  
             MANAGER_CONFIG_NAME = "runtime-manager-"
             RUNTIME_CONFIG_NAME = "runtime-"
-            ssh_config_runtime = ssh_config_runtime_template
             if is_runtime_manager_existing:
                 HOSTNAME_RUNTIME = SSH_JUMPHOST_TARGET
                 HOSTNAME_MANAGER = HOSTNAME
@@ -154,24 +148,13 @@ class SSHHandler(IPythonHandler):
 
                 MANAGER_CONFIG_NAME = MANAGER_CONFIG_NAME + "{}-{}".format(HOSTNAME_MANAGER, PORT_MANAGER)
                 RUNTIME_CONFIG_NAME = RUNTIME_CONFIG_NAME + "{}-{}-{}".format(HOSTNAME_RUNTIME, HOSTNAME_MANAGER, PORT_MANAGER)
-
-                ssh_config_manager = ssh_config_manager_template \
-                    .replace("{HOSTNAME_MANAGER}", HOSTNAME_MANAGER) \
-                    .replace("{PORT_MANAGER}", str(PORT_MANAGER)) \
-                    .replace("{MANAGER_CONFIG_NAME}", MANAGER_CONFIG_NAME) # in the newest setup, the jumphost will scan all workspaces for a matching key. Hence, use the same key for connecting to the jumphost as for connecting to the workspace container
-
-                ssh_config_runtime = ssh_config_runtime \
-                    .replace("{HOSTNAME_MANAGER}", HOSTNAME_MANAGER) \
-                    .replace("{HOSTNAME_RUNTIME}", HOSTNAME_RUNTIME) \
-                    .replace("{PORT_RUNTIME}", str(PORT_RUNTIME)) \
-                    .replace("#ProxyCommand", "ProxyCommand") \
-                    .replace("{MANAGER_CONFIG_NAME}", MANAGER_CONFIG_NAME)
+                    
                 
                 client_command = client_command \
                     .replace("{IS_RUNTIME_MANAGER_EXISTING}", "true") \
-                    .replace("{SSH_CONFIG_MANAGER}", ssh_config_manager) \
                     .replace("{HOSTNAME_MANAGER}", HOSTNAME_MANAGER) \
-                    .replace("{PORT_MANAGER}", str(PORT_MANAGER))
+                    .replace("{PORT_MANAGER}", str(PORT_MANAGER)) \
+                    .replace("#ProxyCommand", "ProxyCommand")
                 
                 local_keyscan_replacement = "{}".format(HOSTNAME_RUNTIME)
 
@@ -179,10 +162,6 @@ class SSHHandler(IPythonHandler):
                 HOSTNAME_RUNTIME = HOSTNAME
                 PORT_RUNTIME = PORT
                 RUNTIME_CONFIG_NAME = RUNTIME_CONFIG_NAME + "{}-{}".format(HOSTNAME_RUNTIME, PORT_RUNTIME)
-
-                ssh_config_runtime = ssh_config_runtime \
-                    .replace("{HOSTNAME_RUNTIME}", HOSTNAME_RUNTIME) \
-                    .replace("{PORT_RUNTIME}", PORT_RUNTIME)
                 
                 local_keyscan_replacement = "[{}]:{}".format(HOSTNAME_RUNTIME, PORT_RUNTIME)            
 
@@ -195,10 +174,10 @@ class SSHHandler(IPythonHandler):
 
             output = client_command \
                 .replace("{PRIVATE_KEY_RUNTIME}", runtime_private_key) \
-                .replace("{SSH_CONFIG_RUNTIME}", ssh_config_runtime) \
                 .replace("{HOSTNAME_RUNTIME}", HOSTNAME_RUNTIME) \
                 .replace("{RUNTIME_KNOWN_HOST_ENTRY}", local_keyscan_entry) \
                 .replace("{MANAGER_CONFIG_NAME}", MANAGER_CONFIG_NAME) \
+                .replace("{PORT_RUNTIME}", str(PORT_RUNTIME)) \
                 .replace("{RUNTIME_CONFIG_NAME}", RUNTIME_CONFIG_NAME) \
                 .replace("{RUNTIME_KEYSCAN_NAME}", local_keyscan_replacement.replace("[", "\[").replace("]", "\]"))
 
