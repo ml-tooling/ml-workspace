@@ -26,7 +26,14 @@ touch ~/.ssh/config
 if ! grep -q "Host $SSH_CONNECTION_NAME" ~/.ssh/config; 
 then 
     # Setup ssh config information
-    echo "{SSH_CONFIG_RUNTIME}" >> ~/.ssh/config;
+    echo "
+Host $SSH_CONNECTION_NAME
+    Hostname $HOSTNAME_RUNTIME
+    Port $PORT_RUNTIME
+    User root
+    IdentityFile ~/.ssh/$SSH_CONNECTION_NAME
+    #ProxyCommand ssh -W %h:%p -i ~/.ssh/$SSH_CONNECTION_NAME $CONFIG_NAME_MANAGER
+    " >> ~/.ssh/config;
 
     # Setup private key of runtime
     echo "{PRIVATE_KEY_RUNTIME}" > ~/.ssh/$SSH_CONNECTION_NAME 
