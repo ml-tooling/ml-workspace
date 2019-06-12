@@ -522,6 +522,11 @@ RUN \
 COPY docker-res/bg_ml_foundation.png "/root/.config/bg_sakuli.png"
 COPY docker-res/bg_ml_foundation.png "/headless/.config/bg_sakuli.png"
 
+# Update Jupyter logos and favicons 
+COPY docker-res/jupyter/logo.png $CONDA_DIR"/lib/python3.6/site-packages/notebook/static/base/images/logo.png"
+COPY docker-res/jupyter/favicon.ico $CONDA_DIR"/lib/python3.6/site-packages/notebook/static/base/images/favicon.ico"
+COPY docker-res/jupyter/favicon.ico $CONDA_DIR"/lib/python3.6/site-packages/notebook/static/favicon.ico"
+
 # Configure Matplotlib
 RUN \
     # Import matplotlib the first time to build the font cache.
