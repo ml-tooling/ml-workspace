@@ -4,10 +4,10 @@ read -e -p "Provide a name for the ssh connection (press enter for '{RUNTIME_CON
 if [[ $SSH_CONNECTION_NAME == "" ]]; then SSH_CONNECTION_NAME={RUNTIME_CONFIG_NAME}; fi;
 
 # Check whether the name is valid. Not all names can be used, as for example a ssh config name cannot contain spaces
-naming_re='^[A-Za-z0-9_-]+$'
+naming_re='^[a-z0-9_-]+$'
 
 if ! [[ "$SSH_CONNECTION_NAME" =~ $naming_re ]]; then
-    echo "[WARNING] The entered name should only contain characters, numbers and - or _. Please run again and input a valid name.";
+    echo "[WARNING] The entered name should only contain lowercased characters, numbers and - or _. Please run again and input a valid name.";
     exit 1;
 fi
 
@@ -62,7 +62,7 @@ if [ $? == 0 ]; then
     # Setup jupyter remote kernel if remote_ikernel is installed
     if hash remote_ikernel 2>/dev/null; then
         while true; do
-            read -p "remote_ikernel was detected on your machine. Do you like to setup a Jupyter remote kernel (y/n)?" yn
+            read -p "remote_ikernel was detected on your machine. Do you like to setup a Jupyter remote kernel (y/n)? " yn
             case $yn in
                 [Yy]* ) remote_ikernel manage --add --interface=ssh --kernel_cmd="ipython kernel -f {connection_file}" --name="$SSH_CONNECTION_NAME" --host=$SSH_CONNECTION_NAME; break;;
                 [Nn]* ) break;;
