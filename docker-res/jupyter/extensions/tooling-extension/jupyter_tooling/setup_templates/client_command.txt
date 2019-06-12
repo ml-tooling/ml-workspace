@@ -10,9 +10,12 @@ IS_MANAGER_EXISTING={IS_RUNTIME_MANAGER_EXISTING}
 HOSTNAME_RUNTIME={HOSTNAME_RUNTIME}
 PORT_RUNTIME={PORT_RUNTIME}
 
-echo "{PRIVATE_KEY_RUNTIME}" > ~/.ssh/$KEY_NAME; \
-chmod 700 ~/.ssh/$KEY_NAME; \
-touch ~/.ssh/config; \
+# Create ssh folder in case it does not exist
+mkdir ~/.ssh && chmod 700 ~/.ssh
+echo "{PRIVATE_KEY_RUNTIME}" > ~/.ssh/$KEY_NAME 
+chmod 700 ~/.ssh/$KEY_NAME
+touch ~/.ssh/config
+
 read -e -p "Provide a name for the ssh connection (press enter for '{RUNTIME_CONFIG_NAME}'): " SSH_CONNECTION_NAME; \
 if [[ $SSH_CONNECTION_NAME == "" ]]; then SSH_CONNECTION_NAME=$KEY_NAME; fi; \
 if ! grep -q "Host $SSH_CONNECTION_NAME" ~/.ssh/config; 
