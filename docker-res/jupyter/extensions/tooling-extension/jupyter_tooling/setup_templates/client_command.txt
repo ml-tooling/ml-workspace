@@ -24,7 +24,7 @@ Host $SSH_CONNECTION_NAME
     Port {PORT_RUNTIME}
     User root
     IdentityFile ~/.ssh/$SSH_CONNECTION_NAME
-    #ProxyCommand ssh -W %h:%p -i ~/.ssh/$SSH_CONNECTION_NAME {MANAGER_CONFIG_NAME}
+    #ProxyCommand ssh -W %h:%p -i ~/.ssh/$SSH_CONNECTION_NAME -p {PORT_MANAGER} limited-user@{HOSTNAME_MANAGER}
 " >> ~/.ssh/config;
 
     # Setup private key of runtime
@@ -41,17 +41,6 @@ then
 else
     echo "[WARNING] A runtime with the same DNS and Port was already added to known hosts. If the connection test fails, you can try to add 'StrictHostKeyChecking no' to the 'Host $SSH_CONNECTION_NAME' in the ~/.ssh/config";
 fi;
-
-# Runtime Manager Part (only execute when a runtime manager is setup in front of the runtime)
-if [ {IS_RUNTIME_MANAGER_EXISTING} = true ]; then
-    chmod 700 ~/.ssh/$SSH_CONNECTION_NAME
-    if ! grep -q "Host {MANAGER_CONFIG_NAME}" ~/.ssh/config; then echo "
-Host {MANAGER_CONFIG_NAME}
-    Hostname {HOSTNAME_MANAGER}
-    User limited-user
-    Port {PORT_MANAGER}
-" >> ~/.ssh/config; fi;
-fi
 
 # Test the connection
 echo "Testing the SSH connection via 'ssh $SSH_CONNECTION_NAME'"
