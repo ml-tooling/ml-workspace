@@ -600,6 +600,12 @@ ENV WORKSPACE_CONFIG_BACKUP="true"
 
 ### INCUBATION ZONE ###
 
+RUN \
+    apt-get update && \
+    apt-get install tmux && \
+    # Cleanup
+    /resources/clean_layer.sh
+    
 ### END INCUBATION ZONE ###
 
 ARG workspace_version="unknown"
