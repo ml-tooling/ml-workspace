@@ -36,7 +36,7 @@ The ML workspace is an all-in-one web-based IDE specialized for machine learning
 - 🔀 Seamless Git integration optimized for notebooks.
 - 📈 Integrated hardware & training monitoring via Tensoboard & Netdata.
 - 🚪 Access from anywhere via Web, SSH, or VNC under a single port.
-- 🎛 Usabel as remote kernel (Jupyter) or remote machine (VS Code) via SSH.
+- 🎛 Usable as remote kernel (Jupyter) or remote machine (VS Code) via SSH.
 - 🐳 Easy to deploy on Mac, Linux, and Windows via Docker.
 
 ## Getting Started
@@ -45,7 +45,7 @@ The ML workspace is an all-in-one web-based IDE specialized for machine learning
 
 The workspace requires **Docker** to be installed on your machine ([Installation Guide](https://docs.docker.com/install/#supported-platforms)).
 
-> 📖 _If you are new to Docker, we recommend taking a look at [this awesome beginner guide](https://docker-curriculum.com/)._
+> 📖 _If you are new to Docker, we recommend taking a look at [this beginner guide](https://docker-curriculum.com/)._
 
 ### Start single instance
 
@@ -57,7 +57,7 @@ docker run -d -p 8091:8091 -v "${PWD}:/workspace" --restart always mltooling/ml-
 
 Voilà, that was easy! Now, Docker will pull the latest workspace image to your machine. This may take a few minutes, depending on your internet speed. Once the workspace is started, you can access it via: http://localhost:8091. 
 
-> ℹ️ _If started on a remote machine or with a different port, make sure to use the machines IP/DNS and/or the exposed port._
+> ℹ️ _If started on a remote machine or with a different port, make sure to use the machine's IP/DNS and/or the exposed port._
 
 ### Persist Data
 
@@ -65,7 +65,7 @@ To persist the data, you need to mount a volume into `/workspace`.
 
 ### Configuration
 
-The container can be configured with following environment variables (`--env`):
+The container can be configured with the following environment variables (`--env`):
 
 <table>
     <tr>
@@ -210,7 +210,7 @@ Once you are connected, you will see a desktop GUI that allows you to install an
 
 <img src="./docs/images/feature-desktop-vnc-clipboard.png"/>
 
-> 💡 _**Long-running tasks:** Use the desktop GUI for long-running Jupyter executions. By running notebooks from the browser of your workspace desktop GUI, all output will be synchronized to the notebook even if you have disconnected your workspace from the notebook._
+> 💡 _**Long-running tasks:** Use the desktop GUI for long-running Jupyter executions. By running notebooks from the browser of your workspace desktop GUI, all output will be synchronized to the notebook even if you have disconnected your browser from the notebook._
 
 ### Visual Studio Code
 
@@ -222,7 +222,7 @@ Once you are connected, you will see a desktop GUI that allows you to install an
 
 <img src="./docs/images/feature-git-integration.png"/>
 
-Version control is a crucial aspect for productive collaboration. To make this process as smooth as possible, we have integrated a custom-made Jupyter extension specialized on pushing single notebooks, a full-fledged web-based Git client ([ungit](https://github.com/FredrikNoren/ungit)), an awesome tool to open and edit plain text documents (e.g., `.py`, `.md`) as notebooks ([jupytext](https://github.com/mwouts/jupytext)), as well as a notebook merging tool ([nbdime](https://github.com/jupyter/nbdime)). Additionally, JupyterLab and VS Code also provide GUI-based Git clients.
+Version control is a crucial aspect for productive collaboration. To make this process as smooth as possible, we have integrated a custom-made Jupyter extension specialized on pushing single notebooks, a full-fledged web-based Git client ([ungit](https://github.com/FredrikNoren/ungit)), a tool to open and edit plain text documents (e.g., `.py`, `.md`) as notebooks ([jupytext](https://github.com/mwouts/jupytext)), as well as a notebook merging tool ([nbdime](https://github.com/jupyter/nbdime)). Additionally, JupyterLab and VS Code also provide GUI-based Git clients.
 
 #### Clone Repository
 
@@ -240,7 +240,7 @@ To commit and push a single notebook to a remote Git repository, we recommend to
 
 <img src="./docs/images/feature-git-extension.png"/>
 
-The other tool for more advanced Git integrations is [ungit](https://github.com/FredrikNoren/ungit). With ungit, you can do most of the common git actions such as push, pull, merge, branch, tag, checkout, and many more.
+For more advanced Git operations we recommend to use [ungit](https://github.com/FredrikNoren/ungit). With ungit, you can do most of the common git actions such as push, pull, merge, branch, tag, checkout, and many more.
 
 #### Sharing, Diffing, and Merging Notebooks
 
