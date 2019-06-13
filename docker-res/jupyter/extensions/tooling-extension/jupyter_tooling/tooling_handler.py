@@ -138,7 +138,6 @@ class SSHHandler(IPythonHandler):
             SSH_JUMPHOST_TARGET = os.environ.get("SSH_JUMPHOST_TARGET", "")
             is_runtime_manager_existing = False if SSH_JUMPHOST_TARGET == "" else True
  
-            MANAGER_CONFIG_NAME = "runtime-manager-"
             RUNTIME_CONFIG_NAME = "runtime-"
             if is_runtime_manager_existing:
                 HOSTNAME_RUNTIME = SSH_JUMPHOST_TARGET
@@ -146,12 +145,9 @@ class SSHHandler(IPythonHandler):
                 PORT_MANAGER = PORT
                 PORT_RUNTIME = 8091
 
-                MANAGER_CONFIG_NAME = MANAGER_CONFIG_NAME + "{}-{}".format(HOSTNAME_MANAGER, PORT_MANAGER)
                 RUNTIME_CONFIG_NAME = RUNTIME_CONFIG_NAME + "{}-{}-{}".format(HOSTNAME_RUNTIME, HOSTNAME_MANAGER, PORT_MANAGER)
                     
-                
                 client_command = client_command \
-                    .replace("{IS_RUNTIME_MANAGER_EXISTING}", "true") \
                     .replace("{HOSTNAME_MANAGER}", HOSTNAME_MANAGER) \
                     .replace("{PORT_MANAGER}", str(PORT_MANAGER)) \
                     .replace("#ProxyCommand", "ProxyCommand")
@@ -176,7 +172,6 @@ class SSHHandler(IPythonHandler):
                 .replace("{PRIVATE_KEY_RUNTIME}", runtime_private_key) \
                 .replace("{HOSTNAME_RUNTIME}", HOSTNAME_RUNTIME) \
                 .replace("{RUNTIME_KNOWN_HOST_ENTRY}", local_keyscan_entry) \
-                .replace("{MANAGER_CONFIG_NAME}", MANAGER_CONFIG_NAME) \
                 .replace("{PORT_RUNTIME}", str(PORT_RUNTIME)) \
                 .replace("{RUNTIME_CONFIG_NAME}", RUNTIME_CONFIG_NAME) \
                 .replace("{RUNTIME_KEYSCAN_NAME}", local_keyscan_replacement.replace("[", "\[").replace("]", "\]"))
