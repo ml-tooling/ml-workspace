@@ -587,7 +587,7 @@ COPY docker-res/jupyter/sidebar.jupyterlab-settings /root/.jupyter/lab/user-sett
 COPY docker-res/jupyter/plugin.jupyterlab-settings /root/.jupyter/lab/user-settings/@jupyterlab/extensionmanager-extension/
 # Assume yes to all apt commands, to avoid user confusion around stdin.
 COPY docker-res/config/90assumeyes /etc/apt/apt.conf.d/
-=-
+
 # Various configurations
 RUN \
     # clear chome init file - not needed since we load settings manually
