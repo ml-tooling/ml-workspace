@@ -411,8 +411,6 @@ COPY \
     docker-res/jupyter/start-singleuser.sh \
     /usr/local/bin/
 
-COPY docker-res/jupyter/jupyter_notebook_config.py /etc/jupyter/
-
 # Jupyter pip requirements - components and extensions
 COPY docker-res/jupyter_requirements.txt ${RESOURCES_PATH}
 
@@ -447,6 +445,10 @@ RUN \
     jupyter nbextension enable --py jupytext && \
     # Activate qgrid
     jupyter nbextension enable --py --sys-prefix qgrid && \
+    # Activate Colab support
+    jupyter serverextension enable --py jupyter_http_over_ws && \
+    # Activate Voila Rendering 
+    jupyter serverextension enable voila --sys-prefix && \
     # Activate Jupyter Tensorboard
     jupyter tensorboard enable && \
     # Edit notebook config
@@ -474,7 +476,7 @@ RUN \
     jupyter labextension install @pyviz/jupyterlab_pyviz && \
     # install jupyterlab git
     jupyter labextension install @jupyterlab/git && \
-    pip install jupyterlab-git==0.5.0 && \ 
+    pip install jupyterlab-git==0.6.0 && \ 
     jupyter serverextension enable --py jupyterlab_git && \
     # Install jupyterlab_iframe - https://github.com/timkpaine/jupyterlab_iframe
     pip install jupyterlab_iframe==0.0.12 && \
@@ -508,6 +510,16 @@ RUN \
 
 ### END JUPYTER ###
 
+### INCUBATION ZONE ###
+
+RUN \
+    apt-get update && \
+    apt-get install tmux nano golang-go && \
+    # Cleanup
+    /resources/clean_layer.sh
+
+### END INCUBATION ZONE ###
+
 ### CONFIGURATION ###
 
 # Configure git
@@ -522,7 +534,8 @@ RUN \
 COPY docker-res/bg_ml_foundation.png "/root/.config/bg_sakuli.png"
 COPY docker-res/bg_ml_foundation.png "/headless/.config/bg_sakuli.png"
 
-# Update Jupyter logos and favicons 
+# Configure Jupyter
+COPY docker-res/jupyter/jupyter_notebook_config.py /etc/jupyter/
 COPY docker-res/jupyter/logo.png $CONDA_DIR"/lib/python3.6/site-packages/notebook/static/base/images/logo.png"
 COPY docker-res/jupyter/favicon.ico $CONDA_DIR"/lib/python3.6/site-packages/notebook/static/base/images/favicon.ico"
 COPY docker-res/jupyter/favicon.ico $CONDA_DIR"/lib/python3.6/site-packages/notebook/static/favicon.ico"
@@ -597,16 +610,6 @@ RUN echo  'cd '$WORKSPACE_HOME >> $HOME/.bashrc
 ENV WORKSPACE_CONFIG_BACKUP="true"
 
 ### END CONFIGURATION ###
-
-### INCUBATION ZONE ###
-
-RUN \
-    apt-get update && \
-    apt-get install tmux && \
-    # Cleanup
-    /resources/clean_layer.sh
-    
-### END INCUBATION ZONE ###
 
 ARG workspace_version="unknown"
 ENV WORKSPACE_VERSION=$workspace_version
