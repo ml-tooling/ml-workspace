@@ -12,7 +12,7 @@ if ! [[ "$SSH_CONNECTION_NAME" =~ $naming_re ]]; then
 fi
 
 # Create ssh folder in case it does not exist
-mkdir ~/.ssh && chmod 700 ~/.ssh
+mkdir -p ~/.ssh && chmod 700 ~/.ssh
 touch ~/.ssh/config
 
 if ! grep -q "Host $SSH_CONNECTION_NAME" ~/.ssh/config; 
