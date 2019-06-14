@@ -80,7 +80,7 @@ define(['base/js/namespace', 'base/js/dialog', 'jquery', 'base/js/utils'], funct
         var div = $('<div/>');
         div.append('<p>SSH provides a powerful set of features that enables you to be more productive with your development tasks as documented <a target="_blank" href="https://github.com/ml-tooling/ml-workspace#ssh-access">here</a>. To setup a secure and passwordless SSH connection to this workspace, please execute: </p>');
         div.append('<br>');
-        div.append('<textarea readonly="true" style="width: 100%; min-height: 25px; height: 25px" id="ssh-setup-command">/bin/bash ~/Downloads/setup_ssh_' + window.location.hostname.toLowerCase().replace(".", "-") + '-' + window.location.port + '.sh</textarea>');
+        div.append('<textarea readonly="true" style="width: 100%; min-height: 25px; height: 25px" id="ssh-setup-command">/bin/bash ~/Downloads/setup_ssh_' + window.location.hostname.toLowerCase().replace(/\./g, "-") + '-' + window.location.port + '.sh</textarea>');
         div.append('<br>');
         div.append('<div style="font-size: 11px; color: #909090;">This command assumes that the setup script was downloaded into `~/Downloads` folder, please change the path if the script was downloaded to another location. During the setup process, you will be asked for input, e.g to provide a name for the connection. You can also copy and run this script to any other machine to setup an SSH connection to this workspace. This scripts only runs on Mac and Linux, Windows is currently not supported.</div>');
         return div
