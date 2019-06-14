@@ -15,7 +15,7 @@ jupyter-tensorboard==0.1.10 # Jupyter notebook integration for tensorboard.
 papermill==1.0.1 # Parametrize and run Jupyter and nteract Notebooks
 jupytext==1.1.6 # Jupyter notebooks as Markdown documents, Julia, Python or R scripts
 nbresuse==0.3.1 # Simple Jupyter extension to show how much resources (RAM) your notebook is using
-voila==0.1.2 # Serving read-only live Jupyter notebooks
+# currently not working voila==0.1.2 # Serving read-only live Jupyter notebooks
 
 ## Interactive Components
 

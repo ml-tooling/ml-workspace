@@ -448,7 +448,7 @@ RUN \
     # Activate Colab support
     jupyter serverextension enable --py jupyter_http_over_ws && \
     # Activate Voila Rendering 
-    jupyter serverextension enable voila --sys-prefix && \
+    # currently not working jupyter serverextension enable voila --sys-prefix && \
     # Activate Jupyter Tensorboard
     jupyter tensorboard enable && \
     # Edit notebook config
