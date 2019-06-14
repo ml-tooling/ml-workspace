@@ -51,9 +51,9 @@ if [ $? == 0 ]; then
     # Setup jupyter remote kernel if remote_ikernel is installed
     if hash remote_ikernel 2>/dev/null; then
         while true; do
-            read -p "remote_ikernel was detected on your machine. Do you like to setup a Jupyter remote kernel (y/n)? " yn
+            read -p "remote_ikernel was detected on your machine. Do you like to setup a Python remote kernel for Jupyter (yes/no)? " yn
             case $yn in
-                [Yy]* ) remote_ikernel manage --add --interface=ssh --kernel_cmd="ipython kernel -f {connection_file}" --name="$SSH_CONNECTION_NAME" --host=$SSH_CONNECTION_NAME; break;;
+                [Yy]* ) remote_ikernel manage --add --interface=ssh --kernel_cmd="ipython kernel -f {connection_file}" --name="Py 3.6" --host=$SSH_CONNECTION_NAME; break;;
                 [Nn]* ) break;;
                 * ) echo "Please answer yes or no.";;
             esac
