@@ -514,7 +514,7 @@ RUN \
 
 RUN \
     apt-get update && \
-    apt-get install tmux nano && \
+    apt-get install --yes --no-install-recommends tmux nano && \
     # Cleanup
     /resources/clean_layer.sh
 
