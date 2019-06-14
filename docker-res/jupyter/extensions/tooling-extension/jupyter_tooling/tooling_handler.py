@@ -176,9 +176,12 @@ class SSHHandler(IPythonHandler):
                 .replace("{RUNTIME_CONFIG_NAME}", RUNTIME_CONFIG_NAME) \
                 .replace("{RUNTIME_KEYSCAN_NAME}", local_keyscan_replacement.replace("[", "\[").replace("]", "\]"))
 
-            #send_data(self, output)
+            # Use hostname, otherwise it cannot be reconstructed in tooling plugin
+            file_name = 'setup_ssh_{}-{}.sh'.format(HOSTNAME.lower().replace(".", "-"), PORT)
+
+            # send_data(self, output)
             self.set_header('Content-Type', 'application/octet-stream')
-            self.set_header('Content-Disposition', 'attachment; filename=setup_ssh_{}-{}.sh'.format(HOSTNAME_RUNTIME, PORT))
+            self.set_header('Content-Disposition', 'attachment; filename=' + file_name) # Hostname runtime
             self.write(output)
             self.finish()
         except Exception as ex:

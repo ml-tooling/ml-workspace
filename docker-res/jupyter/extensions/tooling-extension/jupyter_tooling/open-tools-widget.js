@@ -54,7 +54,7 @@ define(['base/js/namespace', 'base/js/dialog', 'jquery', 'base/js/utils'], funct
         {
             "id": "ssh-access",
             "name": "SSH",
-            "url_path":  basePath + "ssh/setup?hostname=" + window.location.hostname + "&port=" + window.location.port,
+            "url_path":  "",
             "description": "Setup SSH connection to the workspace"
         }
     ]
@@ -67,6 +67,26 @@ define(['base/js/namespace', 'base/js/dialog', 'jquery', 'base/js/utils'], funct
         return div;
     }
 
+    function openPortDialog() {
+        var div = $('<div/>');
+        var form = $('<form/>');
+        div.append('<label style="width: 50px">Port: </label><input type="number" id="port-input" style="width: 200px" min="1" max="65535"><br>')
+        form.appendTo(div);
+        return div;
+    }
+
+    function sshInstructionDialog() {
+        // Please check our documentation on information on what you can do with the workspace
+        var div = $('<div/>');
+        div.append('<p>SSH provides a powerful set of features that enables you to be more productive with your development tasks as documented <a target="_blank" href="https://github.com/ml-tooling/ml-workspace#ssh-access">here</a>. To setup a secure and passwordless SSH connection to this workspace, please execute: </p>');
+        div.append('<br>');
+        div.append('<textarea readonly="true" style="width: 100%; min-height: 25px; height: 25px" id="ssh-setup-command">/bin/bash ~/Downloads/setup_ssh_' + window.location.hostname.toLowerCase().replace(".", "-") + '-' + window.location.port + '.sh</textarea>');
+        div.append('<br>');
+        div.append('<div style="font-size: 11px; color: #909090;">This command assumes that the setup script was downloaded into `~/Downloads` folder, please change the path if the script was downloaded to another location. During the setup process, you will be asked for input, e.g to provide a name for the connection. You can also copy and run this script to any other machine to setup an SSH connection to this workspace. This scripts only runs on Mac and Linux, Windows is currently not supported.</div>');
+        return div
+    }
+
+    https://github.com/ml-tooling/ml-workspace#ssh-access
     function load_ipython_extension() {
         // log to console
         console.info('Loaded Jupyter extension: Juypter Tooling')
@@ -84,9 +104,26 @@ define(['base/js/namespace', 'base/js/dialog', 'jquery', 'base/js/utils'], funct
         <button class="dropdown-toggle btn btn-default btn-xs" data-toggle="dropdown" style="padding: 5px 10px;" aria-expanded="false"> \
             <span>Open Tool</span> <span class="caret"></span> </button> \
            <ul id="start-tool" class="dropdown-menu" style="right: 0; left: auto;">' + tools_menu_items + ' </ul> </div>';
-
-        //$('#header-container').append(tools_dropwdown);
+        
         $(tools_dropwdown).insertBefore($('#login_widget'));
+
+        $('#ssh-access').click(function () {
+            window.open(basePath + "ssh/setup?hostname=" + window.location.hostname + "&port=" + window.location.port, '_blank')
+
+            dialog.modal({
+                body: sshInstructionDialog(),
+                title: 'Setup SSH access to this workspace',
+                buttons: {
+                    'Copy to Clipboard': {
+                        class: 'btn-primary',
+                        click: function(event) {
+                            $('#ssh-setup-command').select()
+                            return window.document.execCommand('copy');
+                        }
+                    }
+                }
+            })
+        });
 
         // open a workspace internal port via subpath - through nginx proxy
         $('#open-tools-button').click(function () {
