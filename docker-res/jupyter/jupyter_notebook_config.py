@@ -16,9 +16,9 @@ c.NotebookApp.port_retries=0
 c.NotebookApp.quit_button=False
 c.NotebookApp.allow_remote_access=True
 c.NotebookApp.token=""
-# TODO really deactive allow origin and disable_check_xsrf
 c.NotebookApp.disable_check_xsrf=True
 c.NotebookApp.allow_origin='*'
+c.NotebookApp.trust_xheaders=True
 
 # set base url if available
 base_url = os.getenv("WORKSPACE_BASE_URL", "/")

@@ -145,6 +145,10 @@ _WIP_ Add Examples
 
 _WIP_
 
+### Run GPU instance
+
+_WIP_
+
 ## 💬 Where to ask questions
 
 The ML Workspace project is maintained by [@LukasMasuch](https://twitter.com/LukasMasuch)
@@ -299,7 +303,7 @@ _WIP_
 
 ### Remote Development
 
-_WIP: Remote Kernels and VS Code remote development_
+_WIP: Remote Kernels, VS Code remote development, and usage as Colab local runtime._
 
 ### Preinstalled Libraries and Runtimes
 

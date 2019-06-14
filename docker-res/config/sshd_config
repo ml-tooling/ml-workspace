@@ -12,3 +12,5 @@ GatewayPorts clientspecified
 # Do not allow password based authentication
 PasswordAuthentication no
 
+# Activate SFTP server
+Subsystem sftp internal-sftp

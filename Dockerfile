@@ -411,8 +411,6 @@ COPY \
     docker-res/jupyter/start-singleuser.sh \
     /usr/local/bin/
 
-COPY docker-res/jupyter/jupyter_notebook_config.py /etc/jupyter/
-
 # Jupyter pip requirements - components and extensions
 COPY docker-res/jupyter_requirements.txt ${RESOURCES_PATH}
 
@@ -447,6 +445,10 @@ RUN \
     jupyter nbextension enable --py jupytext && \
     # Activate qgrid
     jupyter nbextension enable --py --sys-prefix qgrid && \
+    # Activate Colab support
+    jupyter serverextension enable --py jupyter_http_over_ws && \
+    # Activate Voila Rendering 
+    jupyter serverextension enable voila --sys-prefix && \
     # Activate Jupyter Tensorboard
     jupyter tensorboard enable && \
     # Edit notebook config
@@ -474,7 +476,7 @@ RUN \
     jupyter labextension install @pyviz/jupyterlab_pyviz && \
     # install jupyterlab git
     jupyter labextension install @jupyterlab/git && \
-    pip install jupyterlab-git==0.5.0 && \ 
+    pip install jupyterlab-git==0.6.0 && \ 
     jupyter serverextension enable --py jupyterlab_git && \
     # Install jupyterlab_iframe - https://github.com/timkpaine/jupyterlab_iframe
     pip install jupyterlab_iframe==0.0.12 && \
@@ -508,6 +510,16 @@ RUN \
 
 ### END JUPYTER ###
 
+### INCUBATION ZONE ###
+
+RUN \
+    apt-get update && \
+    apt-get install --yes --no-install-recommends tmux nano && \
+    # Cleanup
+    /resources/clean_layer.sh
+
+### END INCUBATION ZONE ###
+
 ### CONFIGURATION ###
 
 # Configure git
@@ -517,12 +529,8 @@ RUN \
     # Use store or credentialstore instead? timout == 365 days validity
     git config --global credential.helper 'cache --timeout=31540000'
 
-# Configure VNC
-# Overwrite Backgrounds
-COPY docker-res/bg_ml_foundation.png "/root/.config/bg_sakuli.png"
-COPY docker-res/bg_ml_foundation.png "/headless/.config/bg_sakuli.png"
-
-# Update Jupyter logos and favicons 
+# Configure Jupyter
+COPY docker-res/jupyter/jupyter_notebook_config.py /etc/jupyter/
 COPY docker-res/jupyter/logo.png $CONDA_DIR"/lib/python3.6/site-packages/notebook/static/base/images/logo.png"
 COPY docker-res/jupyter/favicon.ico $CONDA_DIR"/lib/python3.6/site-packages/notebook/static/base/images/favicon.ico"
 COPY docker-res/jupyter/favicon.ico $CONDA_DIR"/lib/python3.6/site-packages/notebook/static/favicon.ico"
@@ -535,6 +543,11 @@ RUN \
     sed -i "s/^.*Matplotlib is building the font cache using fc-list.*$/# Warning removed/g" $CONDA_PYTHON_DIR/site-packages/matplotlib/font_manager.py && \
     # Make matplotlib output in Jupyter notebooks display correctly
     mkdir -p /etc/ipython/ && echo "c = get_config(); c.IPKernelApp.matplotlib = 'inline'" > /etc/ipython/ipython_config.py
+
+# Configure VNC
+# Overwrite Backgrounds
+COPY docker-res/bg_ml_foundation.png "/root/.config/bg_sakuli.png"
+COPY docker-res/bg_ml_foundation.png "/headless/.config/bg_sakuli.png"
 
 # Basic VNC Settings - no password
 ENV \
@@ -559,11 +572,9 @@ COPY \
     docker-res/5xx.html \
     $RESOURCES_PATH/
 
-COPY \
-    docker-res/scripts $RESOURCES_PATH/scripts
-
-# Assume yes to all apt commands, to avoid user confusion around stdin.
-COPY docker-res/config/90assumeyes /etc/apt/apt.conf.d/
+# Copy scripts into workspace
+COPY docker-res/scripts $RESOURCES_PATH/scripts
+COPY docker-res/tools $RESOURCES_PATH/tools
 
 # Copy some configuration files
 COPY docker-res/config/ssh_config /root/.ssh/config
@@ -574,10 +585,10 @@ COPY docker-res/config/mimeapps.list /root/.config/mimeapps.list
 COPY docker-res/config/chromium-browser.init /root/.chromium-browser.init
 COPY docker-res/jupyter/sidebar.jupyterlab-settings /root/.jupyter/lab/user-settings/@jupyterlab/application-extension/
 COPY docker-res/jupyter/plugin.jupyterlab-settings /root/.jupyter/lab/user-settings/@jupyterlab/extensionmanager-extension/
+# Assume yes to all apt commands, to avoid user confusion around stdin.
+COPY docker-res/config/90assumeyes /etc/apt/apt.conf.d/
 
-# Copy tool installer scripts
-COPY docker-res/tools $RESOURCES_PATH/tools
-
+# Various configurations
 RUN \
     # clear chome init file - not needed since we load settings manually
     > /dockerstartup/chrome-init.sh && \
@@ -588,19 +599,14 @@ RUN \
     ln -s $WORKSPACE_HOME $HOME/Desktop/workspace && \
     cp -r /headless/.config/xfce4/ /root/.config/ && \
     chmod a+rwx /usr/local/bin/start-notebook.sh && \
-    chmod a+rwx /usr/local/bin/start.sh
-
-# Set /workspace as default directory to navigate to as root user
-RUN echo  'cd '$WORKSPACE_HOME >> $HOME/.bashrc 
+    chmod a+rwx /usr/local/bin/start.sh && \
+    # Set /workspace as default directory to navigate to as root user
+    echo  'cd '$WORKSPACE_HOME >> $HOME/.bashrc 
 
 # Set default values for environment variables
 ENV WORKSPACE_CONFIG_BACKUP="true"
 
 ### END CONFIGURATION ###
-
-### INCUBATION ZONE ###
-
-### END INCUBATION ZONE ###
 
 ARG workspace_version="unknown"
 ENV WORKSPACE_VERSION=$workspace_version
@@ -609,14 +615,14 @@ ENV WORKSPACE_VERSION=$workspace_version
 RUN printenv > $HOME/.ssh/environment
 
 # Overwrite & add Labels
-LABEL "io.k8s.description"="All-in-one web-based IDE specialized for machine learning and data science."
-LABEL "io.k8s.display-name"="Machine Learning Workspace"
-LABEL "io.openshift.expose-services"="8091:http, 5901:xvnc"
-LABEL "io.openshift.non-scalable"="true"
-LABEL "io.openshift.tags"="	vnc, ubuntu, xfce, workspace, machine learning"
-LABEL "io.openshift.min-memory"="1Gi"
-LABEL "workspace.version"=$workspace_version
-LABEL "workspace.type"=$WORKSPACE_TYPE
+LABEL "io.k8s.description"="All-in-one web-based IDE specialized for machine learning and data science." \
+    "io.k8s.display-name"="Machine Learning Workspace" \
+    "io.openshift.expose-services"="8091:http, 5901:xvnc" \
+    "io.openshift.non-scalable"="true" \
+    "io.openshift.tags"="	vnc, ubuntu, xfce, workspace, machine learning" \
+    "io.openshift.min-memory"="1Gi" \
+    "workspace.version"=$workspace_version \
+    "workspace.type"=$WORKSPACE_TYPE
 
 # This assures we have a volume mounted even if the user forgot to do bind mount.
 # So that they do not lose their data if they delete the container.
