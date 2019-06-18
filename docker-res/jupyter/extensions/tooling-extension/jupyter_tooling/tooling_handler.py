@@ -179,11 +179,15 @@ class SSHHandler(IPythonHandler):
             # Use hostname, otherwise it cannot be reconstructed in tooling plugin
             file_name = 'setup_ssh_{}-{}.sh'.format(HOSTNAME.lower().replace(".", "-"), PORT)
 
-            # send_data(self, output)
-            self.set_header('Content-Type', 'application/octet-stream')
-            self.set_header('Content-Disposition', 'attachment; filename=' + file_name) # Hostname runtime
-            self.write(output)
-            self.finish()
+            FORMAT = self.get_argument('format', None)
+            if FORMAT == 'text':
+                self.finish(output)
+            else:
+                self.set_header('Content-Type', 'application/octet-stream')
+                self.set_header('Content-Disposition', 'attachment; filename=' + file_name) # Hostname runtime
+                self.write(output)
+                self.finish()
+            
         except Exception as ex:
             handle_error(self, 500, exception=ex)
             return

@@ -85,12 +85,12 @@ The container can be configured with the following environment variables (`--env
     </tr>
     <tr>
         <td>WORKSPACE_AUTH_USER</td>
-        <td>Basic auth user name. To enable basic auth, both the user and password needs to be set.</td>
+        <td>Basic auth user name. To enable basic auth, both the user and password need to be set.</td>
         <td></td>
     </tr>
     <tr>
         <td>WORKSPACE_AUTH_PASSWORD</td>
-        <td>Basic auth user password. To enable basic auth, both the user and password needs to be set.</td>
+        <td>Basic auth user password. To enable basic auth, both the user and password need to be set.</td>
         <td></td>
     </tr>
     <tr>
