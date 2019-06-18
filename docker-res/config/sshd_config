@@ -14,3 +14,6 @@ PasswordAuthentication no
 
 # Activate SFTP server
 Subsystem sftp internal-sftp
+
+# Activate X11 Forwarding (GUI Access)  
+X11Forwarding yes
