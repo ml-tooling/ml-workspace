@@ -15,5 +15,8 @@ PasswordAuthentication no
 # Activate SFTP server
 Subsystem sftp internal-sftp
 
+# Allow SSH-Agent Forwarding
+AllowAgentForwarding yes
+
 # Activate X11 Forwarding (GUI Access)  
 X11Forwarding yes
