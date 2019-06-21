@@ -514,7 +514,7 @@ RUN \
 
 RUN \
     apt-get update && \
-    apt-get install --yes --no-install-recommends tmux nano && \
+    apt-get install --yes --no-install-recommends tmux nano nautilus gvfs-backends && \
     # Cleanup
     /resources/clean_layer.sh
 
@@ -582,6 +582,7 @@ COPY docker-res/config/sshd_config /etc/ssh/sshd_config
 COPY docker-res/config/nginx.conf /etc/nginx/nginx.conf
 COPY docker-res/config/netdata.conf /etc/netdata/netdata.conf
 COPY docker-res/config/mimeapps.list /root/.config/mimeapps.list
+COPY docker-res/config/bookmarks /root/.config/gtk-3.0/bookmarks
 COPY docker-res/config/chromium-browser.init /root/.chromium-browser.init
 COPY docker-res/jupyter/sidebar.jupyterlab-settings /root/.jupyter/lab/user-settings/@jupyterlab/application-extension/
 COPY docker-res/jupyter/plugin.jupyterlab-settings /root/.jupyter/lab/user-settings/@jupyterlab/extensionmanager-extension/
@@ -619,7 +620,7 @@ LABEL "io.k8s.description"="All-in-one web-based IDE specialized for machine lea
     "io.k8s.display-name"="Machine Learning Workspace" \
     "io.openshift.expose-services"="8091:http, 5901:xvnc" \
     "io.openshift.non-scalable"="true" \
-    "io.openshift.tags"="	vnc, ubuntu, xfce, workspace, machine learning" \
+    "io.openshift.tags"="vnc, ubuntu, xfce, workspace, machine learning" \
     "io.openshift.min-memory"="1Gi" \
     "workspace.version"=$workspace_version \
     "workspace.type"=$WORKSPACE_TYPE

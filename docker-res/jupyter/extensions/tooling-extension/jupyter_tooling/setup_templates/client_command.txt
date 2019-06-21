@@ -7,13 +7,14 @@ if [[ $SSH_CONNECTION_NAME == "" ]]; then SSH_CONNECTION_NAME={RUNTIME_CONFIG_NA
 naming_re='^[a-z0-9_-]+$'
 
 if ! [[ "$SSH_CONNECTION_NAME" =~ $naming_re ]]; then
-    echo "[WARNING] The entered name should only contain lowercased characters, numbers and - or _. Please run again and input a valid name.";
+    echo "[WARNING] The entered name should only contain lowercase characters, numbers and - or _. Please run again and input a valid name.";
     exit 1;
 fi
 
 # Create ssh folder in case it does not exist
 mkdir -p ~/.ssh && chmod 700 ~/.ssh
 touch ~/.ssh/config
+touch ~/.ssh/known_hosts
 
 if ! grep -q "Host $SSH_CONNECTION_NAME" ~/.ssh/config; 
 then 
@@ -23,6 +24,8 @@ Host $SSH_CONNECTION_NAME
     Hostname {HOSTNAME_RUNTIME}
     Port {PORT_RUNTIME}
     User root
+    ServerAliveCountMax 10
+    ServerAliveInterval 60
     IdentityFile ~/.ssh/$SSH_CONNECTION_NAME
     #ProxyCommand ssh -W %h:%p -i ~/.ssh/$SSH_CONNECTION_NAME -p {PORT_MANAGER} limited-user@{HOSTNAME_MANAGER}
 " >> ~/.ssh/config;
@@ -60,10 +63,24 @@ if [ $? == 0 ]; then
         done
     fi;
 
+    # Setup SFTP bookmarks in file explorer
+    BOOKMARKS_FILE=~/.config/gtk-3.0/bookmarks
+    if [ -f "$BOOKMARKS_FILE" ]; then
+        # bookmark file detected
+        while true; do
+            read -p "Do you want to add this connection as mountable SFTP storage to the bookmarks of your file manager (yes/no)? " yn
+            case $yn in
+                [Yy]* ) printf "\nsftp://$SSH_CONNECTION_NAME/workspace/ $SSH_CONNECTION_NAME" >> $BOOKMARKS_FILE; break;;
+                [Nn]* ) break;;
+                * ) echo "Please answer yes or no.";;
+            esac
+        done
+    fi
+
     # TODO Add additional features: e.g. autossh port forwarding for main workspace port, sshfs folder mounting
 
     # print out some user information
-    echo "The ssh configuration is completed successfully. You can now securly connect via 'ssh $SSH_CONNECTION_NAME'.";
+    echo "The ssh configuration is completed successfully. You can now securely connect via 'ssh $SSH_CONNECTION_NAME'.";
 else
     echo "[WARNING] Connection test not successful! Please check the ssh setup manually within the ~/.ssh/config"
 fi

@@ -138,7 +138,7 @@ class SSHHandler(IPythonHandler):
             SSH_JUMPHOST_TARGET = os.environ.get("SSH_JUMPHOST_TARGET", "")
             is_runtime_manager_existing = False if SSH_JUMPHOST_TARGET == "" else True
  
-            RUNTIME_CONFIG_NAME = "runtime-"
+            RUNTIME_CONFIG_NAME = "workspace-"
             if is_runtime_manager_existing:
                 HOSTNAME_RUNTIME = SSH_JUMPHOST_TARGET
                 HOSTNAME_MANAGER = HOSTNAME
