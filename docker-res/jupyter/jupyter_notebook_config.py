@@ -1,6 +1,7 @@
 from jupyter_core.paths import jupyter_data_dir
 import subprocess
 import os
+import psutil
 import errno
 import stat
 
@@ -32,14 +33,43 @@ c.FileContentsManager.delete_to_trash=False
 c.IPKernelApp.matplotlib = 'inline'
 
 # https://github.com/timkpaine/jupyterlab_iframe
-if not base_url.startswith("/"):
-    base_url = "/" + base_url
-c.JupyterLabIFrame.iframes = [base_url + 'tools/ungit', base_url + 'tools/netdata', base_url + 'tools/vnc', base_url + 'tools/glances', base_url + 'tools/custom']
+try:
+    if not base_url.startswith("/"):
+        base_url = "/" + base_url
+    c.JupyterLabIFrame.iframes = [base_url + 'tools/ungit', base_url + 'tools/netdata', base_url + 'tools/vnc', base_url + 'tools/glances', base_url + 'tools/custom']
+except:
+    pass
 
 # https://github.com/timkpaine/jupyterlab_templates
-if os.path.exists('/workspace/templates'):
-    c.JupyterLabTemplates.template_dirs = ['/workspace/templates']
-c.JupyterLabTemplates.include_default = False
+try:
+    if os.path.exists('/workspace/templates'):
+        c.JupyterLabTemplates.template_dirs = ['/workspace/templates']
+    c.JupyterLabTemplates.include_default = False
+except:
+    pass
+
+# Set memory limits for resource use display: https://github.com/yuvipanda/nbresuse
+try:
+    mem_limit = None
+    if os.path.isfile("/sys/fs/cgroup/memory/memory.limit_in_bytes"):
+        with open('/sys/fs/cgroup/memory/memory.limit_in_bytes', 'r') as file:
+            mem_limit = file.read().replace('\n', '').strip()
+    
+    total_memory = psutil.virtual_memory().total
+
+    if not mem_limit:
+        mem_limit = total_memory
+    elif int(mem_limit) > int(total_memory):
+        # if mem limit from cgroup bigger than total memory -> use total memory
+        mem_limit = total_memory
+    
+    # Workaround -> round memory limit, otherwise the number is quite long
+    # TODO fix in nbresuse
+    mem_limit = round(int(mem_limit) / (1024 * 1024)) * (1024 * 1024)
+    c.ResourceUseDisplay.mem_limit = int(mem_limit)
+    c.ResourceUseDisplay.mem_warning_threshold=0.1
+except:
+    pass
 
 # Generate a self-signed certificate
 if 'GEN_CERT' in os.environ:
