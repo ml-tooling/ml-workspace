@@ -518,6 +518,12 @@ RUN \
     # Cleanup
     /resources/clean_layer.sh
 
+# Install Jupyterhub lib to make it compatible with Jupyterhub
+RUN \
+    pip install jupyterhub==1.0.0 && \
+    # Cleanup
+    /resources/clean_layer.sh
+
 ### END INCUBATION ZONE ###
 
 ### CONFIGURATION ###
@@ -601,6 +607,7 @@ RUN \
     cp -r /headless/.config/xfce4/ /root/.config/ && \
     chmod a+rwx /usr/local/bin/start-notebook.sh && \
     chmod a+rwx /usr/local/bin/start.sh && \
+    chmod a+rwx /usr/local/bin/start-singleuser.sh && \
     # Set /workspace as default directory to navigate to as root user
     echo  'cd '$WORKSPACE_HOME >> $HOME/.bashrc 
 
