@@ -19,5 +19,5 @@ Thank you for creating a pull request 🙌 ❤️
 <!--- Before you submit the PR, go over this checklist and make sure you can
 tick off all the boxes. [] -> [x] -->
 
-- [ ] I have read the [CONTRIBUTING](https://github.com/ml-tooling/ml-workspace/blob/develop/CONTRIBUTING.md) document.
+- [ ] I have read the [CONTRIBUTING](https://github.com/ml-tooling/ml-workspace/blob/master/CONTRIBUTING.md) document.
 - [ ] My changes don't require a change to the documentation, or if they do, I've added all required information.

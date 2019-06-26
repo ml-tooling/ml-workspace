@@ -1,7 +1,7 @@
 <!--
 Please keep in mind that the GitHub issue tracker is mostly intended for bug reports, feature requests, deployment problems, or other enhancements.
 
-For general usage questions, please consider posting on Stack Overflow or Gitter instead. You can find the links for all our support channels here: https://github.com/ml-tooling/ml-workspace#-where-to-ask-questions
+For general usage questions, please consider posting on Stack Overflow or Gitter instead. You can find the links for all our support channels here: https://github.com/ml-tooling/ml-workspace#support
 -->
 
 **Describe the issue:**
