@@ -17,6 +17,8 @@ call("ssh-keygen -f ~/.ssh/{} -t ed25519 -q -N \"\"".format(SSH_KEY_NAME), shell
 call("chmod 600 ~/.ssh/{}".format(SSH_KEY_NAME), shell=True)
 # echo "" >> ~/.ssh/authorized_keys will prepend a new line before the key is added to the file
 call("echo "" >> ~/.ssh/authorized_keys && cat ~/.ssh/{}.pub | tee -a ~/.ssh/authorized_keys".format(SSH_KEY_NAME), shell=True)
+# Add identity to ssh agent -> e.g. can be used for git authorization
+call("eval \"$(ssh-agent -s)\" && ssh-add ~/.ssh/"+SSH_KEY_NAME, shell=True)
 ###
 
 # start ssh service
