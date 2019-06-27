@@ -124,10 +124,11 @@ RUN \
     conda uninstall -y pytorch-cpu torchvision-cpu && \
     conda install -y pytorch torchvision cudatoolkit=10.0 -c pytorch --yes && \
     # install jax: https://github.com/google/jax#pip-installation
-    pip install --no-cache-dir --upgrade https://storage.googleapis.com/jax-wheels/cuda100/jaxlib-0.1.11-cp36-none-linux_x86_64.whl && \
+    pip install --no-cache-dir --upgrade https://storage.googleapis.com/jax-wheels/cuda100/jaxlib-0.1.21-cp36-none-linux_x86_64.whl && \
     pip install --no-cache-dir --upgrade jax  && \
-    # Install Rapids: https://rapids.ai/start.html#conda-install
-    pip install cudf-cuda100==0.5 cuml-cuda100==0.5 && \
+    # Install Rapids: https://rapids.ai/start.html#conda-install - Upgrade to 0.7?
+    conda install -y -c defaults -c nvidia -c rapidsai -c pytorch -c numba -c conda-forge cudf=0.7 cuml=0.7 && \
+    # pip install cudf-cuda100==0.6.1 cuml-cuda100==0.6.1 && \
     # Install Spacy GPU Support:
     pip install --no-cache-dir thinc-gpu-ops && \
     # pip install --no-cache-dir cugraph-cuda100 && \
