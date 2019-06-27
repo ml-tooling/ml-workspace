@@ -12,7 +12,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends ca-certificates
     echo "$NVIDIA_GPGKEY_SUM  cudasign.pub" | sha256sum -c --strict - && rm cudasign.pub && \
     echo "deb https://developer.download.nvidia.com/compute/cuda/repos/ubuntu1604/x86_64 /" > /etc/apt/sources.list.d/cuda.list && \
     echo "deb https://developer.download.nvidia.com/compute/machine-learning/repos/ubuntu1604/x86_64 /" > /etc/apt/sources.list.d/nvidia-ml.list && \
-    # Cleanup
+    # Cleanup - cannot use cleanup script here, otherwise too much is removed
     apt-get clean && \ 
     rm -rf /root/.cache/* && \
     rm -rf /tmp/* && \
@@ -24,14 +24,15 @@ ENV CUDA_PKG_VERSION 10-0=$CUDA_VERSION-1
 # For libraries in the cuda-compat-* package: https://docs.nvidia.com/cuda/eula/index.html#attachment-a
 RUN apt-get update && apt-get install -y --no-install-recommends \
         cuda-cudart-$CUDA_PKG_VERSION \
-        cuda-compat-10-0=410.48-1 && \
+        cuda-compat-10-0 && \
     ln -s cuda-10.0 /usr/local/cuda && \
     rm -rf /var/lib/apt/lists/* && \
-    # Cleanup
+    # Cleanup - cannot use cleanup script here, otherwise too much is removed
     apt-get clean && \ 
     rm -rf /root/.cache/* && \
     rm -rf /tmp/* && \
     rm -rf /var/lib/apt/lists/*
+
 
 RUN echo "/usr/local/nvidia/lib" >> /etc/ld.so.conf.d/nvidia.conf && \
     echo "/usr/local/nvidia/lib64" >> /etc/ld.so.conf.d/nvidia.conf
@@ -42,7 +43,7 @@ ENV LD_LIBRARY_PATH /usr/local/nvidia/lib:/usr/local/nvidia/lib64:${LD_LIBRARY_P
 # nvidia-container-runtime
 ENV NVIDIA_VISIBLE_DEVICES all
 ENV NVIDIA_DRIVER_CAPABILITIES compute,utility
-ENV NVIDIA_REQUIRE_CUDA "cuda>=10.0 brand=tesla,driver>=384,driver<385"
+ENV NVIDIA_REQUIRE_CUDA "cuda>=10.0 brand=tesla,driver>=384,driver<385 brand=tesla,driver>=410,driver<411"
 
 ### CUDA RUNTIME ###
 # https://gitlab.com/nvidia/cuda/blob/ubuntu16.04/10.0/runtime/Dockerfile
@@ -55,7 +56,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
         libnccl2=$NCCL_VERSION-1+cuda10.0 && \
     apt-mark hold libnccl2 && \
     rm -rf /var/lib/apt/lists/* && \
-    # Cleanup
+    # Cleanup - cannot use cleanup script here, otherwise too much is removed
     apt-get clean && \ 
     rm -rf /root/.cache/* && \
     rm -rf /tmp/* && \
@@ -72,7 +73,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
         cuda-command-line-tools-$CUDA_PKG_VERSION \
         libnccl-dev=$NCCL_VERSION-1+cuda10.0 && \
     rm -rf /var/lib/apt/lists/* && \ 
-    # Cleanup
+    # Cleanup - cannot use cleanup script here, otherwise too much is removed
     apt-get clean && \ 
     rm -rf /root/.cache/* && \
     rm -rf /tmp/* && \
@@ -85,7 +86,7 @@ ENV LIBRARY_PATH /usr/local/cuda/lib64/stubs
 ### CUDANN7 DEVEL ###
 # https://gitlab.com/nvidia/cuda/blob/ubuntu16.04/10.0/devel/cudnn7/Dockerfile
 
-ENV CUDNN_VERSION 7.5.0.56
+ENV CUDNN_VERSION 7.6.0.64
 LABEL com.nvidia.cudnn.version="${CUDNN_VERSION}"
 
 RUN apt-get update && apt-get install -y --no-install-recommends \
@@ -99,6 +100,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 ### END CUDANN7 ###
 
 ### GPU DATA SCIENCE LIBRARIES ###
+
 RUN \
     apt-get update && apt-get install -y libomp-dev libopenblas-base && \
     # Install cuda-toolkit (e.g. for pytorch: https://pytorch.org/): https://anaconda.org/anaconda/cudatoolkit
