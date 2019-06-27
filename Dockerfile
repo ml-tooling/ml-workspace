@@ -518,6 +518,13 @@ RUN \
     # Cleanup
     /resources/clean_layer.sh
 
+RUN \
+    # Update conda - 4.7 is much faster
+    conda update -n base -c defaults conda && \
+    pip install --no-cache-dir autopep8 pylint pytest boto3 && \
+    # Cleanup
+    /resources/clean_layer.sh
+
 ### END INCUBATION ZONE ###
 
 ### CONFIGURATION ###
