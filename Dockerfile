@@ -529,7 +529,9 @@ RUN \
 
 RUN \
     # Link Conda - All python are linke to the conda instances 
-    ln -s -f $CONDA_DIR/bin/python /usr/bin/python3 && \
+    # Linking python 3 crashes conda -> cannot install anyting - remove instead
+    #ln -s -f $CONDA_DIR/bin/python /usr/bin/python3 && \
+    rm /usr/bin/python3 && \
     ln -s -f $CONDA_DIR/bin/python /usr/bin/python && \
     ln -s -f $CONDA_DIR/envs/python2/bin/python /usr/bin/python2 && \
     rm /usr/bin/python2.7 && \
