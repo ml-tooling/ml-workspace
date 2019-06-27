@@ -37,7 +37,7 @@ RUN echo "/usr/local/nvidia/lib" >> /etc/ld.so.conf.d/nvidia.conf && \
     echo "/usr/local/nvidia/lib64" >> /etc/ld.so.conf.d/nvidia.conf
 
 ENV PATH /usr/local/nvidia/bin:/usr/local/cuda/bin:${PATH}
-ENV LD_LIBRARY_PATH /usr/local/nvidia/lib:/usr/local/nvidia/lib64
+ENV LD_LIBRARY_PATH /usr/local/nvidia/lib:/usr/local/nvidia/lib64:${LD_LIBRARY_PATH}
 
 # nvidia-container-runtime
 ENV NVIDIA_VISIBLE_DEVICES all
@@ -107,13 +107,13 @@ RUN \
     pip install --no-cache-dir cupy-cuda100 && \
     # Install pycuda: https://pypi.org/project/pycuda
     pip install --no-cache-dir pycuda && \
-    # Install gpustat: https://github.com/wookayin/gpustat
-    pip install --no-cache-dir gpustat && \
+    # Install gpu utils libs
+    pip install --no-cache-dir gpustat py3nvml gputil && \
     # Install scikit-cuda: https://scikit-cuda.readthedocs.io/en/latest/install.html
     pip install --no-cache-dir scikit-cuda && \
     # Install tensorflow gpu: https://www.tensorflow.org/install/gpu
     conda uninstall -y tensorflow && \
-    conda install -y -c anaconda tensorflow-gpu && \
+    pip install --no-cache-dir tensorflow-gpu && \
     # Install ONNX GPU Runtime
     pip uninstall -y onnxruntime && \
     pip install --no-cache-dir onnxruntime-gpu==0.4.0 && \
@@ -126,14 +126,19 @@ RUN \
     # install jax: https://github.com/google/jax#pip-installation
     pip install --no-cache-dir --upgrade https://storage.googleapis.com/jax-wheels/cuda100/jaxlib-0.1.21-cp36-none-linux_x86_64.whl && \
     pip install --no-cache-dir --upgrade jax  && \
-    # Install Rapids: https://rapids.ai/start.html#conda-install - Upgrade to 0.7?
-    conda install -y -c defaults -c nvidia -c rapidsai -c pytorch -c numba -c conda-forge cudf=0.7 cuml=0.7 && \
-    # pip install cudf-cuda100==0.6.1 cuml-cuda100==0.6.1 && \
+    # Install Rapids: https://rapids.ai/start.html#conda-install
+    conda install -y -c defaults -c nvidia -c rapidsai -c pytorch -c numba -c conda-forge \
+            cudf=0.7 \
+            cuml=0.7 \
+            cugraph=0.7 \
+            nvstrings=0.7 \
+            dask-cuda=0.7 \ 
+            dask-cudf=0.7 \
+            dask-cuml=0.7 && \
+    # Install pygpu - Required for theano: http://deeplearning.net/software/libgpuarray/
+    conda install -y pygpu && \
     # Install Spacy GPU Support:
     pip install --no-cache-dir thinc-gpu-ops && \
-    # pip install --no-cache-dir cugraph-cuda100 && \
-    # Downgrades lots of packages
-    #conda install -c nvidia/label/cuda10.0 -c rapidsai/label/cuda10.0 -c pytorch -c numba -c conda-forge -c defaults cudf=0.5 cuml=0.5  python=3.6 --yes && \ 
     # MXNet with GPU Support:
     # pip install --no-cache-dir --upgrade mxnet-cu100 && \
     # Cleanup
