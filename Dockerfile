@@ -527,6 +527,14 @@ RUN \
     # Cleanup
     /resources/clean_layer.sh
 
+RUN \
+    # Link Conda - All python are linke to the conda instances 
+    ln -s -f $CONDA_DIR/bin/python /usr/bin/python3 && \
+    ln -s -f $CONDA_DIR/bin/python /usr/bin/python && \
+    ln -s -f $CONDA_DIR/envs/python2/bin/python /usr/bin/python2 && \
+    rm /usr/bin/python2.7 && \
+    rm /usr/bin/python3.5
+
 ### END INCUBATION ZONE ###
 
 ### CONFIGURATION ###
@@ -554,6 +562,11 @@ RUN \
     mkdir -p /etc/ipython/ && echo "c = get_config(); c.IPKernelApp.matplotlib = 'inline'" > /etc/ipython/ipython_config.py
 
 # Configure VNC
+# Fix VNC python shebang - requires python2
+RUN \
+    sed -i "s@#!/usr/bin/python@#!/usr/bin/python2@g" /headless/noVNC/utils/websockify/websockify.py && \
+    sed -i "s@#!/usr/bin/python@#!/usr/bin/python2@g" /headless/noVNC/utils/websockify/run
+
 # Overwrite Backgrounds
 COPY docker-res/bg_ml_foundation.png "/root/.config/bg_sakuli.png"
 COPY docker-res/bg_ml_foundation.png "/headless/.config/bg_sakuli.png"
