@@ -522,6 +522,8 @@ RUN \
     # Update conda - 4.7 is much faster
     conda update -n base -c defaults conda && \
     pip install --no-cache-dir autopep8 pylint pytest boto3 && \
+    # Install Jupyterhub lib to make it compatible with Jupyterhub
+    pip install --no-cache-dir jupyterhub==1.0.0 && \
     # Cleanup
     /resources/clean_layer.sh
 
@@ -608,6 +610,7 @@ RUN \
     cp -r /headless/.config/xfce4/ /root/.config/ && \
     chmod a+rwx /usr/local/bin/start-notebook.sh && \
     chmod a+rwx /usr/local/bin/start.sh && \
+    chmod a+rwx /usr/local/bin/start-singleuser.sh && \
     # Set /workspace as default directory to navigate to as root user
     echo  'cd '$WORKSPACE_HOME >> $HOME/.bashrc 
 

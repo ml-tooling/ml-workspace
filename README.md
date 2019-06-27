@@ -21,7 +21,7 @@
   <a href="#getting-started">Getting Started</a> •
   <a href="#highlights">Highlights</a> •
   <a href="#features">Features & Screenshots</a> •
-  <a href="#-where-to-ask-questions">Support</a> •
+  <a href="#support">Support</a> •
   <a href="https://github.com/ml-tooling/ml-workspace/issues/new?labels=bug&template=01_bug-report.md">Report a Bug</a> •
   <a href="#contribution">Contribution</a>
 </p>
@@ -149,7 +149,7 @@ _WIP_
 
 _WIP_
 
-## 💬 Where to ask questions
+## Support
 
 The ML Workspace project is maintained by [@LukasMasuch](https://twitter.com/LukasMasuch)
 and [@raethlein](https://twitter.com/raethlein). Please understand that we won't be able
@@ -178,7 +178,7 @@ valuable if it's shared publicly so that more people can benefit from it.
 
 The workspace is equipped with a selection of best-in-class open-source development tools to help with the machine learning workflow. Many of these tools can be started from the `Open Tool` menu from Jupyter (the main application of the workspace):
 
-<img src="./docs/images/feature-open-tools.png"/>
+<img style="width: 100%" src="./docs/images/feature-open-tools.png"/>
 
 > ℹ️ _Within your workspace you have **full root & sudo access** to install any library or tool you need via terminal (e.g., `pip` or `apt-get`)_
 
@@ -186,13 +186,13 @@ The workspace is equipped with a selection of best-in-class open-source developm
 
 [Jupyter Notebook](https://jupyter.org/) is a web-based interactive environment for writing and running code. The main building blocks of Jupyter are the file-browser, the notebook editor, and kernels. The file-browser provides an interactive file manager for all notebooks, files, and folders in the `/workspace` directory.
 
-<img src="./docs/images/feature-jupyter-tree.png"/>
+<img style="width: 100%" src="./docs/images/feature-jupyter-tree.png"/>
 
 A new notebook can be created by clicking on the `New` drop-down button at the top of the list and selecting the desired language kernel.
 
 > 💡 _You can spawn interactive **terminal** instances as well by selecting `New -> Terminal` in the file-browser._
 
-<img src="./docs/images/feature-jupyter-notebook.png"/>
+<img style="width: 100%" src="./docs/images/feature-jupyter-notebook.png"/>
 
 The notebook editor enables users to author documents that include live code, markdown text, shell commands, LaTeX equations, interactive widgets, plots, and images. These notebook documents provide a complete and self-contained record of a computation that can be converted to various formats and shared with others.
 
@@ -206,13 +206,13 @@ The Notebook allows code to be run in a range of different programming languages
 
 This workspace provides an HTTP-based VNC access to the workspace via [noVNC](https://github.com/novnc/noVNC). Thereby, you can access and work within the workspace with a fully featured desktop GUI. To access this desktop GUI, go to `Open Tool`, select `VNC`, and click the `Connect` button. In the case you are asked for a password, use `vncpassword`.
 
-<img src="./docs/images/feature-desktop-vnc.png"/>
+<img style="width: 100%" src="./docs/images/feature-desktop-vnc.png"/>
 
 Once you are connected, you will see a desktop GUI that allows you to install and use full-fledged web-browsers or any other tool that is available for Ubuntu. Within the `Tools` folder on the desktop, you will find a collection of install scripts that makes it straightforward to install some of the most commonly used development tools, such as Atom, PyCharm, R-Runtime, R-Studio, or Postman (just double-click on the script).
 
 **Clipboard:** If you want to share the clipboard between your machine and the workspace, you can use the copy-paste functionality as described below:
 
-<img src="./docs/images/feature-desktop-vnc-clipboard.png"/>
+<img style="width: 100%" src="./docs/images/feature-desktop-vnc-clipboard.png"/>
 
 > 💡 _**Long-running tasks:** Use the desktop GUI for long-running Jupyter executions. By running notebooks from the browser of your workspace desktop GUI, all output will be synchronized to the notebook even if you have disconnected your browser from the notebook._
 
@@ -224,25 +224,23 @@ Once you are connected, you will see a desktop GUI that allows you to install an
 
 ### Git Integration
 
-<img src="./docs/images/feature-git-integration.png"/>
-
 Version control is a crucial aspect for productive collaboration. To make this process as smooth as possible, we have integrated a custom-made Jupyter extension specialized on pushing single notebooks, a full-fledged web-based Git client ([ungit](https://github.com/FredrikNoren/ungit)), a tool to open and edit plain text documents (e.g., `.py`, `.md`) as notebooks ([jupytext](https://github.com/mwouts/jupytext)), as well as a notebook merging tool ([nbdime](https://github.com/jupyter/nbdime)). Additionally, JupyterLab and VS Code also provide GUI-based Git clients.
 
 #### Clone Repository
 
 For cloning repositories via `https`, we recommend to navigate to the desired root folder and to click on the `git` button as shown below:
 
-<img src="./docs/images/feature-git-open.png"/>
+<img style="width: 100%" src="./docs/images/feature-git-open.png"/>
 
 This might ask for some required settings and, subsequently, opens [ungit](https://github.com/FredrikNoren/ungit), a web-based Git client with a clean and intuitive UI that makes it convenient to sync your code artifacts. Within ungit, you can clone any repository. If authentication is required, you will get asked for your credentials.
 
-<img src="./docs/images/feature-clone-repo.png"/>
+<img style="width: 100%" src="./docs/images/feature-clone-repo.png"/>
 
 #### Push, Pull, Merge, and Other Git Actions
 
 To commit and push a single notebook to a remote Git repository, we recommend to use the Git plugin integrated into Jupyter as shown below:
 
-<img src="./docs/images/feature-git-extension.png"/>
+<img style="width: 100%" src="./docs/images/feature-git-extension.png"/>
 
 For more advanced Git operations we recommend to use [ungit](https://github.com/FredrikNoren/ungit). With ungit, you can do most of the common git actions such as push, pull, merge, branch, tag, checkout, and many more.
 
@@ -250,11 +248,11 @@ For more advanced Git operations we recommend to use [ungit](https://github.com/
 
 Jupyter notebooks are great, but they often are huge files, with a very specific JSON file format. To enable seamless sharing, diffing, and merging via Git this workspace is pre-installed with [nbdime](https://github.com/jupyter/nbdime). Nbdime understands the structure of notebook documents and, therefore, automatically makes intelligent decisions when diffing and merging notebooks. In the case you have merge conflicts, nbdime will make sure that the notebook is still readable by Jupyter, as shown below:
 
-<img src="./docs/images/feature-git-merging.png"/>
+<img style="width: 100%" src="./docs/images/feature-git-merging.png"/>
 
 Furthermore, the workspace comes pre-installed with [jupytext](https://github.com/mwouts/jupytext), a Jupyter plugin that reads and writes notebooks as plain text files. This allows you to open, edit, and run scripts or markdown files (e.g., `.py`, `.md`) as notebooks within Jupyter. In the following screenshot, we have opened this `README.md` file via Jupyter:
 
-<img src="./docs/images/feature-git-jupytext.png"/>
+<img style="width: 100%" src="./docs/images/feature-git-jupytext.png"/>
 
 In combination with Git, jupytext enables a clear diff history and easy merging of version conflicts. With both of those tools, collaborating on Jupyter notebooks with Git becomes straightforward.
 
@@ -262,7 +260,7 @@ In combination with Git, jupytext enables a clear diff history and easy merging 
 
 [JupyterLab](https://github.com/jupyterlab/jupyterlab) (`Open Tool -> JupyterLab`) is the next-generation user interface for Project Jupyter. It offers all the familiar building blocks of the classic Jupyter Notebook (notebook, terminal, text editor, file browser, rich outputs, etc.) in a flexible and powerful user interface. This JupyterLab instance comes pre-installed with a few helpful extensions such as a the [jupyterlab-toc](https://github.com/jupyterlab/jupyterlab-toc), [jupyterlab-git](https://github.com/jupyterlab/jupyterlab-git), and [juptyterlab-tensorboard](https://github.com/chaoleili/jupyterlab_tensorboard).
 
-<img src="./docs/images/feature-jupyterlab.png"/>
+<img style="width: 100%" src="./docs/images/feature-jupyterlab.png"/>
 
 ### Hardware Monitoring
 
@@ -270,11 +268,11 @@ The workspace provides two preinstalled web-based tools to help developers durin
 
 [Netdata](https://github.com/netdata/netdata) (`Open Tool -> Netdata`) is a real-time hardware and performance monitoring dashboard that visualize the processes and services on your Linux systems. It monitors metrics about CPU, GPU, memory, disks, networks, processes, and more.
 
-<img src="./docs/images/feature-netdata.png" />
+<img style="width: 100%" src="./docs/images/feature-netdata.png" />
 
 [Glances](https://github.com/nicolargo/glances) (`Open Tool -> Glances`) is a web-based hardware monitoring dashboard as well and can be used as an alternative to Netdata.
 
-<img src="./docs/images/feature-glances.png"/>
+<img style="width: 100%" src="./docs/images/feature-glances.png"/>
 
 > ℹ️ _Netdata and Glances will show you the hardware statistics for the entire machine on which the workspace container is running._
 
@@ -282,11 +280,11 @@ The workspace provides two preinstalled web-based tools to help developers durin
 
 [Tensorboard](https://www.tensorflow.org/tensorboard) provides a suite of visualization tools to make it easier to understand, debug, and optimize your experiment runs. It includes logging features for scalar, histogram, model structure, embeddings, and text & image visualization. The workspace comes preinstalled with [jupyter_tensorboard extension](https://github.com/lspvic/jupyter_tensorboard) that integrates Tensorboard into the Jupyter interface with functionalities to start, manage, and stop instances. You can open a new instance for a valid logs directory as shown below:
 
-<img src="./docs/images/feature-tensorboard-open.png" />
+<img style="width: 100%" src="./docs/images/feature-tensorboard-open.png" />
 
 If you have opened a Tensorboard instance in a valid log directory, you will see the visualizations of your logged data:
 
-<img src="./docs/images/feature-tensorboard-overview.png" />
+<img style="width: 100%" src="./docs/images/feature-tensorboard-overview.png" />
 
 > ℹ️ _Tensorboard can be used in combination with many other ML frameworks besides Tensorflow. By using the [tensorboardX](https://github.com/lanpa/tensorboardX) library you can log basically from any python based library. Also, PyTorch has a direct Tensorboard integration as described [here](https://pytorch.org/docs/stable/tensorboard.html)._
 
@@ -299,11 +297,103 @@ If you prefer to see the tensorboard directly within your notebook, you can make
 
 ### SSH Access
 
-_WIP_
+SSH provides a powerful set of features that enables you to be more productive with your development tasks. You can easily setup a secure and passwordless SSH connection to a workspace by selecting `Open Tool -> SSH`. This will download a customized setup script and shows some additional instructions:
+
+> ℹ️ _The setup script only runs on Mac and Linux, Windows is currently not supported._
+
+Just run the setup script on the machine from where you want to setup a connection to the workspace and input a name for the connection (e.g. `my-workspace`). You might also get asked for some additional input during the process. Once the connection is successfully setup and tested, you can securely connect to the workspace by simply executing `ssh my-workspace`. 
+
+Besides the ability to execute commands on a remote machine, SSH also provides a variety of other features that can improve your development workflow as described in the following sections.
+
+#### Tunnel Ports
+
+An SSH connection can be used for tunneling application ports from the remote machine to the local machine, or vice versa. For example, you can expose the workspace internal port `5901` (VNC Server) to the local machine on port `5000` by executing:
+
+```
+ssh -nNT -L 5000:localhost:5901 my-workspace
+```
+
+> ℹ️ _You can also expose an application port from your local machine to a workspace via the `-R` option (instead of `-L`)._
+
+After the tunnel is established, you can use your favorite VNC viewer on your local machine and connect to `vnc://localhost:5000` (default password: `vncpassword`). To make the tunnel connection more resistant and reliable, we recommend to use [autossh](https://www.harding.motd.ca/autossh/) to automatically restart SSH tunnels in the case that the connection dies:
+
+```
+autossh -M 0 -f -nNT -L 5000:localhost:5901 my-workspace
+```
+
+Port tunneling is quite useful when you have started any server-based tool within the workspace that you like to make accessible for another machine. In its default setting, the workspace has a variety of tools already running on different ports, such as:
+
+- `8091`: Main workspace port with access to all integrated tools.
+- `8090`: Jupyter server.
+- `8054`: VS Code server.
+- `5901`: VNC server.
+- `22`: SSH server.
+
+> 📖 _For more information about port tunneling/forwarding, we recommend [this guide](https://www.everythingcli.org/ssh-tunnelling-for-fun-and-profit-local-vs-remote/)._
+
+#### Copy Data via SCP
+
+SCP allows files and directories to be securely copied to, from, or between different machines via SSH connections. For example, to copy a local file (`./local-file.txt`) into the `/workspace` folder inside the workspace, execute:
+
+```
+scp ./local-file.txt my-workspace:/workspace
+```
+
+To copy the `/workspace` directory from `my-workspace` to the working directory of the local machine, execute:
+
+```
+scp -r local-workspace:/workspace .
+```
+
+> 📖 _For more information about scp, we recommend [this guide](https://www.garron.me/en/articles/scp.html)._
+
+#### Sync Data via Rsync
+
+```
+rsync -avzP source/ destination
+```
+
+https://github.com/dooblem/bsync
+https://github.com/bcpierce00/unison
+https://axkibe.github.io/lsyncd/
+https://github.com/deajan/osync
+
+#### Mount Folders via SSHFS
+
+Besides copying and syncing data, an SSH connection can also be used to mount directories from a remote machine into the local filesystem via [SSHFS](https://github.com/libfuse/sshfs). 
+For example, to mount the `/workspace` directory of `my-workspace` into a local path (e.g. `/local/folder/path`), execute:
+
+```
+sshfs -o reconnect my-workspace:/workspace /local/folder/path
+```
+
+Once the remote directory is mounted, you can interact with the remote file system the same way as with any local directory and file.
+
+> 📖 _For more information about sshfs, we recommend [this guide](https://www.digitalocean.com/community/tutorials/how-to-use-sshfs-to-mount-remote-file-systems-over-ssh)._
 
 ### Remote Development
 
+The workspace can be integrated and used as remote runtime for a variety of common development tools and IDE's.
+
+
+. All of those integrations require a passwordless SSH connection from the local machine to the workspace. You can easily setup a
+
 _WIP: Remote Kernels, VS Code remote development, and usage as Colab local runtime._
+
+#### Jupyter - Remote Kernel
+
+The workspace can be added to a Jupyter instance as a remote kernel. 
+
+To a running 
+
+#### VS Code - Remote Machine
+
+
+#### PyCharm - Remote Interpreter
+
+
+#### Colab - Local Runtime
+
 
 ### Preinstalled Libraries and Runtimes
 
@@ -314,7 +404,7 @@ The workspace is pre-installed with many popular runtimes, data science librarie
 
 The full list of installed tools can be found within the [Dockerfile](https://github.com/ml-tooling/ml-workspace/blob/master/Dockerfile).
 
-> 💡 _**An R-Runtime** installation script is provided in the `Tools` folder on the desktop of the VNC GUI._
+> ℹ️ _**An R-Runtime** installation script is provided in the `Tools` folder on the desktop of the VNC GUI._
 
 ### GPU Support
 
