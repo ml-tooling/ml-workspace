@@ -12,7 +12,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends ca-certificates
     echo "$NVIDIA_GPGKEY_SUM  cudasign.pub" | sha256sum -c --strict - && rm cudasign.pub && \
     echo "deb https://developer.download.nvidia.com/compute/cuda/repos/ubuntu1604/x86_64 /" > /etc/apt/sources.list.d/cuda.list && \
     echo "deb https://developer.download.nvidia.com/compute/machine-learning/repos/ubuntu1604/x86_64 /" > /etc/apt/sources.list.d/nvidia-ml.list && \
-    # Cleanup
+    # Cleanup - cannot use cleanup script here, otherwise too much is removed
     apt-get clean && \ 
     rm -rf /root/.cache/* && \
     rm -rf /tmp/* && \
@@ -24,25 +24,26 @@ ENV CUDA_PKG_VERSION 10-0=$CUDA_VERSION-1
 # For libraries in the cuda-compat-* package: https://docs.nvidia.com/cuda/eula/index.html#attachment-a
 RUN apt-get update && apt-get install -y --no-install-recommends \
         cuda-cudart-$CUDA_PKG_VERSION \
-        cuda-compat-10-0=410.48-1 && \
+        cuda-compat-10-0 && \
     ln -s cuda-10.0 /usr/local/cuda && \
     rm -rf /var/lib/apt/lists/* && \
-    # Cleanup
+    # Cleanup - cannot use cleanup script here, otherwise too much is removed
     apt-get clean && \ 
     rm -rf /root/.cache/* && \
     rm -rf /tmp/* && \
     rm -rf /var/lib/apt/lists/*
 
+
 RUN echo "/usr/local/nvidia/lib" >> /etc/ld.so.conf.d/nvidia.conf && \
     echo "/usr/local/nvidia/lib64" >> /etc/ld.so.conf.d/nvidia.conf
 
 ENV PATH /usr/local/nvidia/bin:/usr/local/cuda/bin:${PATH}
-ENV LD_LIBRARY_PATH /usr/local/nvidia/lib:/usr/local/nvidia/lib64
+ENV LD_LIBRARY_PATH /usr/local/nvidia/lib:/usr/local/nvidia/lib64:${LD_LIBRARY_PATH}
 
 # nvidia-container-runtime
 ENV NVIDIA_VISIBLE_DEVICES all
 ENV NVIDIA_DRIVER_CAPABILITIES compute,utility
-ENV NVIDIA_REQUIRE_CUDA "cuda>=10.0 brand=tesla,driver>=384,driver<385"
+ENV NVIDIA_REQUIRE_CUDA "cuda>=10.0 brand=tesla,driver>=384,driver<385 brand=tesla,driver>=410,driver<411"
 
 ### CUDA RUNTIME ###
 # https://gitlab.com/nvidia/cuda/blob/ubuntu16.04/10.0/runtime/Dockerfile
@@ -55,7 +56,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
         libnccl2=$NCCL_VERSION-1+cuda10.0 && \
     apt-mark hold libnccl2 && \
     rm -rf /var/lib/apt/lists/* && \
-    # Cleanup
+    # Cleanup - cannot use cleanup script here, otherwise too much is removed
     apt-get clean && \ 
     rm -rf /root/.cache/* && \
     rm -rf /tmp/* && \
@@ -72,7 +73,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
         cuda-command-line-tools-$CUDA_PKG_VERSION \
         libnccl-dev=$NCCL_VERSION-1+cuda10.0 && \
     rm -rf /var/lib/apt/lists/* && \ 
-    # Cleanup
+    # Cleanup - cannot use cleanup script here, otherwise too much is removed
     apt-get clean && \ 
     rm -rf /root/.cache/* && \
     rm -rf /tmp/* && \
@@ -85,7 +86,7 @@ ENV LIBRARY_PATH /usr/local/cuda/lib64/stubs
 ### CUDANN7 DEVEL ###
 # https://gitlab.com/nvidia/cuda/blob/ubuntu16.04/10.0/devel/cudnn7/Dockerfile
 
-ENV CUDNN_VERSION 7.5.0.56
+ENV CUDNN_VERSION 7.6.0.64
 LABEL com.nvidia.cudnn.version="${CUDNN_VERSION}"
 
 RUN apt-get update && apt-get install -y --no-install-recommends \
@@ -99,6 +100,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 ### END CUDANN7 ###
 
 ### GPU DATA SCIENCE LIBRARIES ###
+
 RUN \
     apt-get update && apt-get install -y libomp-dev libopenblas-base && \
     # Install cuda-toolkit (e.g. for pytorch: https://pytorch.org/): https://anaconda.org/anaconda/cudatoolkit
@@ -107,32 +109,38 @@ RUN \
     pip install --no-cache-dir cupy-cuda100 && \
     # Install pycuda: https://pypi.org/project/pycuda
     pip install --no-cache-dir pycuda && \
-    # Install gpustat: https://github.com/wookayin/gpustat
-    pip install --no-cache-dir gpustat && \
+    # Install gpu utils libs
+    pip install --no-cache-dir gpustat py3nvml gputil && \
     # Install scikit-cuda: https://scikit-cuda.readthedocs.io/en/latest/install.html
     pip install --no-cache-dir scikit-cuda && \
-    # Install tensorflow gpu: https://www.tensorflow.org/install/gpu
-    conda uninstall -y tensorflow && \
-    conda install -y -c anaconda tensorflow-gpu && \
+    # Install tensorflow gpu - conda uninstall removes too much and conda remove corrupts environment
+    pip uninstall -y tensorflow && \
+    pip install --no-cache-dir tensorflow-gpu && \
     # Install ONNX GPU Runtime
     pip uninstall -y onnxruntime && \
     pip install --no-cache-dir onnxruntime-gpu==0.4.0 && \
     # Install cntk
     pip uninstall -y cntk && \
     pip install --no-cache-dir cntk-gpu && \
-    # Install pytorch gpu
-    conda uninstall -y pytorch-cpu torchvision-cpu && \
+    # Install pytorch gpu - conda uninstall removes too much and conda remove corrupts environment
+    pip uninstall -y pytorch-cpu torchvision-cpu && \
     conda install -y pytorch torchvision cudatoolkit=10.0 -c pytorch --yes && \
     # install jax: https://github.com/google/jax#pip-installation
-    pip install --no-cache-dir --upgrade https://storage.googleapis.com/jax-wheels/cuda100/jaxlib-0.1.11-cp36-none-linux_x86_64.whl && \
+    pip install --no-cache-dir --upgrade https://storage.googleapis.com/jax-wheels/cuda100/jaxlib-0.1.21-cp36-none-linux_x86_64.whl && \
     pip install --no-cache-dir --upgrade jax  && \
     # Install Rapids: https://rapids.ai/start.html#conda-install
-    pip install cudf-cuda100==0.5 cuml-cuda100==0.5 && \
+    conda install -y -c defaults -c nvidia -c rapidsai -c pytorch -c numba -c conda-forge \
+            cudf=0.7 \
+            cuml=0.7 \
+            cugraph=0.7 \
+            nvstrings=0.7 \
+            dask-cuda=0.7 \ 
+            dask-cudf=0.7 \
+            dask-cuml=0.7 && \
+    # Install pygpu - Required for theano: http://deeplearning.net/software/libgpuarray/
+    conda install -y pygpu && \
     # Install Spacy GPU Support:
     pip install --no-cache-dir thinc-gpu-ops && \
-    # pip install --no-cache-dir cugraph-cuda100 && \
-    # Downgrades lots of packages
-    #conda install -c nvidia/label/cuda10.0 -c rapidsai/label/cuda10.0 -c pytorch -c numba -c conda-forge -c defaults cudf=0.5 cuml=0.5  python=3.6 --yes && \ 
     # MXNet with GPU Support:
     # pip install --no-cache-dir --upgrade mxnet-cu100 && \
     # Cleanup

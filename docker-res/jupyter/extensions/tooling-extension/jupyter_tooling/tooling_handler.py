@@ -53,9 +53,16 @@ def handle_error(handler, status_code: int, error_msg: str = None, exception=Non
 def send_data(handler, data):
     handler.finish(json.dumps(data, sort_keys=True, indent=4))
 
+class PingHandler(IPythonHandler):
+
+    @web.authenticated
+    def get(self):
+        # Used by Jupyterhub to test if user cookies are valid
+        self.finish("Successful")
 
 class GitCommitHandler(IPythonHandler):
 
+    @web.authenticated
     def post(self):
         data = self.get_json_body()
 
@@ -82,6 +89,7 @@ class GitCommitHandler(IPythonHandler):
 
 class GitInfoHandler(IPythonHandler):
 
+    @web.authenticated
     def get(self):
         try:
             path = _resolve_path(self.get_argument('path', None))
@@ -90,6 +98,7 @@ class GitInfoHandler(IPythonHandler):
             handle_error(self, 500, exception=ex)
             return
 
+    @web.authenticated
     def post(self):
 
         path = _resolve_path(self.get_argument('path', None))
@@ -122,6 +131,7 @@ class GitInfoHandler(IPythonHandler):
 class SSHHandler(IPythonHandler):
     private_ssh_key_path = "/root/.ssh/id_ed25519"
 
+    @web.authenticated
     def get(self):
         try:
             with open(self.private_ssh_key_path, "r") as f:
@@ -138,7 +148,7 @@ class SSHHandler(IPythonHandler):
             SSH_JUMPHOST_TARGET = os.environ.get("SSH_JUMPHOST_TARGET", "")
             is_runtime_manager_existing = False if SSH_JUMPHOST_TARGET == "" else True
  
-            RUNTIME_CONFIG_NAME = "runtime-"
+            RUNTIME_CONFIG_NAME = "workspace-"
             if is_runtime_manager_existing:
                 HOSTNAME_RUNTIME = SSH_JUMPHOST_TARGET
                 HOSTNAME_MANAGER = HOSTNAME
@@ -379,8 +389,8 @@ def load_jupyter_server_extension(nb_server_app) -> None:
 
     host_pattern = '.*$'
 
-    route_pattern = url_path_join(web_app.settings['base_url'], '/test')
-    web_app.add_handlers(host_pattern, [(route_pattern, HelloWorldHandler)])
+    route_pattern = url_path_join(web_app.settings['base_url'], '/tooling/ping')
+    web_app.add_handlers(host_pattern, [(route_pattern, PingHandler)])
 
     route_pattern = url_path_join(web_app.settings['base_url'], '/git/info')
     web_app.add_handlers(host_pattern, [(route_pattern, GitInfoHandler)])

@@ -57,6 +57,7 @@ elif args.mode == "backup":
                         --include='/.config' \
                         --include='/.config/xfce4/' --include='/.config/xfce4/xfconf/***' \
                         --include='/.config/Code/' --include='/.config/Code/User/' --include='/.config/Code/User/settings.json' \
+                        --include='/.config/gtk-3.0/' --include='/.config/gtk-3.0/bookmarks' \
                         --include='/.gitconfig' \
                         --include='/.local/' --include='/.local/share/' --include='/.local/share/jupyter/' --include='/.local/share/jupyter/kernels/***' \
                         --include='/.jupyter/***'"

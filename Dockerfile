@@ -514,9 +514,28 @@ RUN \
 
 RUN \
     apt-get update && \
-    apt-get install --yes --no-install-recommends tmux nano && \
+    apt-get install --yes --no-install-recommends tmux nano nautilus gvfs-backends && \
     # Cleanup
     /resources/clean_layer.sh
+
+RUN \
+    # Update conda - 4.7 is much faster
+    conda update -n base -c defaults conda && \
+    pip install --no-cache-dir autopep8 pylint pytest boto3 && \
+    # Install Jupyterhub lib to make it compatible with Jupyterhub
+    pip install --no-cache-dir jupyterhub==1.0.0 && \
+    # Cleanup
+    /resources/clean_layer.sh
+
+RUN \
+    # Link Conda - All python are linke to the conda instances 
+    # Linking python 3 crashes conda -> cannot install anyting - remove instead
+    #ln -s -f $CONDA_DIR/bin/python /usr/bin/python3 && \
+    rm /usr/bin/python3 && \
+    ln -s -f $CONDA_DIR/bin/python /usr/bin/python && \
+    ln -s -f $CONDA_DIR/envs/python2/bin/python /usr/bin/python2 && \
+    rm /usr/bin/python2.7 && \
+    rm /usr/bin/python3.5
 
 ### END INCUBATION ZONE ###
 
@@ -545,6 +564,11 @@ RUN \
     mkdir -p /etc/ipython/ && echo "c = get_config(); c.IPKernelApp.matplotlib = 'inline'" > /etc/ipython/ipython_config.py
 
 # Configure VNC
+# Fix VNC python shebang - requires python2
+RUN \
+    sed -i "s@#!/usr/bin/python@#!/usr/bin/python2@g" /headless/noVNC/utils/websockify/websockify.py && \
+    sed -i "s@#!/usr/bin/python@#!/usr/bin/python2@g" /headless/noVNC/utils/websockify/run
+
 # Overwrite Backgrounds
 COPY docker-res/bg_ml_foundation.png "/root/.config/bg_sakuli.png"
 COPY docker-res/bg_ml_foundation.png "/headless/.config/bg_sakuli.png"
@@ -582,6 +606,7 @@ COPY docker-res/config/sshd_config /etc/ssh/sshd_config
 COPY docker-res/config/nginx.conf /etc/nginx/nginx.conf
 COPY docker-res/config/netdata.conf /etc/netdata/netdata.conf
 COPY docker-res/config/mimeapps.list /root/.config/mimeapps.list
+COPY docker-res/config/bookmarks /root/.config/gtk-3.0/bookmarks
 COPY docker-res/config/chromium-browser.init /root/.chromium-browser.init
 COPY docker-res/jupyter/sidebar.jupyterlab-settings /root/.jupyter/lab/user-settings/@jupyterlab/application-extension/
 COPY docker-res/jupyter/plugin.jupyterlab-settings /root/.jupyter/lab/user-settings/@jupyterlab/extensionmanager-extension/
@@ -600,6 +625,7 @@ RUN \
     cp -r /headless/.config/xfce4/ /root/.config/ && \
     chmod a+rwx /usr/local/bin/start-notebook.sh && \
     chmod a+rwx /usr/local/bin/start.sh && \
+    chmod a+rwx /usr/local/bin/start-singleuser.sh && \
     # Set /workspace as default directory to navigate to as root user
     echo  'cd '$WORKSPACE_HOME >> $HOME/.bashrc 
 
@@ -619,7 +645,7 @@ LABEL "io.k8s.description"="All-in-one web-based IDE specialized for machine lea
     "io.k8s.display-name"="Machine Learning Workspace" \
     "io.openshift.expose-services"="8091:http, 5901:xvnc" \
     "io.openshift.non-scalable"="true" \
-    "io.openshift.tags"="	vnc, ubuntu, xfce, workspace, machine learning" \
+    "io.openshift.tags"="vnc, ubuntu, xfce, workspace, machine learning" \
     "io.openshift.min-memory"="1Gi" \
     "workspace.version"=$workspace_version \
     "workspace.type"=$WORKSPACE_TYPE

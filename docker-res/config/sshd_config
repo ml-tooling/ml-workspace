@@ -9,11 +9,16 @@ ClientAliveCountMax 10
 # https://askubuntu.com/questions/50064/reverse-port-tunnelling
 GatewayPorts clientspecified
 
-# Do not allow password based authentication
+# Only allow key-based authentication -> higher security
 PasswordAuthentication no
+ChallengeResponseAuthentication no
+GSSAPIAuthentication no
 
 # Activate SFTP server
 Subsystem sftp internal-sftp
+
+# Allow SSH-Agent Forwarding
+AllowAgentForwarding yes
 
 # Activate X11 Forwarding (GUI Access)  
 X11Forwarding yes

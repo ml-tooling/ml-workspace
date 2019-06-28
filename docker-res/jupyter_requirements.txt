@@ -1,7 +1,7 @@
 ## Jupyter Compontents
 
 # Update pyzmq to newest version, otherwise warning message is shown
-pyzmq==18.0.1 # Python bindings for 0MQ
+pyzmq==18.0.2 # Python bindings for 0MQ
 jupyter-console==6.0.0 # Jupyter terminal console
 jupyter_kernel_gateway==2.3.0 # A web server for spawning and communicating with Jupyter kernels
 ipyparallel==6.2.4 # Interactive Parallel Computing with IPython
@@ -13,8 +13,8 @@ jupyter_contrib_nbextensions==0.5.1 # A collection of Jupyter nbextensions.
 jupyter_nbextensions_configurator==0.4.1 # jupyter serverextension providing configuration interfaces for nbextensions.
 jupyter-tensorboard==0.1.10 # Jupyter notebook integration for tensorboard.
 papermill==1.0.1 # Parametrize and run Jupyter and nteract Notebooks
-jupytext==1.1.6 # Jupyter notebooks as Markdown documents, Julia, Python or R scripts
-nbresuse==0.3.1 # Simple Jupyter extension to show how much resources (RAM) your notebook is using
+jupytext==1.1.7 # Jupyter notebooks as Markdown documents, Julia, Python or R scripts
+nbresuse==0.3.2 # Simple Jupyter extension to show how much resources (RAM) your notebook is using
 # currently not working voila==0.1.2 # Serving read-only live Jupyter notebooks
 
 ## Interactive Components
