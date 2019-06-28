@@ -113,8 +113,8 @@ RUN \
     pip install --no-cache-dir gpustat py3nvml gputil && \
     # Install scikit-cuda: https://scikit-cuda.readthedocs.io/en/latest/install.html
     pip install --no-cache-dir scikit-cuda && \
-    # Install tensorflow gpu: https://www.tensorflow.org/install/gpu
-    conda remove --force -y tensorflow && \
+    # Install tensorflow gpu - conda uninstall removes too much and conda remove corrupts environment
+    pip uninstall -y tensorflow && \
     pip install --no-cache-dir tensorflow-gpu && \
     # Install ONNX GPU Runtime
     pip uninstall -y onnxruntime && \
@@ -122,8 +122,8 @@ RUN \
     # Install cntk
     pip uninstall -y cntk && \
     pip install --no-cache-dir cntk-gpu && \
-    # Install pytorch gpu
-    conda remove --force -y pytorch-cpu torchvision-cpu && \
+    # Install pytorch gpu - conda uninstall removes too much and conda remove corrupts environment
+    pip uninstall -y pytorch-cpu torchvision-cpu && \
     conda install -y pytorch torchvision cudatoolkit=10.0 -c pytorch --yes && \
     # install jax: https://github.com/google/jax#pip-installation
     pip install --no-cache-dir --upgrade https://storage.googleapis.com/jax-wheels/cuda100/jaxlib-0.1.21-cp36-none-linux_x86_64.whl && \
