@@ -12,6 +12,7 @@ c.NotebookApp.port = 8090
 c.NotebookApp.notebook_dir="./"
 c.NotebookApp.open_browser = False
 c.NotebookApp.allow_root=True
+c.NotebookApp.iopub_msg_rate_limit = 100000000
 c.NotebookApp.iopub_data_rate_limit=2147483647
 c.NotebookApp.port_retries=0
 c.NotebookApp.quit_button=False
@@ -42,11 +43,12 @@ if shutdown_inactive_kernels and shutdown_inactive_kernels.lower() != "false":
         pass
     
     if cull_timeout > 0:
+        print("Activating automatic kernel shutdown after " + str(cull_timeout) + "s of inactivity.")
         # Timeout (in seconds) after which a kernel is considered idle and ready to be shutdown.
         c.MappingKernelManager.cull_idle_timeout = cull_timeout
         # Do not shutdown if kernel is busy (e.g on long-running kernel cells)
         c.MappingKernelManager.cull_busy = False
-        # Do not shutdown kernels that are connected via browser
+        # Do not shutdown kernels that are connected via browser, activate?
         c.MappingKernelManager.cull_connected = False
 
 # https://github.com/timkpaine/jupyterlab_iframe
