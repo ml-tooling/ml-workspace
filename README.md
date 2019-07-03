@@ -103,8 +103,8 @@ The container can be configured with the following environment variables (`--env
     </tr>
     <tr>
         <td>SHUTDOWN_INACTIVE_KERNELS</td>
-        <td>Automatically shutdown inactive kernels after a given timeout (to cleanup memory or gpu resources). Value can be either a timeout in seconds or set to `True` with a default value of 48h.</td>
-        <td></td>
+        <td>Automatically shutdown inactive kernels after a given timeout (to cleanup memory or gpu resources). Value can be either a timeout in seconds or set to `true` with a default value of 48h.</td>
+        <td>false</td>
     </tr>
     <tr>
         <td>NOTEBOOK_ARGS</td>

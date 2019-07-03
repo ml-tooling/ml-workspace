@@ -630,7 +630,8 @@ RUN \
     echo  'cd '$WORKSPACE_HOME >> $HOME/.bashrc 
 
 # Set default values for environment variables
-ENV WORKSPACE_CONFIG_BACKUP="true"
+ENV WORKSPACE_CONFIG_BACKUP="true" \
+    SHUTDOWN_INACTIVE_KERNELS="false" 
 
 ### END CONFIGURATION ###
 
