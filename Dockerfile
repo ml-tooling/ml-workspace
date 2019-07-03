@@ -514,7 +514,7 @@ RUN \
 
 RUN \
     apt-get update && \
-    apt-get install --yes --no-install-recommends tmux nano nautilus gvfs-backends && \
+    apt-get install --yes --no-install-recommends tmux nano htop nautilus gvfs-backends && \
     # Cleanup
     /resources/clean_layer.sh
 
@@ -580,8 +580,8 @@ ENV \
 
 # vnc screen changes
 RUN \
-    sed -i "s@UI.initSetting('path', 'websockify')@UI.initSetting('path', 'workspace/tools/vnc/websockify')@g" /headless/noVNC/app/ui.js && \
-    sed -i "s@UI.updateSetting('path')@UI.updateSetting('path', 'workspace/tools/vnc/websockify')@g" /headless/noVNC/app/ui.js && \
+    # change init settings to update so that local storage is always overwritten
+    sed -i "s@UI.initSetting('path', 'websockify')@UI.updateSetting('path', 'workspace/tools/vnc/websockify')@g" /headless/noVNC/app/ui.js && \
     sed -i "s@UI.initSetting('resize', 'off')@UI.initSetting('resize', 'remote')@g" /headless/noVNC/app/ui.js && \
     sed -i "s@UI.initSetting('reconnect', false)@UI.initSetting('reconnect', true)@g" /headless/noVNC/app/ui.js && \
     sed -i 's/<div id="noVNC_container">/<div id="noVNC_container" style="border-radius: 0 0 0 0">/g' /headless/noVNC/vnc.html && \

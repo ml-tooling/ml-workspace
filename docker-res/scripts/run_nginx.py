@@ -23,6 +23,10 @@ if ENV_NAME_SERVICE_PASSWORD in os.environ:
     ENV_SERVICE_PASSWORD = os.environ[ENV_NAME_SERVICE_PASSWORD]
 
 NGINX_FILE = "/etc/nginx/nginx.conf"
+
+# Replace base url placeholders with actual base url -> should 
+call("sed -i 's@{WORKSPACE_BASE_URL}@" + os.environ["WORKSPACE_BASE_URL"].rstrip('/') + "@g' " + NGINX_FILE, shell=True)
+
 # PREPARE SSL SERVING
 ENV_NAME_SERVICE_SSL_ENABLED = "WORKSPACE_SSL_ENABLED"
 if ENV_NAME_SERVICE_SSL_ENABLED in os.environ \
