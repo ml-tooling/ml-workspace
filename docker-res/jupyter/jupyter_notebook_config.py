@@ -33,9 +33,9 @@ c.FileContentsManager.delete_to_trash=False
 c.IPKernelApp.matplotlib = 'inline'
 
 shutdown_inactive_kernels = os.getenv("SHUTDOWN_INACTIVE_KERNELS", "false")
-if shutdown_inactive_kernels and shutdown_inactive_kernels.lower() != "false".lower():
+if shutdown_inactive_kernels and shutdown_inactive_kernels.lower() != "false":
     cull_timeout = 172800 # default is 48 hours
-     try: 
+    try: 
         # see if env variable is set as timout integer
         cull_timeout = int(shutdown_inactive_kernels)
     except ValueError:
