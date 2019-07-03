@@ -32,6 +32,23 @@ c.FileContentsManager.delete_to_trash=False
 # Always use inline for matplotlib
 c.IPKernelApp.matplotlib = 'inline'
 
+shutdown_inactive_kernels = os.getenv("SHUTDOWN_INACTIVE_KERNELS", "false")
+if shutdown_inactive_kernels and shutdown_inactive_kernels.lower() != "false".lower():
+    cull_timeout = 172800 # default is 48 hours
+     try: 
+        # see if env variable is set as timout integer
+        cull_timeout = int(shutdown_inactive_kernels)
+    except ValueError:
+        pass
+    
+    if cull_timeout > 0:
+        # Timeout (in seconds) after which a kernel is considered idle and ready to be shutdown.
+        c.MappingKernelManager.cull_idle_timeout = cull_timeout
+        # Do not shutdown if kernel is busy (e.g on long-running kernel cells)
+        c.MappingKernelManager.cull_busy = False
+        # Do not shutdown kernels that are connected via browser
+        c.MappingKernelManager.cull_connected = False
+
 # https://github.com/timkpaine/jupyterlab_iframe
 try:
     if not base_url.startswith("/"):
