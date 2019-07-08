@@ -550,6 +550,8 @@ RUN \
     # Cleanup
     /resources/clean_layer.sh
 
+ENV XDG_RUNTIME_DIR=/tmp
+
 ### END INCUBATION ZONE ###
 
 ### CONFIGURATION ###
@@ -653,6 +655,7 @@ ARG workspace_version="unknown"
 ENV WORKSPACE_VERSION=$workspace_version
 
 # refresh ssh environment variables here again
+# TODO remove
 RUN printenv > $HOME/.ssh/environment
 
 # Overwrite & add Labels
