@@ -8,6 +8,9 @@ from subprocess import call
 import os
 import sys
 
+# Export environment for ssh sessions
+call("printenv > $HOME/.ssh/environment", shell=True)
+
 ### Generate SSH Key (for ssh access, also remote kernel access)
 # Generate a key pair without a passphrase (having the key should be enough) that can be used to ssh into the container
 # Add the public key to authorized_keys so someone with the public key can use it to ssh into the container
