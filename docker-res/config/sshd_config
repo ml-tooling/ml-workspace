@@ -1,3 +1,7 @@
+# Logging Configuration
+SyslogFacility AUTH
+LogLevel INFO
+
 # Allow transfer of user environment variables
 PermitUserEnvironment yes
 
