@@ -56,9 +56,3 @@ if ENV_SERVICE_USER and ENV_SERVICE_PASSWORD:
 
 # create / copy certificates
 call(ENV_RESOURCES_PATH + "/scripts/setup_certs.sh", shell=True)
-
-# start nginx
-call("nginx", shell=True)
-
-# start sslh - SSH and HTTP(s) on same port
-call("sslh -p 0.0.0.0:8091 --ssh 127.0.0.1:22 --http 127.0.0.1:8092 --ssl 127.0.0.1:8092", shell=True)

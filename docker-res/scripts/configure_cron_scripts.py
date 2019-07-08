@@ -10,9 +10,6 @@ import sys
 
 ENV_RESOURCES_PATH = os.getenv("RESOURCES_PATH", "/resources")
 
-# start cron service
-call("service cron start", shell=True)
-
 # start check xfdesktop leak process
 call("python " + ENV_RESOURCES_PATH + "/scripts/check_xfdesktop_leak.py schedule", shell=True)
 

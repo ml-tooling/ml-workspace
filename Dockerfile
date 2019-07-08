@@ -537,6 +537,19 @@ RUN \
     rm /usr/bin/python2.7 && \
     rm /usr/bin/python3.5
 
+RUN \
+    # Create sshd run directory - required for starting process via supervisor
+    mkdir /var/run/sshd && chmod 400 /var/run/sshd && \
+    pip install --no-cache-dir --upgrade supervisor supervisor-stdout && \
+    # Cleanup
+    /resources/clean_layer.sh
+
+RUN \
+    apt-get update && \
+    apt-get install --yes --no-install-recommends rsyslog && \
+    # Cleanup
+    /resources/clean_layer.sh
+
 ### END INCUBATION ZONE ###
 
 ### CONFIGURATION ###
@@ -605,6 +618,7 @@ COPY docker-res/config/ssh_config /root/.ssh/config
 COPY docker-res/config/sshd_config /etc/ssh/sshd_config
 COPY docker-res/config/nginx.conf /etc/nginx/nginx.conf
 COPY docker-res/config/netdata.conf /etc/netdata/netdata.conf
+COPY docker-res/config/supervisord.conf /etc/supervisor/supervisord.conf
 COPY docker-res/config/mimeapps.list /root/.config/mimeapps.list
 COPY docker-res/config/bookmarks /root/.config/gtk-3.0/bookmarks
 COPY docker-res/config/chromium-browser.init /root/.chromium-browser.init
@@ -655,7 +669,8 @@ LABEL "io.k8s.description"="All-in-one web-based IDE specialized for machine lea
 # So that they do not lose their data if they delete the container.
 # TODO: VOLUME [ "/workspace" ]
 
-ENTRYPOINT ["/tini", "--", "python", "/resources/run.py"]
+# use global option with tini to kill full process groups: https://github.com/krallin/tini#process-group-killing
+ENTRYPOINT ["/tini", "-g", "--", "python", "/resources/run.py"]
 
 # Port 8091 is the main access port (also includes SSH)
 # Port 5091 is the VNC port

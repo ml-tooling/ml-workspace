@@ -44,20 +44,22 @@ os.environ[ENV_NAME_WORKSPACE_BASE_URL] = base_url
 
 ENV_RESOURCES_PATH = os.getenv("RESOURCES_PATH", "/resources")
 
-log.info("Configure and run nginx service")
-call("python " + ENV_RESOURCES_PATH + "/scripts/run_nginx.py", shell=True)
+log.info("Configure nginx service")
+call("python " + ENV_RESOURCES_PATH + "/scripts/configure_nginx.py", shell=True)
 
-log.info("Configure and run ssh service")
-call("python " + ENV_RESOURCES_PATH + "/scripts/run_ssh.py", shell=True)
+log.info("Configure ssh service")
+call("python " + ENV_RESOURCES_PATH + "/scripts/configure_ssh.py", shell=True)
 
-log.info("Configure and run tools")
-call("python " + ENV_RESOURCES_PATH + "/scripts/run_tools.py", shell=True)
+log.info("Configure tools")
+call("python " + ENV_RESOURCES_PATH + "/scripts/configure_tools.py", shell=True)
 
-log.info("Configure and run cron scripts")
-call("python " + ENV_RESOURCES_PATH + "/scripts/run_cron_scripts.py", shell=True)
+log.info("Configure cron scripts")
+call("python " + ENV_RESOURCES_PATH + "/scripts/configure_cron_scripts.py", shell=True)
 
 log.info("Configure and run custom scripts")
 call("python " + ENV_RESOURCES_PATH + "/scripts/run_custom_scripts.py", shell=True)
 
-log.info("Configure and run jupyter")
-call("python " + ENV_RESOURCES_PATH + "/scripts/run_jupyter.py", shell=True)
+# Start VNC
+call("/dockerstartup/vnc_startup.sh &", shell=True)
+
+call('supervisord -n -c /etc/supervisor/supervisord.conf', shell=True)

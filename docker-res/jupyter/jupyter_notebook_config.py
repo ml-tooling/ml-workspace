@@ -12,6 +12,7 @@ c.NotebookApp.port = 8090
 c.NotebookApp.notebook_dir="./"
 c.NotebookApp.open_browser = False
 c.NotebookApp.allow_root=True
+# https://forums.fast.ai/t/jupyter-notebook-enhancements-tips-and-tricks/17064/22
 c.NotebookApp.iopub_msg_rate_limit = 100000000
 c.NotebookApp.iopub_data_rate_limit=2147483647
 c.NotebookApp.port_retries=0
