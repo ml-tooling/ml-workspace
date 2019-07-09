@@ -1,3 +1,7 @@
+# Logging Configuration
+SyslogFacility AUTH
+LogLevel INFO
+
 # Allow transfer of user environment variables
 PermitUserEnvironment yes
 
@@ -22,3 +26,5 @@ AllowAgentForwarding yes
 
 # Activate X11 Forwarding (GUI Access)  
 X11Forwarding yes
+X11UseLocalhost no
+X11DisplayOffset 10

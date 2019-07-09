@@ -105,7 +105,7 @@ define(['base/js/namespace', 'base/js/dialog', 'jquery', 'base/js/utils'], funct
             <span>Open Tool</span> <span class="caret"></span> </button> \
            <ul id="start-tool" class="dropdown-menu" style="right: 0; left: auto;">' + tools_menu_items + ' </ul> </div>';
         
-        $(tools_dropwdown).insertBefore($('#login_widget'));
+        $('#header-container').append(tools_dropwdown)
 
         $('#ssh-access').click(function () {
             window.open(basePath + "ssh/setup?hostname=" + window.location.hostname + "&port=" + window.location.port, '_blank')

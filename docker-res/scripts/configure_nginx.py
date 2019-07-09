@@ -23,6 +23,10 @@ if ENV_NAME_SERVICE_PASSWORD in os.environ:
     ENV_SERVICE_PASSWORD = os.environ[ENV_NAME_SERVICE_PASSWORD]
 
 NGINX_FILE = "/etc/nginx/nginx.conf"
+
+# Replace base url placeholders with actual base url -> should 
+call("sed -i 's@{WORKSPACE_BASE_URL}@" + os.environ["WORKSPACE_BASE_URL"].rstrip('/') + "@g' " + NGINX_FILE, shell=True)
+
 # PREPARE SSL SERVING
 ENV_NAME_SERVICE_SSL_ENABLED = "WORKSPACE_SSL_ENABLED"
 if ENV_NAME_SERVICE_SSL_ENABLED in os.environ \
@@ -52,9 +56,3 @@ if ENV_SERVICE_USER and ENV_SERVICE_PASSWORD:
 
 # create / copy certificates
 call(ENV_RESOURCES_PATH + "/scripts/setup_certs.sh", shell=True)
-
-# start nginx
-call("nginx", shell=True)
-
-# start sslh - SSH and HTTP(s) on same port
-call("sslh -p 0.0.0.0:8091 --ssh 127.0.0.1:22 --http 127.0.0.1:8092 --ssl 127.0.0.1:8092", shell=True)

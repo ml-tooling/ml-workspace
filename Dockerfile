@@ -514,7 +514,7 @@ RUN \
 
 RUN \
     apt-get update && \
-    apt-get install --yes --no-install-recommends tmux nano nautilus gvfs-backends && \
+    apt-get install --yes --no-install-recommends tmux nano htop nautilus gvfs-backends && \
     # Cleanup
     /resources/clean_layer.sh
 
@@ -536,6 +536,21 @@ RUN \
     ln -s -f $CONDA_DIR/envs/python2/bin/python /usr/bin/python2 && \
     rm /usr/bin/python2.7 && \
     rm /usr/bin/python3.5
+
+RUN \
+    # Create sshd run directory - required for starting process via supervisor
+    mkdir /var/run/sshd && chmod 400 /var/run/sshd && \
+    pip install --no-cache-dir --upgrade supervisor supervisor-stdout && \
+    # Cleanup
+    /resources/clean_layer.sh
+
+RUN \
+    apt-get update && \
+    apt-get install --yes --no-install-recommends rsyslog && \
+    # Cleanup
+    /resources/clean_layer.sh
+
+ENV XDG_RUNTIME_DIR=/tmp
 
 ### END INCUBATION ZONE ###
 
@@ -580,8 +595,8 @@ ENV \
 
 # vnc screen changes
 RUN \
-    sed -i "s@UI.initSetting('path', 'websockify')@UI.initSetting('path', 'workspace/tools/vnc/websockify')@g" /headless/noVNC/app/ui.js && \
-    sed -i "s@UI.updateSetting('path')@UI.updateSetting('path', 'workspace/tools/vnc/websockify')@g" /headless/noVNC/app/ui.js && \
+    # change init settings to update so that local storage is always overwritten
+    sed -i "s@UI.initSetting('path', 'websockify')@UI.updateSetting('path', 'workspace/tools/vnc/websockify')@g" /headless/noVNC/app/ui.js && \
     sed -i "s@UI.initSetting('resize', 'off')@UI.initSetting('resize', 'remote')@g" /headless/noVNC/app/ui.js && \
     sed -i "s@UI.initSetting('reconnect', false)@UI.initSetting('reconnect', true)@g" /headless/noVNC/app/ui.js && \
     sed -i 's/<div id="noVNC_container">/<div id="noVNC_container" style="border-radius: 0 0 0 0">/g' /headless/noVNC/vnc.html && \
@@ -605,6 +620,7 @@ COPY docker-res/config/ssh_config /root/.ssh/config
 COPY docker-res/config/sshd_config /etc/ssh/sshd_config
 COPY docker-res/config/nginx.conf /etc/nginx/nginx.conf
 COPY docker-res/config/netdata.conf /etc/netdata/netdata.conf
+COPY docker-res/config/supervisord.conf /etc/supervisor/supervisord.conf
 COPY docker-res/config/mimeapps.list /root/.config/mimeapps.list
 COPY docker-res/config/bookmarks /root/.config/gtk-3.0/bookmarks
 COPY docker-res/config/chromium-browser.init /root/.chromium-browser.init
@@ -630,7 +646,8 @@ RUN \
     echo  'cd '$WORKSPACE_HOME >> $HOME/.bashrc 
 
 # Set default values for environment variables
-ENV WORKSPACE_CONFIG_BACKUP="true"
+ENV WORKSPACE_CONFIG_BACKUP="true" \
+    SHUTDOWN_INACTIVE_KERNELS="false" 
 
 ### END CONFIGURATION ###
 
@@ -638,6 +655,7 @@ ARG workspace_version="unknown"
 ENV WORKSPACE_VERSION=$workspace_version
 
 # refresh ssh environment variables here again
+# TODO remove
 RUN printenv > $HOME/.ssh/environment
 
 # Overwrite & add Labels
@@ -654,7 +672,8 @@ LABEL "io.k8s.description"="All-in-one web-based IDE specialized for machine lea
 # So that they do not lose their data if they delete the container.
 # TODO: VOLUME [ "/workspace" ]
 
-ENTRYPOINT ["/tini", "--", "python", "/resources/run.py"]
+# use global option with tini to kill full process groups: https://github.com/krallin/tini#process-group-killing
+ENTRYPOINT ["/tini", "-g", "--", "python", "/resources/run.py"]
 
 # Port 8091 is the main access port (also includes SSH)
 # Port 5091 is the VNC port
