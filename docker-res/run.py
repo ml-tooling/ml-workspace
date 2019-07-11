@@ -44,11 +44,11 @@ os.environ[ENV_NAME_WORKSPACE_BASE_URL] = base_url
 
 ENV_RESOURCES_PATH = os.getenv("RESOURCES_PATH", "/resources")
 
-log.info("Configure nginx service")
-call("python " + ENV_RESOURCES_PATH + "/scripts/configure_nginx.py", shell=True)
-
 log.info("Configure ssh service")
 call("python " + ENV_RESOURCES_PATH + "/scripts/configure_ssh.py", shell=True)
+
+log.info("Configure nginx service")
+call("python " + ENV_RESOURCES_PATH + "/scripts/configure_nginx.py", shell=True)
 
 log.info("Configure tools")
 call("python " + ENV_RESOURCES_PATH + "/scripts/configure_tools.py", shell=True)

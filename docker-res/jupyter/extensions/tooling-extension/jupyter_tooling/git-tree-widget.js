@@ -1,4 +1,4 @@
-define(['base/js/namespace', 'jquery', 'base/js/dialog', 'base/js/utils', 'require', './git-shared-components'], function (Jupyter, $, dialog, utils, require, sharedComponents) {
+define(['base/js/namespace', 'jquery', 'base/js/dialog', 'base/js/utils', 'require', './tooling-shared-components'], function (Jupyter, $, dialog, utils, require, sharedComponents) {
 
     // -------- GLOBAL VARIABLES -----------------------
 
@@ -10,7 +10,7 @@ define(['base/js/namespace', 'jquery', 'base/js/dialog', 'base/js/utils', 'requi
 
     // ----------- HANDLER -------------------------------
 
-    var components = require('./git-shared-components');
+    var components = require('./tooling-shared-components');
     var components = new sharedComponents();
 
     //---------- REGISTER EXTENSION ------------------------
@@ -33,10 +33,7 @@ define(['base/js/namespace', 'jquery', 'base/js/dialog', 'base/js/utils', 'requi
 
         $('#gitTreeButton').click(function () {
             var tree_dir = '/' + window.document.body.dataset.notebookPath;
-            console.log("Current Path: " + tree_dir)
             components.getGitInfo(tree_dir, function (data) {
-                console.log("git infor data:")
-                console.log(data)
 
                 let ungitPath = data["requestPath"]
                 if (data["repoRoot"]) {

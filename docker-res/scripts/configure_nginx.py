@@ -26,6 +26,19 @@ NGINX_FILE = "/etc/nginx/nginx.conf"
 
 # Replace base url placeholders with actual base url -> should 
 call("sed -i 's@{WORKSPACE_BASE_URL}@" + os.environ["WORKSPACE_BASE_URL"].rstrip('/') + "@g' " + NGINX_FILE, shell=True)
+# Replace key hash with actual sha1 hash of key
+try:
+    with open("/root/.ssh/id_ed25519", "r") as f:
+        private_key = f.read()
+
+    import hashlib
+    key_hasher = hashlib.sha1()
+    key_hasher.update(str.encode(str(private_key).lower().strip()))
+    key_hash = key_hasher.hexdigest()
+    
+    call("sed -i 's@{KEY_HASH}@" + str(key_hash) + "@g' " + NGINX_FILE, shell=True)
+except Exception as e:
+    print(e)
 
 # PREPARE SSL SERVING
 ENV_NAME_SERVICE_SSL_ENABLED = "WORKSPACE_SSL_ENABLED"
