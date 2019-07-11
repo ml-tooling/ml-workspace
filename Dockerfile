@@ -500,14 +500,6 @@ RUN \
 # Add tensorboard patch - use tensorboard jupyter plugin instead of the actual tensorboard magic
 COPY docker-res/jupyter/tensorboard_notebook_patch.py /opt/conda/lib/python3.6/site-packages/tensorboard/notebook.py
 
-# Install Jupyter Tooling Extension
-COPY docker-res/jupyter/extensions $RESOURCES_PATH/jupyter-extensions
-
-RUN \
-    pip install --no-cache-dir $RESOURCES_PATH/jupyter-extensions/tooling-extension/ && \
-    # Cleanup
-    /resources/clean_layer.sh
-
 ### END JUPYTER ###
 
 ### INCUBATION ZONE ###
@@ -552,6 +544,48 @@ RUN \
 
 ENV XDG_RUNTIME_DIR=/tmp
 
+# Install libjpeg-turbo and Pillow-SIMD for faster Image Processing
+# https://docs.fast.ai/performance.html#faster-image-processing
+RUN \
+    conda uninstall -y --force pillow pil jpeg libtiff libjpeg-turbo  && \
+    pip   uninstall -y         pillow pil jpeg libtiff libjpeg-turbo  && \
+    conda install -yc conda-forge libjpeg-turbo  && \
+    CFLAGS="${CFLAGS} -mavx2" pip install --upgrade --no-cache-dir --force-reinstall --no-binary :all: --compile pillow-simd  && \
+    conda install -y jpeg libtiff  && \
+    # Cleanup
+    /resources/clean_layer.sh
+
+RUN \
+    apt-get update && \
+    apt-get purge -y nginx nginx-common && \
+    # libpcre required, otherwise you get a 'the HTTP rewrite module requires the PCRE library' error
+    apt-get install -y libssl-dev libpcre3 libpcre3-dev && \
+    mkdir $RESOURCES_PATH"/openresty" && \
+    cd $RESOURCES_PATH"/openresty" && \
+    wget --quiet https://openresty.org/download/openresty-1.15.8.1.tar.gz  -O ./openresty.tar.gz && \
+    tar xfz ./openresty.tar.gz && \
+    cd ./openresty-1.15.8.1/ && \
+    ./configure --with-http_stub_status_module --with-http_sub_module && \
+    make -j2 && \
+    make install && \
+    # create log dir and file - otherwise openresty will throw an error
+    mkdir -p /var/log/nginx/ && \
+    touch /var/log/nginx/upstream.log && \
+    # Cleanup
+    /resources/clean_layer.sh
+
+ENV PATH=/usr/local/openresty/nginx/sbin:$PATH
+
+COPY docker-res/nginx/lua-extensions /etc/nginx/nginx_plugins
+
+# Install Jupyter Tooling Extension
+COPY docker-res/jupyter/extensions $RESOURCES_PATH/jupyter-extensions
+
+RUN \
+    pip install --no-cache-dir $RESOURCES_PATH/jupyter-extensions/tooling-extension/ && \
+    # Cleanup
+    /resources/clean_layer.sh
+
 ### END INCUBATION ZONE ###
 
 ### CONFIGURATION ###
@@ -568,6 +602,7 @@ COPY docker-res/jupyter/jupyter_notebook_config.py /etc/jupyter/
 COPY docker-res/jupyter/logo.png $CONDA_DIR"/lib/python3.6/site-packages/notebook/static/base/images/logo.png"
 COPY docker-res/jupyter/favicon.ico $CONDA_DIR"/lib/python3.6/site-packages/notebook/static/base/images/favicon.ico"
 COPY docker-res/jupyter/favicon.ico $CONDA_DIR"/lib/python3.6/site-packages/notebook/static/favicon.ico"
+COPY docker-res/jupyter/favicon.ico $RESOURCES_PATH"/favicon.ico"
 
 # Configure Matplotlib
 RUN \
@@ -618,7 +653,7 @@ COPY docker-res/tools $RESOURCES_PATH/tools
 # Copy some configuration files
 COPY docker-res/config/ssh_config /root/.ssh/config
 COPY docker-res/config/sshd_config /etc/ssh/sshd_config
-COPY docker-res/config/nginx.conf /etc/nginx/nginx.conf
+COPY docker-res/nginx/nginx.conf /etc/nginx/nginx.conf
 COPY docker-res/config/netdata.conf /etc/netdata/netdata.conf
 COPY docker-res/config/supervisord.conf /etc/supervisor/supervisord.conf
 COPY docker-res/config/mimeapps.list /root/.config/mimeapps.list

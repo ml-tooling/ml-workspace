@@ -207,7 +207,7 @@ define(['base/js/namespace', 'jquery', 'base/js/dialog', 'require', 'exports', '
             var that = this;
             $.ajaxSetup(this.ajaxCookieTokenHandling());
             var settings = {
-                url: basePath + 'git/commit',
+                url: basePath + 'tooling/git/commit',
                 processData: false,
                 type: "POST",
                 data: JSON.stringify({
@@ -244,7 +244,7 @@ define(['base/js/namespace', 'jquery', 'base/js/dialog', 'require', 'exports', '
             var that = this;
             $.ajaxSetup(this.ajaxCookieTokenHandling());
             var settings = {
-                url: basePath + 'git/info?path=' + path,
+                url: basePath + 'tooling/git/info?path=' + path,
                 processData: false,
                 type: "POST",
                 data: JSON.stringify({
@@ -276,7 +276,7 @@ define(['base/js/namespace', 'jquery', 'base/js/dialog', 'require', 'exports', '
             $.ajaxSetup(this.ajaxCookieTokenHandling());
             var that = this;
             var settings = {
-                url: basePath + 'git/info?path=' + path,
+                url: basePath + 'tooling/git/info?path=' + path,
                 processData: false,
                 type: "GET",
                 success: function (data) {
@@ -289,6 +289,48 @@ define(['base/js/namespace', 'jquery', 'base/js/dialog', 'require', 'exports', '
                         if (Boolean(data["error"])) {
                             errorMsg = data["error"];
                         }
+                    }
+                    that.openErrorDialog(errorMsg, null);
+                }
+            }
+            $.ajax(settings)
+        }
+
+        getShareableToken(path, success_callback) {
+            $.ajaxSetup(this.ajaxCookieTokenHandling());
+            var that = this;
+            var settings = {
+                url: basePath + 'tooling/token?path=' + path,
+                processData: false,
+                type: "GET",
+                success: function (data) {
+                    success_callback(data)
+                },
+                error: function (response) {
+                    let errorMsg = "An unknown error occurred while getting auth token.";
+                    if (response) {
+                        errorMsg = String(response);
+                    }
+                    that.openErrorDialog(errorMsg, null);
+                }
+            }
+            $.ajax(settings)
+        }
+
+        getSSHSetupCommand(origin_url, success_callback) {
+            $.ajaxSetup(this.ajaxCookieTokenHandling());
+            var that = this;
+            var settings = {
+                url: basePath + 'tooling/ssh/setup-command?origin=' + origin_url,
+                processData: false,
+                type: "GET",
+                success: function (data) {
+                    success_callback(data)
+                },
+                error: function (response) {
+                    let errorMsg = "An unknown error occurred while getting ssh setup command.";
+                    if (response) {
+                        errorMsg = String(response);
                     }
                     that.openErrorDialog(errorMsg, null);
                 }

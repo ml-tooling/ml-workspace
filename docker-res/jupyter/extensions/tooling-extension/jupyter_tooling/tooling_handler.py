@@ -13,9 +13,10 @@ from datetime import datetime
 import git
 import tornado
 from notebook.base.handlers import IPythonHandler
-from notebook.utils import url_path_join
+from notebook .utils import url_path_join
 from tornado import web
 
+SHARED_SSH_SETUP_PATH = "/shared/ssh/setup"
 
 # -------------- HANDLER -------------------------
 class HelloWorldHandler(IPythonHandler):
@@ -128,80 +129,74 @@ class GitInfoHandler(IPythonHandler):
             handle_error(self, 500, exception=ex)
             return
 
-class SSHHandler(IPythonHandler):
-    private_ssh_key_path = "/root/.ssh/id_ed25519"
+class SSHScriptHandler(IPythonHandler):
 
     @web.authenticated
     def get(self):
         try:
-            with open(self.private_ssh_key_path, "r") as f:
-                runtime_private_key = f.read()
-            
-            ssh_templates_path = os.path.dirname(os.path.abspath(__file__)) + "/setup_templates"
-
-            with open(ssh_templates_path + '/client_command.txt', 'r') as file:
-                client_command = file.read()
-
-            HOSTNAME = self.get_argument('hostname', None)
-            PORT = self.get_argument('port', None)
-            
-            SSH_JUMPHOST_TARGET = os.environ.get("SSH_JUMPHOST_TARGET", "")
-            is_runtime_manager_existing = False if SSH_JUMPHOST_TARGET == "" else True
- 
-            RUNTIME_CONFIG_NAME = "workspace-"
-            if is_runtime_manager_existing:
-                HOSTNAME_RUNTIME = SSH_JUMPHOST_TARGET
-                HOSTNAME_MANAGER = HOSTNAME
-                PORT_MANAGER = PORT
-                PORT_RUNTIME = 8091
-
-                RUNTIME_CONFIG_NAME = RUNTIME_CONFIG_NAME + "{}-{}-{}".format(HOSTNAME_RUNTIME, HOSTNAME_MANAGER, PORT_MANAGER)
-                    
-                client_command = client_command \
-                    .replace("{HOSTNAME_MANAGER}", HOSTNAME_MANAGER) \
-                    .replace("{PORT_MANAGER}", str(PORT_MANAGER)) \
-                    .replace("#ProxyCommand", "ProxyCommand")
-                
-                local_keyscan_replacement = "{}".format(HOSTNAME_RUNTIME)
-
-            else:
-                HOSTNAME_RUNTIME = HOSTNAME
-                PORT_RUNTIME = PORT
-                RUNTIME_CONFIG_NAME = RUNTIME_CONFIG_NAME + "{}-{}".format(HOSTNAME_RUNTIME, PORT_RUNTIME)
-                
-                local_keyscan_replacement = "[{}]:{}".format(HOSTNAME_RUNTIME, PORT_RUNTIME)            
-
-            # perform keyscan with localhost to get the runtime's keyscan result.
-            # Replace then the "localhost" part in the returning string with the actual RUNTIME_HOST_NAME
-            local_keyscan_entry = get_ssh_keyscan_results("localhost")
-            if local_keyscan_entry is not None:
-                local_keyscan_entry = local_keyscan_entry.replace(
-                    "localhost", local_keyscan_replacement)
-
-            output = client_command \
-                .replace("{PRIVATE_KEY_RUNTIME}", runtime_private_key) \
-                .replace("{HOSTNAME_RUNTIME}", HOSTNAME_RUNTIME) \
-                .replace("{RUNTIME_KNOWN_HOST_ENTRY}", local_keyscan_entry) \
-                .replace("{PORT_RUNTIME}", str(PORT_RUNTIME)) \
-                .replace("{RUNTIME_CONFIG_NAME}", RUNTIME_CONFIG_NAME) \
-                .replace("{RUNTIME_KEYSCAN_NAME}", local_keyscan_replacement.replace("[", "\[").replace("]", "\]"))
-
-            # Use hostname, otherwise it cannot be reconstructed in tooling plugin
-            file_name = 'setup_ssh_{}-{}.sh'.format(HOSTNAME.lower().replace(".", "-"), PORT)
-
-            FORMAT = self.get_argument('format', None)
-            if FORMAT == 'text':
-                self.finish(output)
-            else:
-                self.set_header('Content-Type', 'application/octet-stream')
-                self.set_header('Content-Disposition', 'attachment; filename=' + file_name) # Hostname runtime
-                self.write(output)
-                self.finish()
-            
+            handle_ssh_script_request(self)
         except Exception as ex:
             handle_error(self, 500, exception=ex)
             return
 
+class SharedSSHHandler(IPythonHandler):
+     def get(self):
+        # authentication only via token
+        try:
+            token = self.get_argument('token', None)
+            valid_token = generate_token(self.request.path)
+            if not token:
+                self.set_status(401)
+                self.finish('echo "Please provide a token via get parameter."')
+                return
+            if token.lower().strip() != valid_token:
+                self.set_status(401)
+                self.finish('echo "The provided token is not valid."')
+                return
+            
+            handle_ssh_script_request(self)
+        except Exception as ex:
+            handle_error(self, 500, exception=ex)
+            return
+
+class SSHCommandHandler(IPythonHandler):
+
+    @web.authenticated
+    def get(self):
+        try:
+            # schema + host + port
+            origin = self.get_argument('origin', None)
+            if not origin:
+                handle_error(self, 400, "Please provide a valid origin (endpoint url) via get parameter.")
+                return
+            
+            host, port = parse_endpoint_origin(origin)
+            base_url = web_app.settings['base_url'].rstrip("/") + SHARED_SSH_SETUP_PATH
+            setup_command = '/bin/bash <(curl -s --insecure "' \
+                            + origin + base_url \
+                            + "?token=" + generate_token(base_url) \
+                            + "&host=" + host \
+                            + "&port=" + port \
+                            + '")'
+            
+            self.finish(setup_command)
+        except Exception as ex:
+            handle_error(self, 500, exception=ex)
+            return
+
+class SharedTokenHandler(IPythonHandler):
+    @web.authenticated
+    def get(self):
+        try:
+            path = self.get_argument('path', None)
+            if path is None:
+                handle_error(self, 400, "Please provide a valid path via get parameter.")
+                return
+            
+            self.finish(generate_token(path))
+        except Exception as ex:
+            handle_error(self, 500, exception=ex)
+            return
 
 # ------------- GIT FUNCTIONS ------------------------
 
@@ -352,6 +347,125 @@ def _resolve_path(path: str) -> str or None:
 
 
 # ------------- SSH Functions ------------------------
+def handle_ssh_script_request(handler):
+    origin = handler.get_argument('origin', None)
+    host = handler.get_argument('host', None)
+    port = handler.get_argument('port', None)
+
+    if not host and origin:
+        host, _ = parse_endpoint_origin(origin)
+    
+    if not port and origin:
+        _, port = parse_endpoint_origin(origin)
+    
+    if not host:
+        handle_error(handler, 400, "Please provide a host via get parameter. Alternatively, you can also specify an origin with the full endpoint url.")
+        return
+
+    if not port:
+        handle_error(handler, 400, "Please provide a port via get parameter. Alternatively, you can also specify an origin with the full endpoint url.")
+        return 
+    
+    setup_script = get_setup_script(host, port)
+
+    download_script_flag = handler.get_argument('download', None)
+    if download_script_flag and download_script_flag.lower().strip() == 'true':
+        # Use host, otherwise it cannot be reconstructed in tooling plugin
+        
+
+        file_name = 'setup_ssh_{}-{}'.format(host.lower().replace(".", "-"), port)
+        SSH_JUMPHOST_TARGET = os.environ.get("SSH_JUMPHOST_TARGET", "")
+        if SSH_JUMPHOST_TARGET:
+            # add name if variabl is set
+            file_name += "-" + SSH_JUMPHOST_TARGET.lower().replace(".", "-")
+        file_name += ".sh"
+
+        handler.set_header('Content-Type', 'application/octet-stream')
+        handler.set_header('Content-Disposition', 'attachment; filename=' + file_name) # Hostname runtime
+        handler.write(setup_script)
+        handler.finish()
+    else:
+        handler.finish(setup_script)
+                
+
+def parse_endpoint_origin(endpoint_url: str):
+    # get host and port from endpoint url
+    from urllib.parse import urlparse
+    endpoint_url = urlparse(endpoint_url)
+    hostname = endpoint_url.hostname
+    port = endpoint_url.port
+    if not port:
+        port = 80
+        if endpoint_url.scheme == "https":
+            port = 443
+    return hostname, str(port)
+
+def generate_token(base_url: str):
+    private_ssh_key_path = "/root/.ssh/id_ed25519"
+    with open(private_ssh_key_path, "r") as f:
+        runtime_private_key = f.read()
+
+    import hashlib
+    key_hasher = hashlib.sha1()
+    key_hasher.update(str.encode(str(runtime_private_key).lower().strip()))
+    key_hash = key_hasher.hexdigest()
+
+    token_hasher = hashlib.sha1()
+    token_str = (key_hash+base_url).lower().strip()
+    token_hasher.update(str.encode(token_str))
+    return str(token_hasher.hexdigest())
+
+def get_setup_script(hostname: str = None, port: str = None):
+    
+    private_ssh_key_path = "/root/.ssh/id_ed25519"
+    with open(private_ssh_key_path, "r") as f:
+        runtime_private_key = f.read()
+
+    ssh_templates_path = os.path.dirname(os.path.abspath(__file__)) + "/setup_templates"
+
+    with open(ssh_templates_path + '/client_command.txt', 'r') as file:
+        client_command = file.read()
+    
+    SSH_JUMPHOST_TARGET = os.environ.get("SSH_JUMPHOST_TARGET", "")
+    is_runtime_manager_existing = False if SSH_JUMPHOST_TARGET == "" else True
+
+    RUNTIME_CONFIG_NAME = "workspace-"
+    if is_runtime_manager_existing:
+        HOSTNAME_RUNTIME = SSH_JUMPHOST_TARGET
+        HOSTNAME_MANAGER = hostname
+        PORT_MANAGER = port
+        PORT_RUNTIME = 8091
+
+        RUNTIME_CONFIG_NAME = RUNTIME_CONFIG_NAME + "{}-{}-{}".format(HOSTNAME_RUNTIME, HOSTNAME_MANAGER, PORT_MANAGER)
+                    
+        client_command = client_command \
+            .replace("{HOSTNAME_MANAGER}", HOSTNAME_MANAGER) \
+            .replace("{PORT_MANAGER}", str(PORT_MANAGER)) \
+            .replace("#ProxyCommand", "ProxyCommand")
+                
+        local_keyscan_replacement = "{}".format(HOSTNAME_RUNTIME)
+    else:
+        HOSTNAME_RUNTIME = hostname
+        PORT_RUNTIME = port
+        RUNTIME_CONFIG_NAME = RUNTIME_CONFIG_NAME + "{}-{}".format(HOSTNAME_RUNTIME, PORT_RUNTIME)
+
+        local_keyscan_replacement = "[{}]:{}".format(HOSTNAME_RUNTIME, PORT_RUNTIME)            
+
+    # perform keyscan with localhost to get the runtime's keyscan result.
+    # Replace then the "localhost" part in the returning string with the actual RUNTIME_HOST_NAME
+    local_keyscan_entry = get_ssh_keyscan_results("localhost")
+    if local_keyscan_entry is not None:
+        local_keyscan_entry = local_keyscan_entry.replace("localhost", local_keyscan_replacement)
+
+    output = client_command \
+        .replace("{PRIVATE_KEY_RUNTIME}", runtime_private_key) \
+        .replace("{HOSTNAME_RUNTIME}", HOSTNAME_RUNTIME) \
+        .replace("{RUNTIME_KNOWN_HOST_ENTRY}", local_keyscan_entry) \
+        .replace("{PORT_RUNTIME}", str(PORT_RUNTIME)) \
+        .replace("{RUNTIME_CONFIG_NAME}", RUNTIME_CONFIG_NAME) \
+        .replace("{RUNTIME_KEYSCAN_NAME}", local_keyscan_replacement.replace("[", "\[").replace("]", "\]"))
+
+    return output
 
 def get_ssh_keyscan_results(host_name, host_port=22, key_format="ecdsa"):
     """
@@ -389,28 +503,36 @@ def load_jupyter_server_extension(nb_server_app) -> None:
 
     host_pattern = '.*$'
 
+    # SharedSSHHandler
+
     route_pattern = url_path_join(web_app.settings['base_url'], '/tooling/ping')
     web_app.add_handlers(host_pattern, [(route_pattern, PingHandler)])
 
-    route_pattern = url_path_join(web_app.settings['base_url'], '/git/info')
+    route_pattern = url_path_join(web_app.settings['base_url'], '/tooling/token')
+    web_app.add_handlers(host_pattern, [(route_pattern, SharedTokenHandler)])
+
+    route_pattern = url_path_join(web_app.settings['base_url'], '/tooling/git/info')
     web_app.add_handlers(host_pattern, [(route_pattern, GitInfoHandler)])
 
-    route_pattern = url_path_join(web_app.settings['base_url'], '/git/commit')
+    route_pattern = url_path_join(web_app.settings['base_url'], '/tooling/git/commit')
     web_app.add_handlers(host_pattern, [(route_pattern, GitCommitHandler)])
 
-    route_pattern = url_path_join(web_app.settings['base_url'], '/ssh/setup')
-    web_app.add_handlers(host_pattern, [(route_pattern, SSHHandler)])
+    route_pattern = url_path_join(web_app.settings['base_url'], '/tooling/ssh/setup-script')
+    web_app.add_handlers(host_pattern, [(route_pattern, SSHScriptHandler)])
 
-    nb_server_app.log.info('Extension jupyter-tooling-widget loaded successfully.')
+    route_pattern = url_path_join(web_app.settings['base_url'], '/tooling/ssh/setup-command')
+    web_app.add_handlers(host_pattern, [(route_pattern, SSHCommandHandler)])
+
+    route_pattern = url_path_join(web_app.settings['base_url'], SHARED_SSH_SETUP_PATH)
+    web_app.add_handlers(host_pattern, [(route_pattern, SharedSSHHandler)])
+
+    log.info('Extension jupyter-tooling-widget loaded successfully.')
 
 
 # Test routine. Can be invoked manually
 if __name__ == "__main__":
     application = tornado.web.Application([
-        (r'/test', HelloWorldHandler),
-        (r'/git/info', GitInfoHandler),
-        (r'/git/commit', GitCommitHandler),
-        (r'/ssh/setup', SSHHandler)
+        (r'/test', HelloWorldHandler)
     ])
 
     application.listen(555)
