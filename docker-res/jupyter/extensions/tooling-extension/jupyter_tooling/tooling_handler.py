@@ -372,7 +372,6 @@ def handle_ssh_script_request(handler):
     if download_script_flag and download_script_flag.lower().strip() == 'true':
         # Use host, otherwise it cannot be reconstructed in tooling plugin
         
-
         file_name = 'setup_ssh_{}-{}'.format(host.lower().replace(".", "-"), port)
         SSH_JUMPHOST_TARGET = os.environ.get("SSH_JUMPHOST_TARGET", "")
         if SSH_JUMPHOST_TARGET:
