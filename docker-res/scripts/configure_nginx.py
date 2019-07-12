@@ -25,7 +25,11 @@ if ENV_NAME_SERVICE_PASSWORD in os.environ:
 NGINX_FILE = "/etc/nginx/nginx.conf"
 
 # Replace base url placeholders with actual base url -> should 
-call("sed -i 's@{WORKSPACE_BASE_URL}@" + os.environ["WORKSPACE_BASE_URL"].rstrip('/') + "@g' " + NGINX_FILE, shell=True)
+call("sed -i 's@{WORKSPACE_BASE_URL}@" + os.getenv("WORKSPACE_BASE_URL", "").rstrip('/') + "@g' " + NGINX_FILE, shell=True)
+
+# Activate or deactivate jupyter based authentication for tooling
+call("sed -i 's@{AUTHENTICATE_VIA_JUPYTER}@" + os.getenv("AUTHENTICATE_VIA_JUPYTER", "false").lower().strip() + "@g' " + NGINX_FILE, shell=True)
+
 # Replace key hash with actual sha1 hash of key
 try:
     with open("/root/.ssh/id_ed25519", "r") as f:

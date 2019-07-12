@@ -107,6 +107,11 @@ The container can be configured with the following environment variables (`--env
         <td>false</td>
     </tr>
     <tr>
+        <td>AUTHENTICATE_VIA_JUPYTER</td>
+        <td>If `true`, all HTTP requests will be authenticated against the Jupyter server, meaning that the authentication method configured with Jupyter will be used for all other tools as well. This can be deactivated with `false`. Any other value will activate this authentication and are applied as token via NotebookApp.token configuration of Jupyter.</td>
+        <td>false</td>
+    </tr>
+    <tr>
         <td>NOTEBOOK_ARGS</td>
         <td>Add and overwrite Jupyter configuration options via command line args. Refer to <a href="https://jupyter-notebook.readthedocs.io/en/stable/config.html">this overview</a> for all options.</td>
         <td></td>

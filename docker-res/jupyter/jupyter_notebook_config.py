@@ -23,6 +23,8 @@ c.NotebookApp.disable_check_xsrf=True
 c.NotebookApp.allow_origin='*'
 c.NotebookApp.trust_xheaders=True
 
+c.JupyterApp.answer_yes = True
+
 # set base url if available
 base_url = os.getenv("WORKSPACE_BASE_URL", "/")
 if base_url is not None and base_url is not "/":
@@ -35,7 +37,7 @@ c.FileContentsManager.delete_to_trash=False
 c.IPKernelApp.matplotlib = 'inline'
 
 shutdown_inactive_kernels = os.getenv("SHUTDOWN_INACTIVE_KERNELS", "false")
-if shutdown_inactive_kernels and shutdown_inactive_kernels.lower() != "false":
+if shutdown_inactive_kernels and shutdown_inactive_kernels.lower().strip() != "false":
     cull_timeout = 172800 # default is 48 hours
     try: 
         # see if env variable is set as timout integer
@@ -51,6 +53,14 @@ if shutdown_inactive_kernels and shutdown_inactive_kernels.lower() != "false":
         c.MappingKernelManager.cull_busy = False
         # Do not shutdown kernels that are connected via browser, activate?
         c.MappingKernelManager.cull_connected = False
+
+authenticate_via_jupyter = os.getenv("AUTHENTICATE_VIA_JUPYTER", "false")
+if authenticate_via_jupyter and authenticate_via_jupyter.lower().strip() != "false":
+    # authentication via jupyter is activated
+    # if true, do not set any token, authentication will be activate on another way (e.g. via JupyterHub)
+    if authenticate_via_jupyter.lower().strip() != "true":
+        # if not true or false, set value as token
+        c.NotebookApp.token = authenticate_via_jupyter
 
 # https://github.com/timkpaine/jupyterlab_iframe
 try:
