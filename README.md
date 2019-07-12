@@ -80,7 +80,7 @@ The container can be configured with the following environment variables (`--env
     </tr>
     <tr>
         <td>WORKSPACE_CONFIG_BACKUP</td>
-        <td>Automatically backup and restore user configuration to the persisted /workspace folder, such as the .ssh, .jupyter, or .gitconfig from the users home directory.</td>
+        <td>Automatically backup and restore user configuration to the persisted <code>/workspace</code> folder, such as the .ssh, .jupyter, or .gitconfig from the users home directory.</td>
         <td>true</td>
     </tr>
     <tr>
@@ -95,7 +95,7 @@ The container can be configured with the following environment variables (`--env
     </tr>
     <tr>
         <td>WORKSPACE_SSL_ENABLED</td>
-        <td>Enable or disable SSL. When set to true, either certificates (cert.crt) must be mounted to /resources/ssl or, if not, the container generates self-signed certificates.</td>
+        <td>Enable or disable SSL. When set to true, either certificates (cert.crt) must be mounted to <code>/resources/ssl</code> or, if not, the container generates self-signed certificates.</td>
         <td>false</td>
     </tr>
     <tr>
@@ -103,12 +103,12 @@ The container can be configured with the following environment variables (`--env
     </tr>
     <tr>
         <td>SHUTDOWN_INACTIVE_KERNELS</td>
-        <td>Automatically shutdown inactive kernels after a given timeout (to cleanup memory or gpu resources). Value can be either a timeout in seconds or set to `true` with a default value of 48h.</td>
+        <td>Automatically shutdown inactive kernels after a given timeout (to cleanup memory or gpu resources). Value can be either a timeout in seconds or set to <code>true</code> with a default value of 48h.</td>
         <td>false</td>
     </tr>
     <tr>
         <td>AUTHENTICATE_VIA_JUPYTER</td>
-        <td>If `true`, all HTTP requests will be authenticated against the Jupyter server, meaning that the authentication method configured with Jupyter will be used for all other tools as well. This can be deactivated with `false`. Any other value will activate this authentication and are applied as token via NotebookApp.token configuration of Jupyter.</td>
+        <td>If <code>true</code>, all HTTP requests will be authenticated against the Jupyter server, meaning that the authentication method configured with Jupyter will be used for all other tools as well. This can be deactivated with <code>false</code>. Any other value will activate this authentication and are applied as token via NotebookApp.token configuration of Jupyter.</td>
         <td>false</td>
     </tr>
     <tr>
@@ -117,12 +117,22 @@ The container can be configured with the following environment variables (`--env
         <td></td>
     </tr>
     <tr>
-        <td colspan="3"><b>Hardware Optimization:</b></td>
+        <td colspan="3"><b>Hardware Configuration:</b></td>
     </tr>
     <tr>
         <td>OMP_NUM_THREADS</td>
-        <td>Number of threads used for MKL computations.</td>
+        <td>The number of threads used for MKL computations. This configuration can be overwritten by the user from within the workspace. Generally, it is good to set it at or below the number of CPUs available to the workspace.</td>
         <td>8</td>
+    </tr>
+    <tr>
+        <td>NVIDIA_VISIBLE_DEVICES</td>
+        <td>(GPU only) Controls which GPUs will be accessible inside the workspace. By default, all GPUs from the host are accessible within the workspace. You can either use <code>all</code>, <code>none</code>, or specify a comma-separated list of device IDs (e.g. <code>0,1</code>). You can find out the list of available device IDs by running <code>nvidia-smi</code> on the host machine.</td>
+        <td></td>
+    </tr>
+    <tr>
+        <td>CUDA_VISIBLE_DEVICES</td>
+        <td>(GPU only) Controls which GPUs CUDA applications running inside the workspace will see. By default, all GPUs that the workspace has access to will be visible. To restrict applications, provide a comma-separated list of internal device IDs (e.g. <code>0,2</code>) based on the available devices within the workspace (run <code>nvidia-smi</code>). In comparison to <code>NVIDIA_VISIBLE_DEVICES</code>, the workspace user will still able to access other GPUs by overwriting this configuration from within the workspace.</td>
+        <td></td>
     </tr>
     <tr>
         <td colspan="3"><b>VNC Configuration:</b></td>
