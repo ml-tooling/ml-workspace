@@ -682,7 +682,8 @@ RUN \
 
 # Set default values for environment variables
 ENV WORKSPACE_CONFIG_BACKUP="true" \
-    SHUTDOWN_INACTIVE_KERNELS="false" 
+    SHUTDOWN_INACTIVE_KERNELS="false" \
+    AUTHENTICATE_VIA_JUPYTER="false"
 
 ### END CONFIGURATION ###
 
