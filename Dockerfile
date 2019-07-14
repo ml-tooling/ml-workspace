@@ -586,6 +586,17 @@ RUN \
     # Cleanup
     /resources/clean_layer.sh
 
+# Install rdp support via xrdp
+RUN \
+    apt-get update && \
+    apt-get install --yes --no-install-recommends xrdp && \
+    # use xfce
+    sudo sed -i.bak '/fi/a #xrdp multiple users configuration \n xfce-session \n' /etc/xrdp/startwm.sh && \
+    # generate /etc/xrdp/rsakeys.ini
+    cd /etc/xrdp/ && xrdp-keygen xrdp && \
+    # Cleanup
+    /resources/clean_layer.sh
+
 ### END INCUBATION ZONE ###
 
 ### CONFIGURATION ###
@@ -654,6 +665,7 @@ COPY docker-res/tools $RESOURCES_PATH/tools
 COPY docker-res/config/ssh_config /root/.ssh/config
 COPY docker-res/config/sshd_config /etc/ssh/sshd_config
 COPY docker-res/nginx/nginx.conf /etc/nginx/nginx.conf
+COPY docker-res/config/xrdp.ini /etc/xrdp/xrdp.ini
 COPY docker-res/config/netdata.conf /etc/netdata/netdata.conf
 COPY docker-res/config/supervisord.conf /etc/supervisor/supervisord.conf
 COPY docker-res/config/mimeapps.list /root/.config/mimeapps.list
