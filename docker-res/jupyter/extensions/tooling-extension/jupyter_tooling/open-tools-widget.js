@@ -131,14 +131,28 @@ define(['base/js/namespace', 'jquery', 'base/js/dialog', 'base/js/utils', 'requi
 
             // open a workspace internal port via subpath - through nginx proxy
             $('#open-tools-button').click(function () {
+                // Hotkeys are disabled here so the user can enter a commit message without unwanted side effects
+                components.enableKeyboardManager(false);
+                // Disable keyboard manager after 1 sec, otherwise its not always diasabled
+                window.setTimeout(function () {
+                    components.enableKeyboardManager(false);
+                }, 1000)
+
                 dialog.modal({
                     body: openPortDialog(),
                     title: 'Access a workspace internal port',
+                    keyboard_manager: Jupyter.keyboard_manager,
+                    sanitize: false,
                     buttons: {
-                        'Close': {},
+                        'Close': {
+                            click: function () {
+                                components.enableKeyboardManager(true);
+                            }
+                        },
                         'Open': {
                             class: "btn-primary",
                             click: function () {
+                                components.enableKeyboardManager(true);
                                 portInput = $('#port-input').val()
                                 if (!portInput) {
                                     alert("Please input a valid port!")
