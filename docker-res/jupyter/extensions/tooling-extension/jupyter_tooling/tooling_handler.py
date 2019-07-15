@@ -172,7 +172,7 @@ class SSHCommandHandler(IPythonHandler):
                 return
             
             host, port = parse_endpoint_origin(origin)
-            base_url = web_app.settings['base_url'].rstrip("/") + "/shared/filebrowser"
+            base_url = web_app.settings['base_url'].rstrip("/") + SHARED_SSH_SETUP_PATH
             setup_command = '/bin/bash <(curl -s --insecure "' \
                             + origin + base_url \
                             + "?token=" + generate_token(base_url) \
