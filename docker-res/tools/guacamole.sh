@@ -1,10 +1,4 @@
 #!/bin/sh
-if [ -z "$1" ]; then
-    echo "A port needs to be provided as argument"
-    exit 1
-fi
-
-
 # Install tomcat
 if [ ! -d "/usr/share/tomcat8/" ]; then
     echo "Installing tomcat8 server."
@@ -79,6 +73,13 @@ if [ ! -d "/etc/guacamole/" ]; then
 fi
 
 # Run
+if [ -z "$1" ]; then
+    echo "A port needs to be provided as argument to start guacamole."
+    echo "Exiting in 10 seconds."
+    sleep 10
+    exit 1
+fi
+
 echo "Starting guacamole on port "$1"."
 # Change port in tomcat config
 sed -i 's/Connector port="[0-9]*"/Connector port="'$1'"/g' /usr/share/tomcat8/conf/server.xml

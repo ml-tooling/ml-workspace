@@ -1,6 +1,8 @@
 #!/bin/sh
 if [ -z "$1" ]; then
-    echo "A port needs to be provided as argument"
+    echo "A port needs to be provided as argument to start franchise."
+    echo "Exiting in 10 seconds."
+    sleep 10
     exit 1
 fi
 
