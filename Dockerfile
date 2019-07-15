@@ -629,13 +629,15 @@ RUN \
 # Configure Jupyter
 COPY docker-res/jupyter/jupyter_notebook_config.py /etc/jupyter/
 COPY docker-res/jupyter/logo.png $CONDA_DIR"/lib/python3.6/site-packages/notebook/static/base/images/logo.png"
-COPY docker-res/icons/favicon.ico $CONDA_DIR"/lib/python3.6/site-packages/notebook/static/base/images/favicon.ico"
-COPY docker-res/icons/favicon.ico $CONDA_DIR"/lib/python3.6/site-packages/notebook/static/favicon.ico"
-COPY docker-res/icons/favicon.ico $RESOURCES_PATH"/favicon.ico"
+COPY docker-res/favicon.ico $CONDA_DIR"/lib/python3.6/site-packages/notebook/static/base/images/favicon.ico"
+COPY docker-res/favicon.ico $CONDA_DIR"/lib/python3.6/site-packages/notebook/static/favicon.ico"
+COPY docker-res/favicon.ico $RESOURCES_PATH"/favicon.ico"
 
 # Configure Filebrowser
-COPY docker-res/icons/favicon.ico $RESOURCES_PATH"/filebrowser/img/icons/favicon.ico"
-COPY docker-res/icons/ml-workspace-logo.svg $RESOURCES_PATH"/filebrowser/img/logo.svg"
+COPY docker-res/favicon.ico $RESOURCES_PATH"/filebrowser/img/icons/favicon.ico"
+COPY docker-res/favicon.ico $RESOURCES_PATH"/filebrowser/img/icons/favicon.-32x32ico"
+COPY docker-res/favicon.ico $RESOURCES_PATH"/filebrowser/img/icons/favicon-16x16.ico"
+COPY docker-res/ml-workspace-logo.svg $RESOURCES_PATH"/filebrowser/img/logo.svg"
 
 # Configure Matplotlib
 RUN \
