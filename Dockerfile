@@ -578,14 +578,6 @@ ENV PATH=/usr/local/openresty/nginx/sbin:$PATH
 
 COPY docker-res/nginx/lua-extensions /etc/nginx/nginx_plugins
 
-# Install Jupyter Tooling Extension
-COPY docker-res/jupyter/extensions $RESOURCES_PATH/jupyter-extensions
-
-RUN \
-    pip install --no-cache-dir $RESOURCES_PATH/jupyter-extensions/tooling-extension/ && \
-    # Cleanup
-    /resources/clean_layer.sh
-
 # Install rdp support via xrdp
 RUN \
     apt-get update && \
@@ -594,6 +586,32 @@ RUN \
     sudo sed -i.bak '/fi/a #xrdp multiple users configuration \n xfce-session \n' /etc/xrdp/startwm.sh && \
     # generate /etc/xrdp/rsakeys.ini
     cd /etc/xrdp/ && xrdp-keygen xrdp && \
+    # Cleanup
+    /resources/clean_layer.sh
+
+# Install minio mc 
+RUN \
+    wget https://dl.min.io/client/mc/release/linux-amd64/mc -O /usr/sbin/mc && \
+    chmod +x /usr/sbin/mc && \
+    # Cleanup
+    /resources/clean_layer.sh
+
+# Install Jupyter Tooling Extension
+COPY docker-res/jupyter/extensions $RESOURCES_PATH/jupyter-extensions
+
+RUN \
+    pip install --no-cache-dir $RESOURCES_PATH/jupyter-extensions/tooling-extension/ && \
+    # Cleanup
+    /resources/clean_layer.sh
+
+RUN \
+    cd $RESOURCES_PATH && \
+    curl -fsSL https://filebrowser.xyz/get.sh | bash && \
+    filebrowser config init && \
+    filebrowser users add admin admin --perm.admin=true && \
+    # Create fielbrowser customization
+    mkdir -p $RESOURCES_PATH"/filebrowser/" && \
+    filebrowser config set --root=$WORKSPACE_HOME --auth.method=proxy --auth.header=X-Token-Header --branding.name "Workspace Browser" --branding.disableExternal --signup=false --root=/workspace --perm.admin=false --perm.create=false --perm.delete=false --perm.download=true --perm.execute=false --perm.modify=false --perm.rename=false --perm.share=false && \
     # Cleanup
     /resources/clean_layer.sh
 
@@ -611,9 +629,13 @@ RUN \
 # Configure Jupyter
 COPY docker-res/jupyter/jupyter_notebook_config.py /etc/jupyter/
 COPY docker-res/jupyter/logo.png $CONDA_DIR"/lib/python3.6/site-packages/notebook/static/base/images/logo.png"
-COPY docker-res/jupyter/favicon.ico $CONDA_DIR"/lib/python3.6/site-packages/notebook/static/base/images/favicon.ico"
-COPY docker-res/jupyter/favicon.ico $CONDA_DIR"/lib/python3.6/site-packages/notebook/static/favicon.ico"
-COPY docker-res/jupyter/favicon.ico $RESOURCES_PATH"/favicon.ico"
+COPY docker-res/icons/favicon.ico $CONDA_DIR"/lib/python3.6/site-packages/notebook/static/base/images/favicon.ico"
+COPY docker-res/icons/favicon.ico $CONDA_DIR"/lib/python3.6/site-packages/notebook/static/favicon.ico"
+COPY docker-res/icons/favicon.ico $RESOURCES_PATH"/favicon.ico"
+
+# Configure Filebrowser
+COPY docker-res/icons/favicon.ico $RESOURCES_PATH"/filebrowser/img/icons/favicon.ico"
+COPY docker-res/icons/ml-workspace-logo.svg $RESOURCES_PATH"/filebrowser/img/logo.svg"
 
 # Configure Matplotlib
 RUN \
@@ -725,6 +747,7 @@ ENTRYPOINT ["/tini", "-g", "--", "python", "/resources/run.py"]
 
 # Port 8091 is the main access port (also includes SSH)
 # Port 5091 is the VNC port
+# Port 3389 is the RDP port
 # Port 8090 is the Jupyter Notebook Server
 
 EXPOSE 8091
