@@ -1,6 +1,7 @@
 import json
 import os
 import subprocess
+from subprocess import call
 
 try:
     from urllib.parse import unquote
@@ -171,7 +172,7 @@ class SSHCommandHandler(IPythonHandler):
                 return
             
             host, port = parse_endpoint_origin(origin)
-            base_url = web_app.settings['base_url'].rstrip("/") + SHARED_SSH_SETUP_PATH
+            base_url = web_app.settings['base_url'].rstrip("/") + "/shared/filebrowser"
             setup_command = '/bin/bash <(curl -s --insecure "' \
                             + origin + base_url \
                             + "?token=" + generate_token(base_url) \
@@ -197,6 +198,54 @@ class SharedTokenHandler(IPythonHandler):
         except Exception as ex:
             handle_error(self, 500, exception=ex)
             return
+
+
+class SharedFilesHandler(IPythonHandler):
+    @web.authenticated
+    def get(self):
+        try:
+            path = _resolve_path(self.get_argument('path', None))
+            if not path:
+                handle_error(self, 400, "Please provide a valid path via get parameter.")
+                return
+            
+            if not os.path.exists(path):
+                handle_error(self, 400, "The selected file or folder does not exist: " + path)
+                return
+            
+            # schema + host + port
+            origin = self.get_argument('origin', None)
+            if not origin:
+                handle_error(self, 400, "Please provide a valid origin (endpoint url) via get parameter.")
+                return
+            
+            token = generate_token(path)
+
+            try:
+                # filebrowser needs to be stopped so that a user can be added
+                call("supervisorctl stop filebrowser", shell=True)
+
+                # Add new user with the given permissions and scope
+                add_user_command = "filebrowser users add " + token + " " + token \
+                    + " --perm.admin=false --perm.create=false --perm.delete=false" \
+                    + " --perm.download=true --perm.execute=false --perm.modify=false" \
+                    + " --perm.rename=false --perm.share=false --lockPassword=true" \
+                    + " --database=/resources/filebrowser.db --scope=\"" + path + "\""
+
+                call(add_user_command, shell=True)
+            except:
+                pass
+            
+            call("supervisorctl start filebrowser", shell=True)
+
+            base_url = web_app.settings['base_url'].rstrip("/") + "/shared/filebrowser/"
+            setup_command = origin + base_url + "?token=" + token
+            self.finish(setup_command)
+
+        except Exception as ex:
+            handle_error(self, 500, exception=ex)
+            return
+
 
 # ------------- GIT FUNCTIONS ------------------------
 
@@ -521,6 +570,9 @@ def load_jupyter_server_extension(nb_server_app) -> None:
 
     route_pattern = url_path_join(web_app.settings['base_url'], '/tooling/ssh/setup-command')
     web_app.add_handlers(host_pattern, [(route_pattern, SSHCommandHandler)])
+
+    route_pattern = url_path_join(web_app.settings['base_url'], "/tooling/files/link")
+    web_app.add_handlers(host_pattern, [(route_pattern, SharedFilesHandler)])
 
     route_pattern = url_path_join(web_app.settings['base_url'], SHARED_SSH_SETUP_PATH)
     web_app.add_handlers(host_pattern, [(route_pattern, SharedSSHHandler)])

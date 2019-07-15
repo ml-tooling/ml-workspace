@@ -338,6 +338,58 @@ define(['base/js/namespace', 'jquery', 'base/js/dialog', 'require', 'exports', '
             $.ajax(settings)
         }
 
+        getSharableFileLink(origin_url, path, success_callback) {
+            $.ajaxSetup(this.ajaxCookieTokenHandling());
+            var that = this;
+            var settings = {
+                url: basePath + 'tooling/files/link?origin=' + origin_url + "&path=" + path,
+                processData: false,
+                type: "GET",
+                success: function (data) {
+                    success_callback(data)
+                },
+                error: function (response) {
+                    let errorMsg = "An unknown error occurred while generating sharable file link.";
+                    if (response) {
+                        errorMsg = String(response);
+                    }
+                    that.openErrorDialog(errorMsg, null);
+                }
+            }
+            $.ajax(settings)
+        }
+
+        shareFileDialog(shareLink) {
+            var div = $('<div/>');
+            div.append('<p>Anyone with the follwing link can view and download the selected file or folder:</p>');
+            div.append('<br>');
+            div.append('<textarea readonly="true" style="width: 100%; min-height: 25px; height: 25px" id="sharable-file-link">' + shareLink + '</textarea>');
+            div.append('<br>');
+            div.append('<div style="font-size: 11px; color: #909090;">Be careful and responsible with whom you share sensitive data. This sharable link will not expire and cannot currently be deactivated.</div>');
+            return div
+        }
+
+        shareData(path) {
+            var that = this;
+            that.getSharableFileLink(window.location.origin, path, function (data) {
+                dialog.modal({
+                    body: that.shareFileDialog(String(data)),
+                    title: 'Share data with others',
+                    buttons: {
+                        'Close': {
+                        },
+                        'Copy to Clipboard': {
+                            class: 'btn-primary',
+                            click: function (event) {
+                                $('#sharable-file-link').select()
+                                return window.document.execCommand('copy');
+                            }
+                        }
+                    }
+                })
+            });
+        }
+
         /**
          * @param {list} contains email and name
          * @return {string} The html code to configure the git.name and the git.email of the git user
