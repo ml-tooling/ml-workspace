@@ -561,6 +561,24 @@ RUN \
     # Cleanup
     clean-layer.sh
 
+# TODO move down
+RUN \
+    # Link Conda - All python are linke to the conda instances 
+    # Linking python 3 crashes conda -> cannot install anyting - remove instead
+    #ln -s -f $CONDA_DIR/bin/python /usr/bin/python3 && \
+    # if removed -> cannot use add-apt-repository
+    # rm /usr/bin/python3 && \
+    ln -s -f $CONDA_DIR/bin/python /usr/bin/python && \
+    ln -s -f $CONDA_DIR/envs/python2/bin/python /usr/bin/python2 && \
+    rm /usr/bin/python2.7 && \
+    # rm /usr/bin/python3.5
+    # Fix node versions - put into own dir and before conda:
+    mkdir -p /opt/node/bin && \
+    ln -s /usr/bin/node /opt/node/bin/node && \
+    ln -s /usr/bin/npm /opt/node/bin/npm
+
+ENV PATH=/opt/node/bin:$PATH
+
 ### END DATA SCIENCE BASICS ###
 
 ### JUPYTER ###
@@ -632,7 +650,7 @@ RUN \
     jupyter labextension install jupyterlab_tensorboard && \
     jupyter labextension install qgrid && \
     # Install Statusbar
-    jupyter labextension install @jupyterlab/statusbar && \
+    # Already integrated jupyter labextension install @jupyterlab/statusbar && \
     # For Bokeh
     jupyter labextension install jupyterlab_bokeh && \
     # For Plotly
@@ -653,11 +671,11 @@ RUN \
     jupyter labextension install jupyterlab_templates && \
     jupyter serverextension enable --py jupyterlab_templates && \
     # Install go-to-definition extension
-    jupyter labextension install @krassowski/jupyterlab_go_to_definition && \
+    # Does not work with newest jupyterlab: jupyter labextension install @krassowski/jupyterlab_go_to_definition && \
     # Install jupyterlab variable inspector - https://github.com/lckr/jupyterlab-variableInspector
-    jupyter labextension install @lckr/jupyterlab_variableinspector && \
+    # Does not work with newest jupyterlab: jupyter labextension install @lckr/jupyterlab_variableinspector && \
     # Activate ipygrid in jupterlab
-    jupyter labextension install ipyaggrid && \
+    # Does not work with newest version: jupyter labextension install ipyaggrid && \
     # Cleanup
     # Remove build folder -> is not needed
     rm -rf $CONDA_DIR/share/jupyter/lab/staging && \
@@ -674,21 +692,6 @@ RUN \
 ### END JUPYTER ###
 
 ### INCUBATION ZONE ### 
-
-RUN \
-    # Link Conda - All python are linke to the conda instances 
-    # Linking python 3 crashes conda -> cannot install anyting - remove instead
-    #ln -s -f $CONDA_DIR/bin/python /usr/bin/python3 && \
-    # if removed -> cannot use add-apt-repository
-    # rm /usr/bin/python3 && \
-    ln -s -f $CONDA_DIR/bin/python /usr/bin/python && \
-    ln -s -f $CONDA_DIR/envs/python2/bin/python /usr/bin/python2 && \
-    rm /usr/bin/python2.7 && \
-    # rm /usr/bin/python3.5
-    # Fix node versions:
-    # Conda installs wrong node version - relink conda node to the actual node 
-    rm -f /opt/conda/bin/node && ln -s /usr/bin/node /opt/conda/bin/node && \
-    rm -f /opt/conda/bin/npm && ln -s /usr/bin/npm /opt/conda/bin/npm
 
 ### END INCUBATION ZONE ###
 
@@ -765,6 +768,7 @@ RUN \
 
 # Configure filebrowser
 RUN \
+    cd $HOME && \
     filebrowser config init && \
     filebrowser users add admin admin --perm.admin=true && \
     # Create fielbrowser customization
