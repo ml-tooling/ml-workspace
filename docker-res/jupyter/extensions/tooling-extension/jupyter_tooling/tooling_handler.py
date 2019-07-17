@@ -230,7 +230,7 @@ class SharedFilesHandler(IPythonHandler):
                     + " --perm.admin=false --perm.create=false --perm.delete=false" \
                     + " --perm.download=true --perm.execute=false --perm.modify=false" \
                     + " --perm.rename=false --perm.share=false --lockPassword=true" \
-                    + " --database=/resources/filebrowser.db --scope=\"" + path + "\""
+                    + " --database=/root/filebrowser.db --scope=\"" + path + "\""
 
                 call(add_user_command, shell=True)
             except:
