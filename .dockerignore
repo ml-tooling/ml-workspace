@@ -1,2 +1,6 @@
 *
 !docker-res/
+**/.DS_Store
+**/Thumbs.db
+**/*.pyc
+.DS_Store

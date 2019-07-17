@@ -32,7 +32,7 @@ call("sed -i 's@{AUTHENTICATE_VIA_JUPYTER}@" + os.getenv("AUTHENTICATE_VIA_JUPYT
 
 # Replace key hash with actual sha1 hash of key
 try:
-    with open("/root/.ssh/id_ed25519", "r") as f:
+    with open(os.getenv("HOME", "/root") + "/.ssh/id_ed25519", "r") as f:
         private_key = f.read()
 
     import hashlib
@@ -72,4 +72,4 @@ if ENV_SERVICE_USER and ENV_SERVICE_PASSWORD:
 ###
 
 # create / copy certificates
-call(ENV_RESOURCES_PATH + "/scripts/setup_certs.sh", shell=True)
+call(ENV_RESOURCES_PATH + "/scripts/setup-certs.sh", shell=True)

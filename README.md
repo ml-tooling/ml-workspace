@@ -75,7 +75,7 @@ The container can be configured with the following environment variables (`--env
     </tr>
     <tr>
         <td>WORKSPACE_BASE_URL</td>
-        <td>The base URL under which the notebook server is reachable. E.g. setting it to /my-workspace, the workspace would be reachable under /my-workspace/tree.</td>
+        <td>The base URL under which Jupyter and all other tools will be reachable from.</td>
         <td>/</td>
     </tr>
     <tr>
@@ -342,6 +342,7 @@ Port tunneling is quite useful when you have started any server-based tool withi
 - `8090`: Jupyter server.
 - `8054`: VS Code server.
 - `5901`: VNC server.
+- `3389`: RDP server.
 - `22`: SSH server.
 
 > 📖 _For more information about port tunneling/forwarding, we recommend [this guide](https://www.everythingcli.org/ssh-tunnelling-for-fun-and-profit-local-vs-remote/)._
@@ -414,7 +415,7 @@ To a running
 
 The workspace is pre-installed with many popular runtimes, data science libraries, and ubuntu packages:
 
-- **Runtimes:** Anaconda 3 (Python 3.6), Java 8, NodeJS 11
+- **Runtimes:** Miniconda 3 (Python 3.6), Java 8, NodeJS 11, Go, Ruby
 - **Python libraries:** Tensorflow, Keras, Pytorch, Sklearn, CNTK, XGBoost, Theano, Fastai, and [many more](https://github.com/ml-tooling/ml-workspace/blob/master/docker-res/requirements.txt)
 
 The full list of installed tools can be found within the [Dockerfile](https://github.com/ml-tooling/ml-workspace/blob/master/Dockerfile).

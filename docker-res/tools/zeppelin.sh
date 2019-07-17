@@ -17,7 +17,7 @@ if [ -z "$1" ]; then
 fi
 
 echo "Starting zeppelin on port "$1
-mkdir $WORKSPACE_HOME/zeppelin
+mkdir -p $WORKSPACE_HOME/zeppelin
 export ZEPPELIN_NOTEBOOK_DIR=$WORKSPACE_HOME/zeppelin
 export ZEPPELIN_PORT=$1
 /resources/zeppelin/zeppelin-0.8.1-bin-all/bin/zeppelin-daemon.sh start

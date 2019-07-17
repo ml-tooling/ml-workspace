@@ -13,7 +13,7 @@ define(['base/js/namespace', 'jquery', 'base/js/dialog', 'base/js/utils', 'requi
     let tools = [{
             "id": "vnc-link",
             "name": "VNC",
-            "url_path": basePath + "tools/vnc/vnc.html?password=vncpassword",
+            "url_path": basePath + "tools/vnc/?password=vncpassword",
             "description": "Desktop GUI for the workspace"
         },
         {
