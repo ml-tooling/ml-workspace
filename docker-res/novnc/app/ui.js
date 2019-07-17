@@ -1062,13 +1062,15 @@ const UI = {
 
             document.body.addEventListener('paste', function (e) {
                 try {
-                    console.log("paste")
+                    console.log("paste");
                     if (controlBarClipboard.classList.contains("noVNC_open")) {
                         return;
                     }
                     if (UI.rfb != null) {
-                        controlBarClipboard.value = e.clipboardData.getData('text')
-                        UI.rfb.clipboardPasteFrom(e.clipboardData.getData('text'));
+                        text = e.clipboardData.getData('text');
+                        console.log("copy clipboard from local to vnc: " + text);
+                        controlBarClipboard.value = text;
+                        UI.rfb.clipboardPasteFrom(text);
                     }
                 } catch (error) {
                     console.error(error);
@@ -1077,22 +1079,24 @@ const UI = {
 
             document.body.addEventListener('keydown', function (e) {
                 try {
-                    console.log("document keydown: " + e.keyCode)
+                    console.log("document keydown: " + e.keyCode);
                     if (controlBar.classList.contains("noVNC_open")) {
                         return;
                     }
                     if (e.keyCode !== 86) {
                         e.preventDefault();
                     } else {
-                        navigator.clipboard.readText()
-                            .then(text => {
-                                console.log("get cliboard: " + text)
-                                controlBarClipboard.value = text
-                                UI.rfb.clipboardPasteFrom(text);
-                            })
-                            .catch(err => {
-                                console.error('Failed to read clipboard contents: ', err);
-                            });
+                        if (navigator.clipboard) {
+                            navigator.clipboard.readText()
+                                .then(text => {
+                                    console.log("copy clipboard from local to vnc: " + text);
+                                    controlBarClipboard.value = text;
+                                    UI.rfb.clipboardPasteFrom(text);
+                                })
+                                .catch(err => {
+                                    console.error('Failed to read clipboard contents: ', err);
+                                });
+                        }
                     }
                     setTimeout(function () {
                         viewer.dispatchEvent(new e.constructor(e.type, e));
@@ -1108,7 +1112,7 @@ const UI = {
             document.body.addEventListener('keyup', function (e) {
 
                 try {
-                    console.log("document keyup")
+                    console.log("document keyup");
                     if (controlBar.classList.contains("noVNC_open")) {
                         return;
                     }
@@ -1129,7 +1133,7 @@ const UI = {
 
             viewer.addEventListener('keydown', function (e) {
                 try {
-                    console.log("viewer keydown")
+                    console.log("viewer keydown");
                     if (e.ctrlKey) {
                         if (controlBar.classList.contains("noVNC_open")) {
                             return;
@@ -1150,7 +1154,7 @@ const UI = {
                             return;
                         }
                         if (clipboard != null) {
-                            console.log("copy clipboard from vnc to local: " + clipboard.value)
+                            console.log("copy clipboard from vnc to local: " + clipboard.value);
                             clipboard.focus();
                             clipboard.select();
 
