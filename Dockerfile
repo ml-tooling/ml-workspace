@@ -250,8 +250,14 @@ RUN \
     # Fix permissions
     chmod a+rwx /usr/bin/node && \
     chmod a+rwx /usr/bin/npm && \
+    # Fix node versions - put into own dir and before conda:
+    mkdir -p /opt/node/bin && \
+    ln -s /usr/bin/node /opt/node/bin/node && \
+    ln -s /usr/bin/npm /opt/node/bin/npm && \
     # Cleanup
     clean-layer.sh
+
+ENV PATH=/opt/node/bin:$PATH
 
 # Install Java Runtime
 RUN \
@@ -459,6 +465,18 @@ RUN \
 
 ### DATA SCIENCE BASICS ###
 
+# TODO move down
+RUN \
+    # Link Conda - All python are linke to the conda instances 
+    # Linking python 3 crashes conda -> cannot install anyting - remove instead
+    #ln -s -f $CONDA_DIR/bin/python /usr/bin/python3 && \
+    # if removed -> cannot use add-apt-repository
+    # rm /usr/bin/python3 && \
+    ln -s -f $CONDA_DIR/bin/python /usr/bin/python && \
+    ln -s -f $CONDA_DIR/envs/python2/bin/python /usr/bin/python2 && \
+    rm /usr/bin/python2.7
+    # rm /usr/bin/python3.5
+
 # MKL and Hardware Optimization
 # Fix problem with MKL with duplicated libiomp5: https://github.com/dmlc/xgboost/issues/1715
 # Alternative - use openblas instead of Intel MKL: conda install -y nomkl 
@@ -560,24 +578,6 @@ RUN \
     rm -rf tr pt da sv ca nb && \
     # Cleanup
     clean-layer.sh
-
-# TODO move down
-RUN \
-    # Link Conda - All python are linke to the conda instances 
-    # Linking python 3 crashes conda -> cannot install anyting - remove instead
-    #ln -s -f $CONDA_DIR/bin/python /usr/bin/python3 && \
-    # if removed -> cannot use add-apt-repository
-    # rm /usr/bin/python3 && \
-    ln -s -f $CONDA_DIR/bin/python /usr/bin/python && \
-    ln -s -f $CONDA_DIR/envs/python2/bin/python /usr/bin/python2 && \
-    rm /usr/bin/python2.7 && \
-    # rm /usr/bin/python3.5
-    # Fix node versions - put into own dir and before conda:
-    mkdir -p /opt/node/bin && \
-    ln -s /usr/bin/node /opt/node/bin/node && \
-    ln -s /usr/bin/npm /opt/node/bin/npm
-
-ENV PATH=/opt/node/bin:$PATH
 
 ### END DATA SCIENCE BASICS ###
 
