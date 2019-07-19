@@ -95,7 +95,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     apt-mark hold libcudnn7 && \
     rm -rf /var/lib/apt/lists/* && \ 
     # Cleanup
-    /resources/clean_layer.sh
+    clean-layer.sh
 
 ### END CUDANN7 ###
 
@@ -144,7 +144,7 @@ RUN \
     # MXNet with GPU Support:
     # pip install --no-cache-dir --upgrade mxnet-cu100 && \
     # Cleanup
-    /resources/clean_layer.sh
+    clean-layer.sh
 
 # https://www.anaconda.com/getting-started-with-gpu-computing-in-anaconda/
 
@@ -172,7 +172,7 @@ RUN \
     cp /tmp/netdata_nv_plugin/python_modules/pynvml.py /usr/libexec/netdata/python.d/python_modules/ && \
     cp /tmp/netdata_nv_plugin/nv.conf /etc/netdata/python.d/ && \
     # Cleanup
-    /resources/clean_layer.sh
+    clean-layer.sh
 
 ### END GPU TOOLS ###
 
