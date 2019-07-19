@@ -168,7 +168,7 @@ const UI = {
         UI.initSetting('resize', 'remote');
         UI.initSetting('reconnect', true);
         // update settings cannot be used anymore to force settings
-        WebUtil.setSetting('path', window.location.pathname.substring(0, window.location.pathname.lastIndexOf("/")) + '/websockify');
+        WebUtil.setSetting('path', window.location.pathname.substring(0, window.location.pathname.lastIndexOf("/")).replace(/^\//, '') + '/websockify');
         // ######################## END CUSTOM CODE ########################
 
         UI.setupSettingLabels();
