@@ -662,6 +662,7 @@ RUN \
     pip install jupyterlab_templates && \
     jupyter labextension install jupyterlab_templates && \
     jupyter serverextension enable --py jupyterlab_templates && \
+    # Install jupyterlab-data-explorer: https://github.com/jupyterlab/jupyterlab-data-explorer
     # Install go-to-definition extension
     # Does not work with newest jupyterlab: jupyter labextension install @krassowski/jupyterlab_go_to_definition && \
     # Install jupyterlab variable inspector - https://github.com/lckr/jupyterlab-variableInspector
