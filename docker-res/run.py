@@ -13,6 +13,11 @@ print("Starting Workspace")
 logging.basicConfig(stream=sys.stdout, format='%(asctime)s : %(levelname)s : %(message)s', level=logging.INFO)
 log = logging.getLogger(__name__)
 
+def set_env_variable(env_variable: str, value: str):
+    # TODO is export needed as well?
+    call('export ' + env_variable + '="' + value + '"', shell=True)
+    os.environ[env_variable] = value
+
 # Manage base path dynamically
 ENV_JUPYTERHUB_BASE_URL = os.getenv("JUPYTERHUB_BASE_URL")
 ENV_JUPYTERHUB_SERVICE_PREFIX = os.getenv("JUPYTERHUB_SERVICE_PREFIX")
@@ -34,9 +39,16 @@ if not base_url.startswith("/"):
 # Remove trailing slash
 base_url = base_url.rstrip('/').strip()
 
-# TODO is export needed as well?
-call("export " + ENV_NAME_WORKSPACE_BASE_URL + "=" + base_url, shell=True)
-os.environ[ENV_NAME_WORKSPACE_BASE_URL] = base_url
+set_env_variable(ENV_NAME_WORKSPACE_BASE_URL, base_url)
+
+# Dynamically set MAX_NUM_THREADS
+ENV_MAX_NUM_THREADS = os.getenv("MAX_NUM_THREADS", 8)
+set_env_variable("OMP_NUM_THREADS", ENV_MAX_NUM_THREADS) # OpenMP
+set_env_variable("OPENBLAS_NUM_THREADS", ENV_MAX_NUM_THREADS) # OpenBLAS
+set_env_variable("MKL_NUM_THREADS", ENV_MAX_NUM_THREADS) # MKL
+set_env_variable("VECLIB_MAXIMUM_THREADS", ENV_MAX_NUM_THREADS) # Accelerate
+set_env_variable("NUMEXPR_NUM_THREADS", ENV_MAX_NUM_THREADS) # Numexpr
+set_env_variable("NUMBA_NUM_THREADS", ENV_MAX_NUM_THREADS) # Numba
 
 ENV_RESOURCES_PATH = os.getenv("RESOURCES_PATH", "/resources")
 
