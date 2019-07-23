@@ -7,13 +7,15 @@ jupyter_kernel_gateway==2.3.0 # A web server for spawning and communicating with
 ipyparallel==6.2.4 # Interactive Parallel Computing with IPython
 jupyter_http_over_ws==0.0.6 # Jupyter support for HTTP-over-ws
 
+jupyterhub==1.0.0 # JupyterHub: A multi-user server for Jupyter notebooks
+
 ## Jupyter Extensions
 
 jupyter_contrib_nbextensions==0.5.1 # A collection of Jupyter nbextensions.
 jupyter_nbextensions_configurator==0.4.1 # jupyter serverextension providing configuration interfaces for nbextensions.
 jupyter-tensorboard==0.1.10 # Jupyter notebook integration for tensorboard.
 papermill==1.0.1 # Parametrize and run Jupyter and nteract Notebooks
-jupytext==1.1.7 # Jupyter notebooks as Markdown documents, Julia, Python or R scripts
+jupytext==1.2.1 # Jupyter notebooks as Markdown documents, Julia, Python or R scripts
 nbresuse==0.3.2 # Simple Jupyter extension to show how much resources (RAM) your notebook is using
 # currently not working voila==0.1.2 # Serving read-only live Jupyter notebooks
 
