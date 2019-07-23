@@ -12,6 +12,7 @@ ENV_RESOURCES_PATH = os.getenv("RESOURCES_PATH", "/resources")
 ENV_WORKSPACE_TYPE = os.getenv("WORKSPACE_TYPE", "cpu")
 ENV_WORKSPACE_HOME = os.getenv("WORKSPACE_HOME", "/workspace")
 ENV_WORKSPACE_BASE_URL = os.getenv("WORKSPACE_BASE_URL", "/")
+HOME = os.getenv("HOME", "/root")
 
 if not ENV_WORKSPACE_BASE_URL.startswith("/"):
     ENV_WORKSPACE_BASE_URL = "/" + ENV_WORKSPACE_BASE_URL
@@ -19,7 +20,7 @@ if not ENV_WORKSPACE_BASE_URL.startswith("/"):
 if not ENV_WORKSPACE_BASE_URL.endswith("/"):
     ENV_WORKSPACE_BASE_URL = ENV_WORKSPACE_BASE_URL + "/"
 
-DESKTOP_PATH = os.getenv("HOME", "/root") + "/Desktop"
+DESKTOP_PATH = HOME + "/Desktop"
 
 # Get jupyter token 
 ENV_AUTHENTICATE_VIA_JUPYTER = os.getenv("AUTHENTICATE_VIA_JUPYTER", "false")
@@ -51,5 +52,26 @@ call('chmod +x /usr/share/applications/jupyterlab.desktop', shell=True) # Make e
 
 # Set vnc password
 call('mkdir -p $HOME/.vnc && touch $HOME/.vnc/passwd && echo "$VNC_PW" | vncpasswd -f >> $HOME/.vnc/passwd && chmod 600 $HOME/.vnc/passwd', shell=True)
+
+# Configure filebrowser
+
+# Init filebrowser configuration
+call('filebrowser config init --database=' + HOME + '/filebrowser.db', shell=True)
+
+# Add admin user
+import random, string
+filebrowser_pwd = ''.join(random.sample(string.ascii_lowercase, 20))
+print("Create filebrowser admin with generated password: " + filebrowser_pwd)
+call('filebrowser users add admin ' + filebrowser_pwd + ' --perm.admin=true --database=' + HOME + '/filebrowser.db', shell=True)
+
+# Configure filebrowser
+configure_filebrowser = 'filebrowser config set --root="/" --auth.method=proxy --auth.header=X-Token-Header ' \
+                    + ' --branding.files=$RESOURCES_PATH"/filebrowser/" --branding.name="Filebrowser" ' \
+                    + ' --branding.disableExternal --signup=false --perm.admin=false --perm.create=false ' \
+                    + ' --perm.delete=false --perm.download=true --perm.execute=false '
+                    + ' --perm.admin=false --perm.create=false --perm.delete=false ' \
+                    + ' --perm.modify=false --perm.rename=false --perm.share=false ' \
+                    + '  --database=' + HOME + '/filebrowser.db'
+call(configure_filebrowser, shell=True)
 
 # Tools are started via supervisor, see supervisor.conf
