@@ -182,6 +182,9 @@ RUN \
     chmod 700 $HOME/.ssh && \
     printenv >> $HOME/.ssh/environment && \
     chmod -R a+rwx /usr/local/bin/ && \
+    # Install X11 tools - TODO really necessary?
+    # https://github.com/fcwu/docker-ubuntu-vnc-desktop/blob/master/image/etc/supervisor/conf.d/supervisord.conf
+    apt-get install --yes --no-install-recommends xvfb x11-utils wmctrl x11-apps  && \
     # Fix permissions
     fix-permissions.sh $HOME && \
     # Cleanup
@@ -254,6 +257,11 @@ RUN \
     mkdir -p /opt/node/bin && \
     ln -s /usr/bin/node /opt/node/bin/node && \
     ln -s /usr/bin/npm /opt/node/bin/npm && \
+    # Install YARN
+    curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | sudo apt-key add - && \
+    echo "deb https://dl.yarnpkg.com/debian/ stable main" | sudo tee /etc/apt/sources.list.d/yarn.list && \
+    apt-get update && \
+    apt-get install --yes --no-install-recommends yarn && \
     # Cleanup
     clean-layer.sh
 
@@ -378,6 +386,7 @@ RUN \
     # Install Zipping Tools 
     apt-get install unrar zip unzip --yes && \
     apt-get install p7zip p7zip-rar --yes && \
+    apt-get install bsdtar --yes && \
     apt-get install thunar-archive-plugin --yes && \
     apt-get install file-roller --yes && \
     # Install Git Tools
@@ -477,24 +486,6 @@ RUN \
     rm /usr/bin/python2.7
     # rm /usr/bin/python3.5
 
-# MKL and Hardware Optimization
-# Fix problem with MKL with duplicated libiomp5: https://github.com/dmlc/xgboost/issues/1715
-# Alternative - use openblas instead of Intel MKL: conda install -y nomkl 
-# http://markus-beuckelmann.de/blog/boosting-numpy-blas.html
-# MKL:
-# https://software.intel.com/en-us/articles/tips-to-improve-performance-for-popular-deep-learning-frameworks-on-multi-core-cpus
-# https://github.com/intel/pytorch#bkm-on-xeon
-# http://astroa.physics.metu.edu.tr/MANUALS/intel_ifc/mergedProjects/optaps_for/common/optaps_par_var.htm
-ENV KMP_DUPLICATE_LIB_OK="True" \
-    # TensorFlow uses less than half the RAM with tcmalloc relative to the default. - requires google-perftools
-    LD_PRELOAD="/usr/lib/libtcmalloc.so.4" \
-    # set number of threads mkl should use, if not-set, it tries to use all
-    # this can be problematic since docker restricts CPUs by stil showing all
-    OMP_NUM_THREADS="8" \
-    # Control how to bind OpenMP* threads to physical processing units
-    KMP_AFFINITY="granularity=fine,compact,1,0"
-    # KMP_BLOCKTIME="1" -> is not faster in my tests
-
 ## Python 3
 
 # Install FastText
@@ -537,10 +528,11 @@ RUN \
             requests \
             urllib3 \
             ipykernel \
+            protobuf \
             zlib \
             python-crontab \
             'ipython=7.6.*' \
-            'notebook=5.7.*' \
+            'notebook=6.0.*' \
             libsodium && \
     # Install glances and requirements
     pip install --no-cache-dir glances py-cpuinfo requests netifaces matplotlib bottle && \
@@ -557,6 +549,7 @@ RUN \
     pip install --no-cache-dir --upgrade -r ${RESOURCES_PATH}/requirements.txt && \
     # Install libjpeg-turbo and Pillow-SIMD for faster Image Processing
     # https://docs.fast.ai/performance.html#faster-image-processing
+    # Use better pillow simd install: https://github.com/uploadcare/pillow-simd/issues/44
     conda uninstall -y --force pillow pil jpeg libtiff libjpeg-turbo && \
     pip uninstall -y pillow pil jpeg libtiff libjpeg-turbo  && \
     conda install -y --no-deps -c conda-forge libjpeg-turbo  && \
@@ -594,7 +587,6 @@ COPY docker-res/jupyter/jupyter_requirements.txt ${RESOURCES_PATH}
 
 # install jupyter extensions
 RUN \
-    conda install -y 'jupyterhub=1.0.*' && \
     npm update && \
     npm install -g webpack && \
     # Install jupyter pip requirements
@@ -689,7 +681,43 @@ RUN \
     # Cleanup
     clean-layer.sh
 
-### END JUPYTER ###
+### VSCODE ###
+
+# Install vscode extension
+# https://github.com/cdr/code-server/issues/171
+# Alternative install: /usr/local/bin/code-server --user-data-dir=$HOME/.config/Code/ --extensions-dir=$HOME/.vscode/extensions/ --install-extension ms-python-release && \
+RUN \
+    cd $RESOURCES_PATH && \
+    mkdir -p $HOME/.vscode/extensions/ && \
+    # Install python extension
+    wget --quiet https://github.com/microsoft/vscode-python/releases/download/2019.6.24221/ms-python-release.vsix && \
+    bsdtar -xf ms-python-release.vsix extension && \
+    rm ms-python-release.vsix && \
+    mv extension $HOME/.vscode/extensions/ms-python.python-2019.6.24221 && \
+    # Install remote development extension
+    # https://marketplace.visualstudio.com/items?itemName=ms-vscode-remote.remote-ssh
+    wget --quiet https://marketplace.visualstudio.com/_apis/public/gallery/publishers/ms-vscode-remote/vsextensions/remote-ssh/0.44.2/vspackage -O ms-vscode-remote.remote-ssh.vsix && \
+    bsdtar -xf ms-vscode-remote.remote-ssh.vsix extension && \
+    rm ms-vscode-remote.remote-ssh.vsix && \
+    mv extension $HOME/.vscode/extensions/ms-vscode-remote.remote-ssh-0.44.2 && \
+    # Install remote development ssh - editing configuration files
+    # https://marketplace.visualstudio.com/items?itemName=ms-vscode-remote.remote-ssh-edit
+    wget --quiet https://marketplace.visualstudio.com/_apis/public/gallery/publishers/ms-vscode-remote/vsextensions/remote-ssh-edit/0.44.2/vspackage -O ms-vscode-remote.remote-ssh-edit.vsix && \
+    bsdtar -xf ms-vscode-remote.remote-ssh-edit.vsix extension && \
+    rm ms-vscode-remote.remote-ssh-edit.vsix && \
+    mv extension $HOME/.vscode/extensions/ms-vscode-remote.remote-ssh-edit-0.44.2 && \
+    # Install remote development ssh - explorer
+    # https://marketplace.visualstudio.com/items?itemName=ms-vscode-remote.remote-ssh-explorer
+    wget --quiet https://marketplace.visualstudio.com/_apis/public/gallery/publishers/ms-vscode-remote/vsextensions/remote-ssh-explorer/0.44.2/vspackage -O ms-vscode-remote.remote-ssh-explorer.vsix && \
+    bsdtar -xf ms-vscode-remote.remote-ssh-explorer.vsix extension && \
+    rm ms-vscode-remote.remote-ssh-explorer.vsix && \
+    mv extension $HOME/.vscode/extensions/ms-vscode-remote.remote-ssh-explorer-0.44.2 && \
+    # Fix permissions
+    fix-permissions.sh $HOME/.vscode/extensions/ && \
+    # Cleanup
+    clean-layer.sh
+
+### END VSCODE ###
 
 ### INCUBATION ZONE ### 
 
@@ -816,12 +844,30 @@ RUN \
     # Set /workspace as default directory to navigate to as root user
     echo  'cd '$WORKSPACE_HOME >> $HOME/.bashrc 
 
+# MKL and Hardware Optimization
+# Fix problem with MKL with duplicated libiomp5: https://github.com/dmlc/xgboost/issues/1715
+# Alternative - use openblas instead of Intel MKL: conda install -y nomkl 
+# http://markus-beuckelmann.de/blog/boosting-numpy-blas.html
+# MKL:
+# https://software.intel.com/en-us/articles/tips-to-improve-performance-for-popular-deep-learning-frameworks-on-multi-core-cpus
+# https://github.com/intel/pytorch#bkm-on-xeon
+# http://astroa.physics.metu.edu.tr/MANUALS/intel_ifc/mergedProjects/optaps_for/common/optaps_par_var.htm
+ENV KMP_DUPLICATE_LIB_OK="True" \
+    # TensorFlow uses less than half the RAM with tcmalloc relative to the default. - requires google-perftools
+    LD_PRELOAD="/usr/lib/libtcmalloc.so.4" \
+    # Control how to bind OpenMP* threads to physical processing units
+    KMP_AFFINITY="granularity=fine,compact,1,0"
+    # KMP_BLOCKTIME="1" -> is not faster in my tests
+
 # Set default values for environment variables
 ENV WORKSPACE_CONFIG_BACKUP="true" \
     SHUTDOWN_INACTIVE_KERNELS="false" \
     AUTHENTICATE_VIA_JUPYTER="false" \
     DATA_ENVIRONMENT="/workspace/environment" \
     WORKSPACE_BASE_URL="/" \
+    # set number of threads various programs should use, if not-set, it tries to use all
+    # this can be problematic since docker restricts CPUs by stil showing all
+    MAX_NUM_THREADS="8" \
     WORKSPACE_TYPE="cpu"
 
 ### END CONFIGURATION ###
