@@ -47,6 +47,12 @@ define(['base/js/namespace', 'jquery', 'base/js/dialog', 'base/js/utils', 'requi
             "description": "Monitor hardware resources"
         },
         {
+            "id": "filebrowser-link",
+            "name": "Filebrowser",
+            "url_path": basePath + "shared/filebrowser/files/?token=admin",
+            "description": "Browse and manage workspace files"
+        },
+        {
             "id": "open-tools-button",
             "name": "Open Port",
             "url_path": "",

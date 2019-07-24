@@ -184,6 +184,7 @@ RUN \
     chmod -R a+rwx /usr/local/bin/ && \
     # Install X11 tools - TODO really necessary?
     # https://github.com/fcwu/docker-ubuntu-vnc-desktop/blob/master/image/etc/supervisor/conf.d/supervisord.conf
+    # TODO isntall dbus-x11 x11-xserver-utils
     apt-get install --yes --no-install-recommends xvfb x11-utils wmctrl x11-apps  && \
     # Fix permissions
     fix-permissions.sh $HOME && \
@@ -533,6 +534,7 @@ RUN \
             python-crontab \
             'ipython=7.6.*' \
             'notebook=6.0.*' \
+            'jupyterlab=1.0.*' \
             libsodium && \
     # Install glances and requirements
     pip install --no-cache-dir glances py-cpuinfo requests netifaces matplotlib bottle && \
@@ -636,7 +638,7 @@ RUN \
 
 # install jupyterlab
 RUN \
-    conda install 'jupyterlab=1.0.*' --yes && \
+    # jupyterlab installed in requirements section
     jupyter labextension install @jupyter-widgets/jupyterlab-manager && \
     jupyter labextension install @jupyterlab/toc && \
     jupyter labextension install jupyterlab_tensorboard && \
@@ -794,15 +796,6 @@ RUN \
     git config --global http.sslVerify false && \
     # Use store or credentialstore instead? timout == 365 days validity
     git config --global credential.helper 'cache --timeout=31540000'
-
-# Configure filebrowser
-RUN \
-    cd $HOME && \
-    filebrowser config init && \
-    filebrowser users add admin admin --perm.admin=true && \
-    # Create fielbrowser customization
-    mkdir -p $RESOURCES_PATH"/filebrowser/" && \
-    filebrowser config set --root="/" --auth.method=proxy --auth.header=X-Token-Header --branding.files=$RESOURCES_PATH"/filebrowser/" --branding.name="Filebrowser" --branding.disableExternal --signup=false --perm.admin=false --perm.create=false --perm.delete=false --perm.download=true --perm.execute=false --perm.modify=false --perm.rename=false --perm.share=false
 
 # Configure Matplotlib
 RUN \
