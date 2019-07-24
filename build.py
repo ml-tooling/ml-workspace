@@ -6,6 +6,7 @@ parser = argparse.ArgumentParser()
 parser.add_argument('--name', help='name of docker container', default="ml-workspace")
 parser.add_argument('--version', help='version tag of docker container', default="latest")
 parser.add_argument('--deploy', help='deploy docker container to remote', action='store_true')
+parser.add_argument('--flavor', help='flavor (full, light) used for docker container', default='full')
 
 REMOTE_IMAGE_PREFIX = "mltooling/"
 
@@ -39,12 +40,15 @@ def build(module):
 service_name = os.path.basename(os.path.dirname(os.path.realpath(__file__)))
 if args.name:
     service_name = args.name
+if args.flavor != "full":
+     service_name += "-" + args.flavor
 
 # docker build
+flavor_build_arg = " --build-arg workspace_flavor=" + str(args.flavor)
 version_build_arg = " --build-arg workspace_version=" + str(args.version)
 versioned_image = service_name+":"+str(args.version)
 latest_image = service_name+":latest"
-failed = call("docker build -t "+versioned_image+" -t "+latest_image+" " + version_build_arg + " ./")
+failed = call("docker build -t "+versioned_image+" -t "+latest_image+" " + version_build_arg +" " + flavor_build_arg + " ./")
 
 if failed:
     print("Failed to build container")

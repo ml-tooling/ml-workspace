@@ -57,8 +57,8 @@ ENV LC_ALL="en_US.UTF-8" \
 RUN \
     apt-get update --fix-missing && \
     apt-get install sudo --yes && \
-    apt-get install -y -q debian-archive-keyring debian-keyring && \
-    apt-get update --fix-missing && \
+    # too big apt-get install -y -q debian-archive-keyring debian-keyring && \
+    # apt-get update --fix-missing && \
     apt-get install --yes --no-install-recommends \
         # This is necessary for apt to access HTTPS sources: 
         apt-transport-https \
@@ -83,14 +83,13 @@ RUN \
         # ping support
         iputils-ping \
         wget \
-        maven \
         jed \
         libglib2.0-0 \
         libxext6 \
         libsm6 \
         libxext-dev \
         libxrender1 \
-        lmodern \
+        # TOO big lmodern \
         libjpeg-dev \
         libpng-dev \
         libpng12-dev \
@@ -106,24 +105,22 @@ RUN \
         openmpi-bin \
         libtiff-dev \
         libjasper-dev \
-        libatlas-base-dev \
-        libblas-dev \
         libprotoc-dev \
         cmake  \
         fonts-liberation \
         msttcorefonts \
-        font-manager \
-        # Compression Libs
-        bzip2 \
         rsync \
+        google-perftools \
+        # Json Processor
+        jq \
+        # Compression Libs
         zip \
         gzip \
         unzip \
-        zlib1g-dev \
-        liblapack-dev \
-        google-perftools \
-        # Json Processor
-        jq && \
+        bzip2 \
+        unrar \
+        bsdtar \
+        zlib1g-dev && \
     chmod -R a+rwx /usr/local/bin/ && \
     # configure dynamic linker run-time bindings
     ldconfig && \
@@ -182,10 +179,6 @@ RUN \
     chmod 700 $HOME/.ssh && \
     printenv >> $HOME/.ssh/environment && \
     chmod -R a+rwx /usr/local/bin/ && \
-    # Install X11 tools - TODO really necessary?
-    # https://github.com/fcwu/docker-ubuntu-vnc-desktop/blob/master/image/etc/supervisor/conf.d/supervisord.conf
-    # TODO isntall dbus-x11 x11-xserver-utils
-    apt-get install --yes --no-install-recommends xvfb x11-utils wmctrl x11-apps  && \
     # Fix permissions
     fix-permissions.sh $HOME && \
     # Cleanup
@@ -271,25 +264,12 @@ ENV PATH=/opt/node/bin:$PATH
 # Install Java Runtime
 RUN \
     apt-get update && \
-    apt-get install -y openjdk-8-jdk && \
+    # libgl1-mesa-dri > 150 MB
+    apt-get install -y --no-install-recommends openjdk-8-jdk maven && \
     # Cleanup
     clean-layer.sh
 
 ENV JAVA_HOME /usr/lib/jvm/java-8-openjdk-amd64
-
-# Install Go Runtime
-RUN \
-    apt-get update && \
-    apt-get install -y golang-go && \
-    # Cleanup
-    clean-layer.sh
-
-# Install Ruby Runtime
-RUN \
-    apt-get update && \
-    apt-get install -y ruby-full && \
-    # Cleanup
-    clean-layer.sh
 
 ### END RUNTIMES ###
 
@@ -299,25 +279,9 @@ RUN \
 RUN \
     apt-get update && \
     # Install custom font
-    apt-get install -y ttf-wqy-zenhei && \
+    # TODO necessary? apt-get install -y ttf-wqy-zenhei && \
     apt-get install -y supervisor xfce4 xfce4-terminal xterm && \
     apt-get purge -y pm-utils xscreensaver* && \
-    # Cleanup
-    clean-layer.sh
-
-# Install Git LFS
-RUN \
-    apt-get update && \
-    curl -s https://packagecloud.io/install/repositories/github/git-lfs/script.deb.sh | sudo bash && \
-    apt-get install git-lfs --yes && \
-    git lfs install && \
-    # Cleanup
-    clean-layer.sh
-
-# Install minio mc 
-RUN \
-    wget --quiet https://dl.min.io/client/mc/release/linux-amd64/mc -O /usr/sbin/mc && \
-    chmod +x /usr/sbin/mc && \
     # Cleanup
     clean-layer.sh
 
@@ -372,39 +336,39 @@ RUN \
 # Install Terminal / GDebi (Package Manager) / Glogg (Stream file viewer) & archive tools
 RUN \
     apt-get update && \
-    apt-get install xfce4-terminal --yes && \
-    apt-get install xfce4-taskmanager --yes --allow-unauthenticated && \
-    apt-get install gnome-tweak-tool --yes && \
-    apt-get install gnome-search-tool --yes && \
-    apt-get install gdebi --yes && \
+    apt-get install --yes --no-install-recommends xfce4-terminal && \
+    apt-get install --yes --no-install-recommends --allow-unauthenticated xfce4-taskmanager  && \
+    # 170MB - install via link: https://goodies.xfce.org/projects/applications/xfce4-taskmanager
+    # apt-get install --yes gnome-tweak-tool  && \
+    # apt-get install --yes file-roller && \
+    # apt-get install --yes --no-install-recommends gnome-search-tool && \
+    # Install gdebi deb installer
+    apt-get install --yes --no-install-recommends gdebi && \
+    # Search for files
+    apt-get install --yes catfish && \
+    apt-get install --yes font-manager && \
     # Streaming text editor for large files
-    apt-get install glogg --yes && \
-    apt-get install filezilla --yes && \
-    apt-get install baobab --yes && \
+    apt-get install --yes --no-install-recommends glogg  && \
+    apt-get install --yes --no-install-recommends baobab && \
     # Lightweight text editor
-    apt-get install mousepad --yes && \
-    apt-get install htop --yes && \
+    apt-get install --yes mousepad && \
+    apt-get install --yes htop && \
     # Install Zipping Tools 
-    apt-get install unrar zip unzip --yes && \
-    apt-get install p7zip p7zip-rar --yes && \
-    apt-get install bsdtar --yes && \
-    apt-get install thunar-archive-plugin --yes && \
-    apt-get install file-roller --yes && \
+    apt-get install --yes p7zip p7zip-rar && \
+    apt-get install --yes --no-install-recommends thunar-archive-plugin && \
+    apt-get install --yes xarchiver && \
     # Install Git Tools
-    # one tool is enough? apt-get install giggle --yes && \
-    apt-get install gitg --yes && \
+    # apt-get install --yes --no-install-recommends gitg  && \
     # DB Utils
-    apt-get install sqlitebrowser --yes  && \
+    apt-get install --yes --no-install-recommends sqlitebrowser && \
     # Install nautilus and support for sftp mounting
-    apt-get install --no-install-recommends nautilus gvfs-backends --yes && \
-    # Cleanup
-    clean-layer.sh
-
-RUN \
-    apt-get update && \
-    apt-get install -y chromium-browser chromium-browser-l10n chromium-codecs-ffmpeg && \
+    apt-get install --yes --no-install-recommends nautilus gvfs-backends && \
+    # Install chrome
+    apt-get install --yes chromium-browser chromium-browser-l10n chromium-codecs-ffmpeg && \
     ln -s /usr/bin/chromium-browser /usr/bin/google-chrome && \
     # Cleanup
+    # Large package: gnome-user-guide 50MB app-install-data 50MB
+    apt-get remove --yes app-install-data gnome-user-guide && \ 
     clean-layer.sh
 
 COPY docker-res/scripts/install-firefox.sh $RESOURCES_PATH/scripts/install-firefox.sh
@@ -489,38 +453,18 @@ RUN \
 
 ## Python 3
 
-# Install FastText
-RUN \
-    mkdir $RESOURCES_PATH"/fasttext" && \
-    cd $RESOURCES_PATH"/fasttext" && \
-    wget --quiet https://github.com/facebookresearch/fastText/archive/v0.9.1.zip && \
-    unzip -q v0.9.1.zip && \
-    rm v0.9.1.zip && \
-    cd fastText-0.9.1 && \
-    # Surpress output - if there is a problem remove to see logs > /dev/null
-    make > /dev/null && \
-    chmod -R a+rwx $RESOURCES_PATH"/fasttext" && \
-    cp "fasttext" /usr/local/bin && \
-    # cd back otherwise clean layer will fail since it is deleted
-    cd $RESOURCES_PATH && \
-    rm -r $RESOURCES_PATH"/fasttext" && \
-    # pip install moved to requirements file
-    # Cleanup 
-    clean-layer.sh
+ARG workspace_flavor="full"
 
 # Data science libraries requirements
 COPY docker-res/requirements.txt ${RESOURCES_PATH}
 
 ### Install main data science libs
-RUN \
+RUN \ 
     # upgrade pip
     pip install --upgrade pip && \
-    # Install Packages
-    apt-get update -y && \
-    apt-get install -y --no-install-recommends graphviz pandoc && \
     # Install some basics - required to run container
     conda install -y --update-all \
-            mkl \
+            nomkl \
             cython \
             numpy \
             matplotlib \
@@ -529,6 +473,10 @@ RUN \
             requests \
             urllib3 \
             ipykernel \
+            tqdm \
+            pandas \
+            six \
+            future \
             protobuf \
             zlib \
             python-crontab \
@@ -538,41 +486,54 @@ RUN \
             libsodium && \
     # Install glances and requirements
     pip install --no-cache-dir glances py-cpuinfo requests netifaces matplotlib bottle && \
-    # Install mkl-include & mkldnn
+    # If minimal flavor - exit here
+    if [ "$workspace_flavor" = "minimal" ]; then \
+        # Fix permissions
+        fix-permissions.sh $CONDA_DIR && \
+        # Cleanup
+        clean-layer.sh && \
+        exit 0 ; \
+    fi && \
+    # Install Packages
+    apt-get update -y && \
+    apt-get install -y --no-install-recommends graphviz pandoc libblas-dev && \
+    # Install mkl, mkl-include & mkldnn
+    conda install -y mkl mkl-include  && \
     conda install -y -c mingfeima mkldnn && \
-    conda install -y mkl-include && \
     # Install tensorflow - cpu only -  mkl support
     conda install -y tensorflow && \
     # Install pytorch - cpu only
     conda install -y -c pytorch pytorch-cpu torchvision-cpu && \
+    # If light light flavor - exit here
+    if [ "$workspace_flavor" = "light" ]; then \
+        # Fix permissions
+        fix-permissions.sh $CONDA_DIR && \
+        # Cleanup
+        clean-layer.sh && \
+        exit 0 ; \
+    fi && \
+    # libartals == 40MB liblapack-dev == 20 MB
+    apt-get install -y --no-install-recommends liblapack-dev libatlas-base-dev && \
     # Faiss - A library for efficient similarity search and clustering of dense vectors. 
     conda install -y -c pytorch faiss-cpu && \
     # Install pip requirements
     pip install --no-cache-dir --upgrade -r ${RESOURCES_PATH}/requirements.txt && \
-    # Install libjpeg-turbo and Pillow-SIMD for faster Image Processing
-    # https://docs.fast.ai/performance.html#faster-image-processing
-    # Use better pillow simd install: https://github.com/uploadcare/pillow-simd/issues/44
-    conda uninstall -y --force pillow pil jpeg libtiff libjpeg-turbo && \
-    pip uninstall -y pillow pil jpeg libtiff libjpeg-turbo  && \
-    conda install -y --no-deps -c conda-forge libjpeg-turbo  && \
-    CFLAGS="${CFLAGS} -mavx2" pip install --upgrade --no-cache-dir --force-reinstall --no-binary :all: --compile pillow-simd==6.0.0.post0  && \
-    conda install -y --no-deps jpeg libtiff  && \
-    # Conda installs wrong node version - relink conda node to the actual node 
-    rm -f /opt/conda/bin/node && ln -s /usr/bin/node /opt/conda/bin/node && \
-    rm -f /opt/conda/bin/npm && ln -s /usr/bin/npm /opt/conda/bin/npm && \
-    # Fix permissions
-    fix-permissions.sh $CONDA_DIR && \
-    # Cleanup
-    clean-layer.sh
-
-RUN \ 
+    # Setup Spacy
     # Spacy - download and large language removal
     python -m spacy download en && \
     # Remove unneeded languages - otherwise it takes up too much space
     cd $CONDA_PYTHON_DIR/site-packages/spacy/lang && \
     rm -rf tr pt da sv ca nb && \
+    # Fix permissions
+    fix-permissions.sh $CONDA_DIR && \
     # Cleanup
     clean-layer.sh
+
+# Fix conda version
+RUN \
+    # Conda installs wrong node version - relink conda node to the actual node 
+    rm -f /opt/conda/bin/node && ln -s /usr/bin/node /opt/conda/bin/node && \
+    rm -f /opt/conda/bin/npm && ln -s /usr/bin/npm /opt/conda/bin/npm
 
 ### END DATA SCIENCE BASICS ###
 
@@ -638,13 +599,34 @@ RUN \
 
 # install jupyterlab
 RUN \
+    # Required for jupytext and matplotlib plugins
+    jupyter lab build && \
+    # If minimal flavor - do not install jupyterlab extensions
+    if [ "$workspace_flavor" = "minimal" ]; then \
+        # Cleanup
+        # Remove build folder -> is not needed
+        rm -rf $CONDA_DIR/share/jupyter/lab/staging && \
+        clean-layer.sh && \
+        exit 0 ; \
+    fi && \
     # jupyterlab installed in requirements section
     jupyter labextension install @jupyter-widgets/jupyterlab-manager && \
     jupyter labextension install @jupyterlab/toc && \
     jupyter labextension install jupyterlab_tensorboard && \
-    jupyter labextension install qgrid && \
-    # Install Statusbar
-    # Already integrated jupyter labextension install @jupyterlab/statusbar && \
+    # install jupyterlab git
+    jupyter labextension install @jupyterlab/git && \
+    pip install jupyterlab-git && \ 
+    jupyter serverextension enable --py jupyterlab_git && \
+    # For Matplotlib: https://github.com/matplotlib/jupyter-matplotlib
+    jupyter labextension install jupyter-matplotlib && \
+    # Do not install any other jupyterlab extensions
+    if [ "$workspace_flavor" = "light" ]; then \
+        # Cleanup
+        # Remove build folder -> is not needed
+        rm -rf $CONDA_DIR/share/jupyter/lab/staging && \
+        clean-layer.sh && \
+        exit 0 ; \
+    fi && \
     # For Bokeh
     jupyter labextension install jupyterlab_bokeh && \
     # For Plotly
@@ -652,10 +634,8 @@ RUN \
     jupyter labextension install jupyterlab-chart-editor && \
     # For holoview
     jupyter labextension install @pyviz/jupyterlab_pyviz && \
-    # install jupyterlab git
-    jupyter labextension install @jupyterlab/git && \
-    pip install jupyterlab-git && \ 
-    jupyter serverextension enable --py jupyterlab_git && \
+    # Install qgrid
+    jupyter labextension install qgrid && \
     # Install jupyterlab_iframe - https://github.com/timkpaine/jupyterlab_iframe
     pip install jupyterlab_iframe&& \
     jupyter labextension install jupyterlab_iframe && \
@@ -668,11 +648,18 @@ RUN \
     pip install jupyterlab_sql && \
     jupyter serverextension enable jupyterlab_sql --py --sys-prefix && \
     jupyter lab build && \
-    # Install jupyterlab-data-explorer: https://github.com/jupyterlab/jupyterlab-data-explorer
-    # Install go-to-definition extension
-    # Does not work with newest jupyterlab: jupyter labextension install @krassowski/jupyterlab_go_to_definition && \
     # Install jupyterlab variable inspector - https://github.com/lckr/jupyterlab-variableInspector
-    # Does not work with newest jupyterlab: jupyter labextension install @lckr/jupyterlab_variableinspector && \
+    jupyter labextension install @lckr/jupyterlab_variableinspector && \
+    # Install jupyterlab code formattor - https://github.com/ryantam626/jupyterlab_code_formatter
+    jupyter labextension install @ryantam626/jupyterlab_code_formatter && \
+    pip install jupyterlab_code_formatter && \
+    jupyter serverextension enable --py jupyterlab_code_formatter && \
+    # Install go-to-definition extension 
+    jupyter labextension install @krassowski/jupyterlab_go_to_definition && \
+    # Install jupyterlab-data-explorer: https://github.com/jupyterlab/jupyterlab-data-explorer
+    # Does not exist on NPM jupyter labextension install @jupyterlab/dataregistry && \
+    # Install jupyterlab system monitor: https://github.com/jtpio/jupyterlab-system-monitor
+    # DO not install for now jupyter labextension install jupyterlab-topbar-extension jupyterlab-system-monitor && \
     # Activate ipygrid in jupterlab
     # Does not work with newest version: jupyter labextension install ipyaggrid && \
     # Cleanup
@@ -694,6 +681,10 @@ RUN \
 # https://github.com/cdr/code-server/issues/171
 # Alternative install: /usr/local/bin/code-server --user-data-dir=$HOME/.config/Code/ --extensions-dir=$HOME/.vscode/extensions/ --install-extension ms-python-release && \
 RUN \
+    # If not full flavor - do not install anything
+    if [ "$workspace_flavor" != "full" ]; then \
+        exit 0 ; \
+    fi && \
     cd $RESOURCES_PATH && \
     mkdir -p $HOME/.vscode/extensions/ && \
     # Install python extension

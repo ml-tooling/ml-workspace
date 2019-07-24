@@ -1,12 +1,7 @@
 #
 ####### Basics #######
 #
-tqdm==4.32.2 # A fast, extensible progress bar for Python and CLI
-pandas==0.24.2
-
 ## Compatibility
-six==1.12.0 # Python 2 and 3 compatibility utilities
-future==0.17.1 # Clean single-source support for Python 3 and 2
 dataclasses==0.6 # A backport of the dataclasses module for Python 3.6
 
 ## Object Serialization
