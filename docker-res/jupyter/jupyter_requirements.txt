@@ -18,6 +18,7 @@ papermill==1.0.1 # Parametrize and run Jupyter and nteract Notebooks
 jupytext==1.2.1 # Jupyter notebooks as Markdown documents, Julia, Python or R scripts
 nbresuse==0.3.2 # Simple Jupyter extension to show how much resources (RAM) your notebook is using
 # currently not working voila==0.1.2 # Serving read-only live Jupyter notebooks
+ipython-sql==0.3.9 # RDBMS access via IPython
 
 ## Interactive Components
 
