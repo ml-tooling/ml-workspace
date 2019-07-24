@@ -22,3 +22,4 @@ fi
 # Run
 echo "Starting Starspace"
 starspace --help
+sleep 10
