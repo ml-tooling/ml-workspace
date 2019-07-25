@@ -5,24 +5,19 @@
 dataclasses==0.6 # A backport of the dataclasses module for Python 3.6
 
 ## Object Serialization
-cloudpickle==1.2.1 # Extended pickling support for Python objects
 joblib==0.13.2 # Lightweight pipelining: using Python functions as pipeline jobs.
 dill==0.3.0 # dill can be used to store python objects to a file
-msgpack==0.6.1 # MessagePack (de)serializer.
-msgpack-numpy==0.4.4.3 # Numpy data serialization using msgpack
 marshmallow==2.19.5 # A lightweight library for converting complex datatypes to and from native Python datatype
 jsonpickle==1.2 # Python library for serializing any arbitrary object graph into JSON
 
 ## Utilities
 boltons==19.1.0 # When they're not builtins, they're boltons.
 toolz==0.10.0 # A functional standard library for Python.
-cysignals==1.10.2 # Interrupt and signal handling for Cython
 memory_profiler==0.55.0 # A module for monitoring memory usage of a python program
 cytoolz==0.10.0 # Cython implementation of Toolz: High performance functional utilities
 arrow==0.14.2 # Better dates & times for Python 
 python-dateutil==2.8.0 # Extensions to the standard Python datetime module
 click==7.0.0 # Composable command line interface toolkit
-psutil==5.6.3 # Cross-platform lib for process and system monitoring in Python.
 jmespath==0.9.4 # JSON Matching Expressions
 marisa-trie==0.7.5 # Static memory-efficient and fast Trie-like structures for Python.
 tabulate==0.8.3 # Pretty-print tabular data in Python
@@ -32,54 +27,46 @@ Delorean==1.0.0 # library for manipulating datetimes with ease and clarity
 
 # Python Development Helpers
 yapf==0.28.0 # formatter for Python files
-autopep8==1.4.4 # A tool that automatically formats Python code to conform to the PEP 8 style guide
 black==19.3b0 # The uncompromising code formatter.
-pylint==2.3.1 # python code static checker
 sphinx==2.1.2 # Python documentation generator
-pytest==5.0.1 # pytest: simple powerful testing with Python
 nose2==0.9.1  # The successor to nose, based on unittest2 
 
 ####### Data Science Libs #######
 #
 
 ## ML Frameworks
-# installed via conda for mkl support: tensorflow==1.13.1 # TensorFlow is an open source machine learning framework for everyone.
-keras==2.2.4 # Deep Learning for humans
-fastai==1.0.55 # The fastai library simplifies training fast and accurate neural nets using modern best practices.
-catboost==0.15.2 ; python_version > '2.7' # State-of-the-art open-source gradient boosting on decision trees library.
+# tensorflow -> installed via conda for mkl support
+# keras -> light dependency
+# fastai -> light dependency
+# xgboost -> light dependency
+# scikit-learn -> light dependency
+catboost==0.16 ; python_version > '2.7' # State-of-the-art open-source gradient boosting on decision trees library.
 lightgbm==2.2.3 # A fast, distributed, high performance gradient boosting framework
-xgboost==0.90 # Scalable, Portable and Distributed Gradient Boosting
 theano==1.0.4 # Optimizing compiler for evaluating mathematical expressions on CPUs and GPUs.
 chainer==6.2.0 # A flexible framework of neural networks
 tflearn==0.3.2 # Deep Learning Library featuring a higher-level API for TensorFlow
 dm-sonnet==1.34 # Sonnet is a library for building neural networks in TensorFlow.
 statsmodels==0.10.1 # Statistical computations and models for Python
 cntk==2.7 # CNTK is an open-source, commercial-grade deep learning framework.
-scikit-learn==0.21.2 # A set of python modules for machine learning and data mining
 
 ## Data Handling and Persistence
 csvkit==1.0.4 # A suite of command-line tools for working with CSV, the king of tabular file formats.
-feather-format==0.4.0 # Feather: fast, interoperable binary data frame storage for Python, R, and more powered by Apache Arrow
-pyarrow==0.14.1 # cross-language development platform for in-memory data.
 sklearn-pandas==1.8.0 # Pandas integration with sklearn
 pandas-datareader==0.7.0 # Data readers extracted from the pandas codebase,should be compatible with recent pandas versions
 pandasql==0.7.3 # Allows you to query pandas DataFrames using SQL syntax
 category_encoders==2.0.0 # A collection sklearn transformers to encode categorical variables as numeric
 blaze==0.10.1 # Blaze translates a subset of modified NumPy and Pandas-like syntax to databases and other computing systems. 
 geojson==2.4.1 # Python bindings and utilities for GeoJSON
-annoy==1.16.0 # 1.16.0 cannot be installed - Approximate Nearest Neighbors in C++/Python optimized for memory usage and loading/saving to disk.
+annoy==1.16.0 # Approximate Nearest Neighbors in C++/Python optimized for memory usage and loading/saving to disk.
 easydict==1.9 # Access dict values as attributes (works recursively).
-h5py==2.9.0 # Read and write HDF5 files from Python
-PyYAML==5.1.1 # YAML parser and emitter for Python
 
 ## Text Processing / NLP
+# fasttext -> installed in light dependencies
+# beautifulsoup4 -> installed in light dependencies
 spacy==2.1.6 ; python_version > '2.7'
 gensim==3.8.0 # Python framework for fast Vector Space Modelling
-fasttext==0.9.1 # fasttext Python bindings, a library for efficient learning of word representations and sentence classification.
 pyfasttext==0.4.6 # cysignals has to be install manually before pyfasttext to avoid compile errors; installing cysignals in this requirements.txt still causes compile error
 fuzzywuzzy==0.17.0 #Fuzzy string matching like a boss. It uses Levenshtein Distance to calculate the differences between sequences in a simple-to-use package.
-beautifulsoup4==4.8.0 # Beautiful Soup is a library that makes it easy to scrape information from web pages.
-soupsieve==1.9.2 # A modern CSS selector implementation for Beautiful Soup.
 nltk==3.4.4 # Natural Language Toolkit
 torchtext==0.3.1 # Data loaders and abstractions for text and NLP
 textacy==0.8.0 # Higher-level text processing, built on spaCy
@@ -155,7 +142,7 @@ sacred==0.7.5 # tool to help you configure, organize, log and reproduce experime
 mlflow==1.1.0 # MLflow: An ML Workflow Tool
 
 ## AutoML
-ludwig==0.1.2 # A deep learning experimentation toolbox
+ludwig==0.1.2 # A deep learning experimentation toolbox - gmpy installation error
 adanet==0.7.0 # adanet is a lightweight and scalable TensorFlow AutoML framework for training and deploying adaptive neural networks using the AdaNet algorithm
 # incompatible autokeras==0.3.7 # AutoML for deep learning based on Keras
 # incompatible auto-sklearn==0.5.0 # 3MB - Automated machine learning based on sklearn.
@@ -190,11 +177,26 @@ featuretools==0.9.1 # A framework for automated feature engineering
 vecstack==0.3.0 # Python package for stacking (machine learning technique)
 mlens==0.2.3 # Machine Learning Ensemble Library
 geopy==1.20.0 # Python Geocoding Toolbox
-jax==0.1.39 # GPU- and TPU-backed NumPy with differentiation and JIT compilation.
-jaxlib==0.1.22 # XLA library for JAX - required for jax
 tensorly==0.4.3 # making tensor learning simple and accessible
 mmdnn==0.2.5 # Deep learning model converter, visualization and editor.
+
+## Jupyter Ecosystem
+jupyter-console==6.0.0 # Jupyter terminal console
+jupyter_kernel_gateway==2.3.0 # A web server for spawning and communicating with Jupyter kernels
+ipyparallel==6.2.4 # Interactive Parallel Computing with IPython
+jupyter_http_over_ws==0.0.6 # Jupyter support for HTTP-over-ws
+papermill==1.0.1 # Parametrize and run Jupyter and nteract Notebooks
+ipython-sql==0.3.9 # RDBMS access via IPython
+ipywidgets==7.5.0 # IPython HTML widgets for Jupyter
+widgetsnbextension==3.5.0 # IPython HTML widgets for Jupyter
+nbinteract==0.2.4 # Export interactive HTML pages from Jupyter Notebooks
+qgrid==1.1.1 # a Jupyter notebook widget which uses SlickGrid to render pandas DataFrames within a Jupyter notebook
+ipyaggrid==0.1.11 # Jupyter widget - ag-grid in the notebook
+pivottablejs==0.9.0 # PivotTable.js integration for Jupyter/IPython Notebook
+tensorwatch==0.8.5 # Interactive Realtime Debugging and Visualization for AI
+bqplot==0.11.6 # Plotting library for IPython/Jupyter Notebooks
 ipyexperiments==0.1.16 # jupyter/ipython experiment containers for GPU and general RAM re-use and memory leaks detection.
+# currently not working voila==0.1.2 # Serving read-only live Jupyter notebooks
 
 #
 ####### Visualization Libs #######
@@ -202,7 +204,6 @@ ipyexperiments==0.1.16 # jupyter/ipython experiment containers for GPU and gener
 ## General Visualization Libs
 bokeh==1.3.0 # interactive visualization library that targets modern web browsers for presentation - 20MB
 plotly==4.0.0 # interactive visualizations - 34MB
-seaborn==0.9.0 # Python visualization library based on matplotlib
 holoviews==1.12.3 # Stop plotting your data - annotate your data and let it visualize itself.
 chartify==2.6.0 ; python_version > '2.7' # Python library to make plotting simpler for data scientists
 
@@ -220,12 +221,10 @@ dash-core-components==1.0.0 # Supercharged components
 dash-table==4.0.2 # Interactive DataTable component (new!)
 
 ## Pandas Visualization Tools
-pandas-profiling==2.2.0 # Generate profile report for pandas DataFrame
 missingno==0.4.2 # Missing data visualization module for Python.
 
 ## Training Visualization Tools
 tensorboard_logger==0.1.0 ; python_version > '2.7'
-tensorboardX==1.8 ; python_version > '2.7'
 visualdl==1.3.0 # Visualize Deep Learning
 
 ## ML Model Exploration
@@ -241,7 +240,7 @@ keract==2.6.2 # Keras Activations and Gradients
 ## Task-specific Visualization Libs
 umap-learn==0.3.9 # Uniform Manifold Approximation and Projection
 wordcloud==1.5.0 # A little word cloud generator
-folium==0.9.1 # Make beautiful maps with Leaflet.js & Python
+folium==0.10.0 # Make beautiful maps with Leaflet.js & Python
 visdom==0.1.8.8 # A tool for visualizing live, rich data for Torch and Numpy
 
 #
@@ -255,16 +254,15 @@ elasticsearch==7.0.2 # Python client for Elasticsearch
 neo4j-driver==1.7.4 ; python_version > '2.7' # Neo4j Bolt driver for Python
 lazydata==1.0.19 ; python_version > '2.7'  # Scalable data dependencies
 redis==3.2.1 # Python client for Redis key-value store
-SQLAlchemy==1.3.6 # Database Abstraction Library
 cx-Oracle==7.2.0 # Python interface to Oracle
 kafka-python==1.4.6 # Pure Python client for Apache Kafka
 tinydb==3.13.0 # TinyDB is a tiny, document oriented database optimized for your happiness :)
 PyMySQL==0.9.3 # Pure Python MySQL Driver
-boto3==1.9.193 # The AWS SDK for Python
+boto3==1.9.195 # The AWS SDK for Python
 apache-libcloud==2.5.0 # A standard Python library that abstracts away differences among multiple cloud provider APIs.
 pyhdb==0.3.4  # SAP HANA Database Client for Python
 hdbcli==2.4.142 # SAP HANA Python Client
-google-cloud-storage==1.16.1 # Google Cloud Storage API client library
+google-cloud-storage==1.17.0 # Google Cloud Storage API client library
 
 #
 ####### Others #######
@@ -277,6 +275,8 @@ fastapi==0.33.0 # FastAPI framework, high performance, easy to learn, fast to co
 #
 # > 40 MB - cassandra-driver==3.17.1 # Python driver for Cassandra
 # > 200 MB - pymagnitude==0.1.120 # A fast, efficient universal vector embedding utility package.
+# requires pyarrow feather-format==0.4.0 # Feather: fast, interoperable binary data frame storage for Python, R, and more powered by Apache Arrow
+# 190MB pyarrow==0.14.1 # cross-language development platform for in-memory data.
 # deprecated geoplotlib==0.3.2 # python toolbox for geographic visualizations
 # deprecated perfume-bench==0.1.6 ; python_version > '2.7' # Interactive performance benchmarking in Jupyter
 # deprecated hypertools==0.5.1 # A Python toolbox for gaining geometric insights into high-dimensional data
@@ -301,4 +301,3 @@ fastapi==0.33.0 # FastAPI framework, high performance, easy to learn, fast to co
 # cannot be updated certifi==2018.10.15 # Python package for providing Mozilla's CA Bundle.
 # does not install pattern==3.6 # Web mining module for Python, with tools for scraping, natural language processing, machine learning, network analysis and visualization. 
 # PyQt5==5.12.2 # > 20MB - required for spyder Python bindings for the Qt cross platform UI and application toolkit
-# Installed in dockerfile since it is a container requirement: python-crontab==2.3.8 # Python Crontab API
