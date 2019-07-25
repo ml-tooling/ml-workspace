@@ -863,7 +863,7 @@ ENV WORKSPACE_CONFIG_BACKUP="true" \
     WORKSPACE_BASE_URL="/" \
     # set number of threads various programs should use, if not-set, it tries to use all
     # this can be problematic since docker restricts CPUs by stil showing all
-    MAX_NUM_THREADS="8" \
+    MAX_NUM_THREADS="auto" \
     WORKSPACE_TYPE="cpu"
 
 ### END CONFIGURATION ###

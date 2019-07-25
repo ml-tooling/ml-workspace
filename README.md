@@ -126,8 +126,8 @@ The container can be configured with the following environment variables (`--env
     </tr>
     <tr>
         <td>MAX_NUM_THREADS</td>
-        <td>The number of threads used for computations when using various common libraries (MKL, OPENBLAS, OMP, NUMBA, ...). This configuration can be overwritten by the user from within the workspace. Generally, it is good to set it at or below the number of CPUs available to the workspace.</td>
-        <td>8</td>
+        <td>The number of threads used for computations when using various common libraries (MKL, OPENBLAS, OMP, NUMBA, ...). You can also use <code>auto</code> to let the workspace dynamically determine the number of threads based on available CPU resources. This configuration can be overwritten by the user from within the workspace. Generally, it is good to set it at or below the number of CPUs available to the workspace.</td>
+        <td>auto</td>
     </tr>
     <tr>
         <td>NVIDIA_VISIBLE_DEVICES</td>
