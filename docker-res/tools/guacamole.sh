@@ -73,15 +73,15 @@ if [ ! -d "/etc/guacamole/" ]; then
 fi
 
 # Run
-if [ -z "$1" ]; then
+port=$1
+if [ -z "$port" ]; then
     echo "A port needs to be provided as argument to start guacamole."
-    echo "Exiting in 10 seconds."
-    sleep 10
-    exit 1
+    read -p "Please provide a port for starting guacamole: " port
 fi
 
-echo "Starting guacamole on port "$1"."
+echo "Starting guacamole on port "$port"."
 # Change port in tomcat config
-sed -i 's/Connector port="[0-9]*"/Connector port="'$1'"/g' /usr/share/tomcat8/conf/server.xml
+sed -i 's/Connector port="[0-9]*"/Connector port="'$port'"/g' /usr/share/tomcat8/conf/server.xml
 service guacd restart
 /usr/share/tomcat8/bin/catalina.sh run
+sleep 15

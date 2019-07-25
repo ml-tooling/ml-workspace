@@ -8,4 +8,4 @@ else
 fi
 
 ruby --help
-sleep 10
+sleep 20

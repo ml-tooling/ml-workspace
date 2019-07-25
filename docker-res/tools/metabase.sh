@@ -1,5 +1,4 @@
 #!/bin/sh
-
 if [ ! -f "/resources/metabase.jar" ]; then
     cd /resources
     echo "Installing metabase"
@@ -7,14 +6,14 @@ if [ ! -f "/resources/metabase.jar" ]; then
 fi
 
 # Run
-if [ -z "$1" ]; then
+port=$1
+if [ -z "$port" ]; then
     echo "A port needs to be provided as argument to start metabase."
-    echo "Exiting in 10 seconds."
-    sleep 10
-    exit 1
+    read -p "Please provide a port for starting metabase: " port
 fi
 
-echo "Starting metabase on port "$1
-export MB_JETTY_PORT=$1
+echo "Starting metabase on port "$port
+export MB_JETTY_PORT=$port
 cd /resources/
 java -jar metabase.jar
+sleep 15

@@ -9,15 +9,15 @@ if [ ! -f /resources/zeppelin/zeppelin-0.8.1-bin-all/bin/zeppelin-daemon.sh  ]; 
 fi
 
 # Run
-if [ -z "$1" ]; then
+port=$1
+if [ -z "$port" ]; then
     echo "A port needs to be provided as argument to start zeppelin."
-    echo "Exiting in 10 seconds."
-    sleep 10
-    exit 1
+    read -p "Please provide a port for starting zeppelin: " port
 fi
 
-echo "Starting zeppelin on port "$1
+echo "Starting zeppelin on port "$port
 mkdir -p $WORKSPACE_HOME/zeppelin
 export ZEPPELIN_NOTEBOOK_DIR=$WORKSPACE_HOME/zeppelin
-export ZEPPELIN_PORT=$1
+export ZEPPELIN_PORT=$port
 /resources/zeppelin/zeppelin-0.8.1-bin-all/bin/zeppelin-daemon.sh start
+sleep 15

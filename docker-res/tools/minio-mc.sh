@@ -7,5 +7,7 @@ else
     echo "Minio Utility is already installed"
 fi
 
+# Run
+echo "Use minio mc via command line:"
 mc --help
-sleep 10
+sleep 20

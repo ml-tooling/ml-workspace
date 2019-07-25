@@ -13,4 +13,4 @@ echo "This should return a version with post prefix if pillow-simd is used:"
 python -c "from PIL import Image; print(Image.PILLOW_VERSION)"
 echo "This should return True of libjpeg-turbo is enabled:"
 python -c "from PIL import features; print(features.check_feature('libjpeg_turbo'))"
-sleep 10
+sleep 30

@@ -20,4 +20,4 @@ fi
 # Run
 echo "Use fasttext via command line:"
 fasttext --help
-sleep 10
+sleep 20
