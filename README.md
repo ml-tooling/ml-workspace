@@ -99,6 +99,11 @@ The container can be configured with the following environment variables (`--env
         <td>false</td>
     </tr>
     <tr>
+        <td>SHARED_LINKS_ENABLED</td>
+        <td>Enable or disable the capability to share resources via external links. This is used to enable file sharing, access to workspace-internal ports, and easy command-based SSH setup. All shared links are protected via a token. However, there are certain risks since the token cannot be easily invalidated after sharing and does not expire.</td>
+        <td>true</td>
+    </tr>
+    <tr>
         <td colspan="3"><b>Jupyter Configuration:</b></td>
     </tr>
     <tr>
@@ -139,17 +144,17 @@ The container can be configured with the following environment variables (`--env
     </tr>
     <tr>
         <td>VNC_PW</td>
-        <td>Password of VNC Connection.</td>
+        <td>Password of VNC connection. This password only needs to be secure if the VNC server is directly exposed. If it is used via noVNC, it is already protected based on the configured authentication mechanism.</td>
         <td>vncpassword</td>
     </tr>
     <tr>
         <td>VNC_RESOLUTION</td>
-        <td>Desktop Resolution of VNC Connection.</td>
+        <td>Default desktop resolution of VNC connection. When using noVNC, the resolution will be dynamically adapted to the window size.</td>
         <td>1600x900</td>
     </tr>
     <tr>
         <td>VNC_COL_DEPTH</td>
-        <td>Color Depth of VNC Connection.</td>
+        <td>Default color depth of VNC connection.</td>
         <td>24</td>
     </tr>
 </table>

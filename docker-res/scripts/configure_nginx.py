@@ -30,6 +30,8 @@ call("sed -i 's@{WORKSPACE_BASE_URL}@" + os.getenv("WORKSPACE_BASE_URL", "").rst
 # Activate or deactivate jupyter based authentication for tooling
 call("sed -i 's@{AUTHENTICATE_VIA_JUPYTER}@" + os.getenv("AUTHENTICATE_VIA_JUPYTER", "false").lower().strip() + "@g' " + NGINX_FILE, shell=True)
 
+call("sed -i 's@{SHARED_LINKS_ENABLED}@" + os.getenv("SHARED_LINKS_ENABLED", "false").lower().strip() + "@g' " + NGINX_FILE, shell=True)
+
 # Replace key hash with actual sha1 hash of key
 try:
     with open(os.getenv("HOME", "/root") + "/.ssh/id_ed25519", "r") as f:

@@ -338,15 +338,12 @@ RUN \
     apt-get update && \
     apt-get install --yes --no-install-recommends xfce4-terminal && \
     apt-get install --yes --no-install-recommends --allow-unauthenticated xfce4-taskmanager  && \
-    # 170MB - install via link: https://goodies.xfce.org/projects/applications/xfce4-taskmanager
-    # apt-get install --yes gnome-tweak-tool  && \
-    # apt-get install --yes file-roller && \
-    # apt-get install --yes --no-install-recommends gnome-search-tool && \
     # Install gdebi deb installer
     apt-get install --yes --no-install-recommends gdebi && \
     # Search for files
-    apt-get install --yes catfish && \
-    apt-get install --yes font-manager && \
+    apt-get install --yes --no-install-recommends catfish && \
+    apt-get install --yes --no-install-recommends gnome-search-tool && \
+    apt-get install --yes --no-install-recommends font-manager && \
     # Streaming text editor for large files
     apt-get install --yes --no-install-recommends glogg  && \
     apt-get install --yes --no-install-recommends baobab && \
@@ -357,8 +354,6 @@ RUN \
     apt-get install --yes p7zip p7zip-rar && \
     apt-get install --yes --no-install-recommends thunar-archive-plugin && \
     apt-get install --yes xarchiver && \
-    # Install Git Tools
-    # apt-get install --yes --no-install-recommends gitg  && \
     # DB Utils
     apt-get install --yes --no-install-recommends sqlitebrowser && \
     # Install nautilus and support for sftp mounting
@@ -439,7 +434,6 @@ RUN \
 
 ### DATA SCIENCE BASICS ###
 
-# TODO move down
 RUN \
     # Link Conda - All python are linke to the conda instances 
     # Linking python 3 crashes conda -> cannot install anyting - remove instead
@@ -456,15 +450,18 @@ RUN \
 ARG workspace_flavor="full"
 
 # Data science libraries requirements
-COPY docker-res/requirements.txt ${RESOURCES_PATH}
+COPY docker-res/libraries ${RESOURCES_PATH}/libraries
 
 ### Install main data science libs
 RUN \ 
     # upgrade pip
     pip install --upgrade pip && \
+    # Install Packages
+    apt-get update -y && \
+    apt-get install -y --no-install-recommends graphviz && \
     # Install some basics - required to run container
     conda install -y --update-all \
-            nomkl \
+            mkl \
             cython \
             numpy \
             matplotlib \
@@ -486,6 +483,8 @@ RUN \
             libsodium && \
     # Install glances and requirements
     pip install --no-cache-dir glances py-cpuinfo requests netifaces matplotlib bottle && \
+    # Install minimal pip requirements
+    pip install --no-cache-dir --upgrade -r ${RESOURCES_PATH}/libraries/minimal-requirements.txt && \
     # If minimal flavor - exit here
     if [ "$workspace_flavor" = "minimal" ]; then \
         # Fix permissions
@@ -494,16 +493,15 @@ RUN \
         clean-layer.sh && \
         exit 0 ; \
     fi && \
-    # Install Packages
-    apt-get update -y && \
-    apt-get install -y --no-install-recommends graphviz pandoc libblas-dev && \
     # Install mkl, mkl-include & mkldnn
-    conda install -y mkl mkl-include  && \
-    conda install -y -c mingfeima mkldnn && \
+    conda install -y mkl-include  && \
+    # TODO - Install was not working conda install -y -c mingfeima mkldnn && \
     # Install tensorflow - cpu only -  mkl support
     conda install -y tensorflow && \
     # Install pytorch - cpu only
     conda install -y -c pytorch pytorch-cpu torchvision-cpu && \
+    # Install light pip requirements
+    pip install --no-cache-dir --upgrade -r ${RESOURCES_PATH}/libraries/light-requirements.txt && \
     # If light light flavor - exit here
     if [ "$workspace_flavor" = "light" ]; then \
         # Fix permissions
@@ -513,11 +511,11 @@ RUN \
         exit 0 ; \
     fi && \
     # libartals == 40MB liblapack-dev == 20 MB
-    apt-get install -y --no-install-recommends liblapack-dev libatlas-base-dev && \
+    apt-get install -y --no-install-recommends liblapack-dev libatlas-base-dev pandoc libblas-dev && \
     # Faiss - A library for efficient similarity search and clustering of dense vectors. 
     conda install -y -c pytorch faiss-cpu && \
-    # Install pip requirements
-    pip install --no-cache-dir --upgrade -r ${RESOURCES_PATH}/requirements.txt && \
+    # Install full pip requirements
+    pip install --no-cache-dir --upgrade -r ${RESOURCES_PATH}/libraries/full-requirements.txt && \
     # Setup Spacy
     # Spacy - download and large language removal
     python -m spacy download en && \
@@ -545,17 +543,34 @@ COPY \
     docker-res/jupyter/start-singleuser.sh \
     /usr/local/bin/
 
-# Jupyter pip requirements - components and extensions
-COPY docker-res/jupyter/jupyter_requirements.txt ${RESOURCES_PATH}
-
 # install jupyter extensions
 RUN \
     npm update && \
     npm install -g webpack && \
-    # Install jupyter pip requirements
-    pip install --no-cache-dir --upgrade -r ${RESOURCES_PATH}/jupyter_requirements.txt && \
+    # Add as Python 2 kernel
+    # Install Python 2 kernel spec globally to avoid permission problems when NB_UID
+    # switching at runtime and to allow the notebook server running out of the root
+    # environment to find it. Also, activate the python2 environment upon kernel launch.
+    pip install --no-cache-dir kernda && \
+    $CONDA_DIR/envs/python2/bin/python -m pip install ipykernel && \
+    $CONDA_DIR/envs/python2/bin/python -m ipykernel install && \
+    kernda -o -y /usr/local/share/jupyter/kernels/python2/kernel.json && \
     # Activate and configure extensions
     jupyter contrib nbextension install --user && \
+    # nbextensions configurator
+    jupyter nbextensions_configurator enable --user && \
+    # Active nbresuse
+    jupyter serverextension enable --py nbresuse && \
+    # Activate Jupytext
+    jupyter nbextension enable --py jupytext && \
+    # If minimal flavor - exit here
+    if [ "$workspace_flavor" = "minimal" ]; then \
+        # Cleanup
+        clean-layer.sh && \
+        exit 0 ; \
+    fi && \
+    # Configure nbdime
+    nbdime config-git --enable --global && \
     # Enable useful extensions
     jupyter nbextension enable skip-traceback/main && \
     jupyter nbextension enable comment-uncomment/main && \
@@ -565,34 +580,24 @@ RUN \
     jupyter nbextension enable execute_time/ExecuteTime && \
     jupyter nbextension enable collapsible_headings/main && \
     jupyter nbextension enable codefolding/main && \
-    # nbextensions configurator
-    jupyter nbextensions_configurator enable --user && \
-    # Configure nbdime
-    nbdime config-git --enable --global && \
-    # Active nbresuse
-    jupyter serverextension enable --py nbresuse && \
-    # Activate Jupytext
-    jupyter nbextension enable --py jupytext && \
+    # Activate Jupyter Tensorboard
+    jupyter tensorboard enable && \
+    # Edit notebook config
+    cat $HOME/.jupyter/nbconfig/notebook.json | jq '.toc2={"moveMenuLeft": false}' > tmp.$$.json && mv tmp.$$.json $HOME/.jupyter/nbconfig/notebook.json && \
+    # If light flavor - exit here
+    if [ "$workspace_flavor" = "light" ]; then \
+        # Cleanup
+        clean-layer.sh && \
+        exit 0 ; \
+    fi && \
     # Activate qgrid
     jupyter nbextension enable --py --sys-prefix qgrid && \
     # Activate Colab support
     jupyter serverextension enable --py jupyter_http_over_ws && \
     # Activate Voila Rendering 
     # currently not working jupyter serverextension enable voila --sys-prefix && \
-    # Activate Jupyter Tensorboard
-    jupyter tensorboard enable && \
-    # Edit notebook config
-    cat $HOME/.jupyter/nbconfig/notebook.json | jq '.toc2={"moveMenuLeft": false}' > tmp.$$.json && mv tmp.$$.json $HOME/.jupyter/nbconfig/notebook.json && \
-    # Disable the cluster tab for now
+    # Enable ipclusters
     ipcluster nbextension enable && \
-    # Add as Python 2 kernel
-    # Install Python 2 kernel spec globally to avoid permission problems when NB_UID
-    # switching at runtime and to allow the notebook server running out of the root
-    # environment to find it. Also, activate the python2 environment upon kernel launch.
-    pip install --no-cache-dir kernda && \
-    $CONDA_DIR/envs/python2/bin/python -m pip install ipykernel && \
-    $CONDA_DIR/envs/python2/bin/python -m ipykernel install && \
-    kernda -o -y /usr/local/share/jupyter/kernels/python2/kernel.json && \
     # Fix permissions? fix-permissions.sh $CONDA_DIR && \
     # Cleanup
     clean-layer.sh
@@ -852,6 +857,7 @@ ENV KMP_DUPLICATE_LIB_OK="True" \
 # Set default values for environment variables
 ENV WORKSPACE_CONFIG_BACKUP="true" \
     SHUTDOWN_INACTIVE_KERNELS="false" \
+    SHARED_LINKS_ENABLED="true" \
     AUTHENTICATE_VIA_JUPYTER="false" \
     DATA_ENVIRONMENT="/workspace/environment" \
     WORKSPACE_BASE_URL="/" \

@@ -308,8 +308,15 @@ define(['base/js/namespace', 'jquery', 'base/js/dialog', 'require', 'exports', '
                 },
                 error: function (response) {
                     let errorMsg = "An unknown error occurred while getting auth token.";
-                    if (response) {
-                        errorMsg = String(response);
+                    if (response && response.responseText) {
+                        try {
+                            let data = JSON.parse(response.responseText)
+                            if (Boolean(data["error"])) {
+                                errorMsg = data["error"];
+                            }
+                        } catch (e) {
+                            errorMsg = String(response.responseText)
+                        }
                     }
                     that.openErrorDialog(errorMsg, null);
                 }
@@ -329,8 +336,15 @@ define(['base/js/namespace', 'jquery', 'base/js/dialog', 'require', 'exports', '
                 },
                 error: function (response) {
                     let errorMsg = "An unknown error occurred while getting ssh setup command.";
-                    if (response) {
-                        errorMsg = String(response);
+                    if (response && response.responseText) {
+                        try {
+                            let data = JSON.parse(response.responseText)
+                            if (Boolean(data["error"])) {
+                                errorMsg = data["error"];
+                            }
+                        } catch (e) {
+                            errorMsg = String(response.responseText)
+                        }
                     }
                     that.openErrorDialog(errorMsg, null);
                 }
@@ -350,8 +364,15 @@ define(['base/js/namespace', 'jquery', 'base/js/dialog', 'require', 'exports', '
                 },
                 error: function (response) {
                     let errorMsg = "An unknown error occurred while generating sharable file link.";
-                    if (response) {
-                        errorMsg = String(response);
+                    if (response && response.responseText) {
+                        try {
+                            let data = JSON.parse(response.responseText)
+                            if (Boolean(data["error"])) {
+                                errorMsg = data["error"];
+                            }
+                        } catch (e) {
+                            errorMsg = String(response.responseText)
+                        }
                     }
                     that.openErrorDialog(errorMsg, null);
                 }

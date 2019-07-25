@@ -144,6 +144,11 @@ class SharedSSHHandler(IPythonHandler):
      def get(self):
         # authentication only via token
         try:
+            sharing_enabled = os.environ.get("SHARED_LINKS_ENABLED", "false")
+            if sharing_enabled.lower() != "true":
+                handle_error(self, 401, error_msg="Shared links are disabled. Please download and execute the SSH script manually.")
+                return
+            
             token = self.get_argument('token', None)
             valid_token = generate_token(self.request.path)
             if not token:
@@ -165,6 +170,11 @@ class SSHCommandHandler(IPythonHandler):
     @web.authenticated
     def get(self):
         try:
+            sharing_enabled = os.environ.get("SHARED_LINKS_ENABLED", "false")
+            if sharing_enabled.lower() != "true":
+                self.finish("Shared links are disabled. Please download and executen the SSH script manually.")
+                return
+            
             # schema + host + port
             origin = self.get_argument('origin', None)
             if not origin:
@@ -189,6 +199,11 @@ class SharedTokenHandler(IPythonHandler):
     @web.authenticated
     def get(self):
         try:
+            sharing_enabled = os.environ.get("SHARED_LINKS_ENABLED", "false")
+            if sharing_enabled.lower() != "true":
+                handle_error(self, 400, error_msg="Shared links are disabled.")
+                return
+            
             path = self.get_argument('path', None)
             if path is None:
                 handle_error(self, 400, "Please provide a valid path via get parameter.")
@@ -204,6 +219,11 @@ class SharedFilesHandler(IPythonHandler):
     @web.authenticated
     def get(self):
         try:
+            sharing_enabled = os.environ.get("SHARED_LINKS_ENABLED", "false")
+            if sharing_enabled.lower() != "true":
+                self.finish("Shared links are disabled. Please download and share the data manually.")
+                return
+            
             path = _resolve_path(self.get_argument('path', None))
             if not path:
                 handle_error(self, 400, "Please provide a valid path via get parameter.")
