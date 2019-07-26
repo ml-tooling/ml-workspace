@@ -79,9 +79,9 @@ The container can be configured with the following environment variables (`--env
         <td>/</td>
     </tr>
     <tr>
-        <td>WORKSPACE_CONFIG_BACKUP</td>
-        <td>Automatically backup and restore user configuration to the persisted <code>/workspace</code> folder, such as the .ssh, .jupyter, or .gitconfig from the users home directory.</td>
-        <td>true</td>
+        <td>WORKSPACE_SSL_ENABLED</td>
+        <td>Enable or disable SSL. When set to true, either certificates (cert.crt) must be mounted to <code>/resources/ssl</code> or, if not, the container generates self-signed certificates.</td>
+        <td>false</td>
     </tr>
     <tr>
         <td>WORKSPACE_AUTH_USER</td>
@@ -94,9 +94,9 @@ The container can be configured with the following environment variables (`--env
         <td></td>
     </tr>
     <tr>
-        <td>WORKSPACE_SSL_ENABLED</td>
-        <td>Enable or disable SSL. When set to true, either certificates (cert.crt) must be mounted to <code>/resources/ssl</code> or, if not, the container generates self-signed certificates.</td>
-        <td>false</td>
+        <td>CONFIG_BACKUP_ENABLED</td>
+        <td>Automatically backup and restore user configuration to the persisted <code>/workspace</code> folder, such as the .ssh, .jupyter, or .gitconfig from the users home directory.</td>
+        <td>true</td>
     </tr>
     <tr>
         <td>SHARED_LINKS_ENABLED</td>

@@ -855,7 +855,7 @@ ENV KMP_DUPLICATE_LIB_OK="True" \
     # KMP_BLOCKTIME="1" -> is not faster in my tests
 
 # Set default values for environment variables
-ENV WORKSPACE_CONFIG_BACKUP="true" \
+ENV CONFIG_BACKUP_ENABLED="true" \
     SHUTDOWN_INACTIVE_KERNELS="false" \
     SHARED_LINKS_ENABLED="true" \
     AUTHENTICATE_VIA_JUPYTER="false" \

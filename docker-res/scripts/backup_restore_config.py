@@ -30,27 +30,27 @@ if unknown:
 WORKSPACE_HOME = os.getenv('WORKSPACE_HOME')
 USER_HOME = os.getenv('HOME')
 RESOURCE_FOLDER = os.getenv('RESOURCES_PATH')
-WORKSPACE_CONFIG_BACKUP = os.getenv('WORKSPACE_CONFIG_BACKUP')
-WORKSPACE_CONFIG_BACKUP_FOLDER = WORKSPACE_HOME + "/.workspace/backup/"
+CONFIG_BACKUP_ENABLED = os.getenv('CONFIG_BACKUP_ENABLED')
+CONFIG_BACKUP_FOLDER = WORKSPACE_HOME + "/.workspace/backup/"
 
 if args.mode == "restore":
-    if WORKSPACE_CONFIG_BACKUP is None or WORKSPACE_CONFIG_BACKUP.lower() == "false" or WORKSPACE_CONFIG_BACKUP.lower() == "off":
+    if CONFIG_BACKUP_ENABLED is None or CONFIG_BACKUP_ENABLED.lower() == "false" or CONFIG_BACKUP_ENABLED.lower() == "off":
         log.info("Configuration Backup is not activated. Restore process will not be started.")
         sys.exit()
 
     log.info("Starting config backup restore.")
 
-    if not os.path.exists(WORKSPACE_CONFIG_BACKUP_FOLDER) or len(os.listdir(WORKSPACE_CONFIG_BACKUP_FOLDER)) == 0:
+    if not os.path.exists(CONFIG_BACKUP_FOLDER) or len(os.listdir(CONFIG_BACKUP_FOLDER)) == 0:
         log.info("Nothing to restore. Config backup folder is empty.")
         sys.exit()
     
     # set verbose? -v
-    rsync_restore =  "rsync -a -r -t -z -E -X -A " + WORKSPACE_CONFIG_BACKUP_FOLDER + " " + USER_HOME
+    rsync_restore =  "rsync -a -r -t -z -E -X -A " + CONFIG_BACKUP_FOLDER + " " + USER_HOME
     log.debug("Run rsync restore: " + rsync_restore)
     subprocess.call(rsync_restore, shell=True)
 elif args.mode == "backup":
-    if not os.path.exists(WORKSPACE_CONFIG_BACKUP_FOLDER):
-        os.makedirs(WORKSPACE_CONFIG_BACKUP_FOLDER)
+    if not os.path.exists(CONFIG_BACKUP_FOLDER):
+        os.makedirs(CONFIG_BACKUP_FOLDER)
     
     log.info("Starting configuration backup.")
     backup_selection = "--include='/.config' \
@@ -68,26 +68,26 @@ elif args.mode == "backup":
     rsync_backup =  "rsync -a -r -t -z -E -X -A --delete-excluded --max-size=100m \
                         " + backup_selection + " \
                         --exclude='/.ssh/environment' --include='/.ssh/***' \
-                        --exclude='*' " + USER_HOME + "/ " + WORKSPACE_CONFIG_BACKUP_FOLDER
+                        --exclude='*' " + USER_HOME + "/ " + CONFIG_BACKUP_FOLDER
     log.debug("Run rsync backup: " + rsync_backup)
     subprocess.call(rsync_backup, shell=True)
 
 elif args.mode == "schedule":
     DEFAULT_CRON = "0 * * * *"  # every hour
 
-    if WORKSPACE_CONFIG_BACKUP is None or WORKSPACE_CONFIG_BACKUP.lower() == "false" or WORKSPACE_CONFIG_BACKUP.lower() == "off":
+    if CONFIG_BACKUP_ENABLED is None or CONFIG_BACKUP_ENABLED.lower() == "false" or CONFIG_BACKUP_ENABLED.lower() == "off":
         log.info("Configuration Backup is not activated.")
         sys.exit()
 
-    if not os.path.exists(WORKSPACE_CONFIG_BACKUP_FOLDER):
-        os.makedirs(WORKSPACE_CONFIG_BACKUP_FOLDER)
+    if not os.path.exists(CONFIG_BACKUP_FOLDER):
+        os.makedirs(CONFIG_BACKUP_FOLDER)
     
     from crontab import CronTab, CronSlices
 
     cron_schedule = DEFAULT_CRON
     # env variable can also be a cron scheadule
-    if CronSlices.is_valid(WORKSPACE_CONFIG_BACKUP):
-        cron_schedule = WORKSPACE_CONFIG_BACKUP
+    if CronSlices.is_valid(CONFIG_BACKUP_ENABLED):
+        cron_schedule = CONFIG_BACKUP_ENABLED
     
     # Cron does not provide enviornment variables, source them manually
     environment_file = os.path.join(RESOURCE_FOLDER, "environment.sh")
