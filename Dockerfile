@@ -304,6 +304,8 @@ RUN \
     # Install rsyslog for syslog logging
     apt-get install --yes --no-install-recommends rsyslog && \
     pip install --no-cache-dir --upgrade supervisor supervisor-stdout && \
+    # supervisor needs this logging path
+    mkdir -p /var/log/supervisor/ && \
     # Cleanup
     clean-layer.sh
 
@@ -688,7 +690,7 @@ RUN \
 # Alternative install: /usr/local/bin/code-server --user-data-dir=$HOME/.config/Code/ --extensions-dir=$HOME/.vscode/extensions/ --install-extension ms-python-release && \
 RUN \
     # If minimal or light flavor -> exit here
-    if [ "$WORKSPACE_FLAVOR" = "minimal" || "$WORKSPACE_FLAVOR" = "light"]; then \
+    if [ "$WORKSPACE_FLAVOR" = "minimal" ] || [ "$WORKSPACE_FLAVOR" = "light" ]; then \
         exit 0 ; \
     fi && \
     cd $RESOURCES_PATH && \
@@ -872,8 +874,6 @@ ARG VCS_REF="unknown"
 ARG WORKSPACE_VERSION="unknown"
 ENV WORKSPACE_VERSION=$WORKSPACE_VERSION
 
-# Removed - is run during startup since a few env variables are dynamically changed: RUN printenv > $HOME/.ssh/environment
-
 # Overwrite & add Labels
 LABEL \
     "maintainer"="mltooling.team@gmail.com" \
@@ -910,6 +910,8 @@ LABEL \
     "org.label-schema.schema-version"="1.0" \
     "org.label-schema.vcs-ref"=$VCS_REF \
     "org.label-schema.build-date"=$BUILD_DATE
+
+# Removed - is run during startup since a few env variables are dynamically changed: RUN printenv > $HOME/.ssh/environment
 
 # This assures we have a volume mounted even if the user forgot to do bind mount.
 # So that they do not lose their data if they delete the container.
