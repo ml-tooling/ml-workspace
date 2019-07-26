@@ -384,7 +384,7 @@ define(['base/js/namespace', 'jquery', 'base/js/dialog', 'require', 'exports', '
             var div = $('<div/>');
             div.append('<p>Anyone with the follwing link can view and download the selected file or folder:</p>');
             div.append('<br>');
-            div.append('<textarea readonly="true" style="width: 100%; min-height: 25px; height: 25px" id="sharable-file-link">' + shareLink + '</textarea>');
+            div.append('<textarea readonly="true" style="width: 100%; min-height: 25px; height: 45px" id="sharable-file-link">' + shareLink + '</textarea>');
             div.append('<br>');
             div.append('<div style="font-size: 11px; color: #909090;">Be careful and responsible with whom you share sensitive data. This sharable link will not expire and cannot currently be deactivated.</div>');
             return div
