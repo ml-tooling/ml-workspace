@@ -75,13 +75,13 @@ The container can be configured with the following environment variables (`--env
     </tr>
     <tr>
         <td>WORKSPACE_BASE_URL</td>
-        <td>The base URL under which the notebook server is reachable. E.g. setting it to /my-workspace, the workspace would be reachable under /my-workspace/tree.</td>
+        <td>The base URL under which Jupyter and all other tools will be reachable from.</td>
         <td>/</td>
     </tr>
     <tr>
-        <td>WORKSPACE_CONFIG_BACKUP</td>
-        <td>Automatically backup and restore user configuration to the persisted /workspace folder, such as the .ssh, .jupyter, or .gitconfig from the users home directory.</td>
-        <td>true</td>
+        <td>WORKSPACE_SSL_ENABLED</td>
+        <td>Enable or disable SSL. When set to true, either certificates (cert.crt) must be mounted to <code>/resources/ssl</code> or, if not, the container generates self-signed certificates.</td>
+        <td>false</td>
     </tr>
     <tr>
         <td>WORKSPACE_AUTH_USER</td>
@@ -94,21 +94,26 @@ The container can be configured with the following environment variables (`--env
         <td></td>
     </tr>
     <tr>
-        <td>WORKSPACE_SSL_ENABLED</td>
-        <td>Enable or disable SSL. When set to true, either certificates (cert.crt) must be mounted to /resources/ssl or, if not, the container generates self-signed certificates.</td>
-        <td>false</td>
+        <td>CONFIG_BACKUP_ENABLED</td>
+        <td>Automatically backup and restore user configuration to the persisted <code>/workspace</code> folder, such as the .ssh, .jupyter, or .gitconfig from the users home directory.</td>
+        <td>true</td>
+    </tr>
+    <tr>
+        <td>SHARED_LINKS_ENABLED</td>
+        <td>Enable or disable the capability to share resources via external links. This is used to enable file sharing, access to workspace-internal ports, and easy command-based SSH setup. All shared links are protected via a token. However, there are certain risks since the token cannot be easily invalidated after sharing and does not expire.</td>
+        <td>true</td>
     </tr>
     <tr>
         <td colspan="3"><b>Jupyter Configuration:</b></td>
     </tr>
     <tr>
         <td>SHUTDOWN_INACTIVE_KERNELS</td>
-        <td>Automatically shutdown inactive kernels after a given timeout (to cleanup memory or gpu resources). Value can be either a timeout in seconds or set to `true` with a default value of 48h.</td>
+        <td>Automatically shutdown inactive kernels after a given timeout (to cleanup memory or gpu resources). Value can be either a timeout in seconds or set to <code>true</code> with a default value of 48h.</td>
         <td>false</td>
     </tr>
     <tr>
         <td>AUTHENTICATE_VIA_JUPYTER</td>
-        <td>If `true`, all HTTP requests will be authenticated against the Jupyter server, meaning that the authentication method configured with Jupyter will be used for all other tools as well. This can be deactivated with `false`. Any other value will activate this authentication and are applied as token via NotebookApp.token configuration of Jupyter.</td>
+        <td>If <code>true</code>, all HTTP requests will be authenticated against the Jupyter server, meaning that the authentication method configured with Jupyter will be used for all other tools as well. This can be deactivated with <code>false</code>. Any other value will activate this authentication and are applied as token via NotebookApp.token configuration of Jupyter.</td>
         <td>false</td>
     </tr>
     <tr>
@@ -117,29 +122,39 @@ The container can be configured with the following environment variables (`--env
         <td></td>
     </tr>
     <tr>
-        <td colspan="3"><b>Hardware Optimization:</b></td>
+        <td colspan="3"><b>Hardware Configuration:</b></td>
     </tr>
     <tr>
-        <td>OMP_NUM_THREADS</td>
-        <td>Number of threads used for MKL computations.</td>
-        <td>8</td>
+        <td>MAX_NUM_THREADS</td>
+        <td>The number of threads used for computations when using various common libraries (MKL, OPENBLAS, OMP, NUMBA, ...). You can also use <code>auto</code> to let the workspace dynamically determine the number of threads based on available CPU resources. This configuration can be overwritten by the user from within the workspace. Generally, it is good to set it at or below the number of CPUs available to the workspace.</td>
+        <td>auto</td>
+    </tr>
+    <tr>
+        <td>NVIDIA_VISIBLE_DEVICES</td>
+        <td>(GPU only) Controls which GPUs will be accessible inside the workspace. By default, all GPUs from the host are accessible within the workspace. You can either use <code>all</code>, <code>none</code>, or specify a comma-separated list of device IDs (e.g. <code>0,1</code>). You can find out the list of available device IDs by running <code>nvidia-smi</code> on the host machine.</td>
+        <td></td>
+    </tr>
+    <tr>
+        <td>CUDA_VISIBLE_DEVICES</td>
+        <td>(GPU only) Controls which GPUs CUDA applications running inside the workspace will see. By default, all GPUs that the workspace has access to will be visible. To restrict applications, provide a comma-separated list of internal device IDs (e.g. <code>0,2</code>) based on the available devices within the workspace (run <code>nvidia-smi</code>). In comparison to <code>NVIDIA_VISIBLE_DEVICES</code>, the workspace user will still able to access other GPUs by overwriting this configuration from within the workspace.</td>
+        <td></td>
     </tr>
     <tr>
         <td colspan="3"><b>VNC Configuration:</b></td>
     </tr>
     <tr>
         <td>VNC_PW</td>
-        <td>Password of VNC Connection.</td>
+        <td>Password of VNC connection. This password only needs to be secure if the VNC server is directly exposed. If it is used via noVNC, it is already protected based on the configured authentication mechanism.</td>
         <td>vncpassword</td>
     </tr>
     <tr>
         <td>VNC_RESOLUTION</td>
-        <td>Desktop Resolution of VNC Connection.</td>
+        <td>Default desktop resolution of VNC connection. When using noVNC, the resolution will be dynamically adapted to the window size.</td>
         <td>1600x900</td>
     </tr>
     <tr>
         <td>VNC_COL_DEPTH</td>
-        <td>Color Depth of VNC Connection.</td>
+        <td>Default color depth of VNC connection.</td>
         <td>24</td>
     </tr>
 </table>
@@ -332,6 +347,7 @@ Port tunneling is quite useful when you have started any server-based tool withi
 - `8090`: Jupyter server.
 - `8054`: VS Code server.
 - `5901`: VNC server.
+- `3389`: RDP server.
 - `22`: SSH server.
 
 > 📖 _For more information about port tunneling/forwarding, we recommend [this guide](https://www.everythingcli.org/ssh-tunnelling-for-fun-and-profit-local-vs-remote/)._
@@ -404,7 +420,7 @@ To a running
 
 The workspace is pre-installed with many popular runtimes, data science libraries, and ubuntu packages:
 
-- **Runtimes:** Anaconda 3 (Python 3.6), Java 8, NodeJS 11
+- **Runtimes:** Miniconda 3 (Python 3.6), Java 8, NodeJS 11, Go, Ruby
 - **Python libraries:** Tensorflow, Keras, Pytorch, Sklearn, CNTK, XGBoost, Theano, Fastai, and [many more](https://github.com/ml-tooling/ml-workspace/blob/master/docker-res/requirements.txt)
 
 The full list of installed tools can be found within the [Dockerfile](https://github.com/ml-tooling/ml-workspace/blob/master/Dockerfile).

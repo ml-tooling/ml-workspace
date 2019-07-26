@@ -1,1 +1,1 @@
-CHROMIUM_FLAGS='--disable-dev-shm-usage --no-sandbox --disable-gpu --user-data-dir --start-maximized'
+CHROMIUM_FLAGS='--disable-dev-shm-usage --no-sandbox --disable-gpu --user-data-dir --disable-infobars --start-maximized' 

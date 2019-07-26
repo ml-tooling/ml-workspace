@@ -1,5 +1,5 @@
 #!/bin/sh
-if ! hash /opt/Hyper/hyper 2>/dev/null; then
+if [ ! -f "/opt/Hyper/hyper" ]; then
     cd /resources
     echo "Installing Hyper Terminal"
     apt-get update

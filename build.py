@@ -1,11 +1,13 @@
 import os, sys
 import subprocess
 import argparse
+import datetime
 
 parser = argparse.ArgumentParser()
 parser.add_argument('--name', help='name of docker container', default="ml-workspace")
 parser.add_argument('--version', help='version tag of docker container', default="latest")
 parser.add_argument('--deploy', help='deploy docker container to remote', action='store_true')
+parser.add_argument('--flavor', help='flavor (full, light) used for docker container', default='full')
 
 REMOTE_IMAGE_PREFIX = "mltooling/"
 
@@ -27,6 +29,9 @@ def build(module):
 
     if args.deploy:
         build_command += " --deploy"
+ 
+    if args.flavor:
+        build_command += " --flavor"
 
     working_dir = os.path.dirname(os.path.realpath(__file__))
     full_command = "cd " + module + " && " + build_command + " && cd " + working_dir
@@ -40,11 +45,35 @@ service_name = os.path.basename(os.path.dirname(os.path.realpath(__file__)))
 if args.name:
     service_name = args.name
 
+if not args.flavor:
+    args.flavor = "full"
+
+args.flavor = str(args.flavor).lower()
+# Build full image without suffix if the flavor is not minimal or light
+if args.flavor in ["minimal", "light"]:
+    service_name += "-" + args.flavor
+
 # docker build
-version_build_arg = " --build-arg workspace_version=" + str(args.version)
+git_rev = "unknown"
+try:
+    git_rev = subprocess.check_output(["git", "rev-parse", "--short", "HEAD"]).decode('ascii').strip()
+except:
+    pass
+
+build_date = datetime.datetime.utcnow().isoformat("T") + "Z"
+try:
+    build_date = subprocess.check_output(['date', '-u', '+%Y-%m-%dT%H:%M:%SZ']).decode('ascii').strip()
+except:
+    pass
+
+vcs_ref_build_arg = " --build-arg VCS_REF=" + str(git_rev)
+build_date_build_arg = " --build-arg BUILD_DATE=" + str(build_date)
+flavor_build_arg = " --build-arg WORKSPACE_FLAVOR=" + str(args.flavor)
+version_build_arg = " --build-arg WORKSPACE_VERSION=" + str(args.version)
 versioned_image = service_name+":"+str(args.version)
 latest_image = service_name+":latest"
-failed = call("docker build -t "+versioned_image+" -t "+latest_image+" " + version_build_arg + " ./")
+failed = call("docker build -t "+ versioned_image + " -t " + latest_image + " " 
+            + version_build_arg + " " + flavor_build_arg+ " " + vcs_ref_build_arg + " " + build_date_build_arg + " ./")
 
 if failed:
     print("Failed to build container")
@@ -64,5 +93,6 @@ if args.deploy:
 
         call("docker push " + remote_latest_image)
 
-# Build GPU image based on cpu image
-build("gpu")
+if args.flavor not in ["full", "minimal", "light"]:
+    # assume that flavor has its own directory with build.py
+    build(args.flavor)

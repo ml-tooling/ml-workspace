@@ -54,11 +54,16 @@ define(['base/js/namespace', 'jquery', 'base/js/dialog', 'base/js/utils', 'requi
 
         });
 
-        // tensorboard button when select a directory
+        // Commit & push file button
         $(".dynamic-buttons:first").append('<button id="#commit-push-button" title="Commit and push file" class="commit-push-button btn btn-default btn-xs">Commit & Push</button>');
-
+        $(".dynamic-buttons:first").append('<button id="#share-data-button" title="Share data" style="margin-left: 4px;" class="share-data-button btn btn-default btn-xs"><i class="fa fa-share-alt"></i></button>');
+       
         $(".commit-push-button").click(function () {
             components.openCommitSingleDialog(Jupyter.notebook_list.selected[0].path);
+        });
+
+        $(".share-data-button").click(function () {
+            components.shareData(Jupyter.notebook_list.selected[0].path);
         });
 
         var _selection_changed = Jupyter.notebook_list.__proto__._selection_changed;
@@ -67,8 +72,13 @@ define(['base/js/namespace', 'jquery', 'base/js/dialog', 'base/js/utils', 'requi
             selected = this.selected;
             if (selected.length == 1 && selected[0].type !== 'directory') {
                 $('.commit-push-button').css('display', 'inline-block');
+                $('.share-data-button').css('display', 'inline-block');
+            } else if (selected.length == 1 && selected[0].type == 'directory') {
+                $('.commit-push-button').css('display', 'none');
+                $('.share-data-button').css('display', 'inline-block');
             } else {
                 $('.commit-push-button').css('display', 'none');
+                $('.share-data-button').css('display', 'none');
             }
         };
         Jupyter.notebook_list._selection_changed();

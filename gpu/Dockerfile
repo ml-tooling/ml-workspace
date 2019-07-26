@@ -41,6 +41,7 @@ ENV PATH /usr/local/nvidia/bin:/usr/local/cuda/bin:${PATH}
 ENV LD_LIBRARY_PATH /usr/local/nvidia/lib:/usr/local/nvidia/lib64:${LD_LIBRARY_PATH}
 
 # nvidia-container-runtime
+# https://github.com/NVIDIA/nvidia-container-runtime#environment-variables-oci-spec
 ENV NVIDIA_VISIBLE_DEVICES all
 ENV NVIDIA_DRIVER_CAPABILITIES compute,utility
 ENV NVIDIA_REQUIRE_CUDA "cuda>=10.0 brand=tesla,driver>=384,driver<385 brand=tesla,driver>=410,driver<411"
@@ -95,7 +96,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     apt-mark hold libcudnn7 && \
     rm -rf /var/lib/apt/lists/* && \ 
     # Cleanup
-    /resources/clean_layer.sh
+    clean-layer.sh
 
 ### END CUDANN7 ###
 
@@ -144,7 +145,7 @@ RUN \
     # MXNet with GPU Support:
     # pip install --no-cache-dir --upgrade mxnet-cu100 && \
     # Cleanup
-    /resources/clean_layer.sh
+    clean-layer.sh
 
 # https://www.anaconda.com/getting-started-with-gpu-computing-in-anaconda/
 
@@ -172,7 +173,7 @@ RUN \
     cp /tmp/netdata_nv_plugin/python_modules/pynvml.py /usr/libexec/netdata/python.d/python_modules/ && \
     cp /tmp/netdata_nv_plugin/nv.conf /etc/netdata/python.d/ && \
     # Cleanup
-    /resources/clean_layer.sh
+    clean-layer.sh
 
 ### END GPU TOOLS ###
 
@@ -181,15 +182,10 @@ RUN \
 RUN \
     echo 'Defaults env_keep += "ftp_proxy http_proxy https_proxy no_proxy"' >> /etc/sudoers
 
-ENV \
-    WORKSPACE_TYPE="gpu"
-    # TODO use temp as data environment to use temp folder?
-    # DATA_ENVIRONMENT="temp"
+# TODO use temp as data environment to use temp folder?
+# DATA_ENVIRONMENT="temp"
 
-LABEL "workspace.type"=$WORKSPACE_TYPE
+# USER $NB_USER
 
-USER $NB_USER
-# refresh ssh environment variables here again
-RUN \
-    printenv > $HOME/.ssh/environment && \
-    echo "export PATH=$PATH" >> $HOME/.bashrc
+#RUN \
+#    echo "export PATH=$PATH" >> $HOME/.bashrc

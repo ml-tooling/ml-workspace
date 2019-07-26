@@ -7,7 +7,7 @@ SSLNAME=cert
 if [ ! -f ${SSL_RESOURCES_PATH}/$SSLNAME.crt ]; then
     SSLDAYS=365
 
-    openssl req -x509 -nodes -newkey rsa:2048 -keyout $SSLNAME.key -out $SSLNAME.crt  -days $SSLDAYS -subj '/C=DE/ST=Berlin/L=Berlin/CN=localhost'
+    openssl req -x509 -nodes -newkey rsa:2048 -keyout $SSLNAME.key -out $SSLNAME.crt  -days $SSLDAYS -subj '/C=DE/ST=Berlin/L=Berlin/CN=localhost' > /dev/null 2>&1
     
     mv $SSLNAME.crt ${SSL_RESOURCES_PATH}/$SSLNAME.crt
     mv $SSLNAME.key ${SSL_RESOURCES_PATH}/$SSLNAME.key
@@ -16,7 +16,7 @@ fi
 # trust certificate. used in case containers share the same certificate
 cp ${SSL_RESOURCES_PATH}/$SSLNAME.crt /usr/local/share/ca-certificates/
 # update certificates, but dont print out information
-update-ca-certificates
+update-ca-certificates > /dev/null
 
 # Add following add certificates to certify python package
 cat ${SSL_RESOURCES_PATH}/$SSLNAME.crt >> /opt/conda/lib/python3.6/site-packages/certifi/cacert.pem
