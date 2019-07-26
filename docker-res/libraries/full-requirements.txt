@@ -40,7 +40,7 @@ nose2==0.9.1  # The successor to nose, based on unittest2
 # fastai -> light dependency
 # xgboost -> light dependency
 # scikit-learn -> light dependency
-catboost==0.16 ; python_version > '2.7' # State-of-the-art open-source gradient boosting on decision trees library.
+catboost==0.16 # State-of-the-art open-source gradient boosting on decision trees library.
 lightgbm==2.2.3 # A fast, distributed, high performance gradient boosting framework
 theano==1.0.4 # Optimizing compiler for evaluating mathematical expressions on CPUs and GPUs.
 chainer==6.2.0 # A flexible framework of neural networks
@@ -63,7 +63,7 @@ easydict==1.9 # Access dict values as attributes (works recursively).
 ## Text Processing / NLP
 # fasttext -> installed in light dependencies
 # beautifulsoup4 -> installed in light dependencies
-spacy==2.1.6 ; python_version > '2.7'
+spacy==2.1.6
 gensim==3.8.0 # Python framework for fast Vector Space Modelling
 pyfasttext==0.4.6 # cysignals has to be install manually before pyfasttext to avoid compile errors; installing cysignals in this requirements.txt still causes compile error
 fuzzywuzzy==0.17.0 #Fuzzy string matching like a boss. It uses Levenshtein Distance to calculate the differences between sequences in a simple-to-use package.
@@ -81,7 +81,7 @@ pyahocorasick==1.4.0 # a fast and memory efficient library for exact or approxim
 ftfy==5.5.1 # Fixes some problems with Unicode text after the fact
 stop-words==2018.7.23 # Get list of common stop words in various languages in Python
 stanfordnlp==0.2.0 # Official Stanford NLP Python Library
-newspaper3k==0.2.8 ; python_version > '2.7' # Simplified python article discovery & extraction.
+newspaper3k==0.2.8 # Simplified python article discovery & extraction.
 inflect==2.1.0 # Correctly generate plurals, singular nouns, ordinals, indefinite articles; convert numbers to words
 
 ## Image Processing
@@ -205,14 +205,14 @@ ipyexperiments==0.1.16 # jupyter/ipython experiment containers for GPU and gener
 bokeh==1.3.0 # interactive visualization library that targets modern web browsers for presentation - 20MB
 plotly==4.0.0 # interactive visualizations - 34MB
 holoviews==1.12.3 # Stop plotting your data - annotate your data and let it visualize itself.
-chartify==2.6.0 ; python_version > '2.7' # Python library to make plotting simpler for data scientists
+chartify==2.6.0 # Python library to make plotting simpler for data scientists
 
 ## Vega/Altair Ecosystem
 altair==3.1.0 # A declarative statistical visualization library for Python.
 vega==2.4.0 # IPyVega: An IPython/Jupyter widget for Vega 3 and Vega-Lite 2
 vega_datasets==0.7.0 # A Python package for offline access to Vega datasets
 pdvega==0.1 # Pandas plotting interface to Vega and Vega-Lite
-nx-altair==0.1.4 ; python_version > '2.7' # Draw NetworkX graphs with Altair
+nx-altair==0.1.4 # Draw NetworkX graphs with Altair
 
 # Dash Ecosystem
 dash==1.0.2 # The core dash backend
@@ -224,7 +224,7 @@ dash-table==4.0.2 # Interactive DataTable component (new!)
 missingno==0.4.2 # Missing data visualization module for Python.
 
 ## Training Visualization Tools
-tensorboard_logger==0.1.0 ; python_version > '2.7'
+tensorboard_logger==0.1.0
 visualdl==1.3.0 # Visualize Deep Learning
 
 ## ML Model Exploration
@@ -251,14 +251,14 @@ minio==4.0.18 # S3 client
 pymongo==3.8.0 # Mongo Client
 db.py==0.5.3 # easier way to interact with your databases, support for  PostgreSQL, MySQL, SQLite, Redshift, MS SQL Server, Oracle
 elasticsearch==7.0.2 # Python client for Elasticsearch
-neo4j-driver==1.7.4 ; python_version > '2.7' # Neo4j Bolt driver for Python
-lazydata==1.0.19 ; python_version > '2.7'  # Scalable data dependencies
+neo4j-driver==1.7.4 # Neo4j Bolt driver for Python
+lazydata==1.0.19  # Scalable data dependencies
 redis==3.2.1 # Python client for Redis key-value store
-cx-Oracle==7.2.0 # Python interface to Oracle
+cx-Oracle==7.2.1 # Python interface to Oracle
 kafka-python==1.4.6 # Pure Python client for Apache Kafka
 tinydb==3.13.0 # TinyDB is a tiny, document oriented database optimized for your happiness :)
 PyMySQL==0.9.3 # Pure Python MySQL Driver
-boto3==1.9.195 # The AWS SDK for Python
+boto3==1.9.196 # The AWS SDK for Python
 apache-libcloud==2.5.0 # A standard Python library that abstracts away differences among multiple cloud provider APIs.
 pyhdb==0.3.4  # SAP HANA Database Client for Python
 hdbcli==2.4.142 # SAP HANA Python Client

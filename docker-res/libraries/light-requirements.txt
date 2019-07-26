@@ -15,9 +15,9 @@ beautifulsoup4==4.8.0 # Beautiful Soup is a library that makes it easy to scrape
 soupsieve==1.9.2 # A modern CSS selector implementation for Beautiful Soup.
 
 ## Others
-pandas-profiling==2.2.0 # Generate profile report for pandas DataFrame - Basic
-tensorboardX==1.8 ; python_version > '2.7' # Basic
+pandas-profiling==2.2.0 # Generate profile report for pandas DataFrame
+tensorboardX==1.8 # TensorBoardX lets you watch Tensors Flow without Tensorflow
 
 ## Jupyter
 jupyter-tensorboard==0.1.10 # Jupyter notebook integration for tensorboard.
-nbdime==1.0.6 # Diff and merge of Jupyter Notebooks
+nbdime==1.0.7 # Diff and merge of Jupyter Notebooks
