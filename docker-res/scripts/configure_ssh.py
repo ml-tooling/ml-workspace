@@ -8,8 +8,23 @@ from subprocess import call
 import os
 import sys
 
+HOME = os.getenv("HOME", "/root")
+
 # Export environment for ssh sessions
-call("printenv > $HOME/.ssh/environment", shell=True)
+#call("printenv > $HOME/.ssh/environment", shell=True)
+with open(HOME + "/.ssh/environment", 'w') as fp:
+    for env in os.environ:
+        if env == "LS_COLORS":
+            continue
+        # ignore most variables that get set by kubernetes if enableServiceLinks is not disabled
+        # https://github.com/kubernetes/kubernetes/pull/68754
+        if "SERVICE_PORT" in env.upper():
+            continue
+        if "SERVICE_HOST" in env.upper():
+            continue
+        if "PORT" in env.upper() and "TCP" in env.upper():
+            continue
+        fp.write(env + "=" + str(os.environ[env]) + "\n")
 
 ### Generate SSH Key (for ssh access, also remote kernel access)
 # Generate a key pair without a passphrase (having the key should be enough) that can be used to ssh into the container
