@@ -58,6 +58,10 @@ if ENV_MAX_NUM_THREADS:
         if not ENV_MAX_NUM_THREADS or not ENV_MAX_NUM_THREADS.isnumeric() or ENV_MAX_NUM_THREADS == "0":
             ENV_MAX_NUM_THREADS = "4"
         
+        if int(ENV_MAX_NUM_THREADS) > 8:
+            # there should be atleast one thread less compared to cores
+            ENV_MAX_NUM_THREADS = str(int(ENV_MAX_NUM_THREADS)-1)
+        
         # set a maximum of 32, in most cases too many threads are adding too much overhead
         if int(ENV_MAX_NUM_THREADS) > 32:
             ENV_MAX_NUM_THREADS = "32"
