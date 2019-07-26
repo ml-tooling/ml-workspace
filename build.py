@@ -1,6 +1,7 @@
 import os, sys
 import subprocess
 import argparse
+import datetime
 
 parser = argparse.ArgumentParser()
 parser.add_argument('--name', help='name of docker container', default="ml-workspace")
@@ -46,17 +47,33 @@ if args.name:
 
 if not args.flavor:
     args.flavor = "full"
+
 args.flavor = str(args.flavor).lower()
 # Build full image without suffix if the flavor is not minimal or light
-if args.flavor not in ["minimal", "light"]:
+if args.flavor in ["minimal", "light"]:
     service_name += "-" + args.flavor
 
 # docker build
+git_rev = "unknown"
+try:
+    git_rev = subprocess.check_output(["git", "rev-parse", "--short", "HEAD"]).decode('ascii').strip()
+except:
+    pass
+
+build_date = datetime.datetime.utcnow().isoformat("T") + "Z"
+try:
+    build_date = subprocess.check_output(['date', '-u', '+%Y-%m-%dT%H:%M:%SZ']).decode('ascii').strip()
+except:
+    pass
+
+vcs_ref_build_arg = " --build-arg VCS_REF=" + str(git_rev)
+build_date_build_arg = " --build-arg BUILD_DATE=" + str(build_date)
 flavor_build_arg = " --build-arg WORKSPACE_FLAVOR=" + str(args.flavor)
 version_build_arg = " --build-arg WORKSPACE_VERSION=" + str(args.version)
 versioned_image = service_name+":"+str(args.version)
 latest_image = service_name+":latest"
-failed = call("docker build -t "+versioned_image+" -t "+latest_image+" " + version_build_arg +" " + flavor_build_arg + " ./")
+failed = call("docker build -t "+ versioned_image + " -t " + latest_image + " " 
+            + version_build_arg + " " + flavor_build_arg+ " " + vcs_ref_build_arg + " " + build_date_build_arg + " ./")
 
 if failed:
     print("Failed to build container")
