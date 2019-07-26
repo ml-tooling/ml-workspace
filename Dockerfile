@@ -280,7 +280,7 @@ RUN \
     apt-get update && \
     # Install custom font
     # TODO necessary? apt-get install -y ttf-wqy-zenhei && \
-    apt-get install -y supervisor xfce4 xfce4-terminal xterm && \
+    apt-get install -y xfce4 xfce4-terminal xterm && \
     apt-get purge -y pm-utils xscreensaver* && \
     # Cleanup
     clean-layer.sh
@@ -447,7 +447,8 @@ RUN \
 
 ## Python 3
 
-ARG workspace_flavor="full"
+ARG WORKSPACE_FLAVOR="full"
+ENV WORKSPACE_FLAVOR=$WORKSPACE_FLAVOR
 
 # Data science libraries requirements
 COPY docker-res/libraries ${RESOURCES_PATH}/libraries
@@ -486,7 +487,7 @@ RUN \
     # Install minimal pip requirements
     pip install --no-cache-dir --upgrade -r ${RESOURCES_PATH}/libraries/minimal-requirements.txt && \
     # If minimal flavor - exit here
-    if [ "$workspace_flavor" = "minimal" ]; then \
+    if [ "$WORKSPACE_FLAVOR" = "minimal" ]; then \
         # Fix permissions
         fix-permissions.sh $CONDA_DIR && \
         # Cleanup
@@ -503,7 +504,7 @@ RUN \
     # Install light pip requirements
     pip install --no-cache-dir --upgrade -r ${RESOURCES_PATH}/libraries/light-requirements.txt && \
     # If light light flavor - exit here
-    if [ "$workspace_flavor" = "light" ]; then \
+    if [ "$WORKSPACE_FLAVOR" = "light" ]; then \
         # Fix permissions
         fix-permissions.sh $CONDA_DIR && \
         # Cleanup
@@ -564,7 +565,7 @@ RUN \
     # Activate Jupytext
     jupyter nbextension enable --py jupytext && \
     # If minimal flavor - exit here
-    if [ "$workspace_flavor" = "minimal" ]; then \
+    if [ "$WORKSPACE_FLAVOR" = "minimal" ]; then \
         # Cleanup
         clean-layer.sh && \
         exit 0 ; \
@@ -585,7 +586,7 @@ RUN \
     # Edit notebook config
     cat $HOME/.jupyter/nbconfig/notebook.json | jq '.toc2={"moveMenuLeft": false}' > tmp.$$.json && mv tmp.$$.json $HOME/.jupyter/nbconfig/notebook.json && \
     # If light flavor - exit here
-    if [ "$workspace_flavor" = "light" ]; then \
+    if [ "$WORKSPACE_FLAVOR" = "light" ]; then \
         # Cleanup
         clean-layer.sh && \
         exit 0 ; \
@@ -607,7 +608,7 @@ RUN \
     # Required for jupytext and matplotlib plugins
     jupyter lab build && \
     # If minimal flavor - do not install jupyterlab extensions
-    if [ "$workspace_flavor" = "minimal" ]; then \
+    if [ "$WORKSPACE_FLAVOR" = "minimal" ]; then \
         # Cleanup
         # Remove build folder -> is not needed
         rm -rf $CONDA_DIR/share/jupyter/lab/staging && \
@@ -625,7 +626,7 @@ RUN \
     # For Matplotlib: https://github.com/matplotlib/jupyter-matplotlib
     jupyter labextension install jupyter-matplotlib && \
     # Do not install any other jupyterlab extensions
-    if [ "$workspace_flavor" = "light" ]; then \
+    if [ "$WORKSPACE_FLAVOR" = "light" ]; then \
         # Cleanup
         # Remove build folder -> is not needed
         rm -rf $CONDA_DIR/share/jupyter/lab/staging && \
@@ -686,8 +687,8 @@ RUN \
 # https://github.com/cdr/code-server/issues/171
 # Alternative install: /usr/local/bin/code-server --user-data-dir=$HOME/.config/Code/ --extensions-dir=$HOME/.vscode/extensions/ --install-extension ms-python-release && \
 RUN \
-    # If not full flavor - do not install anything
-    if [ "$workspace_flavor" != "full" ]; then \
+    # If minimal or light flavor -> exit here
+    if [ "$WORKSPACE_FLAVOR" = "minimal" || "$WORKSPACE_FLAVOR" = "light"]; then \
         exit 0 ; \
     fi && \
     cd $RESOURCES_PATH && \
@@ -863,28 +864,52 @@ ENV CONFIG_BACKUP_ENABLED="true" \
     WORKSPACE_BASE_URL="/" \
     # set number of threads various programs should use, if not-set, it tries to use all
     # this can be problematic since docker restricts CPUs by stil showing all
-    MAX_NUM_THREADS="auto" \
-    WORKSPACE_TYPE="cpu"
+    MAX_NUM_THREADS="auto"
 
 ### END CONFIGURATION ###
+ARG BUILD_DATE="unknown"
+ARG VCS_REF="unknown"
+ARG WORKSPACE_VERSION="unknown"
+ENV WORKSPACE_VERSION=$WORKSPACE_VERSION
 
-ARG workspace_version="unknown"
-ENV WORKSPACE_VERSION=$workspace_version
-
-# refresh ssh environment variables here again
-# TODO remove?
-RUN printenv > $HOME/.ssh/environment
+# Removed - is run during startup since a few env variables are dynamically changed: RUN printenv > $HOME/.ssh/environment
 
 # Overwrite & add Labels
 LABEL \
-    "io.k8s.description"="All-in-one web-based IDE specialized for machine learning and data science." \
+    "maintainer"="mltooling.team@gmail.com" \
+    "workspace.version"=$WORKSPACE_VERSION \
+    "workspace.flavor"=$WORKSPACE_FLAVOR \
+    # Kubernetes Labels
+    "io.k8s.description"="All-in-one web-based development environment for machine learning." \
     "io.k8s.display-name"="Machine Learning Workspace" \
+    # Openshift labels: https://docs.okd.io/latest/creating_images/metadata.html
     "io.openshift.expose-services"="8091:http, 5901:xvnc" \
     "io.openshift.non-scalable"="true" \
-    "io.openshift.tags"="vnc, ubuntu, xfce, workspace, machine learning" \
+    "io.openshift.tags"="workspace, machine learning, vnc, ubuntu, xfce" \
     "io.openshift.min-memory"="1Gi" \
-    "workspace.version"=$workspace_version \
-    "workspace.type"=$WORKSPACE_TYPE
+    # Open Container labels: https://github.com/opencontainers/image-spec/blob/master/annotations.md
+    "org.opencontainers.image.title"="Machine Learning Workspace" \
+    "org.opencontainers.image.description"="All-in-one web-based development environment for machine learning." \
+    "org.opencontainers.image.documentation"="https://github.com/ml-tooling/ml-workspace" \
+    "org.opencontainers.image.url"="https://github.com/ml-tooling/ml-workspace" \
+    "org.opencontainers.image.source"="https://github.com/ml-tooling/ml-workspace" \
+    "org.opencontainers.image.licenses"="Apache-2.0" \
+    "org.opencontainers.image.version"=$WORKSPACE_VERSION \
+    "org.opencontainers.image.vendor"="ML Tooling" \
+    "org.opencontainers.image.authors"="Lukas Masuch & Benjamin Raehtlein" \
+    "org.opencontainers.image.revision"=$VCS_REF \
+    "org.opencontainers.image.created"=$BUILD_DATE \ 
+    # Label Schema Convention (deprecated): http://label-schema.org/rc1/
+    "org.label-schema.name"="Machine Learning Workspace" \
+    "org.label-schema.description"="All-in-one web-based development environment for machine learning." \
+    "org.label-schema.usage"="https://github.com/ml-tooling/ml-workspace" \
+    "org.label-schema.url"="https://github.com/ml-tooling/ml-workspace" \
+    "org.label-schema.vcs-url"="https://github.com/ml-tooling/ml-workspace" \
+    "org.label-schema.vendor"="ML Tooling" \
+    "org.label-schema.version"=$WORKSPACE_VERSION \
+    "org.label-schema.schema-version"="1.0" \
+    "org.label-schema.vcs-ref"=$VCS_REF \
+    "org.label-schema.build-date"=$BUILD_DATE
 
 # This assures we have a volume mounted even if the user forgot to do bind mount.
 # So that they do not lose their data if they delete the container.

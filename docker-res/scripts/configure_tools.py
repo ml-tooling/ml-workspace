@@ -9,7 +9,6 @@ import os
 import sys
 
 ENV_RESOURCES_PATH = os.getenv("RESOURCES_PATH", "/resources")
-ENV_WORKSPACE_TYPE = os.getenv("WORKSPACE_TYPE", "cpu")
 ENV_WORKSPACE_HOME = os.getenv("WORKSPACE_HOME", "/workspace")
 ENV_WORKSPACE_BASE_URL = os.getenv("WORKSPACE_BASE_URL", "/")
 HOME = os.getenv("HOME", "/root")

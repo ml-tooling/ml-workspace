@@ -182,15 +182,10 @@ RUN \
 RUN \
     echo 'Defaults env_keep += "ftp_proxy http_proxy https_proxy no_proxy"' >> /etc/sudoers
 
-ENV \
-    WORKSPACE_TYPE="gpu"
-    # TODO use temp as data environment to use temp folder?
-    # DATA_ENVIRONMENT="temp"
+# TODO use temp as data environment to use temp folder?
+# DATA_ENVIRONMENT="temp"
 
-LABEL "workspace.type"=$WORKSPACE_TYPE
+# USER $NB_USER
 
-USER $NB_USER
-# refresh ssh environment variables here again
-RUN \
-    printenv > $HOME/.ssh/environment && \
-    echo "export PATH=$PATH" >> $HOME/.bashrc
+#RUN \
+#    echo "export PATH=$PATH" >> $HOME/.bashrc

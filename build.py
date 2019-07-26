@@ -28,6 +28,9 @@ def build(module):
 
     if args.deploy:
         build_command += " --deploy"
+ 
+    if args.flavor:
+        build_command += " --flavor"
 
     working_dir = os.path.dirname(os.path.realpath(__file__))
     full_command = "cd " + module + " && " + build_command + " && cd " + working_dir
@@ -40,12 +43,17 @@ def build(module):
 service_name = os.path.basename(os.path.dirname(os.path.realpath(__file__)))
 if args.name:
     service_name = args.name
-if args.flavor != "full":
-     service_name += "-" + args.flavor
+
+if not args.flavor:
+    args.flavor = "full"
+args.flavor = str(args.flavor).lower()
+# Build full image without suffix if the flavor is not minimal or light
+if args.flavor not in ["minimal", "light"]:
+    service_name += "-" + args.flavor
 
 # docker build
-flavor_build_arg = " --build-arg workspace_flavor=" + str(args.flavor)
-version_build_arg = " --build-arg workspace_version=" + str(args.version)
+flavor_build_arg = " --build-arg WORKSPACE_FLAVOR=" + str(args.flavor)
+version_build_arg = " --build-arg WORKSPACE_VERSION=" + str(args.version)
 versioned_image = service_name+":"+str(args.version)
 latest_image = service_name+":latest"
 failed = call("docker build -t "+versioned_image+" -t "+latest_image+" " + version_build_arg +" " + flavor_build_arg + " ./")
@@ -68,5 +76,6 @@ if args.deploy:
 
         call("docker push " + remote_latest_image)
 
-# Build GPU image based on cpu image
-build("gpu")
+if args.flavor not in ["full", "minimal", "light"]:
+    # assume that flavor has its own directory with build.py
+    build(args.flavor)
