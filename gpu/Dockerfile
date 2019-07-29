@@ -1,4 +1,10 @@
-FROM mltooling/ml-workspace:latest
+ARG WORKSPACE_VERSION="latest"
+# Build from full flavor of workspace with same version
+FROM mltooling/ml-workspace:$WORKSPACE_VERSION
+
+ARG WORKSPACE_FLAVOR="gpu"
+ENV WORKSPACE_FLAVOR=$WORKSPACE_FLAVOR
+
 USER root
 
 ### NVIDIA CUDA BASE ###
@@ -181,6 +187,10 @@ RUN \
 
 RUN \
     echo 'Defaults env_keep += "ftp_proxy http_proxy https_proxy no_proxy"' >> /etc/sudoers
+
+# Overwrite & add Labels
+LABEL \
+    "workspace.flavor"=$WORKSPACE_FLAVOR
 
 # TODO use temp as data environment to use temp folder?
 # DATA_ENVIRONMENT="temp"
