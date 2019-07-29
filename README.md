@@ -104,6 +104,11 @@ The container can be configured with the following environment variables (`--env
         <td>true</td>
     </tr>
     <tr>
+        <td>INCLUDE_TUTORIALS</td>
+        <td>If <code>true</code>, a selection of tutorial and introduction notebooks are added to the <code>/workspace</code> folder at container startup, but only in if the folder is empty.</td>
+        <td>true</td>
+    </tr>
+    <tr>
         <td colspan="3"><b>Jupyter Configuration:</b></td>
     </tr>
     <tr>

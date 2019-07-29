@@ -767,8 +767,6 @@ COPY \
 
 # Copy scripts into workspace
 COPY docker-res/scripts $RESOURCES_PATH/scripts
-COPY docker-res/tools $RESOURCES_PATH/tools
-COPY docker-res/tests $RESOURCES_PATH/tests
 
 # Create Desktop Icons for Tooling
 COPY docker-res/branding $RESOURCES_PATH/branding
@@ -856,6 +854,11 @@ RUN \
     rm /usr/share/applications/exo-mail-reader.desktop && \
     rm /usr/share/applications/xfce4-session-logout.desktop
 
+# Copy resources into workspace
+COPY docker-res/tools $RESOURCES_PATH/tools
+COPY docker-res/tests $RESOURCES_PATH/tests
+COPY docker-res/tutorials $RESOURCES_PATH/tutorials
+
 # Various configurations
 RUN \
     # clear chome init file - not needed since we load settings manually
@@ -895,6 +898,7 @@ ENV CONFIG_BACKUP_ENABLED="true" \
     AUTHENTICATE_VIA_JUPYTER="false" \
     DATA_ENVIRONMENT="/workspace/environment" \
     WORKSPACE_BASE_URL="/" \
+    INCLUDE_TUTORIALS="true" \
     # set number of threads various programs should use, if not-set, it tries to use all
     # this can be problematic since docker restricts CPUs by stil showing all
     MAX_NUM_THREADS="auto"
