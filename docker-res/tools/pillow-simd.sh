@@ -1,5 +1,8 @@
 #!/bin/sh
 
+# Stops script execution if a command has an error
+set -e
+
 # No install argument needed
 
 # Install libjpeg-turbo and Pillow-SIMD for faster Image Processing

@@ -1,5 +1,8 @@
 #!/bin/sh
 
+# Stops script execution if a command has an error
+set -e
+
 INSTALL_ONLY=0
 PORT=""
 # Loop through arguments and process them: https://pretzelhands.com/posts/command-line-flags
@@ -16,7 +19,7 @@ if [ ! -f "/resources/zeppelin/zeppelin-0.8.1-bin-all/bin/zeppelin-daemon.sh"  ]
     cd $RESOURCES_PATH
     mkdir ./zeppelin
     cd ./zeppelin
-    wget https://www.apache.org/dist/zeppelin/zeppelin-0.8.1/zeppelin-0.8.1-bin-all.tgz -O ./zeppelin-0.8.1-bin-all.tgz
+    wget --quiet https://www.apache.org/dist/zeppelin/zeppelin-0.8.1/zeppelin-0.8.1-bin-all.tgz -O ./zeppelin-0.8.1-bin-all.tgz
     tar -zxvf zeppelin-0.8.1-bin-all.tgz
     rm zeppelin-0.8.1-bin-all.tgz
 else

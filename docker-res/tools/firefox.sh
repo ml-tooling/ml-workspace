@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
 
+# Stops script execution if a command has an error
 set -e
 
 INSTALL_ONLY=0

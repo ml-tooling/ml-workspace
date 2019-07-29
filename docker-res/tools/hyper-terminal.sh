@@ -1,5 +1,8 @@
 #!/bin/sh
 
+# Stops script execution if a command has an error
+set -e
+
 INSTALL_ONLY=0
 # Loop through arguments and process them: https://pretzelhands.com/posts/command-line-flags
 for arg in "$@"; do
@@ -14,7 +17,7 @@ if [ ! -f "/opt/Hyper/hyper" ]; then
     cd $RESOURCES_PATH
     apt-get update
     apt-get -f install
-    wget https://releases.hyper.is/download/deb -O ./hyper.deb
+    wget --quiet https://releases.hyper.is/download/deb -O ./hyper.deb
     dpkg -i ./hyper.deb
     rm ./hyper.deb
 else

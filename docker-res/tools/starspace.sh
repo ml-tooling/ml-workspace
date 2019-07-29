@@ -1,5 +1,8 @@
 #!/bin/sh
 
+# Stops script execution if a command has an error
+set -e
+
 INSTALL_ONLY=0
 # Loop through arguments and process them: https://pretzelhands.com/posts/command-line-flags
 for arg in "$@"; do
@@ -14,7 +17,7 @@ if ! hash starspace 2>/dev/null; then
     echo "Installing Boost"
     mkdir $RESOURCES_PATH/boost
     cd $RESOURCES_PATH/boost
-    wget https://dl.bintray.com/boostorg/release/1.63.0/source/boost_1_63_0.zip
+    wget --quiet https://dl.bintray.com/boostorg/release/1.63.0/source/boost_1_63_0.zip
     unzip -q boost_1_63_0.zip 
     rm boost_1_63_0.zip
     mv boost_1_63_0 /usr/local/bin

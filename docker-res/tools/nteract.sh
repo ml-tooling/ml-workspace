@@ -1,5 +1,8 @@
 #!/bin/sh
 
+# Stops script execution if a command has an error
+set -e
+
 INSTALL_ONLY=0
 # Loop through arguments and process them: https://pretzelhands.com/posts/command-line-flags
 for arg in "$@"; do
@@ -12,7 +15,7 @@ done
 if ! hash nteract 2>/dev/null; then
     echo "Installing nteract"
     cd $RESOURCES_PATH
-    wget https://github.com/nteract/nteract/releases/download/v0.14.4/nteract_0.14.4_amd64.deb -O ./nteract.deb
+    wget --quiet https://github.com/nteract/nteract/releases/download/v0.14.4/nteract_0.14.4_amd64.deb -O ./nteract.deb
     dpkg -i ./nteract.deb
     rm ./nteract.deb
 else

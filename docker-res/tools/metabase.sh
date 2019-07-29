@@ -1,5 +1,8 @@
 #!/bin/sh
 
+# Stops script execution if a command has an error
+set -e
+
 INSTALL_ONLY=0
 PORT=""
 # Loop through arguments and process them: https://pretzelhands.com/posts/command-line-flags

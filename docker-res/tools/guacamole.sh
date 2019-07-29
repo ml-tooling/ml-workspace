@@ -1,5 +1,8 @@
 #!/bin/sh
 
+# Stops script execution if a command has an error
+set -e
+
 INSTALL_ONLY=0
 PORT=""
 # Loop through arguments and process them: 
@@ -16,7 +19,7 @@ if [ ! -d "/usr/share/tomcat8/" ]; then
     echo "Installing tomcat8 server."
     # Not working because of user problems: apt-get install tomcat8 tomcat8-admin tomcat8-common tomcat8-user 
     cd $RESOURCES_PATH
-    wget http://apache.spinellicreations.com/tomcat/tomcat-8/v8.5.43/bin/apache-tomcat-8.5.43.tar.gz
+    wget --quiet http://apache.spinellicreations.com/tomcat/tomcat-8/v8.5.43/bin/apache-tomcat-8.5.43.tar.gz
     tar xvzf apache-tomcat-8.5.43.tar.gz
     mkdir -p /usr/share/tomcat8/
     mv apache-tomcat-8.5.43/* /usr/share/tomcat8/
@@ -35,7 +38,7 @@ if [ ! -d "/etc/guacamole/" ]; then
     apt-get install -y libcairo2-dev libpng12-dev libjpeg-turbo8-dev \
     libgif-dev libossp-uuid-dev libavcodec-dev libavutil-dev libswscale-dev libfreerdp-dev \
     libpango1.0-dev libssh2-1-dev libvncserver-dev libssl-dev libvorbis-dev libwebp-dev
-    wget "http://apache.org/dyn/closer.cgi?action=download&filename=guacamole/1.0.0/source/guacamole-server-1.0.0.tar.gz" -O guacamole-server-1.0.0.tar.gz
+    wget --quiet "http://apache.org/dyn/closer.cgi?action=download&filename=guacamole/1.0.0/source/guacamole-server-1.0.0.tar.gz" -O guacamole-server-1.0.0.tar.gz
     tar -xzf guacamole-server-1.0.0.tar.gz
     rm guacamole-server-1.0.0.tar.gz
     cd guacamole-server-1.0.0/
@@ -46,7 +49,7 @@ if [ ! -d "/etc/guacamole/" ]; then
     echo "Installing guacamole client."
     # Install guacamole client
     mkdir /etc/guacamole
-    wget "http://apache.org/dyn/closer.cgi?action=download&filename=guacamole/1.0.0/binary/guacamole-1.0.0.war" -O /etc/guacamole/guacamole.war
+    wget --quiet "http://apache.org/dyn/closer.cgi?action=download&filename=guacamole/1.0.0/binary/guacamole-1.0.0.war" -O /etc/guacamole/guacamole.war
     ln -s /etc/guacamole/guacamole.war /usr/share/tomcat8/webapps/
     # Adapt settings - https://guacamole.apache.org/doc/gug/configuring-guacamole.html
     printf "guacd-hostname: localhost\nguacd-port: 4822\nenable-websocket: true" > /etc/guacamole/guacamole.properties
