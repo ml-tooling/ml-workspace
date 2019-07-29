@@ -15,7 +15,7 @@ boltons==19.1.0 # When they're not builtins, they're boltons.
 toolz==0.10.0 # A functional standard library for Python.
 memory_profiler==0.55.0 # A module for monitoring memory usage of a python program
 cytoolz==0.10.0 # Cython implementation of Toolz: High performance functional utilities
-arrow==0.14.2 # Better dates & times for Python 
+arrow==0.14.3 # Better dates & times for Python 
 python-dateutil==2.8.0 # Extensions to the standard Python datetime module
 click==7.0.0 # Composable command line interface toolkit
 jmespath==0.9.4 # JSON Matching Expressions
@@ -52,7 +52,7 @@ cntk==2.7 # CNTK is an open-source, commercial-grade deep learning framework.
 ## Data Handling and Persistence
 csvkit==1.0.4 # A suite of command-line tools for working with CSV, the king of tabular file formats.
 sklearn-pandas==1.8.0 # Pandas integration with sklearn
-pandas-datareader==0.7.0 # Data readers extracted from the pandas codebase,should be compatible with recent pandas versions
+pandas-datareader==0.7.4 # Data readers extracted from the pandas codebase,should be compatible with recent pandas versions
 pandasql==0.7.3 # Allows you to query pandas DataFrames using SQL syntax
 category_encoders==2.0.0 # A collection sklearn transformers to encode categorical variables as numeric
 blaze==0.10.1 # Blaze translates a subset of modified NumPy and Pandas-like syntax to databases and other computing systems. 
@@ -100,13 +100,13 @@ networkx==2.3 # Data structures for graphs, digraphs, and multigraphs
 dgl==0.3 # Deep Graph Library
 graph-nets==1.0.4 # Library for building graph networks in Tensorflow and Sonnet.
 deepwalk==1.0.3 # DeepWalk online learning of social representations.
-torch-cluster==1.4.2 # PyTorch Extension Library of Optimized Graph Cluster Algorithms
+torch-cluster==1.4.3 # PyTorch Extension Library of Optimized Graph Cluster Algorithms
 torch-geometric==1.3.0 # Geometric Deep Learning Extension Library for PyTorch
 torchbiggraph==1.dev1 # A distributed system to learn embeddings of large graphs
 
 # Reinforcement learning
 tensorforce==0.4.3 # Reinforcement learning for TensorFlow
-gym==0.13.1 # The OpenAI Gym: A toolkit for developing and comparing your reinforcement learning agents.
+gym==0.14.0 # The OpenAI Gym: A toolkit for developing and comparing your reinforcement learning agents.
 dopamine-rl==2.0.5 # Dopamine: A framework for flexible Reinforcement Learning research
 trfl==1.0.1 # trfl is a library of building blocks for reinforcement learning algorithms.
 
@@ -191,11 +191,12 @@ ipywidgets==7.5.0 # IPython HTML widgets for Jupyter
 widgetsnbextension==3.5.0 # IPython HTML widgets for Jupyter
 nbinteract==0.2.4 # Export interactive HTML pages from Jupyter Notebooks
 qgrid==1.1.1 # a Jupyter notebook widget which uses SlickGrid to render pandas DataFrames within a Jupyter notebook
-ipyaggrid==0.1.11 # Jupyter widget - ag-grid in the notebook
+ipyaggrid==0.2.0 # Jupyter widget - ag-grid in the notebook
 pivottablejs==0.9.0 # PivotTable.js integration for Jupyter/IPython Notebook
 tensorwatch==0.8.5 # Interactive Realtime Debugging and Visualization for AI
 bqplot==0.11.6 # Plotting library for IPython/Jupyter Notebooks
 ipyexperiments==0.1.16 # jupyter/ipython experiment containers for GPU and general RAM re-use and memory leaks detection.
+jupyter-server-proxy==1.1.0 # Jupyter server extension to supervise and proxy web services
 # currently not working voila==0.1.2 # Serving read-only live Jupyter notebooks
 
 #
@@ -209,7 +210,7 @@ chartify==2.6.0 # Python library to make plotting simpler for data scientists
 
 ## Vega/Altair Ecosystem
 altair==3.1.0 # A declarative statistical visualization library for Python.
-vega==2.4.0 # IPyVega: An IPython/Jupyter widget for Vega 3 and Vega-Lite 2
+vega==2.5.0 # IPyVega: An IPython/Jupyter widget for Vega 3 and Vega-Lite 2
 vega_datasets==0.7.0 # A Python package for offline access to Vega datasets
 pdvega==0.1 # Pandas plotting interface to Vega and Vega-Lite
 nx-altair==0.1.4 # Draw NetworkX graphs with Altair
@@ -234,7 +235,7 @@ shap==0.29.3 # A unified approach to explain and visualize the output of any mac
 lime==0.1.1.36 # Local Interpretable Model-Agnostic Explanations for machine learning classifiers
 scikit-plot==0.3.7 # An intuitive library to add plotting functionality to scikit-learn objects.
 pyldavis==2.1.2 # Interactive topic model visualization
-alibi==0.2.2 # Algorithms for monitoring and explaining machine learning models
+alibi==0.2.3 # Algorithms for monitoring and explaining machine learning models
 keract==2.6.2 # Keras Activations and Gradients
 
 ## Task-specific Visualization Libs
@@ -253,12 +254,12 @@ db.py==0.5.3 # easier way to interact with your databases, support for  PostgreS
 elasticsearch==7.0.2 # Python client for Elasticsearch
 neo4j-driver==1.7.4 # Neo4j Bolt driver for Python
 lazydata==1.0.19  # Scalable data dependencies
-redis==3.2.1 # Python client for Redis key-value store
+redis==3.3.0 # Python client for Redis key-value store
 cx-Oracle==7.2.1 # Python interface to Oracle
 kafka-python==1.4.6 # Pure Python client for Apache Kafka
 tinydb==3.13.0 # TinyDB is a tiny, document oriented database optimized for your happiness :)
 PyMySQL==0.9.3 # Pure Python MySQL Driver
-boto3==1.9.196 # The AWS SDK for Python
+boto3==1.9.197 # The AWS SDK for Python
 apache-libcloud==2.5.0 # A standard Python library that abstracts away differences among multiple cloud provider APIs.
 pyhdb==0.3.4  # SAP HANA Database Client for Python
 hdbcli==2.4.142 # SAP HANA Python Client
