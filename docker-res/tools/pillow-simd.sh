@@ -1,5 +1,7 @@
 #!/bin/sh
 
+# No install argument needed
+
 # Install libjpeg-turbo and Pillow-SIMD for faster Image Processing
 # https://docs.fast.ai/performance.html#faster-image-processing
 # Use better pillow simd install: https://github.com/uploadcare/pillow-simd/issues/44
@@ -13,4 +15,4 @@ echo "This should return a version with post prefix if pillow-simd is used:"
 python -c "from PIL import Image; print(Image.PILLOW_VERSION)"
 echo "This should return True of libjpeg-turbo is enabled:"
 python -c "from PIL import features; print(features.check_feature('libjpeg_turbo'))"
-sleep 30
+sleep 15

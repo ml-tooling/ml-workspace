@@ -1,4 +1,14 @@
 #!/bin/sh
+
+INSTALL_ONLY=0
+# Loop through arguments and process them: https://pretzelhands.com/posts/command-line-flags
+for arg in "$@"; do
+    case $arg in
+        -i|--install) INSTALL_ONLY=1 ; shift ;;
+        *) break ;;
+    esac
+done
+
 if ! hash sqlectron 2>/dev/null; then
     cd /resources
     echo "Installing Sqlectron Term"
@@ -10,4 +20,8 @@ if ! hash sqlectron 2>/dev/null; then
 fi
 
 # Run
-sqlectron
+if [ $INSTALL_ONLY = 0 ] ; then
+    echo "Starting Sqlectron"
+    sqlectron
+    sleep 10
+fi

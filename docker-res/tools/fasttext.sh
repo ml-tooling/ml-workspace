@@ -1,4 +1,14 @@
 #!/bin/sh
+
+INSTALL_ONLY=0
+# Loop through arguments and process them: https://pretzelhands.com/posts/command-line-flags
+for arg in "$@"; do
+    case $arg in
+        -i|--install) INSTALL_ONLY=1 ; shift ;;
+        *) break ;;
+    esac
+done
+
 if ! hash fasttext 2>/dev/null; then
     echo "Installing Fasttext"
     mkdir $RESOURCES_PATH"/fasttext"
@@ -15,9 +25,14 @@ if ! hash fasttext 2>/dev/null; then
     cd $RESOURCES_PATH
     rm -r $RESOURCES_PATH"/fasttext"
     # pip install moved to requirements file
+else
+    echo "Fasttext is already installed"
 fi
 
 # Run
-echo "Use fasttext via command line:"
-fasttext --help
-sleep 20
+if [ $INSTALL_ONLY = 0 ] ; then
+    echo "Use Fasttext via command line:"
+    fasttext --help
+    sleep 20
+fi
+

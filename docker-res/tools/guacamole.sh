@@ -1,21 +1,35 @@
 #!/bin/sh
+
+INSTALL_ONLY=0
+PORT=""
+# Loop through arguments and process them: 
+for arg in "$@"; do
+    case $arg in
+        -i|--install) INSTALL_ONLY=1 ; shift ;;
+        -p=*|--port=*) PORT="${arg#*=}" ; shift ;; # TODO Does not allow --port 1234
+        *) break ;;
+    esac
+done
+
 # Install tomcat
 if [ ! -d "/usr/share/tomcat8/" ]; then
     echo "Installing tomcat8 server."
     # Not working because of user problems: apt-get install tomcat8 tomcat8-admin tomcat8-common tomcat8-user 
-    cd /resources/
+    cd $RESOURCES_PATH
     wget http://apache.spinellicreations.com/tomcat/tomcat-8/v8.5.43/bin/apache-tomcat-8.5.43.tar.gz
     tar xvzf apache-tomcat-8.5.43.tar.gz
     mkdir -p /usr/share/tomcat8/
     mv apache-tomcat-8.5.43/* /usr/share/tomcat8/
     rm apache-tomcat-8.5.43.tar.gz
     rm -r apache-tomcat-8.5.43/
+else
+    echo "Tomcat is already installed"
 fi
 
 # Install guacomole server and client
 if [ ! -d "/etc/guacamole/" ]; then
     echo "Installing guacamole server."
-    cd /resources/
+    cd $RESOURCES_PATH
     # Install guacamole dependencies
     apt-get update
     apt-get install -y libcairo2-dev libpng12-dev libjpeg-turbo8-dev \
@@ -70,18 +84,22 @@ if [ ! -d "/etc/guacamole/" ]; then
     # add auto redirect to guacomole site for tomcat
     printf '<html lang="en-US"><head><meta charset="UTF-8"><meta http-equiv="refresh" content="0; url=./guacamole/#/?username=guacadmin&password=guacadmin"><title>Redirection</title></head>
     <body><a href="./guacamole/#/?username=guacadmin&password=guacadmin">Redirect</a></body></html>' > /usr/share/tomcat8/webapps/ROOT/index.jsp
+else
+    echo "Guacamole is already installed"
 fi
+
+
 
 # Run
-port=$1
-if [ -z "$port" ]; then
-    echo "A port needs to be provided as argument to start guacamole."
-    read -p "Please provide a port for starting guacamole: " port
-fi
+if [ $INSTALL_ONLY = 0 ] ; then
+    if [ -z "$PORT" ]; then
+        read -p "Please provide a port for starting guacamole: " PORT
+    fi
 
-echo "Starting guacamole on port "$port"."
-# Change port in tomcat config
-sed -i 's/Connector port="[0-9]*"/Connector port="'$port'"/g' /usr/share/tomcat8/conf/server.xml
-service guacd restart
-/usr/share/tomcat8/bin/catalina.sh run
-sleep 15
+    echo "Starting guacamole on port "$PORT
+    # Change port in tomcat config
+    sed -i 's/Connector port="[0-9]*"/Connector port="'$PORT'"/g' /usr/share/tomcat8/conf/server.xml
+    service guacd restart
+    /usr/share/tomcat8/bin/catalina.sh run
+    sleep 15
+fi

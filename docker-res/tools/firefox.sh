@@ -1,7 +1,16 @@
 #!/usr/bin/env bash
+
 set -e
 
-echo "Install Firefox"
+INSTALL_ONLY=0
+# Loop through arguments and process them: https://pretzelhands.com/posts/command-line-flags
+for arg in "$@"; do
+    case $arg in
+        -i|--install) INSTALL_ONLY=1 ; shift ;;
+        *) break ;;
+    esac
+done
+
 
 function disableUpdate() {
     ff_def="$1/browser/defaults/profile"
@@ -32,6 +41,9 @@ function instFF() {
             echo "FF_URL: $FF_URL"
             wget -qO- $FF_URL | tar xvj --strip 1 -C $FF_INST/
             ln -s "$FF_INST/firefox" /usr/bin/firefox
+            # Create desktop icon
+            printf "[Desktop Entry]\nVersion=1.0\nEncoding=UTF-8\nName=Firefox Web Browser\nComment=Webbrowser\nExec=firefox\nTerminal=false\nX-MultipleArgs=false\nType=Application\nIcon=/usr/lib/firefox/browser/icons/mozicon128.png\nCategories=GNOME;GTK;Network;WebBrowser;\nStartupNotify=true;" > /usr/share/applications/firefox.desktop
+            # MimeType=text/html;text/xml;application/xhtml+xml;x-scheme-handler/http;x-scheme-handler/https;x-scheme-handler/ftp;x-scheme-handler/chrome;video/webm;application/x-xpinstall;
             disableUpdate $FF_INST
             exit $?
         fi
@@ -40,4 +52,17 @@ function instFF() {
     exit -1
 }
 
-instFF '45.9.0esr' '/usr/lib/firefox'
+if ! hash firefox 2>/dev/null; then
+    echo "Installing Firefox"
+    instFF '45.9.0esr' '/usr/lib/firefox'
+else
+    echo "Firefox is already installed"
+fi
+
+# Run
+if [ $INSTALL_ONLY = 0 ] ; then
+    echo "Starting Firefox"
+    firefox
+    sleep 10
+fi
+
