@@ -60,6 +60,7 @@ call("eval \"$(ssh-agent -s)\" && ssh-add ~/.ssh/"+SSH_KEY_NAME + " > /dev/null"
 # Fix permissions
 # https://superuser.com/questions/215504/permissions-on-private-key-in-ssh-folder
 # https://gist.github.com/grenade/6318301
+# https://help.ubuntu.com/community/SSH/OpenSSH/Keys
 call("chmod 700 ~/.ssh/", shell=True)
 call("chmod 600 ~/.ssh/" + SSH_KEY_NAME, shell=True)
 

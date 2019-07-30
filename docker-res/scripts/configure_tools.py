@@ -63,6 +63,7 @@ call('mkdir -p $HOME/.vnc && touch $HOME/.vnc/passwd && echo "$VNC_PW" | vncpass
 
 # Configure filebrowser - only if database file does not exist yet (e.g. isn't restored)
 if not os.path.exists(HOME + '/filebrowser.db'):
+    log.info("Initialize filebrowser database.")
     # Init filebrowser configuration - Surpress all output
     call('filebrowser config init --database=' + HOME + '/filebrowser.db > /dev/null', shell=True)
 
