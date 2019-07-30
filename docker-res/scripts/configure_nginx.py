@@ -8,6 +8,15 @@ from subprocess import call
 import os
 import sys
 
+# Enable logging
+import logging
+logging.basicConfig(
+    format='%(asctime)s [%(levelname)s] %(message)s', 
+    level=logging.INFO, 
+    stream=sys.stdout)
+
+log = logging.getLogger(__name__)
+
 ENV_RESOURCES_PATH = os.getenv("RESOURCES_PATH", "/resources")
 
 # Basic Auth
@@ -44,7 +53,7 @@ try:
     
     call("sed -i 's@{KEY_HASH}@" + str(key_hash) + "@g' " + NGINX_FILE, shell=True)
 except Exception as e:
-    print(e)
+    log.error("Error creating ssh key hash for nginx.", exc_info=True)
 
 # PREPARE SSL SERVING
 ENV_NAME_SERVICE_SSL_ENABLED = "WORKSPACE_SSL_ENABLED"

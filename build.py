@@ -36,7 +36,7 @@ def build(module):
         build_command += " --deploy"
  
     if args.flavor:
-        build_command += " --flavor"
+        build_command += " --flavor" + str(args.flavor)
 
     working_dir = os.path.dirname(os.path.realpath(__file__))
     full_command = "cd " + module + " && " + build_command + " && cd " + working_dir
