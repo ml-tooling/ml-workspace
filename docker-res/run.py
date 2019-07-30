@@ -7,12 +7,18 @@ Main Workspace Run Script
 from subprocess import call
 import os
 import math
-import logging, sys
+import sys
 
-print("Starting Workspace")
+# Enable logging
+import logging
+logging.basicConfig(
+    format='%(asctime)s [%(levelname)s] %(message)s', 
+    level=logging.INFO, 
+    stream=sys.stdout)
 
-logging.basicConfig(stream=sys.stdout, format='%(asctime)s : %(levelname)s : %(message)s', level=logging.INFO)
 log = logging.getLogger(__name__)
+
+log.info("Starting Workspace")
 
 def set_env_variable(env_variable: str, value: str):
     # TODO is export needed as well?
@@ -86,6 +92,9 @@ if INCLUDE_TUTORIALS.lower() == "true" and os.path.exists(WORKSPACE_HOME) and le
     from distutils.dir_util import copy_tree
     # Copy all files within tutorials folder in resources to workspace home
     copy_tree(os.path.join(ENV_RESOURCES_PATH, "tutorials"), WORKSPACE_HOME)
+
+# restore config on startup - if CONFIG_BACKUP_ENABLED - it needs to run before other configuration 
+call("python " + ENV_RESOURCES_PATH + "/scripts/backup_restore_config.py restore", shell=True)
 
 log.info("Configure ssh service")
 call("python " + ENV_RESOURCES_PATH + "/scripts/configure_ssh.py", shell=True)

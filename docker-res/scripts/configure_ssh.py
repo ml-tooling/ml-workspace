@@ -8,6 +8,15 @@ from subprocess import call
 import os
 import sys
 
+# Enable logging
+import logging
+logging.basicConfig(
+    format='%(asctime)s [%(levelname)s] %(message)s', 
+    level=logging.INFO, 
+    stream=sys.stdout)
+
+log = logging.getLogger(__name__)
+
 HOME = os.getenv("HOME", "/root")
 
 # Export environment for ssh sessions
@@ -32,11 +41,32 @@ with open(HOME + "/.ssh/environment", 'w') as fp:
 SSH_KEY_NAME = "id_ed25519" # use default name instead of workspace_key
 # TODO add container and user information as a coment via -C
 if not os.path.exists("~/.ssh/"+SSH_KEY_NAME):
+    log.info("Creating new SSH Key ("+ SSH_KEY_NAME + ")")
     # create ssh key if it does not exist yet
     call("ssh-keygen -f ~/.ssh/{} -t ed25519 -q -N \"\" > /dev/null".format(SSH_KEY_NAME), shell=True)
-call("chmod 600 ~/.ssh/{}".format(SSH_KEY_NAME), shell=True)
+
+# Make sure that knonw hosts and authorized keys exist
+call("touch ~/.ssh/authorized_keys", shell=True)
+call("touch ~/.ssh/known_hosts", shell=True)
+
 # echo "" >> ~/.ssh/authorized_keys will prepend a new line before the key is added to the file
-call("echo "" >> ~/.ssh/authorized_keys && cat ~/.ssh/{}.pub | tee -a ~/.ssh/authorized_keys".format(SSH_KEY_NAME), shell=True)
+call("echo "" >> ~/.ssh/authorized_keys", shell=True)
+# only add to authrized key if it does not exist yet within the file
+call('grep -qxF "$(cat ~/.ssh/{}.pub)" ~/.ssh/authorized_keys || cat ~/.ssh/{}.pub >> ~/.ssh/authorized_keys'.format(SSH_KEY_NAME, SSH_KEY_NAME), shell=True)
+
 # Add identity to ssh agent -> e.g. can be used for git authorization
 call("eval \"$(ssh-agent -s)\" && ssh-add ~/.ssh/"+SSH_KEY_NAME + " > /dev/null", shell=True)
+
+# Fix permissions
+# https://superuser.com/questions/215504/permissions-on-private-key-in-ssh-folder
+# https://gist.github.com/grenade/6318301
+call("chmod 700 ~/.ssh/", shell=True)
+call("chmod 600 ~/.ssh/" + SSH_KEY_NAME, shell=True)
+
+# TODO Config backup does not work when setting these:
+#call("chmod -R 600 ~/.ssh/", shell=True)
+#call("chmod 644 ~/.ssh/authorized_keys", shell=True)
+#call("chmod 644 ~/.ssh/known_hosts", shell=True)
+#call("chmod 644 ~/.ssh/config", shell=True)
+#call("chmod 644 ~/.ssh/" + SSH_KEY_NAME + ".pub", shell=True)
 ###
