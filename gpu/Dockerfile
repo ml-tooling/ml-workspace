@@ -4,6 +4,7 @@ FROM mltooling/ml-workspace:$WORKSPACE_VERSION
 
 ARG WORKSPACE_FLAVOR="gpu"
 ENV WORKSPACE_FLAVOR=$WORKSPACE_FLAVOR
+ENV WORKSPACE_VERSION=$WORKSPACE_VERSION
 
 USER root
 
@@ -110,8 +111,8 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 
 RUN \
     apt-get update && apt-get install -y libomp-dev libopenblas-base && \
-    # Install cuda-toolkit (e.g. for pytorch: https://pytorch.org/): https://anaconda.org/anaconda/cudatoolkit
-    conda install cudatoolkit=10.0 -c pytorch --yes && \
+    # Not needed? Install cuda-toolkit (e.g. for pytorch: https://pytorch.org/): https://anaconda.org/anaconda/cudatoolkit
+    conda install -y cudatoolkit=10.0 -c pytorch && \
     # Install cupy: https://cupy.chainer.org/
     pip install --no-cache-dir cupy-cuda100 && \
     # Install pycuda: https://pypi.org/project/pycuda
@@ -131,19 +132,23 @@ RUN \
     pip install --no-cache-dir cntk-gpu && \
     # Install pytorch gpu - conda uninstall removes too much and conda remove corrupts environment
     pip uninstall -y pytorch-cpu torchvision-cpu && \
+    # https://pytorch.org/get-started/locally/
     conda install -y pytorch torchvision cudatoolkit=10.0 -c pytorch --yes && \
+    # pip install https://download.pytorch.org/whl/cu100/torch-1.1.0-cp36-cp36m-linux_x86_64.whl && \
+    # pip install https://download.pytorch.org/whl/cu100/torchvision-0.3.0-cp36-cp36m-linux_x86_64.whl && \
     # install jax: https://github.com/google/jax#pip-installation
-    pip install --no-cache-dir --upgrade https://storage.googleapis.com/jax-wheels/cuda100/jaxlib-0.1.21-cp36-none-linux_x86_64.whl && \
+    pip install --no-cache-dir --upgrade https://storage.googleapis.com/jax-wheels/cuda100/jaxlib-0.1.22-cp36-none-linux_x86_64.whl && \
     pip install --no-cache-dir --upgrade jax  && \
     # Install Rapids: https://rapids.ai/start.html#conda-install
-    conda install -y -c defaults -c nvidia -c rapidsai -c pytorch -c numba -c conda-forge \
-            cudf=0.7 \
-            cuml=0.7 \
-            cugraph=0.7 \
-            nvstrings=0.7 \
-            dask-cuda=0.7 \ 
-            dask-cudf=0.7 \
-            dask-cuml=0.7 && \
+    conda install -y -c nvidia -c rapidsai -c numba -c conda-forge -c pytorch -c defaults \
+            cudatoolkit=10.0 \
+            cudf=0.8 \
+            cuml=0.8 \
+            cugraph=0.8 \
+            nvstrings=0.8 \
+            dask-cuda=0.8 \ 
+            dask-cudf=0.8 \
+            dask-cuml=0.8 && \
     # Install pygpu - Required for theano: http://deeplearning.net/software/libgpuarray/
     conda install -y pygpu && \
     # Install Spacy GPU Support:
@@ -185,12 +190,23 @@ RUN \
 
 ### CONFIGURATION ###
 
+# TODO what does this line do?
 RUN \
     echo 'Defaults env_keep += "ftp_proxy http_proxy https_proxy no_proxy"' >> /etc/sudoers
 
 # Overwrite & add Labels
+ARG BUILD_DATE="unknown"
+ARG VCS_REF="unknown"
+
 LABEL \
-    "workspace.flavor"=$WORKSPACE_FLAVOR
+    "workspace.version"=$WORKSPACE_VERSION \
+    "workspace.flavor"=$WORKSPACE_FLAVOR \
+    "org.opencontainers.image.version"=$WORKSPACE_VERSION \
+    "org.opencontainers.image.revision"=$VCS_REF \
+    "org.opencontainers.image.created"=$BUILD_DATE \ 
+    "org.label-schema.version"=$WORKSPACE_VERSION \
+    "org.label-schema.vcs-ref"=$VCS_REF \
+    "org.label-schema.build-date"=$BUILD_DATE
 
 # TODO use temp as data environment to use temp folder?
 # DATA_ENVIRONMENT="temp"
