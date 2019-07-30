@@ -37,9 +37,9 @@ nose2==0.9.1  # The successor to nose, based on unittest2
 ## ML Frameworks
 # tensorflow -> installed via conda for mkl support
 # keras -> light dependency
-# fastai -> light dependency
 # xgboost -> light dependency
 # scikit-learn -> light dependency
+fastai==1.0.55 # The fastai library simplifies training fast and accurate neural nets using modern best practices.
 catboost==0.16 # State-of-the-art open-source gradient boosting on decision trees library.
 lightgbm==2.2.3 # A fast, distributed, high performance gradient boosting framework
 theano==1.0.4 # Optimizing compiler for evaluating mathematical expressions on CPUs and GPUs.
@@ -142,7 +142,7 @@ sacred==0.7.5 # tool to help you configure, organize, log and reproduce experime
 mlflow==1.1.0 # MLflow: An ML Workflow Tool
 
 ## AutoML
-ludwig==0.1.2 # A deep learning experimentation toolbox - gmpy installation error
+ludwig==0.1.2 # A deep learning experimentation toolbox - gmpy build error
 adanet==0.7.0 # adanet is a lightweight and scalable TensorFlow AutoML framework for training and deploying adaptive neural networks using the AdaNet algorithm
 # incompatible autokeras==0.3.7 # AutoML for deep learning based on Keras
 # incompatible auto-sklearn==0.5.0 # 3MB - Automated machine learning based on sklearn.
@@ -168,6 +168,8 @@ gpytorch==0.3.4 # An implementation of Gaussian Processes in Pytorch
 pytorch-nlp==0.4.1 # Text utilities and datasets for PyTorch
 
 ## Others
+jax==0.1.39 # GPU- and TPU-backed NumPy with differentiation and JIT compilation.
+jaxlib==0.1.22 # XLA library for JAX - required for jax
 onnx==1.5.0 # Open Neural Network Exchange
 onnxruntime==0.4.0 # ONNX Runtime Python bindings
 nevergrad==0.2.2 # A Python toolbox for performing gradient-free optimization
@@ -187,8 +189,8 @@ ipyparallel==6.2.4 # Interactive Parallel Computing with IPython
 jupyter_http_over_ws==0.0.6 # Jupyter support for HTTP-over-ws
 papermill==1.0.1 # Parametrize and run Jupyter and nteract Notebooks
 ipython-sql==0.3.9 # RDBMS access via IPython
-ipywidgets==7.5.0 # IPython HTML widgets for Jupyter
-widgetsnbextension==3.5.0 # IPython HTML widgets for Jupyter
+ipywidgets==7.5.1 # IPython HTML widgets for Jupyter
+widgetsnbextension==3.5.1 # IPython HTML widgets for Jupyter
 nbinteract==0.2.4 # Export interactive HTML pages from Jupyter Notebooks
 qgrid==1.1.1 # a Jupyter notebook widget which uses SlickGrid to render pandas DataFrames within a Jupyter notebook
 ipyaggrid==0.2.0 # Jupyter widget - ag-grid in the notebook
@@ -203,7 +205,7 @@ jupyter-server-proxy==1.1.0 # Jupyter server extension to supervise and proxy we
 ####### Visualization Libs #######
 #
 ## General Visualization Libs
-bokeh==1.3.0 # interactive visualization library that targets modern web browsers for presentation - 20MB
+bokeh==1.3.1 # interactive visualization library that targets modern web browsers for presentation - 20MB
 plotly==4.0.0 # interactive visualizations - 34MB
 holoviews==1.12.3 # Stop plotting your data - annotate your data and let it visualize itself.
 chartify==2.6.0 # Python library to make plotting simpler for data scientists
@@ -254,12 +256,12 @@ db.py==0.5.3 # easier way to interact with your databases, support for  PostgreS
 elasticsearch==7.0.2 # Python client for Elasticsearch
 neo4j-driver==1.7.4 # Neo4j Bolt driver for Python
 lazydata==1.0.19  # Scalable data dependencies
-redis==3.3.0 # Python client for Redis key-value store
+redis==3.3.2 # Python client for Redis key-value store
 cx-Oracle==7.2.1 # Python interface to Oracle
 kafka-python==1.4.6 # Pure Python client for Apache Kafka
 tinydb==3.13.0 # TinyDB is a tiny, document oriented database optimized for your happiness :)
 PyMySQL==0.9.3 # Pure Python MySQL Driver
-boto3==1.9.197 # The AWS SDK for Python
+boto3==1.9.198 # The AWS SDK for Python
 apache-libcloud==2.5.0 # A standard Python library that abstracts away differences among multiple cloud provider APIs.
 pyhdb==0.3.4  # SAP HANA Database Client for Python
 hdbcli==2.4.142 # SAP HANA Python Client

@@ -333,35 +333,37 @@ RUN \
 # Install Terminal / GDebi (Package Manager) / Glogg (Stream file viewer) & archive tools
 RUN \
     apt-get update && \
-    apt-get install --yes --no-install-recommends xfce4-terminal && \
-    apt-get install --yes --no-install-recommends --allow-unauthenticated xfce4-taskmanager  && \
+    apt-get install -y --no-install-recommends xfce4-terminal && \
+    apt-get install -y --no-install-recommends --allow-unauthenticated xfce4-taskmanager  && \
     # Install gdebi deb installer
-    apt-get install --yes --no-install-recommends gdebi && \
+    apt-get install -y --no-install-recommends gdebi && \
     # Search for files
-    apt-get install --yes --no-install-recommends catfish && \
-    apt-get install --yes --no-install-recommends gnome-search-tool && \
-    apt-get install --yes --no-install-recommends font-manager && \
+    apt-get install -y --no-install-recommends catfish && \
+    apt-get install -y --no-install-recommends gnome-search-tool && \
+    apt-get install -y --no-install-recommends font-manager && \
     # Streaming text editor for large files
-    apt-get install --yes --no-install-recommends glogg  && \
-    apt-get install --yes --no-install-recommends baobab && \
+    apt-get install -y --no-install-recommends glogg  && \
+    apt-get install -y --no-install-recommends baobab && \
     # Lightweight text editor
-    apt-get install --yes mousepad && \
-    apt-get install --yes --no-install-recommends vim && \
-    apt-get install --yes htop && \
+    apt-get install -y mousepad && \
+    apt-get install -y --no-install-recommends vim && \
+    apt-get install -y htop && \
     # Install Zipping Tools 
-    apt-get install --yes p7zip p7zip-rar && \
-    apt-get install --yes --no-install-recommends thunar-archive-plugin && \
-    apt-get install --yes xarchiver && \
+    apt-get install -y p7zip p7zip-rar && \
+    apt-get install -y --no-install-recommends thunar-archive-plugin && \
+    apt-get install -y xarchiver && \
     # DB Utils
-    apt-get install --yes --no-install-recommends sqlitebrowser && \
+    apt-get install -y --no-install-recommends sqlitebrowser && \
     # Install nautilus and support for sftp mounting
-    apt-get install --yes --no-install-recommends nautilus gvfs-backends && \
+    apt-get install -y --no-install-recommends nautilus gvfs-backends && \
+    # Install gigolo - Access remote systems
+    apt-get install -y --no-install-recommends gigolo gvfs-bin && \
     # Install chrome
-    apt-get install --yes chromium-browser chromium-browser-l10n chromium-codecs-ffmpeg && \
+    apt-get install -y chromium-browser chromium-browser-l10n chromium-codecs-ffmpeg && \
     ln -s /usr/bin/chromium-browser /usr/bin/google-chrome && \
     # Cleanup
     # Large package: gnome-user-guide 50MB app-install-data 50MB
-    apt-get remove --yes app-install-data gnome-user-guide && \ 
+    apt-get remove -y app-install-data gnome-user-guide && \ 
     clean-layer.sh
 
 # Add the defaults from /lib/x86_64-linux-gnu, otherwise lots of no version errors
@@ -594,6 +596,8 @@ RUN \
     jupyter serverextension enable --py nbresuse && \
     # Activate Jupytext
     jupyter nbextension enable --py jupytext && \
+    # Disable Jupyter Server Proxy
+    jupyter nbextension disable jupyter_server_proxy/tree && \
     # If minimal flavor - exit here
     if [ "$WORKSPACE_FLAVOR" = "minimal" ]; then \
         # Cleanup
@@ -693,7 +697,7 @@ RUN \
     # Install go-to-definition extension 
     jupyter labextension install @krassowski/jupyterlab_go_to_definition && \
     # Install jupyterlab-data-explorer: https://github.com/jupyterlab/jupyterlab-data-explorer
-    # Does not exist on NPM jupyter labextension install @jupyterlab/dataregistry && \
+    # alpha version jupyter labextension install @jupyterlab/dataregistry-extension && \
     # Install jupyterlab system monitor: https://github.com/jtpio/jupyterlab-system-monitor
     # DO not install for now jupyter labextension install jupyterlab-topbar-extension jupyterlab-system-monitor && \
     # Activate ipygrid in jupterlab
