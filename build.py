@@ -22,6 +22,11 @@ def call(command):
 
 # calls build scripts in every module with same flags
 def build(module):
+    
+    if not os.path.isdir(module):
+        print("Could not find directory for " + module)
+        sys.exit(1)
+    
     build_command = "python build.py"
 
     if args.version:
@@ -39,16 +44,27 @@ def build(module):
     failed = call(full_command)
     if failed:
         print("Failed to build module " + module)
-        sys.exit()
-
-service_name = os.path.basename(os.path.dirname(os.path.realpath(__file__)))
-if args.name:
-    service_name = args.name
+        sys.exit(1)
 
 if not args.flavor:
     args.flavor = "full"
 
 args.flavor = str(args.flavor).lower()
+
+if args.flavor == "all":
+    # TODO build all
+    pass
+
+# unknown flavor -> try to build from subdirectory
+if args.flavor not in ["full", "minimal", "light"]:
+    # assume that flavor has its own directory with build.py
+    build(args.flavor)
+    sys.exit(0)
+
+service_name = os.path.basename(os.path.dirname(os.path.realpath(__file__)))
+if args.name:
+    service_name = args.name
+
 # Build full image without suffix if the flavor is not minimal or light
 if args.flavor in ["minimal", "light"]:
     service_name += "-" + args.flavor
@@ -70,6 +86,7 @@ vcs_ref_build_arg = " --build-arg VCS_REF=" + str(git_rev)
 build_date_build_arg = " --build-arg BUILD_DATE=" + str(build_date)
 flavor_build_arg = " --build-arg WORKSPACE_FLAVOR=" + str(args.flavor)
 version_build_arg = " --build-arg WORKSPACE_VERSION=" + str(args.version)
+
 versioned_image = service_name+":"+str(args.version)
 latest_image = service_name+":latest"
 failed = call("docker build -t "+ versioned_image + " -t " + latest_image + " " 
@@ -77,7 +94,7 @@ failed = call("docker build -t "+ versioned_image + " -t " + latest_image + " "
 
 if failed:
     print("Failed to build container")
-    sys.exit()
+    sys.exit(1)
 
 remote_versioned_image = REMOTE_IMAGE_PREFIX + versioned_image
 call("docker tag " + versioned_image + " " + remote_versioned_image)
@@ -90,9 +107,4 @@ if args.deploy:
 
     if "SNAPSHOT" not in args.version:
     # do not push SNAPSHOT builds as latest version
-
         call("docker push " + remote_latest_image)
-
-if args.flavor not in ["full", "minimal", "light"]:
-    # assume that flavor has its own directory with build.py
-    build(args.flavor)

@@ -34,7 +34,7 @@ The ML workspace is an all-in-one web-based IDE specialized for machine learning
 - 🗃 Pre-installed with many popular data science libraries & tools.
 - 🖥 Full Linux desktop GUI accessible via web browser.
 - 🔀 Seamless Git integration optimized for notebooks.
-- 📈 Integrated hardware & training monitoring via Tensoboard & Netdata.
+- 📈 Integrated hardware & training monitoring via Tensorboard & Netdata.
 - 🚪 Access from anywhere via Web, SSH, or VNC under a single port.
 - 🎛 Usable as remote kernel (Jupyter) or remote machine (VS Code) via SSH.
 - 🐳 Easy to deploy on Mac, Linux, and Windows via Docker.
@@ -101,6 +101,11 @@ The container can be configured with the following environment variables (`--env
     <tr>
         <td>SHARED_LINKS_ENABLED</td>
         <td>Enable or disable the capability to share resources via external links. This is used to enable file sharing, access to workspace-internal ports, and easy command-based SSH setup. All shared links are protected via a token. However, there are certain risks since the token cannot be easily invalidated after sharing and does not expire.</td>
+        <td>true</td>
+    </tr>
+    <tr>
+        <td>INCLUDE_TUTORIALS</td>
+        <td>If <code>true</code>, a selection of tutorial and introduction notebooks are added to the <code>/workspace</code> folder at container startup, but only in if the folder is empty.</td>
         <td>true</td>
     </tr>
     <tr>

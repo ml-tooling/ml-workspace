@@ -67,60 +67,60 @@ RUN \
         ca-certificates \
         build-essential \
         pkg-config \
-        curl libcurl3 \
-        libgnome-keyring* \
         software-properties-common \
         python-software-properties \
         lsof \
         net-tools \
+        curl libcurl3 \
+        wget \
         cron \
         tmux \
         nano \
-        vim \
-        git \
-        mercurial \
-        subversion \
         # ping support
         iputils-ping \
-        wget \
+        # Json Processor
+        jq \
+        rsync \
+        # VCS:
+        git \
+        subversion \
         jed \
+        # Image support
+        libtiff-dev \
+        libjpeg-dev \
+        libpng-dev \
+        libpng12-dev \
+        libjasper-dev \
         libglib2.0-0 \
         libxext6 \
         libsm6 \
         libxext-dev \
         libxrender1 \
-        # TOO big lmodern \
-        libjpeg-dev \
-        libpng-dev \
-        libpng12-dev \
         libzmq-dev \
+        # protobuffer support
         protobuf-compiler \
         libprotobuf-dev \
+        libprotoc-dev \
         # cntk deps
         autoconf \
         automake \
         libtool \
-        # OpenMPI support
-        libopenmpi-dev \
-        openmpi-bin \
-        libtiff-dev \
-        libjasper-dev \
-        libprotoc-dev \
         cmake  \
         fonts-liberation \
-        msttcorefonts \
-        rsync \
         google-perftools \
-        # Json Processor
-        jq \
         # Compression Libs
         zip \
         gzip \
         unzip \
-        bzip2 \
         unrar \
+        bzip2 \
         bsdtar \
         zlib1g-dev && \
+    # Removed 
+    # lmodern -> too big 
+    # mercurial -> 10MB
+    # msttcorefonts -> license issue
+    # libgnome-keyring* -> not needed
     chmod -R a+rwx /usr/local/bin/ && \
     # configure dynamic linker run-time bindings
     ldconfig && \
@@ -187,10 +187,10 @@ RUN \
 ### END BASICS ###
 
 ### RUNTIMES ###
-# Install anaconda
+# Install Miniconda: https://repo.continuum.io/miniconda/
 ENV \
     CONDA_DIR=/opt/conda \
-    CONDA_VERSION=4.6.14 \
+    CONDA_VERSION=4.7.10 \
     CONDA_PYTHON_DIR=/opt/conda/lib/python3.6
 
 RUN wget --quiet https://repo.anaconda.com/miniconda/Miniconda3-${CONDA_VERSION}-Linux-x86_64.sh -O ~/miniconda.sh && \
@@ -205,27 +205,19 @@ RUN wget --quiet https://repo.anaconda.com/miniconda/Miniconda3-${CONDA_VERSION}
     $CONDA_DIR/bin/conda config --system --set auto_update_conda false && \
     $CONDA_DIR/bin/conda config --system --set show_channel_urls true && \
     # Update selected packages - install python 3.6
-    $CONDA_DIR/bin/conda install python=3.6 && \
-    $CONDA_DIR/bin/conda install cmake && \
+    $CONDA_DIR/bin/conda install -y --update-all python=3.6 && \
     # Link Conda
     ln -s $CONDA_DIR/bin/python /usr/local/bin/python && \
     ln -s $CONDA_DIR/bin/conda /usr/bin/conda && \
     # Update pip
-    pip install --upgrade pip && \
+    $CONDA_DIR/bin/pip install --upgrade pip && \
     chmod -R a+rwx /usr/local/bin/ && \
-    # Install Python 2
-    # anaconda=$CONDA_VERSION - do not install anaconda, it is too big
-    conda create --yes -p $CONDA_DIR/envs/python2 python=2.7 && \
-    ln -s $CONDA_DIR/envs/python2/bin/pip $CONDA_DIR/bin/pip2 && \
-    ln -s $CONDA_DIR/envs/python2/bin/ipython2 $CONDA_DIR/bin/ipython2 && \
-    $CONDA_DIR/bin/pip2 install --upgrade pip && \
-    # Install compatibility libraries
-    $CONDA_DIR/bin/pip2 install future enum34 six typing && \
-    # Cleanup
+    # Cleanup - Remove all here since conda is not in path as of now
     # find /opt/conda/ -follow -type f -name '*.a' -delete && \
     # find /opt/conda/ -follow -type f -name '*.js.map' -delete && \
     $CONDA_DIR/bin/conda clean --packages && \
     $CONDA_DIR/bin/conda clean -all -f -y  && \
+    $CONDA_DIR/bin/conda build purge-all && \
     # Fix permissions
     fix-permissions.sh $CONDA_DIR && \
     clean-layer.sh
@@ -256,6 +248,8 @@ RUN \
     echo "deb https://dl.yarnpkg.com/debian/ stable main" | sudo tee /etc/apt/sources.list.d/yarn.list && \
     apt-get update && \
     apt-get install --yes --no-install-recommends yarn && \
+    # Install webpack - 32 MB
+    /usr/bin/npm install -g webpack && \
     # Cleanup
     clean-layer.sh
 
@@ -264,7 +258,8 @@ ENV PATH=/opt/node/bin:$PATH
 # Install Java Runtime
 RUN \
     apt-get update && \
-    # libgl1-mesa-dri > 150 MB
+    # libgl1-mesa-dri > 150 MB -> Install jdk-headless version (without gui support)?
+    # TODO Install gradle?
     apt-get install -y --no-install-recommends openjdk-8-jdk maven && \
     # Cleanup
     clean-layer.sh
@@ -338,56 +333,44 @@ RUN \
 # Install Terminal / GDebi (Package Manager) / Glogg (Stream file viewer) & archive tools
 RUN \
     apt-get update && \
-    apt-get install --yes --no-install-recommends xfce4-terminal && \
-    apt-get install --yes --no-install-recommends --allow-unauthenticated xfce4-taskmanager  && \
+    apt-get install -y --no-install-recommends xfce4-terminal && \
+    apt-get install -y --no-install-recommends --allow-unauthenticated xfce4-taskmanager  && \
     # Install gdebi deb installer
-    apt-get install --yes --no-install-recommends gdebi && \
+    apt-get install -y --no-install-recommends gdebi && \
     # Search for files
-    apt-get install --yes --no-install-recommends catfish && \
-    apt-get install --yes --no-install-recommends gnome-search-tool && \
-    apt-get install --yes --no-install-recommends font-manager && \
+    apt-get install -y --no-install-recommends catfish && \
+    apt-get install -y --no-install-recommends gnome-search-tool && \
+    apt-get install -y --no-install-recommends font-manager && \
     # Streaming text editor for large files
-    apt-get install --yes --no-install-recommends glogg  && \
-    apt-get install --yes --no-install-recommends baobab && \
+    apt-get install -y --no-install-recommends glogg  && \
+    apt-get install -y --no-install-recommends baobab && \
     # Lightweight text editor
-    apt-get install --yes mousepad && \
-    apt-get install --yes htop && \
+    apt-get install -y mousepad && \
+    apt-get install -y --no-install-recommends vim && \
+    apt-get install -y htop && \
     # Install Zipping Tools 
-    apt-get install --yes p7zip p7zip-rar && \
-    apt-get install --yes --no-install-recommends thunar-archive-plugin && \
-    apt-get install --yes xarchiver && \
+    apt-get install -y p7zip p7zip-rar && \
+    apt-get install -y --no-install-recommends thunar-archive-plugin && \
+    apt-get install -y xarchiver && \
     # DB Utils
-    apt-get install --yes --no-install-recommends sqlitebrowser && \
+    apt-get install -y --no-install-recommends sqlitebrowser && \
     # Install nautilus and support for sftp mounting
-    apt-get install --yes --no-install-recommends nautilus gvfs-backends && \
+    apt-get install -y --no-install-recommends nautilus gvfs-backends && \
+    # Install gigolo - Access remote systems
+    apt-get install -y --no-install-recommends gigolo gvfs-bin && \
     # Install chrome
-    apt-get install --yes chromium-browser chromium-browser-l10n chromium-codecs-ffmpeg && \
+    apt-get install -y chromium-browser chromium-browser-l10n chromium-codecs-ffmpeg && \
     ln -s /usr/bin/chromium-browser /usr/bin/google-chrome && \
     # Cleanup
     # Large package: gnome-user-guide 50MB app-install-data 50MB
-    apt-get remove --yes app-install-data gnome-user-guide && \ 
-    clean-layer.sh
-
-COPY docker-res/scripts/install-firefox.sh $RESOURCES_PATH/scripts/install-firefox.sh
-
-RUN \
-    /bin/bash $RESOURCES_PATH/scripts/install-firefox.sh && \
-    # Cleanup
+    apt-get remove -y app-install-data gnome-user-guide && \ 
     clean-layer.sh
 
 # Add the defaults from /lib/x86_64-linux-gnu, otherwise lots of no version errors
 # cannot be added above otherwise there are errors in the installation of the gui tools
 ENV LD_LIBRARY_PATH=/lib/x86_64-linux-gnu:$CONDA_DIR/lib 
 
-# Install Visual Studio Code
-RUN \
-   wget --quiet https://go.microsoft.com/fwlink/?LinkID=760868 -O ./vscode.deb && \
-   dpkg -i ./vscode.deb && \
-   apt-get install -f -y && \
-   rm ./vscode.deb && \
-   rm /etc/apt/sources.list.d/vscode.list && \
-   # Cleanup
-   clean-layer.sh
+# Install Web Tools - Offered via Jupyter Tooling Plugin
 
 ## VS Code Webapp: https://github.com/codercom/code-server
 RUN \
@@ -398,13 +381,11 @@ RUN \
     wget --quiet https://github.com/cdr/code-server/releases/download/$VS_CODE_VERSION/code-server$VS_CODE_VERSION-linux-x64.tar.gz -O ./vscode-web.tar.gz && \
     tar xfz ./vscode-web.tar.gz && \
     mv ./code-server$VS_CODE_VERSION-linux-x64/code-server /usr/local/bin && \
+    chmod -R a+rwx /usr/local/bin/code-server && \
     rm ./vscode-web.tar.gz && \
     rm -rf ./code-server$VS_CODE_VERSION-linux-x64 && \
-    # Fix permissions
-    fix-permissions.sh ${RESOURCES_PATH} && \
     # Cleanup
     clean-layer.sh
-# Install Web Tools - Offered via Jupyter Tooling Plugin
 
 ## ungit
 RUN \
@@ -432,60 +413,87 @@ RUN \
     # Cleanup
     clean-layer.sh
 
+ARG WORKSPACE_FLAVOR="full"
+ENV WORKSPACE_FLAVOR=$WORKSPACE_FLAVOR
+
+# Install Visual Studio Code
+COPY docker-res/tools/visual-studio-code.sh $RESOURCES_PATH/tools/visual-studio-code.sh
+
+RUN \
+    # If minimal flavor - do not install
+    if [ "$WORKSPACE_FLAVOR" = "minimal" ]; then \
+        exit 0 ; \
+    fi && \
+    /bin/bash $RESOURCES_PATH/tools/visual-studio-code.sh --install && \
+    # Cleanup
+    clean-layer.sh
+
+# Install Firefox
+
+COPY docker-res/tools/firefox.sh $RESOURCES_PATH/tools/firefox.sh
+
+RUN \
+    # If minimal flavor - do not install
+    if [ "$WORKSPACE_FLAVOR" = "minimal" ]; then \
+        exit 0 ; \
+    fi && \
+    /bin/bash $RESOURCES_PATH/tools/firefox.sh --install && \
+    # Cleanup
+    clean-layer.sh
+
 ### END GUI TOOLS ###
 
 ### DATA SCIENCE BASICS ###
 
-RUN \
-    # Link Conda - All python are linke to the conda instances 
-    # Linking python 3 crashes conda -> cannot install anyting - remove instead
-    #ln -s -f $CONDA_DIR/bin/python /usr/bin/python3 && \
-    # if removed -> cannot use add-apt-repository
-    # rm /usr/bin/python3 && \
-    ln -s -f $CONDA_DIR/bin/python /usr/bin/python && \
-    ln -s -f $CONDA_DIR/envs/python2/bin/python /usr/bin/python2 && \
-    rm /usr/bin/python2.7
-    # rm /usr/bin/python3.5
-
 ## Python 3
-
-ARG WORKSPACE_FLAVOR="full"
-ENV WORKSPACE_FLAVOR=$WORKSPACE_FLAVOR
-
 # Data science libraries requirements
 COPY docker-res/libraries ${RESOURCES_PATH}/libraries
 
 ### Install main data science libs
 RUN \ 
+    # Link Conda - All python are linke to the conda instances 
+    # Linking python 3 crashes conda -> cannot install anyting - remove instead
+    #ln -s -f $CONDA_DIR/bin/python /usr/bin/python3 && \
+    # if removed -> cannot use add-apt-repository
+    # rm /usr/bin/python3 && \
+    # rm /usr/bin/python3.5
+    ln -s -f $CONDA_DIR/bin/python /usr/bin/python && \
     # upgrade pip
     pip install --upgrade pip && \
     # Install Packages
     apt-get update -y && \
     apt-get install -y --no-install-recommends graphviz && \
+    # If minimal flavor - install 
+    if [ "$WORKSPACE_FLAVOR" = "minimal" ]; then \
+        # Install nomkl - mkl needs lots of space
+        conda install -y --update-all nomkl ; \
+    else \
+        # Install mkl for faster computations
+        conda install -y --update-all mkl ; \
+    fi && \
     # Install some basics - required to run container
     conda install -y --update-all \
-            mkl \
             cython \
             numpy \
             matplotlib \
-            numba \
             scipy \
             requests \
             urllib3 \
-            ipykernel \
             tqdm \
             pandas \
             six \
             future \
             protobuf \
             zlib \
+            psutil \
             python-crontab \
-            'ipython=7.6.*' \
-            'notebook=6.0.*' \
-            'jupyterlab=1.0.*' \
-            libsodium && \
+            ipykernel \
+            cmake \
+            'ipython=7.7.*' \
+            'notebook=5.7.*' \
+            'jupyterlab=1.0.*' && \
     # Install glances and requirements
-    pip install --no-cache-dir glances py-cpuinfo requests netifaces matplotlib bottle && \
+    pip install --no-cache-dir glances py-cpuinfo netifaces bottle && \
     # Install minimal pip requirements
     pip install --no-cache-dir --upgrade -r ${RESOURCES_PATH}/libraries/minimal-requirements.txt && \
     # If minimal flavor - exit here
@@ -496,9 +504,13 @@ RUN \
         clean-layer.sh && \
         exit 0 ; \
     fi && \
+    # OpenMPI support
+    apt-get install -y --no-install-recommends libopenmpi-dev openmpi-bin && \
     # Install mkl, mkl-include & mkldnn
-    conda install -y mkl-include  && \
+    conda install -y mkl-include && \
     # TODO - Install was not working conda install -y -c mingfeima mkldnn && \
+    # Install numba
+    conda install -y numba && \
     # Install tensorflow - cpu only -  mkl support
     conda install -y tensorflow && \
     # Install pytorch - cpu only
@@ -536,6 +548,34 @@ RUN \
     rm -f /opt/conda/bin/node && ln -s /usr/bin/node /opt/conda/bin/node && \
     rm -f /opt/conda/bin/npm && ln -s /usr/bin/npm /opt/conda/bin/npm
 
+# Install Python 2 and Python 2 Kernel
+RUN \ 
+    # If minimal flavor - exit here
+    if [ "$WORKSPACE_FLAVOR" = "minimal" ]; then \
+        exit 0 ; \
+    fi && \
+    # anaconda=$CONDA_VERSION - do not install anaconda, it is too big
+    conda create --yes -p $CONDA_DIR/envs/python2 python=2.7 && \
+    ln -s $CONDA_DIR/envs/python2/bin/pip $CONDA_DIR/bin/pip2 && \
+    ln -s $CONDA_DIR/envs/python2/bin/ipython2 $CONDA_DIR/bin/ipython2 && \
+    $CONDA_DIR/bin/pip2 install --upgrade pip && \
+    # Install compatibility libraries
+    $CONDA_DIR/bin/pip2 install future enum34 six typing && \
+    # Add as Python 2 kernel
+    # Install Python 2 kernel spec globally to avoid permission problems when NB_UID
+    # switching at runtime and to allow the notebook server running out of the root
+    # environment to find it. Also, activate the python2 environment upon kernel launch.
+    pip install --no-cache-dir kernda && \
+    $CONDA_DIR/envs/python2/bin/python -m pip install ipykernel && \
+    $CONDA_DIR/envs/python2/bin/python -m ipykernel install && \
+    kernda -o -y /usr/local/share/jupyter/kernels/python2/kernel.json && \
+    # link conda python 2 to python 2 bin instances (in /usr/bin)
+    ln -s -f $CONDA_DIR/envs/python2/bin/python /usr/bin/python2 && \
+    rm /usr/bin/python2.7 && \
+    ln -s -f $CONDA_DIR/envs/python2/bin/python /usr/bin/python2.7 && \
+    # Cleanup
+    clean-layer.sh
+
 ### END DATA SCIENCE BASICS ###
 
 ### JUPYTER ###
@@ -548,16 +588,6 @@ COPY \
 
 # install jupyter extensions
 RUN \
-    npm update && \
-    npm install -g webpack && \
-    # Add as Python 2 kernel
-    # Install Python 2 kernel spec globally to avoid permission problems when NB_UID
-    # switching at runtime and to allow the notebook server running out of the root
-    # environment to find it. Also, activate the python2 environment upon kernel launch.
-    pip install --no-cache-dir kernda && \
-    $CONDA_DIR/envs/python2/bin/python -m pip install ipykernel && \
-    $CONDA_DIR/envs/python2/bin/python -m ipykernel install && \
-    kernda -o -y /usr/local/share/jupyter/kernels/python2/kernel.json && \
     # Activate and configure extensions
     jupyter contrib nbextension install --user && \
     # nbextensions configurator
@@ -566,6 +596,8 @@ RUN \
     jupyter serverextension enable --py nbresuse && \
     # Activate Jupytext
     jupyter nbextension enable --py jupytext && \
+    # Disable Jupyter Server Proxy
+    jupyter nbextension disable jupyter_server_proxy/tree && \
     # If minimal flavor - exit here
     if [ "$WORKSPACE_FLAVOR" = "minimal" ]; then \
         # Cleanup
@@ -665,7 +697,7 @@ RUN \
     # Install go-to-definition extension 
     jupyter labextension install @krassowski/jupyterlab_go_to_definition && \
     # Install jupyterlab-data-explorer: https://github.com/jupyterlab/jupyterlab-data-explorer
-    # Does not exist on NPM jupyter labextension install @jupyterlab/dataregistry && \
+    # alpha version jupyter labextension install @jupyterlab/dataregistry-extension && \
     # Install jupyterlab system monitor: https://github.com/jtpio/jupyterlab-system-monitor
     # DO not install for now jupyter labextension install jupyterlab-topbar-extension jupyterlab-system-monitor && \
     # Activate ipygrid in jupterlab
@@ -739,7 +771,6 @@ COPY \
 
 # Copy scripts into workspace
 COPY docker-res/scripts $RESOURCES_PATH/scripts
-COPY docker-res/tools $RESOURCES_PATH/tools
 
 # Create Desktop Icons for Tooling
 COPY docker-res/branding $RESOURCES_PATH/branding
@@ -827,6 +858,11 @@ RUN \
     rm /usr/share/applications/exo-mail-reader.desktop && \
     rm /usr/share/applications/xfce4-session-logout.desktop
 
+# Copy resources into workspace
+COPY docker-res/tools $RESOURCES_PATH/tools
+COPY docker-res/tests $RESOURCES_PATH/tests
+COPY docker-res/tutorials $RESOURCES_PATH/tutorials
+
 # Various configurations
 RUN \
     # clear chome init file - not needed since we load settings manually
@@ -839,6 +875,8 @@ RUN \
     chmod a+rwx /usr/local/bin/start-notebook.sh && \
     chmod a+rwx /usr/local/bin/start.sh && \
     chmod a+rwx /usr/local/bin/start-singleuser.sh && \
+    chown root:root /tmp && \
+    chmod a+rwx /tmp && \
     # Set /workspace as default directory to navigate to as root user
     echo  'cd '$WORKSPACE_HOME >> $HOME/.bashrc 
 
@@ -864,6 +902,7 @@ ENV CONFIG_BACKUP_ENABLED="true" \
     AUTHENTICATE_VIA_JUPYTER="false" \
     DATA_ENVIRONMENT="/workspace/environment" \
     WORKSPACE_BASE_URL="/" \
+    INCLUDE_TUTORIALS="true" \
     # set number of threads various programs should use, if not-set, it tries to use all
     # this can be problematic since docker restricts CPUs by stil showing all
     MAX_NUM_THREADS="auto"
@@ -918,7 +957,9 @@ LABEL \
 # TODO: VOLUME [ "/workspace" ]
 
 # use global option with tini to kill full process groups: https://github.com/krallin/tini#process-group-killing
-ENTRYPOINT ["/tini", "-g", "--", "python", "/resources/run.py"]
+ENTRYPOINT ["/tini", "-g", "--"]
+
+CMD ["python", "/resources/run.py"] 
 
 # Port 8091 is the main access port (also includes SSH)
 # Port 5091 is the VNC port

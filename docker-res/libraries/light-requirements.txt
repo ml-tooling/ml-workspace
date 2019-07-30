@@ -3,11 +3,8 @@
 ## ML Frameworks
 # installed via conda for mkl support: tensorflow==1.13.1 # TensorFlow is an open source machine learning framework for everyone.
 keras==2.2.4 # Deep Learning for humans
-fastai==1.0.55 # The fastai library simplifies training fast and accurate neural nets using modern best practices.
 xgboost==0.90 # Scalable, Portable and Distributed Gradient Boosting
-scikit-learn==0.21.2 # A set of python modules for machine learning and data mining
-jax==0.1.39 # GPU- and TPU-backed NumPy with differentiation and JIT compilation.
-jaxlib==0.1.22 # XLA library for JAX - required for jax
+scikit-learn==0.21.3 # A set of python modules for machine learning and data mining
 
 ## NLP
 fasttext==0.9.1 # fasttext Python bindings, a library for efficient learning of word representations and sentence classification.
@@ -15,7 +12,7 @@ beautifulsoup4==4.8.0 # Beautiful Soup is a library that makes it easy to scrape
 soupsieve==1.9.2 # A modern CSS selector implementation for Beautiful Soup.
 
 ## Others
-pandas-profiling==2.2.0 # Generate profile report for pandas DataFrame
+pandas-profiling==2.3.0 # Generate profile report for pandas DataFrame
 tensorboardX==1.8 # TensorBoardX lets you watch Tensors Flow without Tensorflow
 
 ## Jupyter
