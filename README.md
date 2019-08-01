@@ -52,20 +52,28 @@ The workspace requires **Docker** to be installed on your machine ([Installation
 Deploying a single workspace instance is as simple as:
 
 ```bash
-docker run -d -p 8091:8091 -v "${PWD}:/workspace" --restart always mltooling/ml-workspace:latest
+docker run -p 8091:8091 mltooling/ml-workspace:latest
 ```
 
-Voilà, that was easy! Now, Docker will pull the latest workspace image to your machine. This may take a few minutes, depending on your internet speed. Once the workspace is started, you can access it via: http://localhost:8091. 
+Voilà, that was easy! Now, Docker will pull the latest workspace image to your machine. This may take a few minutes, depending on your internet speed. Once the workspace is started, you can access it via: http://localhost:8091.
 
 > ℹ️ _If started on a remote machine or with a different port, make sure to use the machine's IP/DNS and/or the exposed port._
 
+To deploy a single instance for productive usage, we recommend to apply at least the following options. The following command runs the container in background (`-d`), mounts your current working directory into the `/workspace` folder (`-v`), secures the workspace via a provided token (`--env AUTHENTICATE_VIA_JUPYTER`), and keeps the container running even on system restarts (`--restart`):
+
+```bash
+docker run -d -p 8091:8091 -v "${pwd}:/workspace" --env AUTHENTICATE_VIA_JUPYTER="mytoken" --restart always mltooling/ml-workspace:latest
+```
+
+You can find additional options for docker run [here](https://docs.docker.com/engine/reference/commandline/run/) and workspace configuration options in [the section below](#Configuration).
+
 ### Persist Data
 
-To persist the data, you need to mount a volume into `/workspace`.
+To persist the data, you need to mount a volume into `/workspace` (via docker run option: `-v`).
 
 ### Configuration
 
-The container can be configured with the following environment variables (`--env`):
+The container can be configured with the following environment variables (via docker run option: `--env`):
 
 <table>
     <tr>
@@ -109,6 +117,11 @@ The container can be configured with the following environment variables (`--env
         <td>true</td>
     </tr>
     <tr>
+        <td>MAX_NUM_THREADS</td>
+        <td>The number of threads used for computations when using various common libraries (MKL, OPENBLAS, OMP, NUMBA, ...). You can also use <code>auto</code> to let the workspace dynamically determine the number of threads based on available CPU resources. This configuration can be overwritten by the user from within the workspace. Generally, it is good to set it at or below the number of CPUs available to the workspace.</td>
+        <td>auto</td>
+    </tr>
+    <tr>
         <td colspan="3"><b>Jupyter Configuration:</b></td>
     </tr>
     <tr>
@@ -124,24 +137,6 @@ The container can be configured with the following environment variables (`--env
     <tr>
         <td>NOTEBOOK_ARGS</td>
         <td>Add and overwrite Jupyter configuration options via command line args. Refer to <a href="https://jupyter-notebook.readthedocs.io/en/stable/config.html">this overview</a> for all options.</td>
-        <td></td>
-    </tr>
-    <tr>
-        <td colspan="3"><b>Hardware Configuration:</b></td>
-    </tr>
-    <tr>
-        <td>MAX_NUM_THREADS</td>
-        <td>The number of threads used for computations when using various common libraries (MKL, OPENBLAS, OMP, NUMBA, ...). You can also use <code>auto</code> to let the workspace dynamically determine the number of threads based on available CPU resources. This configuration can be overwritten by the user from within the workspace. Generally, it is good to set it at or below the number of CPUs available to the workspace.</td>
-        <td>auto</td>
-    </tr>
-    <tr>
-        <td>NVIDIA_VISIBLE_DEVICES</td>
-        <td>(GPU only) Controls which GPUs will be accessible inside the workspace. By default, all GPUs from the host are accessible within the workspace. You can either use <code>all</code>, <code>none</code>, or specify a comma-separated list of device IDs (e.g. <code>0,1</code>). You can find out the list of available device IDs by running <code>nvidia-smi</code> on the host machine.</td>
-        <td></td>
-    </tr>
-    <tr>
-        <td>CUDA_VISIBLE_DEVICES</td>
-        <td>(GPU only) Controls which GPUs CUDA applications running inside the workspace will see. By default, all GPUs that the workspace has access to will be visible. To restrict applications, provide a comma-separated list of internal device IDs (e.g. <code>0,2</code>) based on the available devices within the workspace (run <code>nvidia-smi</code>). In comparison to <code>NVIDIA_VISIBLE_DEVICES</code>, the workspace user will still able to access other GPUs by overwriting this configuration from within the workspace.</td>
         <td></td>
     </tr>
     <tr>
@@ -166,13 +161,84 @@ The container can be configured with the following environment variables (`--env
 
 _WIP_ Add Examples
 
-### Run multiple instances
+### Workspace Flavors
 
-_WIP_
+In addition to the main workspace image (`mltooling/ml-workspace`), we provide other image flavors that extend the features or minimize the image size to support a variety of use cases.
 
-### Run GPU instance
+#### Minimal Flavor
 
-_WIP_
+<a href="https://hub.docker.com/r/mltooling/ml-workspace-minimal" title="Docker Image Version"><img src="https://images.microbadger.com/badges/version/mltooling/ml-workspace-minimal.svg"></a>
+<a href="https://hub.docker.com/r/mltooling/ml-workspace-minimal" title="Docker Image Metadata"><img src="https://images.microbadger.com/badges/image/mltooling/ml-workspace-minimal.svg"></a>
+<a href="https://hub.docker.com/r/mltooling/ml-workspace-minimal" title="Docker Pulls"><img src="https://img.shields.io/docker/pulls/mltooling/ml-workspace-minimal.svg"></a>
+<a href="https://hub.docker.com/r/mltooling/ml-workspace-minimal" title="Docker Stars"><img src="https://img.shields.io/docker/stars/mltooling/ml-workspace-minimal"></a>
+
+The minimal flavor (`mltooling/ml-workspace-minimal`) is our smallest image that contains most of the tools and features described in the [features section](#features) without most of the python libraries that are preinstalled in our main image. Any Python library or excluded tool can be installed manually during runtime by the user.
+
+```bash
+docker run -p 8091:8091 mltooling/ml-workspace-minimal:latest
+```
+
+#### Light Flavor
+
+<a href="https://hub.docker.com/r/mltooling/ml-workspace-light" title="Docker Image Version"><img src="https://images.microbadger.com/badges/version/mltooling/ml-workspace-light.svg"></a>
+<a href="https://hub.docker.com/r/mltooling/ml-workspace-light" title="Docker Image Metadata"><img src="https://images.microbadger.com/badges/image/mltooling/ml-workspace-light.svg"></a>
+<a href="https://hub.docker.com/r/mltooling/ml-workspace-light" title="Docker Pulls"><img src="https://img.shields.io/docker/pulls/mltooling/ml-workspace-light.svg"></a>
+<a href="https://hub.docker.com/r/mltooling/ml-workspace-light" title="Docker Stars"><img src="https://img.shields.io/docker/stars/mltooling/ml-workspace-light"></a>
+
+The light flavor (`mltooling/ml-workspace-light`) has all of the tools and features described in the [features section](#features), but only a small collection of popular python machine learning libraries preinstalled. Any Python library can be installed manually during runtime.
+
+```bash
+docker run -p 8091:8091 mltooling/ml-workspace-light:latest
+```
+
+#### GPU Flavor
+
+<a href="https://hub.docker.com/r/mltooling/ml-workspace-gpu" title="Docker Image Version"><img src="https://images.microbadger.com/badges/version/mltooling/ml-workspace-gpu.svg"></a>
+<a href="https://hub.docker.com/r/mltooling/ml-workspace-gpu" title="Docker Image Metadata"><img src="https://images.microbadger.com/badges/image/mltooling/ml-workspace-gpu.svg"></a>
+<a href="https://hub.docker.com/r/mltooling/ml-workspace-gpu" title="Docker Pulls"><img src="https://img.shields.io/docker/pulls/mltooling/ml-workspace-gpu.svg"></a>
+<a href="https://hub.docker.com/r/mltooling/ml-workspace-gpu" title="Docker Stars"><img src="https://img.shields.io/docker/stars/mltooling/ml-workspace-gpu"></a>
+
+The GPU flavor (`mltooling/ml-workspace-gpu`) is based on our main workspace image and extends it with CUDA 10 and GPU-ready versions of various machine learning libraries (e.g. tensorflow, pytorch, cntk, jax). This GPU image has the following additional requirements for the system:
+
+- Nvidia Drivers for the GPUs. Drivers need to be CUDA 10 compatible, version `>= 410.48` ([📖 Instructions](https://github.com/NVIDIA/nvidia-docker/wiki/Frequently-Asked-Questions#how-do-i-install-the-nvidia-driver)).
+- (Docker >= 19.03) Nvidia Container Toolkit ([📖 Instructions](https://github.com/NVIDIA/nvidia-docker)).
+
+```bash
+docker run -p 8091:8091 --gpus all mltooling/ml-workspace-gpu:latest
+```
+
+- (Docker < 19.03) Nvidia Docker 2.0 ([📖 Instructions](https://github.com/NVIDIA/nvidia-docker/wiki/Installation-(version-2.0))).
+
+```bash
+docker run -p 8091:8091 --runtime nvidia --env NVIDIA_VISIBLE_DEVICES="all" mltooling/ml-workspace-gpu:latest
+```
+
+The GPU flavor also comes with a few additional configuration options as explained below:
+
+<table>
+    <tr>
+        <th>Variable</th>
+        <th>Description</th>
+        <th>Default</th>
+    </tr>
+    <tr>
+        <td>NVIDIA_VISIBLE_DEVICES</td>
+        <td>Controls which GPUs will be accessible inside the workspace. By default, all GPUs from the host are accessible within the workspace. You can either use <code>all</code>, <code>none</code>, or specify a comma-separated list of device IDs (e.g. <code>0,1</code>). You can find out the list of available device IDs by running <code>nvidia-smi</code> on the host machine.</td>
+        <td>all</td>
+    </tr>
+    <tr>
+        <td>CUDA_VISIBLE_DEVICES</td>
+        <td>Controls which GPUs CUDA applications running inside the workspace will see. By default, all GPUs that the workspace has access to will be visible. To restrict applications, provide a comma-separated list of internal device IDs (e.g. <code>0,2</code>) based on the available devices within the workspace (run <code>nvidia-smi</code>). In comparison to <code>NVIDIA_VISIBLE_DEVICES</code>, the workspace user will still able to access other GPUs by overwriting this configuration from within the workspace.</td>
+        <td></td>
+    </tr>
+    <tr>
+        <td>TF_FORCE_GPU_ALLOW_GROWTH</td>
+        <td>By default, the majority of GPU memory will be allocated by the first execution of a TensorFlow graph. While this behavior can be desirable for production pipelines, it is less desirable for interactive use. Use <code>true</code> to enable dynamic GPU Memory allocation or <code>false</code> to instruct TensorFlow to allocate all memory at execution.</td>
+        <td>true</td>
+    </tr>
+</table>
+
+### Multi-user setup
 
 ## Support
 
