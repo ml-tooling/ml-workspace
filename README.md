@@ -267,7 +267,7 @@ The workspace image can also be used as a job to execute arbitrary Python code w
 
 #### Run code from version control system
 
-You can execute code directly from Git, Mercurial, Subversion, or Bazaar by using the pip-vcs format as described in [this guide](https://pip.pypa.io/en/stable/reference/pip_install/#vcs-support). For example, to execute code from the `docker-res/tests/ml-job` directory of a git repository, just run:
+You can execute code directly from Git, Mercurial, Subversion, or Bazaar by using the pip-vcs format as described in [this guide](https://pip.pypa.io/en/stable/reference/pip_install/#vcs-support). For example, to execute code from the subdirectory of a git repository, just run:
 
 ```bash
 docker run --env EXECUTE_CODE="git+https://github.com/ml-tooling/ml-workspace.git#subdirectory=docker-res/tests/ml-job" mltooling/ml-workspace:latest
