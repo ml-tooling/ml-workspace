@@ -267,18 +267,18 @@ The workspace image can also be used as a job to execute arbitrary Python code w
 
 #### Run code from version control system
 
-You can execute code directly from Git, Mercurial, Subversion, or Bazaar by using the pip-vcs format as described in [this guide](https://pip.pypa.io/en/stable/reference/pip_install/#vcs-support). For example, to execute code from the `subdir` directory of a git repository, just run:
+You can execute code directly from Git, Mercurial, Subversion, or Bazaar by using the pip-vcs format as described in [this guide](https://pip.pypa.io/en/stable/reference/pip_install/#vcs-support). For example, to execute code from the `docker-res/tests/ml-job` directory of a git repository, just run:
 
 ```bash
-docker run --env EXECUTE_CODE="git+https://github.com/LukasMasuch/test-project.git#subdirectory=subdir" mltooling/ml-workspace:latest
+docker run --env EXECUTE_CODE="git+https://github.com/ml-tooling/ml-workspace.git#subdirectory=docker-res/tests/ml-job" mltooling/ml-workspace:latest
 ```
 
 #### Run code mounted into workspace
 
-In the following example, we mount and execute the current working directory (expected to contain our code) into the `/workspace/mljob/` directory of the workspace:
+In the following example, we mount and execute the current working directory (expected to contain our code) into the `/workspace/ml-job/` directory of the workspace:
 
 ```bash
-docker run -v "${PWD}:/workspace/mljob/" --env EXECUTE_CODE="/workspace/mljob/" mltooling/ml-workspace:latest
+docker run -v "${PWD}:/workspace/ml-job/" --env EXECUTE_CODE="/workspace/ml-job/" mltooling/ml-workspace:latest
 ```
 
 #### Install Dependencies
