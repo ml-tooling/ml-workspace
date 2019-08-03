@@ -59,19 +59,21 @@ Voilà, that was easy! Now, Docker will pull the latest workspace image to your 
 
 > ℹ️ _If started on a remote machine or with a different port, make sure to use the machine's IP/DNS and/or the exposed port._
 
-To deploy a single instance for productive usage, we recommend to apply at least the following options. The following command runs the container in background (`-d`), mounts your current working directory into the `/workspace` folder (`-v`), secures the workspace via a provided token (`--env AUTHENTICATE_VIA_JUPYTER`), and keeps the container running even on system restarts (`--restart`):
+To deploy a single instance for productive usage, we recommend to apply at least the following options:
 
 ```bash
-docker run -d -p 8091:8091 -v "${pwd}:/workspace" --env AUTHENTICATE_VIA_JUPYTER="mytoken" --restart always mltooling/ml-workspace:latest
+docker run -d -p 8091:8091 -v "${PWD}:/workspace" --env AUTHENTICATE_VIA_JUPYTER="mytoken" --restart always mltooling/ml-workspace:latest
 ```
 
-You can find additional options for docker run [here](https://docs.docker.com/engine/reference/commandline/run/) and workspace configuration options in [the section below](#Configuration).
+This command runs the container in background (`-d`), mounts your current working directory into the `/workspace` folder (`-v`), secures the workspace via a provided token (`--env AUTHENTICATE_VIA_JUPYTER`), and keeps the container running even on system restarts (`--restart`). You can find additional options for docker run [here](https://docs.docker.com/engine/reference/commandline/run/) and workspace configuration options in [the section below](#Configuration).
 
 ### Persist Data
 
 To persist the data, you need to mount a volume into `/workspace` (via docker run option: `-v`).
 
-### Configuration
+The default work directory within the container is `/workspace`, which is also the root directory of the Jupyter instance. The `/workspace` directory is intended to be used for all the important work artifacts. Data within other directories of the server (e.g. `/root`) might get lost at container restarts.
+
+### Configuration Options
 
 The container can be configured with the following environment variables (via docker run option: `--env`):
 
@@ -93,12 +95,12 @@ The container can be configured with the following environment variables (via do
     </tr>
     <tr>
         <td>WORKSPACE_AUTH_USER</td>
-        <td>Basic auth user name. To enable basic auth, both the user and password need to be set.</td>
+        <td>Basic auth user name. To enable basic auth, both the user and password need to be set. We recommend to use the <code>AUTHENTICATE_VIA_JUPYTER</code> for securing the workspace.</td>
         <td></td>
     </tr>
     <tr>
         <td>WORKSPACE_AUTH_PASSWORD</td>
-        <td>Basic auth user password. To enable basic auth, both the user and password need to be set.</td>
+        <td>Basic auth user password. To enable basic auth, both the user and password need to be set. We recommend to use the <code>AUTHENTICATE_VIA_JUPYTER</code> for securing the workspace.</td>
         <td></td>
     </tr>
     <tr>
@@ -161,6 +163,21 @@ The container can be configured with the following environment variables (via do
 
 _WIP_ Add Examples
 
+### Enable Authentication
+
+Since arbitrary code can be run within the workspace, we strongly recommend to enable authentication. The workspace provides two ways to enable authentication:
+
+activate the following options to enable authentication and better security:
+
+### Enable SSL (HTTPS)
+
+We strongly recommend to enable SSL so that the workspace is accesible via HTTPS. 
+
+- SSL 
+It is important to secure the workspace. 
+- Secure Portainer instance using SSL
+All tools will use the authentication method that is 
+
 ### Workspace Flavors
 
 In addition to the main workspace image (`mltooling/ml-workspace`), we provide other image flavors that extend the features or minimize the image size to support a variety of use cases.
@@ -201,7 +218,7 @@ docker run -p 8091:8091 mltooling/ml-workspace-light:latest
 The GPU flavor (`mltooling/ml-workspace-gpu`) is based on our main workspace image and extends it with CUDA 10 and GPU-ready versions of various machine learning libraries (e.g. tensorflow, pytorch, cntk, jax). This GPU image has the following additional requirements for the system:
 
 - Nvidia Drivers for the GPUs. Drivers need to be CUDA 10 compatible, version `>= 410.48` ([📖 Instructions](https://github.com/NVIDIA/nvidia-docker/wiki/Frequently-Asked-Questions#how-do-i-install-the-nvidia-driver)).
-- (Docker >= 19.03) Nvidia Container Toolkit ([📖 Instructions](https://github.com/NVIDIA/nvidia-docker)).
+- (Docker >= 19.03) Nvidia Container Toolkit ([📖 Instructions](https://github.com/NVIDIA/nvidia-docker/wiki/Installation-(Native-GPU-Support))).
 
 ```bash
 docker run -p 8091:8091 --gpus all mltooling/ml-workspace-gpu:latest
@@ -239,6 +256,59 @@ The GPU flavor also comes with a few additional configuration options as explain
 </table>
 
 ### Multi-user setup
+
+_WIP_
+
+### Run as a job
+
+> ℹ️ _A job is defined as any computational task that runs for a certain time to completion, such as a model training or a data pipeline._
+
+The workspace image can also be used as a job to execute arbitrary Python code without starting any of the preinstalled tools. This provides a seamless way to productize your ML projects since the code that has been developed interactively within the workspace will have the same environment and configuration when run as a job via the same workspace image. To run Python code as a job, you need to provide a path or URL to a code directory (or script) via `EXECUTE_CODE`. The code can be either already mounted into the workspace container or downloaded from a version control system (e.g., git or svn) as described in the following sections. The selected code path needs to be python executable. In case the selected code is a directory (e.g., whenever you download the code from a VCS) you need to put a `__main__.py` file at the root of this directory. The `__main__.py` needs to contain the code that starts your job.
+
+#### Run code from version control system
+
+You can execute code directly from Git, Mercurial, Subversion, or Bazaar by using the pip-vcs format as described in [this guide](https://pip.pypa.io/en/stable/reference/pip_install/#vcs-support). For example, to execute code from the `subdir` directory of a git repository, just run:
+
+```bash
+docker run --env EXECUTE_CODE="git+https://github.com/LukasMasuch/test-project.git#subdirectory=subdir" mltooling/ml-workspace:latest
+```
+
+#### Run code mounted into workspace
+
+In the following example, we mount and execute the current working directory (expected to contain our code) into the `/workspace/mljob/` directory of the workspace:
+
+```bash
+docker run -v "${PWD}:/workspace/mljob/" --env EXECUTE_CODE="/workspace/mljob/" mltooling/ml-workspace:latest
+```
+
+#### Install Dependencies
+
+In the case that the preinstalled workspace libraries are not compatible with your code, you can install or change dependencies by just adding one or multiple of the following files to your code directory:
+
+- `requirements.txt`: [pip requirements format](https://pip.pypa.io/en/stable/user_guide/#requirements-files) for pip-installable dependencies.
+- `environment.yml`: [conda environment file](https://docs.conda.io/projects/conda/en/latest/user-guide/tasks/manage-environments.html?highlight=environment.yml#creating-an-environment-file-manually) to create a separate Python environment.
+- `setup.sh`: A shell script executed via `/bin/bash`.
+
+The execution order is 1. `environment.yml` -> 2. `setup.sh` -> 3. `requirements.txt`
+
+#### Test job in interactive mode
+
+You can test your job code within the workspace (started normally with interactive tools) by executing the following python script:
+
+```bash
+python /resources/scripts/execute_code.py /path/to/your/job
+```
+
+#### Build a custom job image
+
+It is also possible to embed your code directly into a custom job image, as shown below:
+
+```dockerfile
+FROM mltooling/ml-workspace:latest
+
+COPY /mljob /workspace/mljob
+ENV EXECUTE_CODE=/workspace/mljob
+```
 
 ## Support
 
