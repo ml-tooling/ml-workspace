@@ -161,22 +161,41 @@ The container can be configured with the following environment variables (via do
     </tr>
 </table>
 
-_WIP_ Add Examples
-
 ### Enable Authentication
 
-Since arbitrary code can be run within the workspace, we strongly recommend to enable authentication. The workspace provides two ways to enable authentication:
+We strongly recommend enabling authentication via one of the following two options. For both options, the user will be required to authenticate for accessing any of the preinstalled tools.
 
-activate the following options to enable authentication and better security:
+#### Token-based Authentication via Jupyter (recommended)
 
-### Enable SSL (HTTPS)
+Activate the token-based authentication based on the authentication implementation of Jupyter via the `AUTHENTICATE_VIA_JUPYTER` variable:
 
-We strongly recommend to enable SSL so that the workspace is accesible via HTTPS. 
+```bash
+docker run -p 8091:8091 --env AUTHENTICATE_VIA_JUPYTER="mytoken" mltooling/ml-workspace:latest
+```
 
-- SSL 
-It is important to secure the workspace. 
-- Secure Portainer instance using SSL
-All tools will use the authentication method that is 
+You can also use `<generated>` to let Jupyter generate a random token that is printed out on the container logs. A value of `true` will not set any token but activate that every request to any tool in the workspace will be checked with the Jupyter instance if the user is authenticated. This is used for tools like JupyterHub, which configures its own way of authentication.
+
+#### Basic Authentication via Nginx
+
+Activate the basic authentication via the `WORKSPACE_AUTH_USER` and `WORKSPACE_AUTH_PASSWORD` variable:
+
+```bash
+docker run -p 8091:8091 --env WORKSPACE_AUTH_USER="user" --env WORKSPACE_AUTH_PASSWORD="pwd" mltooling/ml-workspace:latest
+```
+
+The basic authentication is configured via the nginx proxy and might be more performant compared to the other option since with `AUTHENTICATE_VIA_JUPYTER` every request to any tool in the workspace will check via the Jupyter instance if the user (based on the request cookies) is authenticated.
+
+### Enable SSL/HTTPS
+
+We recommend enabling SSL so that the workspace is accessible via HTTPS (encrypted communication). SSL encryption can be activated via the `WORKSPACE_SSL_ENABLED` variable. When set to `true`, either the `cert.crt` and `cert.key` file must be mounted to `/resources/ssl` or, if the certificate files do not exist, the container generates self-signed certificates. For example, if the `/path/with/certificate/files` on the local system contains a valid certificate for the host domain (`cert.crt` and `cert.key` file), it can be used from the workspace as shown below:
+
+```bash
+docker run -p 8091:8091 --env WORKSPACE_SSL_ENABLED="true" -v /path/with/certificate/files:/resources/ssl:ro mltooling/ml-workspace:latest
+```
+
+### Proxy
+
+If a proxy is required, you can pass the proxy configuration via the `http_proxy` and `no_proxy` environment variables. For example: `--env http_proxy=http://my.proxy:8080`
 
 ### Workspace Flavors
 
@@ -257,7 +276,13 @@ The GPU flavor also comes with a few additional configuration options as explain
 
 ### Multi-user setup
 
-_WIP_
+The workspace is designed as a single user development environment. For a multi-user setup, we recommend to deploy [🧰 ML Hub](https://github.com/ml-tooling/ml-hub). ML Hub is based on JupyterHub and spawns, manages, and proxies multiple workspace instances. It is easy to set up on a single server (via Docker) or a cluster (via Kubernetes) and supports a variety of usage scenarios & authentication providers. You can try out ML Hub  via:
+
+```bash
+docker run -p 8091:8091 -v /var/run/docker.sock:/var/run/docker.sock mltooling/ml-hub:latest
+```
+
+For more information and documentation about ML Hub, please take a look at the [Github Site](https://github.com/ml-tooling/ml-hub).
 
 ### Run as a job
 
@@ -272,6 +297,8 @@ You can execute code directly from Git, Mercurial, Subversion, or Bazaar by usin
 ```bash
 docker run --env EXECUTE_CODE="git+https://github.com/ml-tooling/ml-workspace.git#subdirectory=docker-res/tests/ml-job" mltooling/ml-workspace:latest
 ```
+
+> ℹ️ _You can find information on how to specify branches, commits, or tags please refer to [this guide](https://pip.pypa.io/en/stable/reference/pip_install/#vcs-support)._
 
 #### Run code mounted into workspace
 
