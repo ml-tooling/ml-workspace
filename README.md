@@ -62,10 +62,10 @@ Voilà, that was easy! Now, Docker will pull the latest workspace image to your 
 To deploy a single instance for productive usage, we recommend to apply at least the following options:
 
 ```bash
-docker run -d -p 8091:8091 -v "${PWD}:/workspace" --env AUTHENTICATE_VIA_JUPYTER="mytoken" --env WORKSPACE_SSL_ENABLED="true" --restart always mltooling/ml-workspace:latest
+docker run -d -p 8091:8091 -v "${PWD}:/workspace" --env AUTHENTICATE_VIA_JUPYTER="mytoken" --restart always mltooling/ml-workspace:latest
 ```
 
-This command runs the container in background (`-d`), mounts your current working directory into the `/workspace` folder (`-v`), secures the workspace via a provided token (`--env AUTHENTICATE_VIA_JUPYTER`), activates SSL encryption (`--env WORKSPACE_SSL_ENABLED`), and keeps the container running even on system restarts (`--restart always`). You can find additional options for docker run [here](https://docs.docker.com/engine/reference/commandline/run/) and workspace configuration options in [the section below](#Configuration).
+This command runs the container in background (`-d`), mounts your current working directory into the `/workspace` folder (`-v`), secures the workspace via a provided token (`--env AUTHENTICATE_VIA_JUPYTER`), and keeps the container running even on system restarts (`--restart always`). You can find additional options for docker run [here](https://docs.docker.com/engine/reference/commandline/run/) and workspace configuration options in [the section below](#Configuration).
 
 ### Persist Data
 
