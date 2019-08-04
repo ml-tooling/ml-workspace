@@ -18,7 +18,6 @@ c.NotebookApp.iopub_data_rate_limit=2147483647
 c.NotebookApp.port_retries=0
 c.NotebookApp.quit_button=False
 c.NotebookApp.allow_remote_access=True
-c.NotebookApp.token=""
 c.NotebookApp.disable_check_xsrf=True
 c.NotebookApp.allow_origin='*'
 c.NotebookApp.trust_xheaders=True
@@ -61,19 +60,22 @@ if authenticate_via_jupyter and authenticate_via_jupyter.lower().strip() != "fal
     # Do not allow password change since it currently needs a server restart to accept the new password
     c.NotebookApp.allow_password_change = False
 
-    if authenticate_via_jupyter.lower().strip() != "<generated>":
-        # let jupyter generate a token in print out on console
-        c.NotebookApp.token = None
-     # if true, do not set any token, authentication will be activate on another way (e.g. via JupyterHub)
+    if authenticate_via_jupyter.lower().strip() == "<generated>":
+        # dont do anything to let jupyter generate a token in print out on console
+        pass
+    # if true, do not set any token, authentication will be activate on another way (e.g. via JupyterHub)
     elif authenticate_via_jupyter.lower().strip() != "true":
         # if not true or false, set value as token
         c.NotebookApp.token = authenticate_via_jupyter
+else:
+    # Deactivate token -> no authentication
+    c.NotebookApp.token=""
 
 # https://github.com/timkpaine/jupyterlab_iframe
 try:
     if not base_url.startswith("/"):
         base_url = "/" + base_url
-    c.JupyterLabIFrame.iframes = [base_url + 'tools/ungit', base_url + 'tools/netdata', base_url + 'tools/vnc', base_url + 'tools/glances', base_url + 'tools/custom']
+    c.JupyterLabIFrame.iframes = [base_url + 'tools/ungit', base_url + 'tools/netdata', base_url + 'tools/vnc', base_url + 'tools/glances', base_url + 'tools/vscode']
 except:
     pass
 
@@ -107,29 +109,6 @@ try:
     c.ResourceUseDisplay.mem_warning_threshold=0.1
 except:
     pass
-
-# Generate a self-signed certificate
-if 'GEN_CERT' in os.environ:
-    dir_name = jupyter_data_dir()
-    pem_file = os.path.join(dir_name, 'notebook.pem')
-    try:
-        os.makedirs(dir_name)
-    except OSError as exc:  # Python >2.5
-        if exc.errno == errno.EEXIST and os.path.isdir(dir_name):
-            pass
-        else:
-            raise
-    # Generate a certificate if one doesn't exist on disk
-    subprocess.check_call(['openssl', 'req', '-new',
-                           '-newkey', 'rsa:2048',
-                           '-days', '365',
-                           '-nodes', '-x509',
-                           '-subj', '/C=XX/ST=XX/L=XX/O=generated/CN=generated',
-                           '-keyout', pem_file,
-                           '-out', pem_file])
-    # Restrict access to the file
-    os.chmod(pem_file, stat.S_IRUSR | stat.S_IWUSR)
-    c.NotebookApp.certfile = pem_file
 
 # Change default umask for all subprocesses of the notebook server if set in
 # the environment
