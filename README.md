@@ -193,6 +193,16 @@ We recommend enabling SSL so that the workspace is accessible via HTTPS (encrypt
 docker run -p 8091:8091 --env WORKSPACE_SSL_ENABLED="true" -v /path/with/certificate/files:/resources/ssl:ro mltooling/ml-workspace:latest
 ```
 
+### Limit Memory & CPU
+
+By default, the workspace container has no resource constraints and can use as much of a given resource as the host’s kernel scheduler allows. Docker provides ways to control how much memory, or CPU a container can use, by setting runtime configuration flags of the docker run command. For example, the following command restricts the workspace to only use a maximum of 8 CPUs and 16 GB of memory:
+
+```bash
+docker run -p 8091:8091 --cpus=8 --memory=16g mltooling/ml-workspace:latest
+```
+
+> 📖 _For more options and documentation on resource constraints, please refer to the [official docker guide](https://docs.docker.com/config/containers/resource_constraints/)._
+
 ### Proxy
 
 If a proxy is required, you can pass the proxy configuration via the `http_proxy` and `no_proxy` environment variables.
@@ -298,7 +308,7 @@ You can execute code directly from Git, Mercurial, Subversion, or Bazaar by usin
 docker run --env EXECUTE_CODE="git+https://github.com/ml-tooling/ml-workspace.git#subdirectory=docker-res/tests/ml-job" mltooling/ml-workspace:latest
 ```
 
-> ℹ️ _You can find information on how to specify branches, commits, or tags please refer to [this guide](https://pip.pypa.io/en/stable/reference/pip_install/#vcs-support)._
+> ℹ️ _For additional information on how to specify branches, commits, or tags please refer to [this guide](https://pip.pypa.io/en/stable/reference/pip_install/#vcs-support)._
 
 #### Run code mounted into workspace
 
@@ -358,10 +368,12 @@ valuable if it's shared publicly so that more people can benefit from it.
   <a href="#desktop-gui">Desktop GUI</a> •
   <a href="#visual-studio-code">VS Code</a> •
   <a href="#git-integration">Git Integration</a> •
+  <a href="#file-sharing">File Sharing</a> •
   <a href="#jupyterlab">JupyterLab</a> •
   <a href="#hardware-monitoring">Hardware Monitoring</a> •
   <a href="#tensorboard">Tensorboard</a> •
-  <a href="#ssh-access">SSH Access</a>
+  <a href="#ssh-access">SSH Access</a> •
+  <a href="#remote-development">Remote Development</a>
 </p>
 
 The workspace is equipped with a selection of best-in-class open-source development tools to help with the machine learning workflow. Many of these tools can be started from the `Open Tool` menu from Jupyter (the main application of the workspace):
@@ -594,10 +606,6 @@ The workspace is pre-installed with many popular runtimes, data science librarie
 The full list of installed tools can be found within the [Dockerfile](https://github.com/ml-tooling/ml-workspace/blob/master/Dockerfile).
 
 > ℹ️ _**An R-Runtime** installation script is provided in the `Tools` folder on the desktop of the VNC GUI._
-
-### GPU Support
-
-_WIP_
 
 ## Contribution
 
