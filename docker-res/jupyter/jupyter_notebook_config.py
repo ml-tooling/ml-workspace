@@ -57,8 +57,15 @@ if shutdown_inactive_kernels and shutdown_inactive_kernels.lower().strip() != "f
 authenticate_via_jupyter = os.getenv("AUTHENTICATE_VIA_JUPYTER", "false")
 if authenticate_via_jupyter and authenticate_via_jupyter.lower().strip() != "false":
     # authentication via jupyter is activated
-    # if true, do not set any token, authentication will be activate on another way (e.g. via JupyterHub)
-    if authenticate_via_jupyter.lower().strip() != "true":
+
+    # Do not allow password change since it currently needs a server restart to accept the new password
+    c.NotebookApp.allow_password_change = False
+
+    if authenticate_via_jupyter.lower().strip() != "<generated>":
+        # let jupyter generate a token in print out on console
+        c.NotebookApp.token = None
+     # if true, do not set any token, authentication will be activate on another way (e.g. via JupyterHub)
+    elif authenticate_via_jupyter.lower().strip() != "true":
         # if not true or false, set value as token
         c.NotebookApp.token = authenticate_via_jupyter
 
