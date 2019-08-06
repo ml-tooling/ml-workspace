@@ -50,15 +50,5 @@ call("python " + ENV_RESOURCES_PATH + "/scripts/configure_cron_scripts.py", shel
 log.info("Configure and run custom scripts")
 call("python " + ENV_RESOURCES_PATH + "/scripts/run_custom_scripts.py", shell=True)
 
-# TODO vnc server fails to start via supervisor process:
-# spawnerr: unknown error making dispatchers for 'vncserver': ENOENT
-# alternative: /usr/bin/Xvnc $DISPLAY -depth $VNC_COL_DEPTH -geometry $VNC_RESOLUTION -Log *:stderr:100
-# vncserver uses Xvnc, all Xvnc options can be used (e.g. for logging)
-# https://wiki.archlinux.org/index.php/TigerVNC
-call("/usr/bin/vncserver $DISPLAY -autokill -depth $VNC_COL_DEPTH -geometry $VNC_RESOLUTION", shell=True)
-
-# Disable screensaver and power management - needs to run after the vnc server is started
-call('xset -dpms && xset s noblank && xset s off', shell=True)
-
 # Run supervisor process - main container process
 call('supervisord -n -c /etc/supervisor/supervisord.conf', shell=True)

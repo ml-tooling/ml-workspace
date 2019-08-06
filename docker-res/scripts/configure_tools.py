@@ -58,9 +58,6 @@ shortcut_metadata = '[Desktop Entry]\nVersion=1.0\nType=Link\nName=Jupyter Lab\n
 call('printf "' + shortcut_metadata + '" > /usr/share/applications/jupyterlab.desktop', shell=True) # create a link in categories menu to your Jupyter Lab server
 call('chmod +x /usr/share/applications/jupyterlab.desktop', shell=True) # Make executable
 
-# Set vnc password
-call('mkdir -p $HOME/.vnc && touch $HOME/.vnc/passwd && echo "$VNC_PW" | vncpasswd -f >> $HOME/.vnc/passwd && chmod 600 $HOME/.vnc/passwd', shell=True)
-
 # Configure filebrowser - only if database file does not exist yet (e.g. isn't restored)
 if not os.path.exists(HOME + '/filebrowser.db'):
     log.info("Initialize filebrowser database.")
