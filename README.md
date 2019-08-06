@@ -444,9 +444,9 @@ To commit and push a single notebook to a remote Git repository, we recommend to
 
 For more advanced Git operations we recommend to use [ungit](https://github.com/FredrikNoren/ungit). With ungit, you can do most of the common git actions such as push, pull, merge, branch, tag, checkout, and many more.
 
-#### Sharing, Diffing, and Merging Notebooks
+#### Diffing and Merging Notebooks
 
-Jupyter notebooks are great, but they often are huge files, with a very specific JSON file format. To enable seamless sharing, diffing, and merging via Git this workspace is pre-installed with [nbdime](https://github.com/jupyter/nbdime). Nbdime understands the structure of notebook documents and, therefore, automatically makes intelligent decisions when diffing and merging notebooks. In the case you have merge conflicts, nbdime will make sure that the notebook is still readable by Jupyter, as shown below:
+Jupyter notebooks are great, but they often are huge files, with a very specific JSON file format. To enable seamless diffing and merging via Git this workspace is pre-installed with [nbdime](https://github.com/jupyter/nbdime). Nbdime understands the structure of notebook documents and, therefore, automatically makes intelligent decisions when diffing and merging notebooks. In the case you have merge conflicts, nbdime will make sure that the notebook is still readable by Jupyter, as shown below:
 
 <img style="width: 100%" src="./docs/images/feature-git-merging.png"/>
 
@@ -455,6 +455,18 @@ Furthermore, the workspace comes pre-installed with [jupytext](https://github.co
 <img style="width: 100%" src="./docs/images/feature-git-jupytext.png"/>
 
 In combination with Git, jupytext enables a clear diff history and easy merging of version conflicts. With both of those tools, collaborating on Jupyter notebooks with Git becomes straightforward.
+
+### File Sharing
+
+The workspace has a feature to share any file or folder with anyone via a token-protected link. To share data via link, select any file or folder from the Jupyter directory tree and click on the Share button as shown in the following screenshot:
+
+TODO: Add screenshot
+
+This will generate a unique link protected via a token that gives anyone with the link access to view and download the selected data via the [Filebrowser](https://github.com/filebrowser/filebrowser) UI:
+
+TODO: Add screenshot
+
+To deactivate or manage (e.g., provide edit permissions) shared links, open the Filebrowser via `Open Tool -> Filebrowser` and select `Settings->User Management`.
 
 ### JupyterLab
 
@@ -501,7 +513,7 @@ SSH provides a powerful set of features that enables you to be more productive w
 
 > ℹ️ _The setup script only runs on Mac and Linux, Windows is currently not supported._
 
-Just run the setup script on the machine from where you want to setup a connection to the workspace and input a name for the connection (e.g. `my-workspace`). You might also get asked for some additional input during the process. Once the connection is successfully setup and tested, you can securely connect to the workspace by simply executing `ssh my-workspace`. 
+Just run the setup script on the machine from where you want to setup a connection to the workspace and input a name for the connection (e.g. `my-workspace`). You might also get asked for some additional input during the process. Once the connection is successfully setup and tested, you can securely connect to the workspace by simply executing `ssh my-workspace`.
 
 Besides the ability to execute commands on a remote machine, SSH also provides a variety of other features that can improve your development workflow as described in the following sections.
 
@@ -509,7 +521,7 @@ Besides the ability to execute commands on a remote machine, SSH also provides a
 
 An SSH connection can be used for tunneling application ports from the remote machine to the local machine, or vice versa. For example, you can expose the workspace internal port `5901` (VNC Server) to the local machine on port `5000` by executing:
 
-```
+```bash
 ssh -nNT -L 5000:localhost:5901 my-workspace
 ```
 
@@ -517,7 +529,7 @@ ssh -nNT -L 5000:localhost:5901 my-workspace
 
 After the tunnel is established, you can use your favorite VNC viewer on your local machine and connect to `vnc://localhost:5000` (default password: `vncpassword`). To make the tunnel connection more resistant and reliable, we recommend to use [autossh](https://www.harding.motd.ca/autossh/) to automatically restart SSH tunnels in the case that the connection dies:
 
-```
+```bash
 autossh -M 0 -f -nNT -L 5000:localhost:5901 my-workspace
 ```
 
@@ -530,25 +542,29 @@ Port tunneling is quite useful when you have started any server-based tool withi
 - `3389`: RDP server.
 - `22`: SSH server.
 
+You can find port information on all the tools in the [supervisor configuration](https://github.com/ml-tooling/ml-workspace/blob/develop/docker-res/config/supervisord.conf).
+
 > 📖 _For more information about port tunneling/forwarding, we recommend [this guide](https://www.everythingcli.org/ssh-tunnelling-for-fun-and-profit-local-vs-remote/)._
 
 #### Copy Data via SCP
 
-SCP allows files and directories to be securely copied to, from, or between different machines via SSH connections. For example, to copy a local file (`./local-file.txt`) into the `/workspace` folder inside the workspace, execute:
+[SCP](https://linux.die.net/man/1/scp) allows files and directories to be securely copied to, from, or between different machines via SSH connections. For example, to copy a local file (`./local-file.txt`) into the `/workspace` folder inside the workspace, execute:
 
-```
+```bash
 scp ./local-file.txt my-workspace:/workspace
 ```
 
 To copy the `/workspace` directory from `my-workspace` to the working directory of the local machine, execute:
 
-```
+```bash
 scp -r local-workspace:/workspace .
 ```
 
 > 📖 _For more information about scp, we recommend [this guide](https://www.garron.me/en/articles/scp.html)._
 
 #### Sync Data via Rsync
+
+[Rsync](https://linux.die.net/man/1/rsync) is a utility for efficiently transferring and synchronizing files between different machines (e.g. via SSH connections) by comparing the modification times and sizes of files.
 
 ```
 rsync -avzP source/ destination
@@ -564,7 +580,7 @@ https://github.com/deajan/osync
 Besides copying and syncing data, an SSH connection can also be used to mount directories from a remote machine into the local filesystem via [SSHFS](https://github.com/libfuse/sshfs). 
 For example, to mount the `/workspace` directory of `my-workspace` into a local path (e.g. `/local/folder/path`), execute:
 
-```
+```bash
 sshfs -o reconnect my-workspace:/workspace /local/folder/path
 ```
 
