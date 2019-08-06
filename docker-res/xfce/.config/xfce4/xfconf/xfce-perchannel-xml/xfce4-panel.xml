@@ -15,6 +15,7 @@
         <value type="int" value="10"/>
         <value type="int" value="3"/>
         <value type="int" value="15"/>
+        <value type="int" value="2"/>
         <value type="int" value="11"/>
         <value type="int" value="4"/>
         <value type="int" value="5"/>
@@ -47,5 +48,6 @@
         <value type="string" value="15633090451.desktop"/>
       </property>
     </property>
+    <property name="plugin-2" type="string" value="systemload"/>
   </property>
 </channel>
