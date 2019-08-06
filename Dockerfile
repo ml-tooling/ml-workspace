@@ -117,10 +117,6 @@ RUN \
         bsdtar \
         zlib1g-dev && \
     # Removed 
-    # lmodern -> too big 
-    # mercurial -> 10MB
-    # msttcorefonts -> license issue
-    # libgnome-keyring* -> not needed
     chmod -R a+rwx /usr/local/bin/ && \
     # configure dynamic linker run-time bindings
     ldconfig && \
@@ -259,7 +255,7 @@ ENV PATH=/opt/node/bin:$PATH
 RUN \
     apt-get update && \
     # libgl1-mesa-dri > 150 MB -> Install jdk-headless version (without gui support)?
-    # TODO Install gradle?
+    # TODO: Install apt-get install -y scala gradle ?
     apt-get install -y --no-install-recommends openjdk-8-jdk maven && \
     # Cleanup
     clean-layer.sh
@@ -331,6 +327,11 @@ RUN \
     clean-layer.sh
 
 # Install Terminal / GDebi (Package Manager) / Glogg (Stream file viewer) & archive tools
+# Discover Tools:
+# https://wiki.ubuntuusers.de/Startseite/
+# https://wiki.ubuntuusers.de/Xfce_empfohlene_Anwendungen/
+# https://goodies.xfce.org/start
+# https://linux.die.net/man/1/
 RUN \
     apt-get update && \
     apt-get install -y --no-install-recommends xfce4-terminal && \
@@ -758,6 +759,36 @@ RUN \
 ### END VSCODE ###
 
 ### INCUBATION ZONE ### 
+
+RUN \
+    apt-get update && \
+    # SSH Tooling
+    apt-get install -y autossh mussh && \
+    # Find files
+    apt-get install -y locate && \
+    # Compression Programs: https://wiki.ubuntuusers.de/Archivmanager/
+    # also install rar/unrar? but both are propriatory
+    apt-get install -y lzop && \
+    # SQLite
+    apt-get install -y sqlite3 && \
+    # XML Utils
+    apt-get install -y xmlstarlet && \
+    # Search text and binary files
+    apt-get install -y yara && \
+    # SVN support
+    apt-get install -y subversion && \
+    # vs support for thunar
+    apt-get install -y thunar-vcs-plugin && \
+    # xfce systemload panel plugin - needs to be activated
+    apt-get install -y xfce4-systemload-plugin && \
+    # Leightweight ftp client that supports sftp, http, ...
+    apt-get install -y gftp && \
+    # New Python Libraries:
+    pip install --no-cache-dir \
+                facets-overview && \
+                # requires newer spacy version: spacy-pytorch-transformers \                 
+    # Cleanup
+    clean-layer.sh
 
 ### END INCUBATION ZONE ###
 

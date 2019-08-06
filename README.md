@@ -52,20 +52,30 @@ The workspace requires **Docker** to be installed on your machine ([Installation
 Deploying a single workspace instance is as simple as:
 
 ```bash
-docker run -d -p 8091:8091 -v "${PWD}:/workspace" --restart always mltooling/ml-workspace:latest
+docker run -p 8091:8091 mltooling/ml-workspace:latest
 ```
 
-Voilà, that was easy! Now, Docker will pull the latest workspace image to your machine. This may take a few minutes, depending on your internet speed. Once the workspace is started, you can access it via: http://localhost:8091. 
+Voilà, that was easy! Now, Docker will pull the latest workspace image to your machine. This may take a few minutes, depending on your internet speed. Once the workspace is started, you can access it via: http://localhost:8091.
 
 > ℹ️ _If started on a remote machine or with a different port, make sure to use the machine's IP/DNS and/or the exposed port._
 
+To deploy a single instance for productive usage, we recommend to apply at least the following options:
+
+```bash
+docker run -d -p 8091:8091 -v "${PWD}:/workspace" --env AUTHENTICATE_VIA_JUPYTER="mytoken" --restart always mltooling/ml-workspace:latest
+```
+
+This command runs the container in background (`-d`), mounts your current working directory into the `/workspace` folder (`-v`), secures the workspace via a provided token (`--env AUTHENTICATE_VIA_JUPYTER`), and keeps the container running even on system restarts (`--restart always`). You can find additional options for docker run [here](https://docs.docker.com/engine/reference/commandline/run/) and workspace configuration options in [the section below](#Configuration).
+
 ### Persist Data
 
-To persist the data, you need to mount a volume into `/workspace`.
+To persist the data, you need to mount a volume into `/workspace` (via docker run option: `-v`).
 
-### Configuration
+The default work directory within the container is `/workspace`, which is also the root directory of the Jupyter instance. The `/workspace` directory is intended to be used for all the important work artifacts. Data within other directories of the server (e.g. `/root`) might get lost at container restarts.
 
-The container can be configured with the following environment variables (`--env`):
+### Configuration Options
+
+The container can be configured with the following environment variables (via docker run option: `--env`):
 
 <table>
     <tr>
@@ -85,12 +95,12 @@ The container can be configured with the following environment variables (`--env
     </tr>
     <tr>
         <td>WORKSPACE_AUTH_USER</td>
-        <td>Basic auth user name. To enable basic auth, both the user and password need to be set.</td>
+        <td>Basic auth user name. To enable basic auth, both the user and password need to be set. We recommend to use the <code>AUTHENTICATE_VIA_JUPYTER</code> for securing the workspace.</td>
         <td></td>
     </tr>
     <tr>
         <td>WORKSPACE_AUTH_PASSWORD</td>
-        <td>Basic auth user password. To enable basic auth, both the user and password need to be set.</td>
+        <td>Basic auth user password. To enable basic auth, both the user and password need to be set. We recommend to use the <code>AUTHENTICATE_VIA_JUPYTER</code> for securing the workspace.</td>
         <td></td>
     </tr>
     <tr>
@@ -109,6 +119,11 @@ The container can be configured with the following environment variables (`--env
         <td>true</td>
     </tr>
     <tr>
+        <td>MAX_NUM_THREADS</td>
+        <td>The number of threads used for computations when using various common libraries (MKL, OPENBLAS, OMP, NUMBA, ...). You can also use <code>auto</code> to let the workspace dynamically determine the number of threads based on available CPU resources. This configuration can be overwritten by the user from within the workspace. Generally, it is good to set it at or below the number of CPUs available to the workspace.</td>
+        <td>auto</td>
+    </tr>
+    <tr>
         <td colspan="3"><b>Jupyter Configuration:</b></td>
     </tr>
     <tr>
@@ -124,24 +139,6 @@ The container can be configured with the following environment variables (`--env
     <tr>
         <td>NOTEBOOK_ARGS</td>
         <td>Add and overwrite Jupyter configuration options via command line args. Refer to <a href="https://jupyter-notebook.readthedocs.io/en/stable/config.html">this overview</a> for all options.</td>
-        <td></td>
-    </tr>
-    <tr>
-        <td colspan="3"><b>Hardware Configuration:</b></td>
-    </tr>
-    <tr>
-        <td>MAX_NUM_THREADS</td>
-        <td>The number of threads used for computations when using various common libraries (MKL, OPENBLAS, OMP, NUMBA, ...). You can also use <code>auto</code> to let the workspace dynamically determine the number of threads based on available CPU resources. This configuration can be overwritten by the user from within the workspace. Generally, it is good to set it at or below the number of CPUs available to the workspace.</td>
-        <td>auto</td>
-    </tr>
-    <tr>
-        <td>NVIDIA_VISIBLE_DEVICES</td>
-        <td>(GPU only) Controls which GPUs will be accessible inside the workspace. By default, all GPUs from the host are accessible within the workspace. You can either use <code>all</code>, <code>none</code>, or specify a comma-separated list of device IDs (e.g. <code>0,1</code>). You can find out the list of available device IDs by running <code>nvidia-smi</code> on the host machine.</td>
-        <td></td>
-    </tr>
-    <tr>
-        <td>CUDA_VISIBLE_DEVICES</td>
-        <td>(GPU only) Controls which GPUs CUDA applications running inside the workspace will see. By default, all GPUs that the workspace has access to will be visible. To restrict applications, provide a comma-separated list of internal device IDs (e.g. <code>0,2</code>) based on the available devices within the workspace (run <code>nvidia-smi</code>). In comparison to <code>NVIDIA_VISIBLE_DEVICES</code>, the workspace user will still able to access other GPUs by overwriting this configuration from within the workspace.</td>
         <td></td>
     </tr>
     <tr>
@@ -164,15 +161,191 @@ The container can be configured with the following environment variables (`--env
     </tr>
 </table>
 
-_WIP_ Add Examples
+### Enable Authentication
 
-### Run multiple instances
+We strongly recommend enabling authentication via one of the following two options. For both options, the user will be required to authenticate for accessing any of the preinstalled tools.
 
-_WIP_
+#### Token-based Authentication via Jupyter (recommended)
 
-### Run GPU instance
+Activate the token-based authentication based on the authentication implementation of Jupyter via the `AUTHENTICATE_VIA_JUPYTER` variable:
 
-_WIP_
+```bash
+docker run -p 8091:8091 --env AUTHENTICATE_VIA_JUPYTER="mytoken" mltooling/ml-workspace:latest
+```
+
+You can also use `<generated>` to let Jupyter generate a random token that is printed out on the container logs. A value of `true` will not set any token but activate that every request to any tool in the workspace will be checked with the Jupyter instance if the user is authenticated. This is used for tools like JupyterHub, which configures its own way of authentication.
+
+#### Basic Authentication via Nginx
+
+Activate the basic authentication via the `WORKSPACE_AUTH_USER` and `WORKSPACE_AUTH_PASSWORD` variable:
+
+```bash
+docker run -p 8091:8091 --env WORKSPACE_AUTH_USER="user" --env WORKSPACE_AUTH_PASSWORD="pwd" mltooling/ml-workspace:latest
+```
+
+The basic authentication is configured via the nginx proxy and might be more performant compared to the other option since with `AUTHENTICATE_VIA_JUPYTER` every request to any tool in the workspace will check via the Jupyter instance if the user (based on the request cookies) is authenticated.
+
+### Enable SSL/HTTPS
+
+We recommend enabling SSL so that the workspace is accessible via HTTPS (encrypted communication). SSL encryption can be activated via the `WORKSPACE_SSL_ENABLED` variable. When set to `true`, either the `cert.crt` and `cert.key` file must be mounted to `/resources/ssl` or, if the certificate files do not exist, the container generates self-signed certificates. For example, if the `/path/with/certificate/files` on the local system contains a valid certificate for the host domain (`cert.crt` and `cert.key` file), it can be used from the workspace as shown below:
+
+```bash
+docker run -p 8091:8091 --env WORKSPACE_SSL_ENABLED="true" -v /path/with/certificate/files:/resources/ssl:ro mltooling/ml-workspace:latest
+```
+
+### Limit Memory & CPU
+
+By default, the workspace container has no resource constraints and can use as much of a given resource as the host’s kernel scheduler allows. Docker provides ways to control how much memory, or CPU a container can use, by setting runtime configuration flags of the docker run command. For example, the following command restricts the workspace to only use a maximum of 8 CPUs and 16 GB of memory:
+
+```bash
+docker run -p 8091:8091 --cpus=8 --memory=16g mltooling/ml-workspace:latest
+```
+
+> 📖 _For more options and documentation on resource constraints, please refer to the [official docker guide](https://docs.docker.com/config/containers/resource_constraints/)._
+
+### Proxy
+
+If a proxy is required, you can pass the proxy configuration via the `http_proxy` and `no_proxy` environment variables.
+
+### Workspace Flavors
+
+In addition to the main workspace image (`mltooling/ml-workspace`), we provide other image flavors that extend the features or minimize the image size to support a variety of use cases.
+
+#### Minimal Flavor
+
+<a href="https://hub.docker.com/r/mltooling/ml-workspace-minimal" title="Docker Image Version"><img src="https://images.microbadger.com/badges/version/mltooling/ml-workspace-minimal.svg"></a>
+<a href="https://hub.docker.com/r/mltooling/ml-workspace-minimal" title="Docker Image Metadata"><img src="https://images.microbadger.com/badges/image/mltooling/ml-workspace-minimal.svg"></a>
+<a href="https://hub.docker.com/r/mltooling/ml-workspace-minimal" title="Docker Pulls"><img src="https://img.shields.io/docker/pulls/mltooling/ml-workspace-minimal.svg"></a>
+<a href="https://hub.docker.com/r/mltooling/ml-workspace-minimal" title="Docker Stars"><img src="https://img.shields.io/docker/stars/mltooling/ml-workspace-minimal"></a>
+
+The minimal flavor (`mltooling/ml-workspace-minimal`) is our smallest image that contains most of the tools and features described in the [features section](#features) without most of the python libraries that are preinstalled in our main image. Any Python library or excluded tool can be installed manually during runtime by the user.
+
+```bash
+docker run -p 8091:8091 mltooling/ml-workspace-minimal:latest
+```
+
+#### Light Flavor
+
+<a href="https://hub.docker.com/r/mltooling/ml-workspace-light" title="Docker Image Version"><img src="https://images.microbadger.com/badges/version/mltooling/ml-workspace-light.svg"></a>
+<a href="https://hub.docker.com/r/mltooling/ml-workspace-light" title="Docker Image Metadata"><img src="https://images.microbadger.com/badges/image/mltooling/ml-workspace-light.svg"></a>
+<a href="https://hub.docker.com/r/mltooling/ml-workspace-light" title="Docker Pulls"><img src="https://img.shields.io/docker/pulls/mltooling/ml-workspace-light.svg"></a>
+<a href="https://hub.docker.com/r/mltooling/ml-workspace-light" title="Docker Stars"><img src="https://img.shields.io/docker/stars/mltooling/ml-workspace-light"></a>
+
+The light flavor (`mltooling/ml-workspace-light`) has all of the tools and features described in the [features section](#features), but only a small collection of popular python machine learning libraries preinstalled. Any Python library can be installed manually during runtime.
+
+```bash
+docker run -p 8091:8091 mltooling/ml-workspace-light:latest
+```
+
+#### GPU Flavor
+
+<a href="https://hub.docker.com/r/mltooling/ml-workspace-gpu" title="Docker Image Version"><img src="https://images.microbadger.com/badges/version/mltooling/ml-workspace-gpu.svg"></a>
+<a href="https://hub.docker.com/r/mltooling/ml-workspace-gpu" title="Docker Image Metadata"><img src="https://images.microbadger.com/badges/image/mltooling/ml-workspace-gpu.svg"></a>
+<a href="https://hub.docker.com/r/mltooling/ml-workspace-gpu" title="Docker Pulls"><img src="https://img.shields.io/docker/pulls/mltooling/ml-workspace-gpu.svg"></a>
+<a href="https://hub.docker.com/r/mltooling/ml-workspace-gpu" title="Docker Stars"><img src="https://img.shields.io/docker/stars/mltooling/ml-workspace-gpu"></a>
+
+The GPU flavor (`mltooling/ml-workspace-gpu`) is based on our main workspace image and extends it with CUDA 10 and GPU-ready versions of various machine learning libraries (e.g. tensorflow, pytorch, cntk, jax). This GPU image has the following additional requirements for the system:
+
+- Nvidia Drivers for the GPUs. Drivers need to be CUDA 10 compatible, version `>= 410.48` ([📖 Instructions](https://github.com/NVIDIA/nvidia-docker/wiki/Frequently-Asked-Questions#how-do-i-install-the-nvidia-driver)).
+- (Docker >= 19.03) Nvidia Container Toolkit ([📖 Instructions](https://github.com/NVIDIA/nvidia-docker/wiki/Installation-(Native-GPU-Support))).
+
+```bash
+docker run -p 8091:8091 --gpus all mltooling/ml-workspace-gpu:latest
+```
+
+- (Docker < 19.03) Nvidia Docker 2.0 ([📖 Instructions](https://github.com/NVIDIA/nvidia-docker/wiki/Installation-(version-2.0))).
+
+```bash
+docker run -p 8091:8091 --runtime nvidia --env NVIDIA_VISIBLE_DEVICES="all" mltooling/ml-workspace-gpu:latest
+```
+
+The GPU flavor also comes with a few additional configuration options as explained below:
+
+<table>
+    <tr>
+        <th>Variable</th>
+        <th>Description</th>
+        <th>Default</th>
+    </tr>
+    <tr>
+        <td>NVIDIA_VISIBLE_DEVICES</td>
+        <td>Controls which GPUs will be accessible inside the workspace. By default, all GPUs from the host are accessible within the workspace. You can either use <code>all</code>, <code>none</code>, or specify a comma-separated list of device IDs (e.g. <code>0,1</code>). You can find out the list of available device IDs by running <code>nvidia-smi</code> on the host machine.</td>
+        <td>all</td>
+    </tr>
+    <tr>
+        <td>CUDA_VISIBLE_DEVICES</td>
+        <td>Controls which GPUs CUDA applications running inside the workspace will see. By default, all GPUs that the workspace has access to will be visible. To restrict applications, provide a comma-separated list of internal device IDs (e.g. <code>0,2</code>) based on the available devices within the workspace (run <code>nvidia-smi</code>). In comparison to <code>NVIDIA_VISIBLE_DEVICES</code>, the workspace user will still able to access other GPUs by overwriting this configuration from within the workspace.</td>
+        <td></td>
+    </tr>
+    <tr>
+        <td>TF_FORCE_GPU_ALLOW_GROWTH</td>
+        <td>By default, the majority of GPU memory will be allocated by the first execution of a TensorFlow graph. While this behavior can be desirable for production pipelines, it is less desirable for interactive use. Use <code>true</code> to enable dynamic GPU Memory allocation or <code>false</code> to instruct TensorFlow to allocate all memory at execution.</td>
+        <td>true</td>
+    </tr>
+</table>
+
+### Multi-user setup
+
+The workspace is designed as a single user development environment. For a multi-user setup, we recommend to deploy [🧰 ML Hub](https://github.com/ml-tooling/ml-hub). ML Hub is based on JupyterHub and spawns, manages, and proxies multiple workspace instances. It is easy to set up on a single server (via Docker) or a cluster (via Kubernetes) and supports a variety of usage scenarios & authentication providers. You can try out ML Hub  via:
+
+```bash
+docker run -p 8091:8091 -v /var/run/docker.sock:/var/run/docker.sock mltooling/ml-hub:latest
+```
+
+For more information and documentation about ML Hub, please take a look at the [Github Site](https://github.com/ml-tooling/ml-hub).
+
+### Run as a job
+
+> ℹ️ _A job is defined as any computational task that runs for a certain time to completion, such as a model training or a data pipeline._
+
+The workspace image can also be used as a job to execute arbitrary Python code without starting any of the preinstalled tools. This provides a seamless way to productize your ML projects since the code that has been developed interactively within the workspace will have the same environment and configuration when run as a job via the same workspace image. To run Python code as a job, you need to provide a path or URL to a code directory (or script) via `EXECUTE_CODE`. The code can be either already mounted into the workspace container or downloaded from a version control system (e.g., git or svn) as described in the following sections. The selected code path needs to be python executable. In case the selected code is a directory (e.g., whenever you download the code from a VCS) you need to put a `__main__.py` file at the root of this directory. The `__main__.py` needs to contain the code that starts your job.
+
+#### Run code from version control system
+
+You can execute code directly from Git, Mercurial, Subversion, or Bazaar by using the pip-vcs format as described in [this guide](https://pip.pypa.io/en/stable/reference/pip_install/#vcs-support). For example, to execute code from a [subdirectory](https://github.com/ml-tooling/ml-workspace/tree/develop/docker-res/tests/ml-job) of a git repository, just run:
+
+```bash
+docker run --env EXECUTE_CODE="git+https://github.com/ml-tooling/ml-workspace.git#subdirectory=docker-res/tests/ml-job" mltooling/ml-workspace:latest
+```
+
+> ℹ️ _For additional information on how to specify branches, commits, or tags please refer to [this guide](https://pip.pypa.io/en/stable/reference/pip_install/#vcs-support)._
+
+#### Run code mounted into workspace
+
+In the following example, we mount and execute the current working directory (expected to contain our code) into the `/workspace/ml-job/` directory of the workspace:
+
+```bash
+docker run -v "${PWD}:/workspace/ml-job/" --env EXECUTE_CODE="/workspace/ml-job/" mltooling/ml-workspace:latest
+```
+
+#### Install Dependencies
+
+In the case that the preinstalled workspace libraries are not compatible with your code, you can install or change dependencies by just adding one or multiple of the following files to your code directory:
+
+- `requirements.txt`: [pip requirements format](https://pip.pypa.io/en/stable/user_guide/#requirements-files) for pip-installable dependencies.
+- `environment.yml`: [conda environment file](https://docs.conda.io/projects/conda/en/latest/user-guide/tasks/manage-environments.html?highlight=environment.yml#creating-an-environment-file-manually) to create a separate Python environment.
+- `setup.sh`: A shell script executed via `/bin/bash`.
+
+The execution order is 1. `environment.yml` -> 2. `setup.sh` -> 3. `requirements.txt`
+
+#### Test job in interactive mode
+
+You can test your job code within the workspace (started normally with interactive tools) by executing the following python script:
+
+```bash
+python /resources/scripts/execute_code.py /path/to/your/job
+```
+
+#### Build a custom job image
+
+It is also possible to embed your code directly into a custom job image, as shown below:
+
+```dockerfile
+FROM mltooling/ml-workspace:latest
+
+COPY /mljob /workspace/mljob
+ENV EXECUTE_CODE=/workspace/mljob
+```
 
 ## Support
 
@@ -195,10 +368,12 @@ valuable if it's shared publicly so that more people can benefit from it.
   <a href="#desktop-gui">Desktop GUI</a> •
   <a href="#visual-studio-code">VS Code</a> •
   <a href="#git-integration">Git Integration</a> •
+  <a href="#file-sharing">File Sharing</a> •
   <a href="#jupyterlab">JupyterLab</a> •
   <a href="#hardware-monitoring">Hardware Monitoring</a> •
   <a href="#tensorboard">Tensorboard</a> •
-  <a href="#ssh-access">SSH Access</a>
+  <a href="#ssh-access">SSH Access</a> •
+  <a href="#remote-development">Remote Development</a>
 </p>
 
 The workspace is equipped with a selection of best-in-class open-source development tools to help with the machine learning workflow. Many of these tools can be started from the `Open Tool` menu from Jupyter (the main application of the workspace):
@@ -269,9 +444,9 @@ To commit and push a single notebook to a remote Git repository, we recommend to
 
 For more advanced Git operations we recommend to use [ungit](https://github.com/FredrikNoren/ungit). With ungit, you can do most of the common git actions such as push, pull, merge, branch, tag, checkout, and many more.
 
-#### Sharing, Diffing, and Merging Notebooks
+#### Diffing and Merging Notebooks
 
-Jupyter notebooks are great, but they often are huge files, with a very specific JSON file format. To enable seamless sharing, diffing, and merging via Git this workspace is pre-installed with [nbdime](https://github.com/jupyter/nbdime). Nbdime understands the structure of notebook documents and, therefore, automatically makes intelligent decisions when diffing and merging notebooks. In the case you have merge conflicts, nbdime will make sure that the notebook is still readable by Jupyter, as shown below:
+Jupyter notebooks are great, but they often are huge files, with a very specific JSON file format. To enable seamless diffing and merging via Git this workspace is pre-installed with [nbdime](https://github.com/jupyter/nbdime). Nbdime understands the structure of notebook documents and, therefore, automatically makes intelligent decisions when diffing and merging notebooks. In the case you have merge conflicts, nbdime will make sure that the notebook is still readable by Jupyter, as shown below:
 
 <img style="width: 100%" src="./docs/images/feature-git-merging.png"/>
 
@@ -280,6 +455,18 @@ Furthermore, the workspace comes pre-installed with [jupytext](https://github.co
 <img style="width: 100%" src="./docs/images/feature-git-jupytext.png"/>
 
 In combination with Git, jupytext enables a clear diff history and easy merging of version conflicts. With both of those tools, collaborating on Jupyter notebooks with Git becomes straightforward.
+
+### File Sharing
+
+The workspace has a feature to share any file or folder with anyone via a token-protected link. To share data via link, select any file or folder from the Jupyter directory tree and click on the Share button as shown in the following screenshot:
+
+TODO: Add screenshot
+
+This will generate a unique link protected via a token that gives anyone with the link access to view and download the selected data via the [Filebrowser](https://github.com/filebrowser/filebrowser) UI:
+
+TODO: Add screenshot
+
+To deactivate or manage (e.g., provide edit permissions) shared links, open the Filebrowser via `Open Tool -> Filebrowser` and select `Settings->User Management`.
 
 ### JupyterLab
 
@@ -326,7 +513,7 @@ SSH provides a powerful set of features that enables you to be more productive w
 
 > ℹ️ _The setup script only runs on Mac and Linux, Windows is currently not supported._
 
-Just run the setup script on the machine from where you want to setup a connection to the workspace and input a name for the connection (e.g. `my-workspace`). You might also get asked for some additional input during the process. Once the connection is successfully setup and tested, you can securely connect to the workspace by simply executing `ssh my-workspace`. 
+Just run the setup script on the machine from where you want to setup a connection to the workspace and input a name for the connection (e.g. `my-workspace`). You might also get asked for some additional input during the process. Once the connection is successfully setup and tested, you can securely connect to the workspace by simply executing `ssh my-workspace`.
 
 Besides the ability to execute commands on a remote machine, SSH also provides a variety of other features that can improve your development workflow as described in the following sections.
 
@@ -334,7 +521,7 @@ Besides the ability to execute commands on a remote machine, SSH also provides a
 
 An SSH connection can be used for tunneling application ports from the remote machine to the local machine, or vice versa. For example, you can expose the workspace internal port `5901` (VNC Server) to the local machine on port `5000` by executing:
 
-```
+```bash
 ssh -nNT -L 5000:localhost:5901 my-workspace
 ```
 
@@ -342,7 +529,7 @@ ssh -nNT -L 5000:localhost:5901 my-workspace
 
 After the tunnel is established, you can use your favorite VNC viewer on your local machine and connect to `vnc://localhost:5000` (default password: `vncpassword`). To make the tunnel connection more resistant and reliable, we recommend to use [autossh](https://www.harding.motd.ca/autossh/) to automatically restart SSH tunnels in the case that the connection dies:
 
-```
+```bash
 autossh -M 0 -f -nNT -L 5000:localhost:5901 my-workspace
 ```
 
@@ -355,25 +542,29 @@ Port tunneling is quite useful when you have started any server-based tool withi
 - `3389`: RDP server.
 - `22`: SSH server.
 
+You can find port information on all the tools in the [supervisor configuration](https://github.com/ml-tooling/ml-workspace/blob/develop/docker-res/config/supervisord.conf).
+
 > 📖 _For more information about port tunneling/forwarding, we recommend [this guide](https://www.everythingcli.org/ssh-tunnelling-for-fun-and-profit-local-vs-remote/)._
 
 #### Copy Data via SCP
 
-SCP allows files and directories to be securely copied to, from, or between different machines via SSH connections. For example, to copy a local file (`./local-file.txt`) into the `/workspace` folder inside the workspace, execute:
+[SCP](https://linux.die.net/man/1/scp) allows files and directories to be securely copied to, from, or between different machines via SSH connections. For example, to copy a local file (`./local-file.txt`) into the `/workspace` folder inside the workspace, execute:
 
-```
+```bash
 scp ./local-file.txt my-workspace:/workspace
 ```
 
 To copy the `/workspace` directory from `my-workspace` to the working directory of the local machine, execute:
 
-```
+```bash
 scp -r local-workspace:/workspace .
 ```
 
 > 📖 _For more information about scp, we recommend [this guide](https://www.garron.me/en/articles/scp.html)._
 
 #### Sync Data via Rsync
+
+[Rsync](https://linux.die.net/man/1/rsync) is a utility for efficiently transferring and synchronizing files between different machines (e.g. via SSH connections) by comparing the modification times and sizes of files.
 
 ```
 rsync -avzP source/ destination
@@ -389,7 +580,7 @@ https://github.com/deajan/osync
 Besides copying and syncing data, an SSH connection can also be used to mount directories from a remote machine into the local filesystem via [SSHFS](https://github.com/libfuse/sshfs). 
 For example, to mount the `/workspace` directory of `my-workspace` into a local path (e.g. `/local/folder/path`), execute:
 
-```
+```bash
 sshfs -o reconnect my-workspace:/workspace /local/folder/path
 ```
 
@@ -431,10 +622,6 @@ The workspace is pre-installed with many popular runtimes, data science librarie
 The full list of installed tools can be found within the [Dockerfile](https://github.com/ml-tooling/ml-workspace/blob/master/Dockerfile).
 
 > ℹ️ _**An R-Runtime** installation script is provided in the `Tools` folder on the desktop of the VNC GUI._
-
-### GPU Support
-
-_WIP_
 
 ## Contribution
 
