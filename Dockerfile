@@ -785,7 +785,8 @@ RUN \
     apt-get install -y gftp && \
     # New Python Libraries:
     pip install --no-cache-dir \
-                facets-overview && \
+                facets-overview \
+                pytorch-lightning && \
                 # requires newer spacy version: spacy-pytorch-transformers \                 
     # Cleanup
     clean-layer.sh
@@ -807,7 +808,7 @@ COPY docker-res/scripts $RESOURCES_PATH/scripts
 COPY docker-res/branding $RESOURCES_PATH/branding
 
 # Copy some configuration files
-COPY docker-res/config/ssh_config $HOME/.ssh/config
+COPY docker-res/config/ssh_config /etc/ssh/ssh_config
 COPY docker-res/config/sshd_config /etc/ssh/sshd_config
 COPY docker-res/nginx/nginx.conf /etc/nginx/nginx.conf
 COPY docker-res/config/xrdp.ini /etc/xrdp/xrdp.ini
@@ -896,6 +897,7 @@ COPY docker-res/tutorials $RESOURCES_PATH/tutorials
 
 # Various configurations
 RUN \
+    touch $HOME/.ssh/config && \
     # clear chome init file - not needed since we load settings manually
     chmod -R a+rwx $WORKSPACE_HOME && \
     chmod -R a+rwx $RESOURCES_PATH && \
