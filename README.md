@@ -65,7 +65,7 @@ To deploy a single instance for productive usage, we recommend to apply at least
 docker run -d -p 8091:8091 -v "${PWD}:/workspace" --env AUTHENTICATE_VIA_JUPYTER="mytoken" --restart always mltooling/ml-workspace:latest
 ```
 
-This command runs the container in background (`-d`), mounts your current working directory into the `/workspace` folder (`-v`), secures the workspace via a provided token (`--env AUTHENTICATE_VIA_JUPYTER`), and keeps the container running even on system restarts (`--restart always`). You can find additional options for docker run [here](https://docs.docker.com/engine/reference/commandline/run/) and workspace configuration options in [the section below](#Configuration).
+This command runs the container in background (`-d`), mounts your current working directory into the `/workspace` folder (`-v`), secures the workspace via a provided token (`--env AUTHENTICATE_VIA_JUPYTER`),  and keeps the container running even on system restarts (`--restart always`). You can find additional options for docker run [here](https://docs.docker.com/engine/reference/commandline/run/) and workspace configuration options in [the section below](#Configuration).
 
 ### Persist Data
 
@@ -195,10 +195,10 @@ docker run -p 8091:8091 --env WORKSPACE_SSL_ENABLED="true" -v /path/with/certifi
 
 ### Limit Memory & CPU
 
-By default, the workspace container has no resource constraints and can use as much of a given resource as the host’s kernel scheduler allows. Docker provides ways to control how much memory, or CPU a container can use, by setting runtime configuration flags of the docker run command. For example, the following command restricts the workspace to only use a maximum of 8 CPUs and 16 GB of memory:
+By default, the workspace container has no resource constraints and can use as much of a given resource as the host’s kernel scheduler allows. Docker provides ways to control how much memory, or CPU a container can use, by setting runtime configuration flags of the docker run command. For example, the following command restricts the workspace to only use a maximum of 8 CPUs, 16 GB of memory, and 1 GB of shared memory (required for some ML frameworks):
 
 ```bash
-docker run -p 8091:8091 --cpus=8 --memory=16g mltooling/ml-workspace:latest
+docker run -p 8091:8091 --cpus=8 --memory=16g --shm-size 1G mltooling/ml-workspace:latest
 ```
 
 > 📖 _For more options and documentation on resource constraints, please refer to the [official docker guide](https://docs.docker.com/config/containers/resource_constraints/)._
