@@ -645,7 +645,8 @@ RUN \
     # If minimal flavor - do not install jupyterlab extensions
     if [ "$WORKSPACE_FLAVOR" = "minimal" ]; then \
         # Cleanup
-        # Remove build folder -> is not needed
+        jupyter lab clean && \
+        jlpm cache clean && \
         rm -rf $CONDA_DIR/share/jupyter/lab/staging && \
         clean-layer.sh && \
         exit 0 ; \
@@ -663,7 +664,8 @@ RUN \
     # Do not install any other jupyterlab extensions
     if [ "$WORKSPACE_FLAVOR" = "light" ]; then \
         # Cleanup
-        # Remove build folder -> is not needed
+        jupyter lab clean && \
+        jlpm cache clean && \
         rm -rf $CONDA_DIR/share/jupyter/lab/staging && \
         clean-layer.sh && \
         exit 0 ; \
@@ -678,13 +680,18 @@ RUN \
     # Install qgrid
     jupyter labextension install qgrid && \
     # Install jupyterlab_iframe - https://github.com/timkpaine/jupyterlab_iframe
-    pip install jupyterlab_iframe&& \
+    pip install jupyterlab_iframe && \
     jupyter labextension install jupyterlab_iframe && \
     jupyter serverextension enable --py jupyterlab_iframe && \
     # Install jupyterlab_templates - https://github.com/timkpaine/jupyterlab_templates
     pip install jupyterlab_templates && \
     jupyter labextension install jupyterlab_templates && \
     jupyter serverextension enable --py jupyterlab_templates && \
+    # Install voyagar data grid
+    jupyter labextension install jupyterlab_voyager && \
+    # Install ipysheet
+    pip install --no-cache-dir ipysheet && \
+    jupyter labextension install ipysheet && \
     # Install jupyterlab sql: https://github.com/pbugnion/jupyterlab-sql
     pip install jupyterlab_sql && \
     jupyter serverextension enable jupyterlab_sql --py --sys-prefix && \
@@ -697,14 +704,19 @@ RUN \
     jupyter serverextension enable --py jupyterlab_code_formatter && \
     # Install go-to-definition extension 
     jupyter labextension install @krassowski/jupyterlab_go_to_definition && \
+    # Activate ipygrid in jupterlab
+    jupyter labextension install ipyaggrid && \
+    # Deprecation and validations:
     # Install jupyterlab-data-explorer: https://github.com/jupyterlab/jupyterlab-data-explorer
     # alpha version jupyter labextension install @jupyterlab/dataregistry-extension && \
     # Install jupyterlab system monitor: https://github.com/jtpio/jupyterlab-system-monitor
     # DO not install for now jupyter labextension install jupyterlab-topbar-extension jupyterlab-system-monitor && \
-    # Activate ipygrid in jupterlab
-    # Does not work with newest version: jupyter labextension install ipyaggrid && \
+    # Too big dependency: https://github.com/InsightSoftwareConsortium/itkwidgets
     # Cleanup
-    # Remove build folder -> is not needed
+    # Clean jupyter lab cache: https://github.com/jupyterlab/jupyterlab/issues/4930
+    jupyter lab clean && \
+    jlpm cache clean && \
+    # Remove build folder -> should be remove by lab clean as well?
     rm -rf $CONDA_DIR/share/jupyter/lab/staging && \
     clean-layer.sh
 
@@ -729,28 +741,28 @@ RUN \
     cd $RESOURCES_PATH && \
     mkdir -p $HOME/.vscode/extensions/ && \
     # Install python extension
-    wget --quiet https://github.com/microsoft/vscode-python/releases/download/2019.6.24221/ms-python-release.vsix && \
+    wget --quiet https://github.com/microsoft/vscode-python/releases/download/2019.8.30787/ms-python-release.vsix && \
     bsdtar -xf ms-python-release.vsix extension && \
     rm ms-python-release.vsix && \
-    mv extension $HOME/.vscode/extensions/ms-python.python-2019.6.24221 && \
+    mv extension $HOME/.vscode/extensions/ms-python.python-2019.8.30787 && \
     # Install remote development extension
     # https://marketplace.visualstudio.com/items?itemName=ms-vscode-remote.remote-ssh
-    wget --quiet https://marketplace.visualstudio.com/_apis/public/gallery/publishers/ms-vscode-remote/vsextensions/remote-ssh/0.44.2/vspackage -O ms-vscode-remote.remote-ssh.vsix && \
+    wget --quiet https://marketplace.visualstudio.com/_apis/public/gallery/publishers/ms-vscode-remote/vsextensions/remote-ssh/0.45.5/vspackage -O ms-vscode-remote.remote-ssh.vsix && \
     bsdtar -xf ms-vscode-remote.remote-ssh.vsix extension && \
     rm ms-vscode-remote.remote-ssh.vsix && \
-    mv extension $HOME/.vscode/extensions/ms-vscode-remote.remote-ssh-0.44.2 && \
+    mv extension $HOME/.vscode/extensions/ms-vscode-remote.remote-ssh-0.45.5 && \
     # Install remote development ssh - editing configuration files
     # https://marketplace.visualstudio.com/items?itemName=ms-vscode-remote.remote-ssh-edit
-    wget --quiet https://marketplace.visualstudio.com/_apis/public/gallery/publishers/ms-vscode-remote/vsextensions/remote-ssh-edit/0.44.2/vspackage -O ms-vscode-remote.remote-ssh-edit.vsix && \
+    wget --quiet https://marketplace.visualstudio.com/_apis/public/gallery/publishers/ms-vscode-remote/vsextensions/remote-ssh-edit/0.45.5/vspackage -O ms-vscode-remote.remote-ssh-edit.vsix && \
     bsdtar -xf ms-vscode-remote.remote-ssh-edit.vsix extension && \
     rm ms-vscode-remote.remote-ssh-edit.vsix && \
-    mv extension $HOME/.vscode/extensions/ms-vscode-remote.remote-ssh-edit-0.44.2 && \
+    mv extension $HOME/.vscode/extensions/ms-vscode-remote.remote-ssh-edit-0.45.5 && \
     # Install remote development ssh - explorer
     # https://marketplace.visualstudio.com/items?itemName=ms-vscode-remote.remote-ssh-explorer
-    wget --quiet https://marketplace.visualstudio.com/_apis/public/gallery/publishers/ms-vscode-remote/vsextensions/remote-ssh-explorer/0.44.2/vspackage -O ms-vscode-remote.remote-ssh-explorer.vsix && \
+    wget --quiet https://marketplace.visualstudio.com/_apis/public/gallery/publishers/ms-vscode-remote/vsextensions/remote-ssh-explorer/0.45.5/vspackage -O ms-vscode-remote.remote-ssh-explorer.vsix && \
     bsdtar -xf ms-vscode-remote.remote-ssh-explorer.vsix extension && \
     rm ms-vscode-remote.remote-ssh-explorer.vsix && \
-    mv extension $HOME/.vscode/extensions/ms-vscode-remote.remote-ssh-explorer-0.44.2 && \
+    mv extension $HOME/.vscode/extensions/ms-vscode-remote.remote-ssh-explorer-0.45.5 && \
     # Fix permissions
     fix-permissions.sh $HOME/.vscode/extensions/ && \
     # Cleanup
@@ -783,11 +795,28 @@ RUN \
     apt-get install -y xfce4-systemload-plugin && \
     # Leightweight ftp client that supports sftp, http, ...
     apt-get install -y gftp && \
+    # Minimalistic C client for Redis
+    apt-get install -y libhiredis-dev && \
+    # Cleanup
+    clean-layer.sh
+
+RUN \
     # New Python Libraries:
     pip install --no-cache-dir \
                 facets-overview \
+                virtualenv \
+                handout \
+                filedepot \
+                blosc \
+                graphene \
+                knockknock \
+                pytorch-transformers \
                 pytorch-lightning && \
-                # requires newer spacy version: spacy-pytorch-transformers \                 
+                # requires newer spacy version: spacy-pytorch-transformers \     
+                # too many/specific dependencies: pip install tensorflow-data-validation
+    # Initialize conda for command line activation
+    conda init bash && \
+    conda init zsh && \
     # Cleanup
     clean-layer.sh
 
