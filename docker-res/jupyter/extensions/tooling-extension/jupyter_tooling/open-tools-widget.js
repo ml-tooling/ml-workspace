@@ -53,8 +53,8 @@ define(['base/js/namespace', 'jquery', 'base/js/dialog', 'base/js/utils', 'requi
             "description": "Browse and manage workspace files"
         },
         {
-            "id": "open-tools-button",
-            "name": "Open Port",
+            "id": "access-port-button",
+            "name": "Access Port",
             "url_path": "",
             "description": "Access any workspace internal port"
         },
@@ -71,7 +71,7 @@ define(['base/js/namespace', 'jquery', 'base/js/dialog', 'base/js/utils', 'requi
     var components = require('./tooling-shared-components');
     var components = new sharedComponents();
 
-    function openPortDialog() {
+    function accessPortDialog() {
         var div = $('<div/>');
         var form = $('<form/>');
         div.append('<label style="width: 50px">Port: </label><input type="number" id="port-input" style="width: 200px" min="1" max="65535"><br>')
@@ -136,7 +136,7 @@ define(['base/js/namespace', 'jquery', 'base/js/dialog', 'base/js/utils', 'requi
             });
 
             // open a workspace internal port via subpath - through nginx proxy
-            $('#open-tools-button').click(function () {
+            $('#access-port-button').click(function () {
                 // Hotkeys are disabled here so the user can enter a commit message without unwanted side effects
                 components.enableKeyboardManager(false);
                 // Disable keyboard manager after 1 sec, otherwise its not always diasabled
@@ -145,7 +145,7 @@ define(['base/js/namespace', 'jquery', 'base/js/dialog', 'base/js/utils', 'requi
                 }, 1000)
 
                 dialog.modal({
-                    body: openPortDialog(),
+                    body: accessPortDialog(),
                     title: 'Access a workspace internal port',
                     keyboard_manager: Jupyter.keyboard_manager,
                     sanitize: false,
@@ -155,7 +155,7 @@ define(['base/js/namespace', 'jquery', 'base/js/dialog', 'base/js/utils', 'requi
                                 components.enableKeyboardManager(true);
                             }
                         },
-                        'Open': {
+                        'Access': {
                             class: "btn-primary",
                             click: function () {
                                 components.enableKeyboardManager(true);
