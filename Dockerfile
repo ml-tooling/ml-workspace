@@ -195,6 +195,7 @@ RUN wget --quiet https://repo.anaconda.com/miniconda/Miniconda3-${CONDA_VERSION}
     rm ~/miniconda.sh && \
     # Update conda
     $CONDA_DIR/bin/conda update -n base -c defaults conda && \
+    # TODO -y?
     $CONDA_DIR/bin/conda install conda-build && \
     # Add conda forge - Append so that conda forge has lower priority than the main channel
     $CONDA_DIR/bin/conda config --system --append channels conda-forge && \
@@ -801,6 +802,9 @@ RUN \
     clean-layer.sh
 
 RUN \
+    apt-get update && \
+    # Install 
+    apt-get install -y --no-install-recommends unixodbc unixodbc-dev && \
     # New Python Libraries:
     pip install --no-cache-dir \
                 facets-overview \
@@ -810,14 +814,17 @@ RUN \
                 blosc \
                 graphene \
                 knockknock \
+                pyodbc \
                 pytorch-transformers \
-                pytorch-lightning && \
+                pytorch-lightning \
+                ipyleaflet \
+                # size: 7MB?
+                jupyterthemes && \
                 # requires newer spacy version: spacy-pytorch-transformers \     
                 # too many/specific dependencies: pip install tensorflow-data-validation
-    # Initialize conda for command line activation
-    conda init bash && \
-    conda init zsh && \
+    jupyter labextension install jupyter-leaflet && \
     # Cleanup
+    jupyter lab clean && \
     clean-layer.sh
 
 ### END INCUBATION ZONE ###
@@ -892,6 +899,12 @@ RUN \
     git config --global http.sslVerify false && \
     # Use store or credentialstore instead? timout == 365 days validity
     git config --global credential.helper 'cache --timeout=31540000'
+
+# Configure conda
+RUN \
+    # Initialize conda for command line activation
+    conda init bash && \
+    conda init zsh
 
 # Configure Matplotlib
 RUN \
