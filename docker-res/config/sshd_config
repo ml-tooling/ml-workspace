@@ -1,6 +1,12 @@
+# Inspiration:
+# https://ubuntuforums.org/showthread.php?t=831372
+
 # Logging Configuration
 SyslogFacility AUTH
 LogLevel INFO
+
+# Root is the only user allowed to login
+AllowUsers root
 
 # Allow transfer of user environment variables
 PermitUserEnvironment yes
@@ -17,6 +23,10 @@ GatewayPorts clientspecified
 PasswordAuthentication no
 ChallengeResponseAuthentication no
 GSSAPIAuthentication no
+IgnoreRhosts yes
+HostbasedAuthentication no
+IgnoreUserKnownHosts yes
+UsePAM no
 
 # Activate SFTP server
 Subsystem sftp internal-sftp
@@ -28,3 +38,6 @@ AllowAgentForwarding yes
 X11Forwarding yes
 X11UseLocalhost no
 X11DisplayOffset 10
+
+# Disable permissions checks on keyfiles and directories
+StrictModes no

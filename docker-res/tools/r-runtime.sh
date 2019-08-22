@@ -19,7 +19,7 @@ if ! hash Rscript 2>/dev/null; then
     # R pre-requisites
     apt-get install -y --no-install-recommends fonts-dejavu unixodbc unixodbc-dev r-cran-rodbc gfortran
     # R basics and essentials: https://docs.anaconda.com/anaconda/packages/r-language-pkg-docs/
-    conda install --yes r-base r-irkernel r-reticulate r-essentials rpy2
+    conda install --yes r-base r-irkernel r-reticulate r-essentials rpy2 r-rodbc unixodbc
 else
     echo "R runtime is already installed"
 fi

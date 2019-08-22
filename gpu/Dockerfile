@@ -153,6 +153,9 @@ RUN \
     conda install -y pygpu && \
     # Install Spacy GPU Support:
     pip install --no-cache-dir thinc-gpu-ops && \
+    # Install Jupyterlab GPU Plugin: https://github.com/jacobtomlinson/jupyterlab-nvdashboard - TODO deactivate jupyter plugin
+    # pip install --no-cache-dir jupyterlab-nvdashboard && \
+    # jupyter labextension install jupyterlab-nvdashboard && \
     # MXNet with GPU Support:
     # pip install --no-cache-dir --upgrade mxnet-cu100 && \
     # Cleanup

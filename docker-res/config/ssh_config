@@ -18,4 +18,6 @@ Host *
     # Alive Interval will make SSH connection more stable 
     ServerAliveCountMax 10
     ServerAliveInterval 60
-
+    # Are those settings needed?
+    SendEnv LANG LC_*
+    HashKnownHosts yes

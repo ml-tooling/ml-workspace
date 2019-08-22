@@ -38,7 +38,7 @@ if args.mode == "restore":
         log.info("Configuration Backup is not activated. Restore process will not be started.")
         sys.exit()
 
-    log.info("Starting config backup restore.")
+    log.info("Running config backup restore.")
 
     if not os.path.exists(CONFIG_BACKUP_FOLDER) or len(os.listdir(CONFIG_BACKUP_FOLDER)) == 0:
         log.info("Nothing to restore. Config backup folder is empty.")
