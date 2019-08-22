@@ -2,6 +2,7 @@
 environment/
 logs/
 *.log
+.workspace/
 
 # IntelliJ
 target/
