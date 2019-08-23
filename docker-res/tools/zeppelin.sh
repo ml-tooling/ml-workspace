@@ -32,7 +32,9 @@ if [ $INSTALL_ONLY = 0 ] ; then
         read -p "Please provide a port for starting Zeppelin: " PORT
     fi
 
-    echo "Starting Zeppelin on port "$port
+    echo "Starting Zeppelin on port "$PORT
+    # Create tool entry for tooling plugin
+    echo '{"id": "zeppelin-link", "name": "Zeppelin", "url_path": "/tools/'$PORT'/", "description": "Notebook for interactive data analytics"}' > $HOME/.workspace/tools/zeppelin.json
     mkdir -p $WORKSPACE_HOME/zeppelin
     export ZEPPELIN_NOTEBOOK_DIR=$WORKSPACE_HOME/zeppelin
     export ZEPPELIN_PORT=$PORT
