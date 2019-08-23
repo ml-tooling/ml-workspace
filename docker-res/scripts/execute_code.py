@@ -19,6 +19,16 @@ logging.basicConfig(
 
 log = logging.getLogger(__name__)
 
+# Parse arguments
+import argparse
+parser = argparse.ArgumentParser()
+parser.add_argument('--requirements-only', help='Only install requirements without executing the code.', action='store_true')
+parser.add_argument('--code-only', help='Only execute code without installing requirements.', action='store_true')
+
+args, unknown = parser.parse_known_args()
+if unknown:
+    log.info("Unknown arguments " + str(unknown))
+
 start_time = time.time()
 
 log.info("Execute Code...")
@@ -64,7 +74,7 @@ elif EXECUTE_CODE.lower().startswith(("git+", "svn+", "hg+", "bzr+")):
         if subdir:
             code_path = os.path.join(code_path, subdir.lstrip('/'))
     except Exception as ex:
-        log.exception("Failed to clone repository via pip internal:")
+        log.exception("Failed to clone repository via pip internal.")
 
 if not code_path or not os.path.exists(code_path):
     log.info("No code artifacts could be found for " + EXECUTE_CODE)
@@ -79,40 +89,46 @@ if os.path.isfile(code_path):
 
 # Execute code from folder -> this should always be a folder
 if os.path.isdir(code_path):
-    log.info("Executing python code at path " + main_script)
-
     pip_runtime = "pip"
     python_runtime = "python"
     bash_runtime = "/bin/bash"
-
-    # Check for conda environment file
-    conda_env_path = os.path.join(code_path, "environment.yml")
-    if os.path.isfile(conda_env_path):
-        conda_env_name = "conda-env"
-        log.info("Installing conda environment from " + conda_env_path)
-        if call("conda env create -n " + conda_env_name + " -f " + conda_env_path) == 0:
-            # Set pip and python runtime to the conda environment
-            pip_runtime = "/opt/conda/envs/" + conda_env_name + "/bin/pip"
-            python_runtime = "/opt/conda/envs/" + conda_env_name + "/bin/python"
-            # put conda env into the bash runtime
-            bash_runtime = "PATH=/opt/conda/envs/" + conda_env_name + "/bin/:$PATH /bin/bash"
-        else:
-            log.info("Failed to install conda env from " + conda_env_path)
-
-    # Check for setup.sh file - TODO should we execute this file after pip and conda?
-    setup_path = os.path.join(code_path, "setup.sh")
-    if os.path.isfile(setup_path):
-        log.info("Running setup from " + setup_path)
-        if call(bash_runtime + " " + setup_path) != 0:
-            log.info("Failed to run setup.sh from " + setup_path)
     
-    # Check for requirements.txt file
-    requirements_path = os.path.join(code_path, "requirements.txt")
-    if os.path.isfile(requirements_path):
-        log.info("Installing requirements from " + requirements_path)
-        if call(pip_runtime + " install --no-cache-dir -r " + requirements_path) != 0:
-            log.info("Failed to install requirements.txt from " + requirements_path)
+    if not args.code_only:
+        log.info("Searching requirements at path " + main_script)
+        # Install requirements
+        # Check for conda environment file
+        conda_env_path = os.path.join(code_path, "environment.yml")
+        if os.path.isfile(conda_env_path):
+            conda_env_name = "conda-env"
+            log.info("Installing conda environment from " + conda_env_path)
+            if call("conda env create -n " + conda_env_name + " -f " + conda_env_path) == 0:
+                # Set pip and python runtime to the conda environment
+                pip_runtime = "/opt/conda/envs/" + conda_env_name + "/bin/pip"
+                python_runtime = "/opt/conda/envs/" + conda_env_name + "/bin/python"
+                # put conda env into the bash runtime
+                bash_runtime = "PATH=/opt/conda/envs/" + conda_env_name + "/bin/:$PATH /bin/bash"
+            else:
+                log.info("Failed to install conda env from " + conda_env_path)
+
+        # Check for setup.sh file - TODO should we execute this file after pip and conda?
+        setup_path = os.path.join(code_path, "setup.sh")
+        if os.path.isfile(setup_path):
+            log.info("Running setup from " + setup_path)
+            if call(bash_runtime + " " + setup_path) != 0:
+                log.info("Failed to run setup.sh from " + setup_path)
     
+        # Check for requirements.txt file
+        requirements_path = os.path.join(code_path, "requirements.txt")
+        if os.path.isfile(requirements_path):
+            log.info("Installing requirements from " + requirements_path)
+            if call(pip_runtime + " install --no-cache-dir -r " + requirements_path) != 0:
+                log.info("Failed to install requirements.txt from " + requirements_path)
+    
+    if args.requirements_only:
+        log.info("Finished installing requirements. Code execution is deactivated.")
+        sys.exit(0)
+    
+    log.info("Executing python code at path " + main_script)
     # Run code: if it is a folder, it needs a main module (e.g. __main__.py)
     exit_code = call(python_runtime + ' "' + main_script + '"')
     if exit_code > 0:

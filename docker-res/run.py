@@ -83,9 +83,12 @@ if ENV_MAX_NUM_THREADS:
 ENV_RESOURCES_PATH = os.getenv("RESOURCES_PATH", "/resources")
 ENV_WORKSPACE_HOME = os.getenv('WORKSPACE_HOME', "/workspace")
 
+# pass all script arguments to next script
+script_arguments = " " + ' '.join(sys.argv[1:])
+
 EXECUTE_CODE = os.getenv('EXECUTE_CODE', None)
 if EXECUTE_CODE:
     # use workspace as working directory
-    sys.exit(call("cd " + ENV_WORKSPACE_HOME + " && python " + ENV_RESOURCES_PATH + "/scripts/execute_code.py", shell=True))
+    sys.exit(call("cd " + ENV_WORKSPACE_HOME + " && python " + ENV_RESOURCES_PATH + "/scripts/execute_code.py" + script_arguments, shell=True))
 
-sys.exit(call("python " + ENV_RESOURCES_PATH + "/scripts/run_workspace.py", shell=True))
+sys.exit(call("python " + ENV_RESOURCES_PATH + "/scripts/run_workspace.py" + script_arguments, shell=True))
