@@ -811,10 +811,15 @@ RUN \
                 virtualenv \
                 handout \
                 filedepot \
+                numexpr \
                 blosc \
                 graphene \
                 knockknock \
                 pyodbc \
+                patsy \
+                xlrd \
+                seaborn \
+                sympy \
                 pytorch-transformers \
                 pytorch-lightning \
                 ipyleaflet \
@@ -850,6 +855,7 @@ COPY docker-res/nginx/nginx.conf /etc/nginx/nginx.conf
 COPY docker-res/config/xrdp.ini /etc/xrdp/xrdp.ini
 COPY docker-res/config/netdata.conf /etc/netdata/netdata.conf
 COPY docker-res/config/supervisord.conf /etc/supervisor/supervisord.conf
+COPY docker-res/config/workspace-tools.json $HOME/.workspace/tools/1_workspace-tools.json
 COPY docker-res/config/mimeapps.list $HOME/.config/mimeapps.list
 COPY docker-res/config/bookmarks $HOME/.config/gtk-3.0/bookmarks
 COPY docker-res/config/chromium-browser.init $HOME/.chromium-browser.init
