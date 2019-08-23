@@ -7,7 +7,7 @@ parser = argparse.ArgumentParser()
 parser.add_argument('--name', help='name of docker container', default="ml-workspace")
 parser.add_argument('--version', help='version tag of docker container', default="latest")
 parser.add_argument('--deploy', help='deploy docker container to remote', action='store_true')
-parser.add_argument('--flavor', help='flavor (full, light) used for docker container', default='full')
+parser.add_argument('--flavor', help='flavor (full, light, minimal) used for docker container', default='full')
 
 REMOTE_IMAGE_PREFIX = "mltooling/"
 
@@ -21,7 +21,7 @@ def call(command):
     return subprocess.call(command, shell=True)
 
 # calls build scripts in every module with same flags
-def build(module):
+def build(module="."):
     
     if not os.path.isdir(module):
         print("Could not find directory for " + module)
@@ -36,7 +36,7 @@ def build(module):
         build_command += " --deploy"
  
     if args.flavor:
-        build_command += " --flavor" + str(args.flavor)
+        build_command += " --flavor=" + str(args.flavor)
 
     working_dir = os.path.dirname(os.path.realpath(__file__))
     full_command = "cd " + module + " && " + build_command + " && cd " + working_dir
@@ -52,13 +52,22 @@ if not args.flavor:
 args.flavor = str(args.flavor).lower()
 
 if args.flavor == "all":
-    # TODO build all
-    pass
+    args.flavor = "full"
+    build()
+    args.flavor = "light"
+    build()
+    args.flavor = "minimal"
+    build()
+    args.flavor = "r"
+    build()
+    args.flavor = "gpu"
+    build()
+    sys.exit(0)
 
 # unknown flavor -> try to build from subdirectory
 if args.flavor not in ["full", "minimal", "light"]:
     # assume that flavor has its own directory with build.py
-    build(args.flavor)
+    build(args.flavor + "-flavor")
     sys.exit(0)
 
 service_name = os.path.basename(os.path.dirname(os.path.realpath(__file__)))
