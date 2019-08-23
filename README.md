@@ -237,6 +237,19 @@ The light flavor (`mltooling/ml-workspace-light`) has all of the tools and featu
 docker run -p 8091:8091 mltooling/ml-workspace-light:latest
 ```
 
+#### R Flavor
+
+<a href="https://hub.docker.com/r/mltooling/ml-workspace-r" title="Docker Image Version"><img src="https://images.microbadger.com/badges/version/mltooling/ml-workspace-r.svg"></a>
+<a href="https://hub.docker.com/r/mltooling/ml-workspace-r" title="Docker Image Metadata"><img src="https://images.microbadger.com/badges/image/mltooling/ml-workspace-r.svg"></a>
+<a href="https://hub.docker.com/r/mltooling/ml-workspace-r" title="Docker Pulls"><img src="https://img.shields.io/docker/pulls/mltooling/ml-workspace-r.svg"></a>
+<a href="https://hub.docker.com/r/mltooling/ml-workspace-r" title="Docker Stars"><img src="https://img.shields.io/docker/stars/mltooling/ml-workspace-r"></a>
+
+The R flavor (`mltooling/ml-workspace-r`) is based on our default workspace image and extends it with the R-interpreter, R-Jupyter kernel, RStudio server (access via `Open Tool -> RStudio`), and a variety of popular packages from the R ecosystem.
+
+```bash
+docker run -p 8091:8091 mltooling/ml-workspace-r:latest
+```
+
 #### GPU Flavor
 
 <a href="https://hub.docker.com/r/mltooling/ml-workspace-gpu" title="Docker Image Version"><img src="https://images.microbadger.com/badges/version/mltooling/ml-workspace-gpu.svg"></a>
@@ -244,7 +257,7 @@ docker run -p 8091:8091 mltooling/ml-workspace-light:latest
 <a href="https://hub.docker.com/r/mltooling/ml-workspace-gpu" title="Docker Pulls"><img src="https://img.shields.io/docker/pulls/mltooling/ml-workspace-gpu.svg"></a>
 <a href="https://hub.docker.com/r/mltooling/ml-workspace-gpu" title="Docker Stars"><img src="https://img.shields.io/docker/stars/mltooling/ml-workspace-gpu"></a>
 
-The GPU flavor (`mltooling/ml-workspace-gpu`) is based on our main workspace image and extends it with CUDA 10 and GPU-ready versions of various machine learning libraries (e.g. tensorflow, pytorch, cntk, jax). This GPU image has the following additional requirements for the system:
+The GPU flavor (`mltooling/ml-workspace-gpu`) is based on our default workspace image and extends it with CUDA 10 and GPU-ready versions of various machine learning libraries (e.g. tensorflow, pytorch, cntk, jax). This GPU image has the following additional requirements for the system:
 
 - Nvidia Drivers for the GPUs. Drivers need to be CUDA 10 compatible, version `>= 410.48` ([📖 Instructions](https://github.com/NVIDIA/nvidia-docker/wiki/Frequently-Asked-Questions#how-do-i-install-the-nvidia-driver)).
 - (Docker >= 19.03) Nvidia Container Toolkit ([📖 Instructions](https://github.com/NVIDIA/nvidia-docker/wiki/Installation-(Native-GPU-Support))).
@@ -343,8 +356,15 @@ It is also possible to embed your code directly into a custom job image, as show
 ```dockerfile
 FROM mltooling/ml-workspace:latest
 
-COPY /mljob /workspace/mljob
-ENV EXECUTE_CODE=/workspace/mljob
+# Add job code to image
+COPY ml-job /workspace/ml-job
+ENV EXECUTE_CODE=/workspace/ml-job
+
+# Install requirements only
+RUN python /resources/scripts/execute_code.py --requirements-only
+
+# Execute only the code at container startup
+CMD ["python", "/resources/run.py", "--code-only"]
 ```
 
 ## Support
