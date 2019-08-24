@@ -41,6 +41,8 @@ The ML workspace is an all-in-one web-based IDE specialized for machine learning
 
 ## Getting Started
 
+[![Try in PWD](https://cdn.rawgit.com/play-with-docker/stacks/cff22438/assets/images/button.png)](https://labs.play-with-docker.com/?stack=https://raw.githubusercontent.com/ml-tooling/ml-workspace/develop/docker-compose.yml)
+
 ### Prerequisites
 
 The workspace requires **Docker** to be installed on your machine ([Installation Guide](https://docs.docker.com/install/#supported-platforms)).
