@@ -713,6 +713,9 @@ RUN \
     # Install jupyterlab system monitor: https://github.com/jtpio/jupyterlab-system-monitor
     # DO not install for now jupyter labextension install jupyterlab-topbar-extension jupyterlab-system-monitor && \
     # Too big dependency: https://github.com/InsightSoftwareConsortium/itkwidgets
+    # Too Big: Install ipyleaflet
+    # pip install --no-cache-dir ipyleaflet && \
+    # jupyter labextension install jupyter-leaflet && \
     # Cleanup
     # Clean jupyter lab cache: https://github.com/jupyterlab/jupyterlab/issues/4930
     jupyter lab clean && \
@@ -741,11 +744,11 @@ RUN \
     fi && \
     cd $RESOURCES_PATH && \
     mkdir -p $HOME/.vscode/extensions/ && \
-    # Install python extension
-    wget --quiet https://github.com/microsoft/vscode-python/releases/download/2019.8.30787/ms-python-release.vsix && \
+    # Install python extension - higher version do not work with vscode version 1.33
+    wget --quiet https://github.com/microsoft/vscode-python/releases/download/2019.6.24221/ms-python-release.vsix && \
     bsdtar -xf ms-python-release.vsix extension && \
     rm ms-python-release.vsix && \
-    mv extension $HOME/.vscode/extensions/ms-python.python-2019.8.30787 && \
+    mv extension $HOME/.vscode/extensions/ms-python.python-2019.6.24221 && \
     # Install remote development extension
     # https://marketplace.visualstudio.com/items?itemName=ms-vscode-remote.remote-ssh
     wget --quiet https://marketplace.visualstudio.com/_apis/public/gallery/publishers/ms-vscode-remote/vsextensions/remote-ssh/0.45.5/vspackage -O ms-vscode-remote.remote-ssh.vsix && \
@@ -822,14 +825,11 @@ RUN \
                 sympy \
                 pytorch-transformers \
                 pytorch-lightning \
-                ipyleaflet \
                 # size: 7MB?
                 jupyterthemes && \
                 # requires newer spacy version: spacy-pytorch-transformers \     
                 # too many/specific dependencies: pip install tensorflow-data-validation
-    jupyter labextension install jupyter-leaflet && \
     # Cleanup
-    jupyter lab clean && \
     clean-layer.sh
 
 ### END INCUBATION ZONE ###
