@@ -309,66 +309,6 @@ docker run -p 8091:8091 -v /var/run/docker.sock:/var/run/docker.sock mltooling/m
 
 For more information and documentation about ML Hub, please take a look at the [Github Site](https://github.com/ml-tooling/ml-hub).
 
-### Run as a job
-
-> ℹ️ _A job is defined as any computational task that runs for a certain time to completion, such as a model training or a data pipeline._
-
-The workspace image can also be used as a job to execute arbitrary Python code without starting any of the preinstalled tools. This provides a seamless way to productize your ML projects since the code that has been developed interactively within the workspace will have the same environment and configuration when run as a job via the same workspace image. To run Python code as a job, you need to provide a path or URL to a code directory (or script) via `EXECUTE_CODE`. The code can be either already mounted into the workspace container or downloaded from a version control system (e.g., git or svn) as described in the following sections. The selected code path needs to be python executable. In case the selected code is a directory (e.g., whenever you download the code from a VCS) you need to put a `__main__.py` file at the root of this directory. The `__main__.py` needs to contain the code that starts your job.
-
-#### Run code from version control system
-
-You can execute code directly from Git, Mercurial, Subversion, or Bazaar by using the pip-vcs format as described in [this guide](https://pip.pypa.io/en/stable/reference/pip_install/#vcs-support). For example, to execute code from a [subdirectory](https://github.com/ml-tooling/ml-workspace/tree/develop/docker-res/tests/ml-job) of a git repository, just run:
-
-```bash
-docker run --env EXECUTE_CODE="git+https://github.com/ml-tooling/ml-workspace.git#subdirectory=docker-res/tests/ml-job" mltooling/ml-workspace:latest
-```
-
-> ℹ️ _For additional information on how to specify branches, commits, or tags please refer to [this guide](https://pip.pypa.io/en/stable/reference/pip_install/#vcs-support)._
-
-#### Run code mounted into workspace
-
-In the following example, we mount and execute the current working directory (expected to contain our code) into the `/workspace/ml-job/` directory of the workspace:
-
-```bash
-docker run -v "${PWD}:/workspace/ml-job/" --env EXECUTE_CODE="/workspace/ml-job/" mltooling/ml-workspace:latest
-```
-
-#### Install Dependencies
-
-In the case that the preinstalled workspace libraries are not compatible with your code, you can install or change dependencies by just adding one or multiple of the following files to your code directory:
-
-- `requirements.txt`: [pip requirements format](https://pip.pypa.io/en/stable/user_guide/#requirements-files) for pip-installable dependencies.
-- `environment.yml`: [conda environment file](https://docs.conda.io/projects/conda/en/latest/user-guide/tasks/manage-environments.html?highlight=environment.yml#creating-an-environment-file-manually) to create a separate Python environment.
-- `setup.sh`: A shell script executed via `/bin/bash`.
-
-The execution order is 1. `environment.yml` -> 2. `setup.sh` -> 3. `requirements.txt`
-
-#### Test job in interactive mode
-
-You can test your job code within the workspace (started normally with interactive tools) by executing the following python script:
-
-```bash
-python /resources/scripts/execute_code.py /path/to/your/job
-```
-
-#### Build a custom job image
-
-It is also possible to embed your code directly into a custom job image, as shown below:
-
-```dockerfile
-FROM mltooling/ml-workspace:latest
-
-# Add job code to image
-COPY ml-job /workspace/ml-job
-ENV EXECUTE_CODE=/workspace/ml-job
-
-# Install requirements only
-RUN python /resources/scripts/execute_code.py --requirements-only
-
-# Execute only the code at container startup
-CMD ["python", "/resources/run.py", "--code-only"]
-```
-
 ## Support
 
 The ML Workspace project is maintained by [@LukasMasuch](https://twitter.com/LukasMasuch)
@@ -395,7 +335,8 @@ valuable if it's shared publicly so that more people can benefit from it.
   <a href="#hardware-monitoring">Hardware Monitoring</a> •
   <a href="#tensorboard">Tensorboard</a> •
   <a href="#ssh-access">SSH Access</a> •
-  <a href="#remote-development">Remote Development</a>
+  <a href="#remote-development">Remote Development</a> •
+ <a href="#run-as-a-job">Job Execution</a>
 </p>
 
 The workspace is equipped with a selection of best-in-class open-source development tools to help with the machine learning workflow. Many of these tools can be started from the `Open Tool` menu from Jupyter (the main application of the workspace):
@@ -547,7 +488,7 @@ An SSH connection can be used for tunneling application ports from the remote ma
 ssh -nNT -L 5000:localhost:5901 my-workspace
 ```
 
-> ℹ️ _You can also expose an application port from your local machine to a workspace via the `-R` option (instead of `-L`)._
+> ℹ️ _To expose an application port from your local machine to a workspace, use the `-R` option (instead of `-L`)._
 
 After the tunnel is established, you can use your favorite VNC viewer on your local machine and connect to `vnc://localhost:5000` (default password: `vncpassword`). To make the tunnel connection more resistant and reliable, we recommend to use [autossh](https://www.harding.motd.ca/autossh/) to automatically restart SSH tunnels in the case that the connection dies:
 
@@ -633,17 +574,80 @@ To a running
 
 #### Colab - Local Runtime
 
+### Run as a job
+
+> ℹ️ _A job is defined as any computational task that runs for a certain time to completion, such as a model training or a data pipeline._
+
+The workspace image can also be used to execute arbitrary Python code without starting any of the preinstalled tools. This provides a seamless way to productize your ML projects since the code that has been developed interactively within the workspace will have the same environment and configuration when run as a job via the same workspace image. To run Python code as a job, you need to provide a path or URL to a code directory (or script) via `EXECUTE_CODE`. The code can be either already mounted into the workspace container or downloaded from a version control system (e.g., git or svn) as described in the following sections. The selected code path needs to be python executable. In case the selected code is a directory (e.g., whenever you download the code from a VCS) you need to put a `__main__.py` file at the root of this directory. The `__main__.py` needs to contain the code that starts your job.
+
+#### Run code from version control system
+
+You can execute code directly from Git, Mercurial, Subversion, or Bazaar by using the pip-vcs format as described in [this guide](https://pip.pypa.io/en/stable/reference/pip_install/#vcs-support). For example, to execute code from a [subdirectory](https://github.com/ml-tooling/ml-workspace/tree/develop/docker-res/tests/ml-job) of a git repository, just run:
+
+```bash
+docker run --env EXECUTE_CODE="git+https://github.com/ml-tooling/ml-workspace.git#subdirectory=docker-res/tests/ml-job" mltooling/ml-workspace:latest
+```
+
+> ℹ️ _For additional information on how to specify branches, commits, or tags please refer to [this guide](https://pip.pypa.io/en/stable/reference/pip_install/#vcs-support)._
+
+#### Run code mounted into workspace
+
+In the following example, we mount and execute the current working directory (expected to contain our code) into the `/workspace/ml-job/` directory of the workspace:
+
+```bash
+docker run -v "${PWD}:/workspace/ml-job/" --env EXECUTE_CODE="/workspace/ml-job/" mltooling/ml-workspace:latest
+```
+
+#### Install Dependencies
+
+In the case that the preinstalled workspace libraries are not compatible with your code, you can install or change dependencies by just adding one or multiple of the following files to your code directory:
+
+- `requirements.txt`: [pip requirements format](https://pip.pypa.io/en/stable/user_guide/#requirements-files) for pip-installable dependencies.
+- `environment.yml`: [conda environment file](https://docs.conda.io/projects/conda/en/latest/user-guide/tasks/manage-environments.html?highlight=environment.yml#creating-an-environment-file-manually) to create a separate Python environment.
+- `setup.sh`: A shell script executed via `/bin/bash`.
+
+The execution order is 1. `environment.yml` -> 2. `setup.sh` -> 3. `requirements.txt`
+
+#### Test job in interactive mode
+
+You can test your job code within the workspace (started normally with interactive tools) by executing the following python script:
+
+```bash
+python /resources/scripts/execute_code.py /path/to/your/job
+```
+
+#### Build a custom job image
+
+It is also possible to embed your code directly into a custom job image, as shown below:
+
+```dockerfile
+FROM mltooling/ml-workspace:latest
+
+# Add job code to image
+COPY ml-job /workspace/ml-job
+ENV EXECUTE_CODE=/workspace/ml-job
+
+# Install requirements only
+RUN python /resources/scripts/execute_code.py --requirements-only
+
+# Execute only the code at container startup
+CMD ["python", "/resources/run.py", "--code-only"]
+```
 
 ### Preinstalled Libraries and Runtimes
 
 The workspace is pre-installed with many popular runtimes, data science libraries, and ubuntu packages:
 
-- **Runtimes:** Miniconda 3 (Python 3.6), Java 8, NodeJS 11, Go, Ruby
+- **Interpreter:** Miniconda 3 (Python 3.6), Java 8, NodeJS 11, Go, Ruby
 - **Python libraries:** Tensorflow, Keras, Pytorch, Sklearn, CNTK, XGBoost, Theano, Fastai, and [many more](https://github.com/ml-tooling/ml-workspace/blob/master/docker-res/requirements.txt)
 
 The full list of installed tools can be found within the [Dockerfile](https://github.com/ml-tooling/ml-workspace/blob/master/Dockerfile).
 
 > ℹ️ _**An R-Runtime** installation script is provided in the `Tools` folder on the desktop of the VNC GUI._
+
+## Contributors
+
+[![](https://sourcerer.io/fame/LukasMasuch/ml-tooling/ml-workspace/images/0)](https://sourcerer.io/fame/LukasMasuch/ml-tooling/ml-workspace/links/0)[![](https://sourcerer.io/fame/LukasMasuch/ml-tooling/ml-workspace/images/1)](https://sourcerer.io/fame/LukasMasuch/ml-tooling/ml-workspace/links/1)[![](https://sourcerer.io/fame/LukasMasuch/ml-tooling/ml-workspace/images/2)](https://sourcerer.io/fame/LukasMasuch/ml-tooling/ml-workspace/links/2)[![](https://sourcerer.io/fame/LukasMasuch/ml-tooling/ml-workspace/images/3)](https://sourcerer.io/fame/LukasMasuch/ml-tooling/ml-workspace/links/3)[![](https://sourcerer.io/fame/LukasMasuch/ml-tooling/ml-workspace/images/4)](https://sourcerer.io/fame/LukasMasuch/ml-tooling/ml-workspace/links/4)[![](https://sourcerer.io/fame/LukasMasuch/ml-tooling/ml-workspace/images/5)](https://sourcerer.io/fame/LukasMasuch/ml-tooling/ml-workspace/links/5)[![](https://sourcerer.io/fame/LukasMasuch/ml-tooling/ml-workspace/images/6)](https://sourcerer.io/fame/LukasMasuch/ml-tooling/ml-workspace/links/6)[![](https://sourcerer.io/fame/LukasMasuch/ml-tooling/ml-workspace/images/7)](https://sourcerer.io/fame/LukasMasuch/ml-tooling/ml-workspace/links/7)
 
 ## Contribution
 
