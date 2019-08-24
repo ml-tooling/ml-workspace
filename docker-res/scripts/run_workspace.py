@@ -31,6 +31,8 @@ if INCLUDE_TUTORIALS.lower() == "true" and os.path.exists(WORKSPACE_HOME) and le
     from distutils.dir_util import copy_tree
     # Copy all files within tutorials folder in resources to workspace home
     copy_tree(os.path.join(ENV_RESOURCES_PATH, "tutorials"), WORKSPACE_HOME)
+    # Link tools folder to workspace folder
+    call("ln -s " + ENV_RESOURCES_PATH + "/tools " + WORKSPACE_HOME + "/tools")
 
 # restore config on startup - if CONFIG_BACKUP_ENABLED - it needs to run before other configuration 
 call("python " + ENV_RESOURCES_PATH + "/scripts/backup_restore_config.py restore", shell=True)
