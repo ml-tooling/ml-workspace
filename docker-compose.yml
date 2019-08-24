@@ -1,0 +1,13 @@
+version: '3.2'
+
+services:
+  ml-workspace:
+    image: mltooling/ml-workspace-minimal
+    restart: always
+    volumes:
+      - ml-workspace:/workspace
+    ports:
+      - 8091:8091
+
+volumes:
+  ml-workspace:
