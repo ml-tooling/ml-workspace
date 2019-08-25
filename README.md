@@ -195,6 +195,10 @@ We recommend enabling SSL so that the workspace is accessible via HTTPS (encrypt
 docker run -p 8091:8091 --env WORKSPACE_SSL_ENABLED="true" -v /path/with/certificate/files:/resources/ssl:ro mltooling/ml-workspace:latest
 ```
 
+If you want to host the workspace on a public domain, we recommend to use [Let's encrypt](https://letsencrypt.org/getting-started/) to get a trusted certificate for your domain.  To use the generated certificate (e.g. via [certbot](https://certbot.eff.org/) tool) for the workspace, the `privkey.pem` corresponds to the `cert.key` file and the `fullchain.pem` to the `cert.crt` file.
+
+> ℹ️ _Keep in mind that when you enable SSL support, you must access the workspace over `https://`, not over plain `http://`._
+
 ### Limit Memory & CPU
 
 By default, the workspace container has no resource constraints and can use as much of a given resource as the host’s kernel scheduler allows. Docker provides ways to control how much memory, or CPU a container can use, by setting runtime configuration flags of the docker run command. For example, the following command restricts the workspace to only use a maximum of 8 CPUs, 16 GB of memory, and 1 GB of shared memory (required for some ML frameworks):
