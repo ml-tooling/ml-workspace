@@ -1,1 +1,1 @@
-FROM mltooling/ml-workspace:latest
+FROM mltooling/ml-workspace-minimal:latest
