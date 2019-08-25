@@ -197,7 +197,7 @@ docker run -p 8091:8091 --env WORKSPACE_SSL_ENABLED="true" -v /path/with/certifi
 
 If you want to host the workspace on a public domain, we recommend to use [Let's encrypt](https://letsencrypt.org/getting-started/) to get a trusted certificate for your domain.  To use the generated certificate (e.g. via [certbot](https://certbot.eff.org/) tool) for the workspace, the `privkey.pem` corresponds to the `cert.key` file and the `fullchain.pem` to the `cert.crt` file.
 
-> ℹ️ _Keep in mind that when you enable SSL support, you must access the workspace over `https://`, not over plain `http://`._
+> ℹ️ _When you enable SSL support, you must access the workspace over `https://`, not over plain `http://`._
 
 ### Limit Memory & CPU
 
