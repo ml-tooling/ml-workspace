@@ -539,7 +539,7 @@ def get_setup_script(hostname: str = None, port: str = None):
         HOSTNAME_RUNTIME = SSH_JUMPHOST_TARGET
         HOSTNAME_MANAGER = hostname
         PORT_MANAGER = port
-        PORT_RUNTIME = 8091
+        PORT_RUNTIME = os.getenv("WORKSPACE_PORT", "8091")
 
         RUNTIME_CONFIG_NAME = RUNTIME_CONFIG_NAME + "{}-{}-{}".format(HOSTNAME_RUNTIME, HOSTNAME_MANAGER, PORT_MANAGER)
                     
