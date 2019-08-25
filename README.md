@@ -41,7 +41,7 @@ The ML workspace is an all-in-one web-based IDE specialized for machine learning
 
 ## Getting Started
 
-<p align="center">
+<p>
 <a href="https://labs.play-with-docker.com/?stack=https://raw.githubusercontent.com/ml-tooling/ml-workspace/develop/deployment/play-with-docker/docker-compose.yml" title="Docker Image Metadata"><img src="https://cdn.rawgit.com/play-with-docker/stacks/cff22438/assets/images/button.png" alt="Try in PWD" width="100px"></a>
 <a href="https://console.cloud.google.com/cloudshell/editor?shellonly=true&cloudshell_image=gcr.io/cloudrun/button&cloudshell_git_repo=https://github.com/ml-tooling/ml-workspace.git&cloudshell_working_dir=deployment/google-cloud-run" title="Run on Google Cloud"><img src="https://storage.googleapis.com/cloudrun/button.svg" alt="Run on Google Cloud Button" width="130px"></a>
 </p>
