@@ -643,6 +643,8 @@ RUN \
 RUN \
     # Required for jupytext and matplotlib plugins
     jupyter lab build && \
+    # jupyterlab installed in requirements section
+    jupyter labextension install @jupyter-widgets/jupyterlab-manager && \
     # If minimal flavor - do not install jupyterlab extensions
     if [ "$WORKSPACE_FLAVOR" = "minimal" ]; then \
         # Cleanup
@@ -652,8 +654,6 @@ RUN \
         clean-layer.sh && \
         exit 0 ; \
     fi && \
-    # jupyterlab installed in requirements section
-    jupyter labextension install @jupyter-widgets/jupyterlab-manager && \
     jupyter labextension install @jupyterlab/toc && \
     jupyter labextension install jupyterlab_tensorboard && \
     # install jupyterlab git
@@ -801,13 +801,18 @@ RUN \
     apt-get install -y gftp && \
     # Minimalistic C client for Redis
     apt-get install -y libhiredis-dev && \
+    # Install odbc drivers
+    apt-get install -y --no-install-recommends unixodbc unixodbc-dev && \
+    # Dev tools
+    apt-get install -y --no-install-recommends less bash-completion && \
     # Cleanup
     clean-layer.sh
 
 RUN \
-    apt-get update && \
-    # Install 
-    apt-get install -y --no-install-recommends unixodbc unixodbc-dev && \
+   # If minimal or light flavor -> exit here
+    if [ "$WORKSPACE_FLAVOR" = "minimal" ] || [ "$WORKSPACE_FLAVOR" = "light" ]; then \
+        exit 0 ; \
+    fi && \
     # New Python Libraries:
     pip install --no-cache-dir \
                 facets-overview \
@@ -820,11 +825,22 @@ RUN \
                 knockknock \
                 pyodbc \
                 patsy \
+                swifter \
                 xlrd \
                 seaborn \
                 sympy \
+                stormssh \
                 pytorch-transformers \
                 pytorch-lightning \
+                python-language-server \
+                rope \
+                pep8 \
+                pylama \
+                pydocstyle \
+                tf-encrypted \
+                lazycluster \
+                flake8 \
+                docker \
                 # size: 7MB?
                 jupyterthemes && \
                 # requires newer spacy version: spacy-pytorch-transformers \     
@@ -926,13 +942,13 @@ COPY docker-res/icons $RESOURCES_PATH/icons
 
 RUN \
     # ungit:
-    echo "[Desktop Entry]\nVersion=1.0\nType=Link\nName=Ungit\nComment=Git Client\nCategories=Development;\nIcon=/resources/icons/ungit-icon.png\nURL=http://localhost:8091/tools/ungit" > /usr/share/applications/ungit.desktop && \
+    echo "[Desktop Entry]\nVersion=1.0\nType=Link\nName=Ungit\nComment=Git Client\nCategories=Development;\nIcon=/resources/icons/ungit-icon.png\nURL=http://localhost:8092/tools/ungit" > /usr/share/applications/ungit.desktop && \
     chmod +x /usr/share/applications/ungit.desktop && \
     # netdata:
-    echo "[Desktop Entry]\nVersion=1.0\nType=Link\nName=Netdata\nComment=Hardware Monitoring\nCategories=System;Utility;Development;\nIcon=/resources/icons/netdata-icon.png\nURL=http://localhost:8091/tools/netdata" > /usr/share/applications/netdata.desktop && \
+    echo "[Desktop Entry]\nVersion=1.0\nType=Link\nName=Netdata\nComment=Hardware Monitoring\nCategories=System;Utility;Development;\nIcon=/resources/icons/netdata-icon.png\nURL=http://localhost:8092/tools/netdata" > /usr/share/applications/netdata.desktop && \
     chmod +x /usr/share/applications/netdata.desktop && \
     # glances:
-    echo "[Desktop Entry]\nVersion=1.0\nType=Link\nName=Glances\nComment=Hardware Monitoring\nCategories=System;Utility;\nIcon=/resources/icons/glances-icon.png\nURL=http://localhost:8091/tools/glances" > /usr/share/applications/glances.desktop && \
+    echo "[Desktop Entry]\nVersion=1.0\nType=Link\nName=Glances\nComment=Hardware Monitoring\nCategories=System;Utility;\nIcon=/resources/icons/glances-icon.png\nURL=http://localhost:8092/tools/glances" > /usr/share/applications/glances.desktop && \
     chmod +x /usr/share/applications/glances.desktop && \
     # Remove mail and logout desktop icons
     rm /usr/share/applications/exo-mail-reader.desktop && \
@@ -986,6 +1002,8 @@ ENV CONFIG_BACKUP_ENABLED="true" \
     DATA_ENVIRONMENT="/workspace/environment" \
     WORKSPACE_BASE_URL="/" \
     INCLUDE_TUTORIALS="true" \
+    # Main port used for sshl proxy -> can be changed
+    WORKSPACE_PORT="8091" \
     # set number of threads various programs should use, if not-set, it tries to use all
     # this can be problematic since docker restricts CPUs by stil showing all
     MAX_NUM_THREADS="auto"
