@@ -833,6 +833,8 @@ RUN \
                 pytorch-transformers \
                 pytorch-lightning \
                 python-language-server \
+                opencv-python \
+                imageai \
                 rope \
                 pep8 \
                 pylama \
