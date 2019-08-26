@@ -600,7 +600,7 @@ The Visual Studio Code [Remote - SSH](https://marketplace.visualstudio.com/item
 2. Run the SSH setup script of a selected workspace as explained in the [SSH Access](#ssh-access) section.
 3. Open the Remote-SSH panel in your local VS Code. All configured SSH connections should be automatically discovered. Just select any configured workspace connection you like to connect to as shown below:
 
-<img style="width: 100%" src="https://microsoft.github.io/vscode-remote-release/images/ssh-readme.gif"/>
+<img style="width: 100%" src="./docs/images/feature-remote-dev-vscode.gif"/>
 
 > 📖 _You can find additional features and information about the Remote SSH extension in [this guide](https://code.visualstudio.com/docs/remote/ssh)._
 
