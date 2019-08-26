@@ -23,6 +23,7 @@
   <a href="#support">Support</a> •
   <a href="https://github.com/ml-tooling/ml-workspace/issues/new?labels=bug&template=01_bug-report.md">Report a Bug</a> •
   <a href="#faq">FAQ</a> •
+  <a href="#known-issues">Known Issues</a> •
   <a href="#contribution">Contribution</a>
 </p>
 
@@ -66,10 +67,10 @@ Voilà, that was easy! Now, Docker will pull the latest workspace image to your 
 To deploy a single instance for productive usage, we recommend to apply at least the following options:
 
 ```bash
-docker run -d -p 8091:8091 -v "${PWD}:/workspace" --env AUTHENTICATE_VIA_JUPYTER="mytoken" --restart always mltooling/ml-workspace:latest
+docker run -d -p 8091:8091 -v "${PWD}:/workspace" --env AUTHENTICATE_VIA_JUPYTER="mytoken" --shm-size=512m --restart always mltooling/ml-workspace:latest
 ```
 
-This command runs the container in background (`-d`), mounts your current working directory into the `/workspace` folder (`-v`), secures the workspace via a provided token (`--env AUTHENTICATE_VIA_JUPYTER`),  and keeps the container running even on system restarts (`--restart always`). You can find additional options for docker run [here](https://docs.docker.com/engine/reference/commandline/run/) and workspace configuration options in [the section below](#Configuration).
+This command runs the container in background (`-d`), mounts your current working directory into the `/workspace` folder (`-v`), secures the workspace via a provided token (`--env AUTHENTICATE_VIA_JUPYTER`), provides 512MB of shared memory (`--shm-size`) to prevent unexpected crashes (see [known issues section](#known-issues)), and keeps the container running even on system restarts (`--restart always`). You can find additional options for docker run [here](https://docs.docker.com/engine/reference/commandline/run/) and workspace configuration options in [the section below](#Configuration).
 
 ### Configuration Options
 
@@ -211,10 +212,10 @@ By default, the workspace container has no resource constraints and can use as m
 <details>
 <summary>Details (click to expand...)</summary>
 
-For example, the following command restricts the workspace to only use a maximum of 8 CPUs, 16 GB of memory, and 1 GB of shared memory (required for some ML frameworks):
+For example, the following command restricts the workspace to only use a maximum of 8 CPUs, 16 GB of memory, and 1 GB of shared memory (see [Known Issues](#known-issues)):
 
 ```bash
-docker run -p 8091:8091 --cpus=8 --memory=16g --shm-size 1G mltooling/ml-workspace:latest
+docker run -p 8091:8091 --cpus=8 --memory=16g --shm-size=1G mltooling/ml-workspace:latest
 ```
 
 > 📖 _For more options and documentation on resource constraints, please refer to the [official docker guide](https://docs.docker.com/config/containers/resource_constraints/)._
@@ -567,7 +568,11 @@ The workspace can be integrated and used as a remote runtime (also known as remo
 <details>
 <summary><b>Jupyter - Remote Kernel</b> (click to expand...)</summary>
 
-The workspace can be added to a Jupyter instance as a remote kernel by using the [remote_ikernel](https://bitbucket.org/tdaff/remote_ikernel/) tool. If you have installed remote_ikernel (`pip install remote_ikernel`) on your local machine, the SSH setup script of the workspace will automatically offer you the option to setup a remote kernel connection. In case you want to manually setup and manage remote kernels, you can use the [remote_ikernel](https://bitbucket.org/tdaff/remote_ikernel/src/default/README.rst) command-line tool, as shown below:
+The workspace can be added to a Jupyter instance as a remote kernel by using the [remote_ikernel](https://bitbucket.org/tdaff/remote_ikernel/) tool. If you have installed remote_ikernel (`pip install remote_ikernel`) on your local machine, the SSH setup script of the workspace will automatically offer you the option to setup a remote kernel connection.
+
+> ℹ️ _When running kernels on remote machines, the notebooks themselves will be saved onto the local filesystem, but the kernel will only have access to the filesystem of the remote machine running the kernel. If you need to sync data, you can make use of rsync, scp, or sshfs as explained in the [SSH Access section](#ssh-access)._
+
+In case you want to manually setup and manage remote kernels, use the [remote_ikernel](https://bitbucket.org/tdaff/remote_ikernel/src/default/README.rst) command-line tool, as shown below:
 
 ```bash
 # Change my-workspace with the name of a workspace SSH connection
@@ -578,9 +583,10 @@ remote_ikernel manage --add \
     --host="my-workspace"
 ```
 
+You can use the remote_ikernel command line functionality to list (`remote_ikernel manage --show`) or delete (`remote_ikernel manage --delete <REMOTE_KERNEL_NAME>`) remote kernel connections.
+
 _WIP: Add Screenshot_
 
-> ℹ️ _When running kernels on remote machines, the notebooks themselves will be saved onto the local filesystem, but the kernel will only have access to the filesystem of the remote machine running the kernel. If you need to sync data, you can make use of rsync, scp, or sshfs as explained in the [SSH Access section](#ssh-access)._
 </details>
 
 <details>
@@ -771,6 +777,20 @@ If you want to directly connect to the workspace via a VNC client (not using the
         <td>24</td>
     </tr>
 </table>
+
+</details>
+
+## Known Issues
+
+<details>
+
+<summary><b>Too small shared memory might crash tools or scripts</b> (click to expand...)</summary>
+
+Certain desktop tools (e.g., recent versions of [Firefox](https://github.com/jlesage/docker-firefox#increasing-shared-memory-size)) or libraries (e.g., Pytorch - see Issues: [1](https://github.com/pytorch/pytorch/issues/2244), [2](https://github.com/pytorch/pytorch/issues/1355)) might crash if the shared memory size (`/dev/shm`) is too small. The default shared memory size of Docker is 64MB, which might not be enough for a few tools. You can provide a higher shared memory size via the `shm-size` docker run option:
+
+```bash
+docker run --shm-size=2G mltooling/ml-workspace:latest
+```
 
 </details>
 
