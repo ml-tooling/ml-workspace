@@ -726,7 +726,7 @@ After installation, refresh the Jupyter website and the Zeppelin tool will be av
 ## FAQ
 
 <details>
-<summary><b>How to customize the workspace image (create your own flavor)?</b></summary>
+<summary><b>How to customize the workspace image (create your own flavor)?</b> (click to expand...)</summary>
 
 The workspace can be extended in many ways at runtime, as explained [here](#extensibility). However, if you like to customize the workspace image with your own software or configuration, you can do that via a Dockerfile as shown below:
 
@@ -751,7 +751,7 @@ Finally, use [docker build](https://docs.docker.com/engine/reference/commandline
 </details>
 
 <details>
-<summary><b>How to configure the VNC server?</b></summary>
+<summary><b>How to configure the VNC server?</b> (click to expand...)</summary>
 
 If you want to directly connect to the workspace via a VNC client (not using the [noVNC webapp](#desktop-gui)), you might be interested in changing certain VNC server configurations. To configure the VNC server, you can provide/overwrite the following environment variables at container start (via docker run option: `--env`):
 
