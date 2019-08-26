@@ -146,24 +146,6 @@ The container can be configured with the following environment variables (via do
         <td>Add and overwrite Jupyter configuration options via command line args. Refer to <a href="https://jupyter-notebook.readthedocs.io/en/stable/config.html">this overview</a> for all options.</td>
         <td></td>
     </tr>
-    <tr>
-        <td colspan="3"><b>VNC Configuration:</b></td>
-    </tr>
-    <tr>
-        <td>VNC_PW</td>
-        <td>Password of VNC connection. This password only needs to be secure if the VNC server is directly exposed. If it is used via noVNC, it is already protected based on the configured authentication mechanism.</td>
-        <td>vncpassword</td>
-    </tr>
-    <tr>
-        <td>VNC_RESOLUTION</td>
-        <td>Default desktop resolution of VNC connection. When using noVNC, the resolution will be dynamically adapted to the window size.</td>
-        <td>1600x900</td>
-    </tr>
-    <tr>
-        <td>VNC_COL_DEPTH</td>
-        <td>Default color depth of VNC connection.</td>
-        <td>24</td>
-    </tr>
 </table>
 
 ### Enable Authentication
@@ -671,7 +653,7 @@ The workspace provides a high degree of extensibility. Within the workspace, you
 - **JupyterLab:** `File -> New -> Terminal`
 - **VS Code:** `Terminal -> New Terminal`
 
-Additionally, pre-installed tools such as Jupyter, JupyterLab, and Visual Studio Code each provide their own rich ecosystem of extensions. The workspace also contains a [collection of installer scripts](https://github.com/ml-tooling/ml-workspace/tree/master/docker-res/tools) for many commonly used development tools or libraries (e.g., `PyCharm`, `Zeppelin`, `RStudio`, `Starspace`). Those scripts can be either executed from the Desktop VNC (double-click on the script within the `Tools` folder on the Desktop) or from a terminal (execute any tool script from the `/resources/tools/` folder). For example, to install the [Apache Zeppelin](https://zeppelin.apache.org/) notebook server execute:
+Additionally, pre-installed tools such as Jupyter, JupyterLab, and Visual Studio Code each provide their own rich ecosystem of extensions. The workspace also contains a [collection of installer scripts](https://github.com/ml-tooling/ml-workspace/tree/master/docker-res/tools) for many commonly used development tools or libraries (e.g., `PyCharm`, `Zeppelin`, `RStudio`, `Starspace`). Those scripts can be either executed from the Desktop VNC (double-click on the script within the `Tools` folder on the Desktop) or from a terminal (execute any tool script from the `/resources/tools/` folder). For example, to install the [Apache Zeppelin](https://zeppelin.apache.org/) notebook server, simply execute:
 
 ```bash
 /resources/tools/zeppelin.sh --port=1234
@@ -705,6 +687,35 @@ Finally, use [docker build](https://docs.docker.com/engine/reference/commandline
 
 > 📖 _For a more comprehensive Dockerfile example, take a look at the [Dockerfile of the R-flavor](https://github.com/ml-tooling/ml-workspace/blob/master/r-flavor/Dockerfile)._
 
+</details>
+
+<details>
+<summary><b>How to configure the VNC server?</b></summary>
+
+If you want to directly connect to the workspace via a VNC client (not using the [noVNC webapp](#desktop-gui)), you might be interested in changing certain VNC server configurations. To configure the VNC server, you can provide/overwrite the following environment variables at container start (via docker run option: `--env`):
+
+<table>
+    <tr>
+        <th>Variable</th>
+        <th>Description</th>
+        <th>Default</th>
+    </tr>
+    <tr>
+        <td>VNC_PW</td>
+        <td>Password of VNC connection. This password only needs to be secure if the VNC server is directly exposed. If it is used via noVNC, it is already protected based on the configured authentication mechanism.</td>
+        <td>vncpassword</td>
+    </tr>
+    <tr>
+        <td>VNC_RESOLUTION</td>
+        <td>Default desktop resolution of VNC connection. When using noVNC, the resolution will be dynamically adapted to the window size.</td>
+        <td>1600x900</td>
+    </tr>
+    <tr>
+        <td>VNC_COL_DEPTH</td>
+        <td>Default color depth of VNC connection.</td>
+        <td>24</td>
+    </tr>
+</table>
 
 </details>
 
