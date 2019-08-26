@@ -72,12 +72,6 @@ docker run -d -p 8091:8091 -v "${PWD}:/workspace" --env AUTHENTICATE_VIA_JUPYTER
 
 This command runs the container in background (`-d`), mounts your current working directory into the `/workspace` folder (`-v`), secures the workspace via a provided token (`--env AUTHENTICATE_VIA_JUPYTER`),  and keeps the container running even on system restarts (`--restart always`). You can find additional options for docker run [here](https://docs.docker.com/engine/reference/commandline/run/) and workspace configuration options in [the section below](#Configuration).
 
-### Persist Data
-
-To persist the data, you need to mount a volume into `/workspace` (via docker run option: `-v`).
-
-The default work directory within the container is `/workspace`, which is also the root directory of the Jupyter instance. The `/workspace` directory is intended to be used for all the important work artifacts. Data within other directories of the server (e.g. `/root`) might get lost at container restarts.
-
 ### Configuration Options
 
 The container can be configured with the following environment variables (via docker run option: `--env`):
@@ -147,6 +141,12 @@ The container can be configured with the following environment variables (via do
         <td></td>
     </tr>
 </table>
+
+### Persist Data
+
+To persist the data, you need to mount a volume into `/workspace` (via docker run option: `-v`).
+
+The default work directory within the container is `/workspace`, which is also the root directory of the Jupyter instance. The `/workspace` directory is intended to be used for all the important work artifacts. Data within other directories of the server (e.g. `/root`) might get lost at container restarts.
 
 ### Enable Authentication
 
@@ -470,7 +470,8 @@ Just run the setup script on the machine from where you want to setup a connecti
 
 Besides the ability to execute commands on a remote machine, SSH also provides a variety of other features that can improve your development workflow as described in the following sections.
 
-#### Tunnel Ports
+<details>
+<summary><b>Tunnel Ports</b> (click to expand...)</summary>
 
 An SSH connection can be used for tunneling application ports from the remote machine to the local machine, or vice versa. For example, you can expose the workspace internal port `5901` (VNC Server) to the local machine on port `5000` by executing:
 
@@ -499,7 +500,10 @@ You can find port information on all the tools in the [supervisor configuration]
 
 > 📖 _For more information about port tunneling/forwarding, we recommend [this guide](https://www.everythingcli.org/ssh-tunnelling-for-fun-and-profit-local-vs-remote/)._
 
-#### Copy Data via SCP
+</details>
+
+<details>
+<summary><b>Copy Data via SCP</b> (click to expand...)</summary>
 
 [SCP](https://linux.die.net/man/1/scp) allows files and directories to be securely copied to, from, or between different machines via SSH connections. For example, to copy a local file (`./local-file.txt`) into the `/workspace` folder inside the workspace, execute:
 
@@ -514,8 +518,10 @@ scp -r local-workspace:/workspace .
 ```
 
 > 📖 _For more information about scp, we recommend [this guide](https://www.garron.me/en/articles/scp.html)._
+</details>
 
-#### Sync Data via Rsync
+<details>
+<summary><b>Sync Data via Rsync</b> (click to expand...)</summary>
 
 [Rsync](https://linux.die.net/man/1/rsync) is a utility for efficiently transferring and synchronizing files between different machines (e.g. via SSH connections) by comparing the modification times and sizes of files.
 
@@ -527,8 +533,10 @@ https://github.com/dooblem/bsync
 https://github.com/bcpierce00/unison
 https://axkibe.github.io/lsyncd/
 https://github.com/deajan/osync
+</details>
 
-#### Mount Folders via SSHFS
+<details>
+<summary><b>Mount Folders via SSHFS</b> (click to expand...)</summary> 
 
 Besides copying and syncing data, an SSH connection can also be used to mount directories from a remote machine into the local filesystem via [SSHFS](https://github.com/libfuse/sshfs). 
 For example, to mount the `/workspace` directory of `my-workspace` into a local path (e.g. `/local/folder/path`), execute:
@@ -540,6 +548,7 @@ sshfs -o reconnect my-workspace:/workspace /local/folder/path
 Once the remote directory is mounted, you can interact with the remote file system the same way as with any local directory and file.
 
 > 📖 _For more information about sshfs, we recommend [this guide](https://www.digitalocean.com/community/tutorials/how-to-use-sshfs-to-mount-remote-file-systems-over-ssh)._
+</details>
 
 ### Remote Development
 
@@ -571,8 +580,7 @@ To a running
 The workspace image can also be used to execute arbitrary Python code without starting any of the pre-installed tools. This provides a seamless way to productize your ML projects since the code that has been developed interactively within the workspace will have the same environment and configuration when run as a job via the same workspace image.
 
 <details>
-<summary><b>Run Python code as a job via the workspace image (click to expand...)</b></summary>
-
+<summary><b>Run Python code as a job via the workspace image</b> (click to expand...)</summary>
 
 To run Python code as a job, you need to provide a path or URL to a code directory (or script) via `EXECUTE_CODE`. The code can be either already mounted into the workspace container or downloaded from a version control system (e.g., git or svn) as described in the following sections. The selected code path needs to be python executable. In case the selected code is a directory (e.g., whenever you download the code from a VCS) you need to put a `__main__.py` file at the root of this directory. The `__main__.py` needs to contain the code that starts your job.
 
@@ -665,7 +673,6 @@ After installation, refresh the Jupyter website and the Zeppelin tool will be av
 
 <details>
 <summary><b>How to customize the workspace image (create your own flavor)?</b></summary>
-
 
 The workspace can be extended in many ways at runtime, as explained [here](#extensibility). However, if you like to customize the workspace image with your own software or configuration, you can do that via a Dockerfile as shown below:
 
