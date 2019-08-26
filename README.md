@@ -168,7 +168,7 @@ The container can be configured with the following environment variables (via do
 
 ### Enable Authentication
 
-We strongly recommend enabling authentication via one of the following two options. For both options, the user will be required to authenticate for accessing any of the preinstalled tools.
+We strongly recommend enabling authentication via one of the following two options. For both options, the user will be required to authenticate for accessing any of the pre-installed tools.
 
 #### Token-based Authentication via Jupyter (recommended)
 
@@ -227,7 +227,7 @@ In addition to the main workspace image (`mltooling/ml-workspace`), we provide o
 <a href="https://hub.docker.com/r/mltooling/ml-workspace-minimal" title="Docker Pulls"><img src="https://img.shields.io/docker/pulls/mltooling/ml-workspace-minimal.svg"></a>
 <a href="https://hub.docker.com/r/mltooling/ml-workspace-minimal" title="Docker Stars"><img src="https://img.shields.io/docker/stars/mltooling/ml-workspace-minimal"></a>
 
-The minimal flavor (`mltooling/ml-workspace-minimal`) is our smallest image that contains most of the tools and features described in the [features section](#features) without most of the python libraries that are preinstalled in our main image. Any Python library or excluded tool can be installed manually during runtime by the user.
+The minimal flavor (`mltooling/ml-workspace-minimal`) is our smallest image that contains most of the tools and features described in the [features section](#features) without most of the python libraries that are pre-installed in our main image. Any Python library or excluded tool can be installed manually during runtime by the user.
 
 ```bash
 docker run -p 8091:8091 mltooling/ml-workspace-minimal:latest
@@ -240,7 +240,7 @@ docker run -p 8091:8091 mltooling/ml-workspace-minimal:latest
 <a href="https://hub.docker.com/r/mltooling/ml-workspace-light" title="Docker Pulls"><img src="https://img.shields.io/docker/pulls/mltooling/ml-workspace-light.svg"></a>
 <a href="https://hub.docker.com/r/mltooling/ml-workspace-light" title="Docker Stars"><img src="https://img.shields.io/docker/stars/mltooling/ml-workspace-light"></a>
 
-The light flavor (`mltooling/ml-workspace-light`) has all of the tools and features described in the [features section](#features), but only a small collection of popular python machine learning libraries preinstalled. Any Python library can be installed manually during runtime.
+The light flavor (`mltooling/ml-workspace-light`) has all of the tools and features described in the [features section](#features), but only a small collection of popular python machine learning libraries pre-installed. Any Python library can be installed manually during runtime.
 
 ```bash
 docker run -p 8091:8091 mltooling/ml-workspace-light:latest
@@ -351,7 +351,7 @@ The workspace is equipped with a selection of best-in-class open-source developm
 
 <img style="width: 100%" src="./docs/images/feature-open-tools.png"/>
 
-> ℹ️ _Within your workspace you have **full root & sudo access** to install any library or tool you need via terminal (e.g., `pip` or `apt-get`)_
+> ℹ️ _Within your workspace you have **full root & sudo privileges** to install any library or tool you need via terminal (e.g., `pip`, `apt-get`, `conda`, or `npm`)._
 
 ### Jupyter
 
@@ -447,7 +447,7 @@ To deactivate or manage (e.g., provide edit permissions) shared links, open the 
 
 ### Hardware Monitoring
 
-The workspace provides two preinstalled web-based tools to help developers during model training and other experimentation tasks to get insights into everything happening on the system and figure out performance bottlenecks.
+The workspace provides two pre-installed web-based tools to help developers during model training and other experimentation tasks to get insights into everything happening on the system and figure out performance bottlenecks.
 
 [Netdata](https://github.com/netdata/netdata) (`Open Tool -> Netdata`) is a real-time hardware and performance monitoring dashboard that visualize the processes and services on your Linux systems. It monitors metrics about CPU, GPU, memory, disks, networks, processes, and more.
 
@@ -461,7 +461,7 @@ The workspace provides two preinstalled web-based tools to help developers durin
 
 ### Tensorboard
 
-[Tensorboard](https://www.tensorflow.org/tensorboard) provides a suite of visualization tools to make it easier to understand, debug, and optimize your experiment runs. It includes logging features for scalar, histogram, model structure, embeddings, and text & image visualization. The workspace comes preinstalled with [jupyter_tensorboard extension](https://github.com/lspvic/jupyter_tensorboard) that integrates Tensorboard into the Jupyter interface with functionalities to start, manage, and stop instances. You can open a new instance for a valid logs directory as shown below:
+[Tensorboard](https://www.tensorflow.org/tensorboard) provides a suite of visualization tools to make it easier to understand, debug, and optimize your experiment runs. It includes logging features for scalar, histogram, model structure, embeddings, and text & image visualization. The workspace comes pre-installed with [jupyter_tensorboard extension](https://github.com/lspvic/jupyter_tensorboard) that integrates Tensorboard into the Jupyter interface with functionalities to start, manage, and stop instances. You can open a new instance for a valid logs directory as shown below:
 
 <img style="width: 100%" src="./docs/images/feature-tensorboard-open.png" />
 
@@ -586,10 +586,11 @@ To a running
 
 > ℹ️ _A job is defined as any computational task that runs for a certain time to completion, such as a model training or a data pipeline._
 
-The workspace image can also be used to execute arbitrary Python code without starting any of the preinstalled tools. This provides a seamless way to productize your ML projects since the code that has been developed interactively within the workspace will have the same environment and configuration when run as a job via the same workspace image.
+The workspace image can also be used to execute arbitrary Python code without starting any of the pre-installed tools. This provides a seamless way to productize your ML projects since the code that has been developed interactively within the workspace will have the same environment and configuration when run as a job via the same workspace image.
 
 <details>
 <summary><b>Run Python code as a job via the workspace image (click to expand...)</b></summary>
+
 
 To run Python code as a job, you need to provide a path or URL to a code directory (or script) via `EXECUTE_CODE`. The code can be either already mounted into the workspace container or downloaded from a version control system (e.g., git or svn) as described in the following sections. The selected code path needs to be python executable. In case the selected code is a directory (e.g., whenever you download the code from a VCS) you need to put a `__main__.py` file at the root of this directory. The `__main__.py` needs to contain the code that starts your job.
 
@@ -613,7 +614,7 @@ docker run -v "${PWD}:/workspace/ml-job/" --env EXECUTE_CODE="/workspace/ml-job/
 
 #### Install Dependencies
 
-In the case that the preinstalled workspace libraries are not compatible with your code, you can install or change dependencies by just adding one or multiple of the following files to your code directory:
+In the case that the pre-installed workspace libraries are not compatible with your code, you can install or change dependencies by just adding one or multiple of the following files to your code directory:
 
 - `requirements.txt`: [pip requirements format](https://pip.pypa.io/en/stable/user_guide/#requirements-files) for pip-installable dependencies.
 - `environment.yml`: [conda environment file](https://docs.conda.io/projects/conda/en/latest/user-guide/tasks/manage-environments.html?highlight=environment.yml#creating-an-environment-file-manually) to create a separate Python environment.
@@ -648,11 +649,9 @@ CMD ["python", "/resources/run.py", "--code-only"]
 ```
 </details>
 
-### Extensibility
+### Pre-installed Libraries and Runtimes
 
-The workspace provides a high degree of extensibility. 
-
-### Preinstalled Libraries and Runtimes
+_WIP: Feature Table_
 
 The workspace is pre-installed with many popular runtimes, data science libraries, and ubuntu packages:
 
@@ -663,10 +662,28 @@ The full list of installed tools can be found within the [Dockerfile](https://gi
 
 > ℹ️ _**An R-Runtime** installation script is provided in the `Tools` folder on the desktop of the VNC GUI._
 
+### Extensibility
+
+The workspace provides a high degree of extensibility. Within the workspace, you have **full root & sudo privileges** to install any library or tool you need via terminal (e.g., `pip`, `apt-get`, `conda`, or `npm`). You can open a terminal by one of the following ways:
+
+- **Jupyter:** `New -> Terminal`
+- **Desktop VNC:** `Applications -> Terminal Emulator`
+- **JupyterLab:** `File -> New -> Terminal`
+- **VS Code:** `Terminal -> New Terminal`
+
+Additionally, pre-installed tools such as Jupyter, JupyterLab, and Visual Studio Code each provide their own rich ecosystem of extensions. The workspace also contains a [collection of installer scripts](https://github.com/ml-tooling/ml-workspace/tree/master/docker-res/tools) for many commonly used development tools or libraries (e.g., `PyCharm`, `Zeppelin`, `RStudio`, `Starspace`). Those scripts can be either executed from the Desktop VNC (double-click on the script within the `Tools` folder on the Desktop) or from a terminal (execute any tool script from the `/resources/tools/` folder). For example, to install the [Apache Zeppelin](https://zeppelin.apache.org/) notebook server execute:
+
+```bash
+/resources/tools/zeppelin.sh --port=1234
+```
+
+After installation, refresh the Jupyter website and the Zeppelin tool will be available under `Open Tool -> Zeppelin`. Other tools might only be available within the Desktop VNC (e.g., `atom` or `pycharm`) or do not provide any UI (e.g., `starspace`, `docker-client`).
+
 ## FAQ
 
 <details>
 <summary><b>How to customize the workspace image (create your own flavor)?</b></summary>
+
 
 The workspace can be extended in many ways at runtime, as explained [here](#extensibility). However, if you like to customize the workspace image with your own software or configuration, you can do that via a Dockerfile as shown below:
 
