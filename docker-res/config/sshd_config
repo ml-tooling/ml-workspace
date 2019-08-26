@@ -8,6 +8,10 @@ LogLevel INFO
 # Root is the only user allowed to login
 AllowUsers root
 
+# Allow TCP Forwarding: required by vs code remote development: 
+# https://code.visualstudio.com/docs/remote/troubleshooting#_enabling-alternate-ssh-authentication-methods
+AllowTcpForwarding yes
+
 # Allow transfer of user environment variables
 PermitUserEnvironment yes
 
