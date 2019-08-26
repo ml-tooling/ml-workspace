@@ -146,11 +146,18 @@ The container can be configured with the following environment variables (via do
 
 To persist the data, you need to mount a volume into `/workspace` (via docker run option: `-v`).
 
+<details>
+<summary>Details (click to expand...)</summary>
+
 The default work directory within the container is `/workspace`, which is also the root directory of the Jupyter instance. The `/workspace` directory is intended to be used for all the important work artifacts. Data within other directories of the server (e.g. `/root`) might get lost at container restarts.
+</details>
 
 ### Enable Authentication
 
 We strongly recommend enabling authentication via one of the following two options. For both options, the user will be required to authenticate for accessing any of the pre-installed tools.
+
+<details>
+<summary>Details (click to expand...)</summary>
 
 #### Token-based Authentication via Jupyter (recommended)
 
@@ -172,9 +179,16 @@ docker run -p 8091:8091 --env WORKSPACE_AUTH_USER="user" --env WORKSPACE_AUTH_PA
 
 The basic authentication is configured via the nginx proxy and might be more performant compared to the other option since with `AUTHENTICATE_VIA_JUPYTER` every request to any tool in the workspace will check via the Jupyter instance if the user (based on the request cookies) is authenticated.
 
+</details>
+
 ### Enable SSL/HTTPS
 
-We recommend enabling SSL so that the workspace is accessible via HTTPS (encrypted communication). SSL encryption can be activated via the `WORKSPACE_SSL_ENABLED` variable. When set to `true`, either the `cert.crt` and `cert.key` file must be mounted to `/resources/ssl` or, if the certificate files do not exist, the container generates self-signed certificates. For example, if the `/path/with/certificate/files` on the local system contains a valid certificate for the host domain (`cert.crt` and `cert.key` file), it can be used from the workspace as shown below:
+We recommend enabling SSL so that the workspace is accessible via HTTPS (encrypted communication). SSL encryption can be activated via the `WORKSPACE_SSL_ENABLED` variable. 
+
+<details>
+<summary>Details (click to expand...)</summary>
+
+When set to `true`, either the `cert.crt` and `cert.key` file must be mounted to `/resources/ssl` or, if the certificate files do not exist, the container generates self-signed certificates. For example, if the `/path/with/certificate/files` on the local system contains a valid certificate for the host domain (`cert.crt` and `cert.key` file), it can be used from the workspace as shown below:
 
 ```bash
 docker run -p 8091:8091 --env WORKSPACE_SSL_ENABLED="true" -v /path/with/certificate/files:/resources/ssl:ro mltooling/ml-workspace:latest
@@ -184,9 +198,16 @@ If you want to host the workspace on a public domain, we recommend to use [Let's
 
 > ℹ️ _When you enable SSL support, you must access the workspace over `https://`, not over plain `http://`._
 
+</details>
+
 ### Limit Memory & CPU
 
-By default, the workspace container has no resource constraints and can use as much of a given resource as the host’s kernel scheduler allows. Docker provides ways to control how much memory, or CPU a container can use, by setting runtime configuration flags of the docker run command. For example, the following command restricts the workspace to only use a maximum of 8 CPUs, 16 GB of memory, and 1 GB of shared memory (required for some ML frameworks):
+By default, the workspace container has no resource constraints and can use as much of a given resource as the host’s kernel scheduler allows. Docker provides ways to control how much memory, or CPU a container can use, by setting runtime configuration flags of the docker run command.
+
+<details>
+<summary>Details (click to expand...)</summary>
+
+For example, the following command restricts the workspace to only use a maximum of 8 CPUs, 16 GB of memory, and 1 GB of shared memory (required for some ML frameworks):
 
 ```bash
 docker run -p 8091:8091 --cpus=8 --memory=16g --shm-size 1G mltooling/ml-workspace:latest
@@ -194,7 +215,9 @@ docker run -p 8091:8091 --cpus=8 --memory=16g --shm-size 1G mltooling/ml-workspa
 
 > 📖 _For more options and documentation on resource constraints, please refer to the [official docker guide](https://docs.docker.com/config/containers/resource_constraints/)._
 
-### Proxy
+</details>
+
+### Enable Proxy
 
 If a proxy is required, you can pass the proxy configuration via the `http_proxy` and `no_proxy` environment variables.
 
@@ -209,11 +232,15 @@ In addition to the main workspace image (`mltooling/ml-workspace`), we provide o
 <a href="https://hub.docker.com/r/mltooling/ml-workspace-minimal" title="Docker Pulls"><img src="https://img.shields.io/docker/pulls/mltooling/ml-workspace-minimal.svg"></a>
 <a href="https://hub.docker.com/r/mltooling/ml-workspace-minimal" title="Docker Stars"><img src="https://img.shields.io/docker/stars/mltooling/ml-workspace-minimal"></a>
 
+<details>
+<summary>Details (click to expand...)</summary>
+
 The minimal flavor (`mltooling/ml-workspace-minimal`) is our smallest image that contains most of the tools and features described in the [features section](#features) without most of the python libraries that are pre-installed in our main image. Any Python library or excluded tool can be installed manually during runtime by the user.
 
 ```bash
 docker run -p 8091:8091 mltooling/ml-workspace-minimal:latest
 ```
+</details>
 
 #### Light Flavor
 
@@ -222,11 +249,15 @@ docker run -p 8091:8091 mltooling/ml-workspace-minimal:latest
 <a href="https://hub.docker.com/r/mltooling/ml-workspace-light" title="Docker Pulls"><img src="https://img.shields.io/docker/pulls/mltooling/ml-workspace-light.svg"></a>
 <a href="https://hub.docker.com/r/mltooling/ml-workspace-light" title="Docker Stars"><img src="https://img.shields.io/docker/stars/mltooling/ml-workspace-light"></a>
 
+<details>
+<summary>Details (click to expand...)</summary>
+
 The light flavor (`mltooling/ml-workspace-light`) has all of the tools and features described in the [features section](#features), but only a small collection of popular python machine learning libraries pre-installed. Any Python library can be installed manually during runtime.
 
 ```bash
 docker run -p 8091:8091 mltooling/ml-workspace-light:latest
 ```
+</details>
 
 #### R Flavor
 
@@ -235,11 +266,15 @@ docker run -p 8091:8091 mltooling/ml-workspace-light:latest
 <a href="https://hub.docker.com/r/mltooling/ml-workspace-r" title="Docker Pulls"><img src="https://img.shields.io/docker/pulls/mltooling/ml-workspace-r.svg"></a>
 <a href="https://hub.docker.com/r/mltooling/ml-workspace-r" title="Docker Stars"><img src="https://img.shields.io/docker/stars/mltooling/ml-workspace-r"></a>
 
+<details>
+<summary>Details (click to expand...)</summary>
+
 The R flavor (`mltooling/ml-workspace-r`) is based on our default workspace image and extends it with the R-interpreter, R-Jupyter kernel, RStudio server (access via `Open Tool -> RStudio`), and a variety of popular packages from the R ecosystem.
 
 ```bash
 docker run -p 8091:8091 mltooling/ml-workspace-r:latest
 ```
+</details>
 
 #### GPU Flavor
 
@@ -247,6 +282,9 @@ docker run -p 8091:8091 mltooling/ml-workspace-r:latest
 <a href="https://hub.docker.com/r/mltooling/ml-workspace-gpu" title="Docker Image Metadata"><img src="https://images.microbadger.com/badges/image/mltooling/ml-workspace-gpu.svg"></a>
 <a href="https://hub.docker.com/r/mltooling/ml-workspace-gpu" title="Docker Pulls"><img src="https://img.shields.io/docker/pulls/mltooling/ml-workspace-gpu.svg"></a>
 <a href="https://hub.docker.com/r/mltooling/ml-workspace-gpu" title="Docker Stars"><img src="https://img.shields.io/docker/stars/mltooling/ml-workspace-gpu"></a>
+
+<details>
+<summary>Details (click to expand...)</summary>
 
 The GPU flavor (`mltooling/ml-workspace-gpu`) is based on our default workspace image and extends it with CUDA 10 and GPU-ready versions of various machine learning libraries (e.g. tensorflow, pytorch, cntk, jax). This GPU image has the following additional requirements for the system:
 
@@ -287,6 +325,7 @@ The GPU flavor also comes with a few additional configuration options as explain
         <td>true</td>
     </tr>
 </table>
+</details>
 
 ### Multi-user setup
 
@@ -318,9 +357,9 @@ valuable if it's shared publicly so that more people can benefit from it.
   <a href="#jupyter">Jupyter</a> •
   <a href="#desktop-gui">Desktop GUI</a> •
   <a href="#visual-studio-code">VS Code</a> •
+  <a href="#jupyterlab">JupyterLab</a> •
   <a href="#git-integration">Git Integration</a> •
   <a href="#file-sharing">File Sharing</a> •
-  <a href="#jupyterlab">JupyterLab</a> •
   <a href="#hardware-monitoring">Hardware Monitoring</a> •
   <a href="#tensorboard">Tensorboard</a> •
   <a href="#extensibility">Extensibility</a> •
@@ -375,6 +414,12 @@ Once you are connected, you will see a desktop GUI that allows you to install an
 
 <p align="center"><img src="./docs/images/feature-vs-code.png"/></p>
 
+### JupyterLab
+
+[JupyterLab](https://github.com/jupyterlab/jupyterlab) (`Open Tool -> JupyterLab`) is the next-generation user interface for Project Jupyter. It offers all the familiar building blocks of the classic Jupyter Notebook (notebook, terminal, text editor, file browser, rich outputs, etc.) in a flexible and powerful user interface. This JupyterLab instance comes pre-installed with a few helpful extensions such as a the [jupyterlab-toc](https://github.com/jupyterlab/jupyterlab-toc), [jupyterlab-git](https://github.com/jupyterlab/jupyterlab-git), and [juptyterlab-tensorboard](https://github.com/chaoleili/jupyterlab_tensorboard).
+
+<img style="width: 100%" src="./docs/images/feature-jupyterlab.png"/>
+
 ### Git Integration
 
 Version control is a crucial aspect for productive collaboration. To make this process as smooth as possible, we have integrated a custom-made Jupyter extension specialized on pushing single notebooks, a full-fledged web-based Git client ([ungit](https://github.com/FredrikNoren/ungit)), a tool to open and edit plain text documents (e.g., `.py`, `.md`) as notebooks ([jupytext](https://github.com/mwouts/jupytext)), as well as a notebook merging tool ([nbdime](https://github.com/jupyter/nbdime)). Additionally, JupyterLab and VS Code also provide GUI-based Git clients.
@@ -420,12 +465,6 @@ This will generate a unique link protected via a token that gives anyone with th
 TODO: Add screenshot
 
 To deactivate or manage (e.g., provide edit permissions) shared links, open the Filebrowser via `Open Tool -> Filebrowser` and select `Settings->User Management`.
-
-### JupyterLab
-
-[JupyterLab](https://github.com/jupyterlab/jupyterlab) (`Open Tool -> JupyterLab`) is the next-generation user interface for Project Jupyter. It offers all the familiar building blocks of the classic Jupyter Notebook (notebook, terminal, text editor, file browser, rich outputs, etc.) in a flexible and powerful user interface. This JupyterLab instance comes pre-installed with a few helpful extensions such as a the [jupyterlab-toc](https://github.com/jupyterlab/jupyterlab-toc), [jupyterlab-git](https://github.com/jupyterlab/jupyterlab-git), and [juptyterlab-tensorboard](https://github.com/chaoleili/jupyterlab_tensorboard).
-
-<img style="width: 100%" src="./docs/images/feature-jupyterlab.png"/>
 
 ### Hardware Monitoring
 
@@ -536,7 +575,7 @@ https://github.com/deajan/osync
 </details>
 
 <details>
-<summary><b>Mount Folders via SSHFS</b> (click to expand...)</summary> 
+<summary><b>Mount Folders via SSHFS</b> (click to expand...)</summary>
 
 Besides copying and syncing data, an SSH connection can also be used to mount directories from a remote machine into the local filesystem via [SSHFS](https://github.com/libfuse/sshfs). 
 For example, to mount the `/workspace` directory of `my-workspace` into a local path (e.g. `/local/folder/path`), execute:
