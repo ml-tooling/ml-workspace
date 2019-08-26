@@ -224,7 +224,7 @@ docker run -p 8091:8091 --cpus=8 --memory=16g --shm-size=1G mltooling/ml-workspa
 
 ### Enable Proxy
 
-If a proxy is required, you can pass the proxy configuration via the `http_proxy` and `no_proxy` environment variables.
+If a proxy is required, you can pass the proxy configuration via the `HTTP_PROXY`,`HTTPS_PROXY`, and `NO_PROXY` environment variables.
 
 ### Workspace Flavors
 
@@ -563,14 +563,16 @@ Once the remote directory is mounted, you can interact with the remote file syst
 
 ### Remote Development
 
-The workspace can be integrated and used as a remote runtime (also known as remote kernel/machine/interpreter) for a variety of popular development tools and IDEs, such as Jupyter, VS Code, PyCharm, Colab, or Atom Hydrogen. Thereby, you can connect your favorite development tool running on your local machine to a remote machine for code execution. These integrations usually require a passwordless SSH connection from the local machine to the workspace. To set up an SSH connection, please follow the steps explained in the [SSH Access section](#ssh-access).
+The workspace can be integrated and used as a remote runtime (also known as remote kernel/machine/interpreter) for a variety of popular development tools and IDEs, such as Jupyter, VS Code, PyCharm, Colab, or Atom Hydrogen. Thereby, you can connect your favorite development tool running on your local machine to a remote machine for code execution. This enables a **local-quality development experience with remote hosted compute resources**.
+
+These integrations usually require a passwordless SSH connection from the local machine to the workspace. To set up an SSH connection, please follow the steps explained in the [SSH Access](#ssh-access) section.
 
 <details>
 <summary><b>Jupyter - Remote Kernel</b> (click to expand...)</summary>
 
 The workspace can be added to a Jupyter instance as a remote kernel by using the [remote_ikernel](https://bitbucket.org/tdaff/remote_ikernel/) tool. If you have installed remote_ikernel (`pip install remote_ikernel`) on your local machine, the SSH setup script of the workspace will automatically offer you the option to setup a remote kernel connection.
 
-> ℹ️ _When running kernels on remote machines, the notebooks themselves will be saved onto the local filesystem, but the kernel will only have access to the filesystem of the remote machine running the kernel. If you need to sync data, you can make use of rsync, scp, or sshfs as explained in the [SSH Access section](#ssh-access)._
+> ℹ️ _When running kernels on remote machines, the notebooks themselves will be saved onto the local filesystem, but the kernel will only have access to the filesystem of the remote machine running the kernel. If you need to sync data, you can make use of rsync, scp, or sshfs as explained in the [SSH Access](#ssh-access) section._
 
 In case you want to manually setup and manage remote kernels, use the [remote_ikernel](https://bitbucket.org/tdaff/remote_ikernel/src/default/README.rst) command-line tool, as shown below:
 
@@ -591,6 +593,16 @@ _WIP: Add Screenshot_
 
 <details>
 <summary><b>VS Code - Remote Machine</b> (click to expand...)</summary>
+
+The Visual Studio Code [Remote - SSH](https://marketplace.visualstudio.com/items?itemName=ms-vscode-remote.remote-ssh) extension allows you to open a remote folder on any remote machine with SSH access and work with it just as you would if the folder were on your own machine. Once connected to a remote machine, you can interact with files and folders anywhere on the remote filesystem and take full advantage of VS Code's feature set (IntelliSense, debugging, and extension support). The discovers and works out-of-the-box with passwordless SSH connections as configured by the workspace SSH setup script. To enable your local VS Code application to connect to a workspace:
+
+1. Install [Remote - SSH](https://marketplace.visualstudio.com/items?itemName=ms-vscode-remote.remote-ssh) extension inside your local VS Code.
+2. Run the SSH setup script of a selected workspace as explained in the [SSH Access](#ssh-access) section.
+3. Open the Remote-SSH panel in your local VS Code. All configured SSH connections should be automatically discovered. Just select any configured workspace connection you like to connect to as shown below:
+
+<img style="width: 100%" src="https://microsoft.github.io/vscode-remote-release/images/ssh-readme.gif"/>
+
+> 📖 _You can find additional features and information about the Remote SSH extension in [this guide](https://code.visualstudio.com/docs/remote/ssh)._
 
 </details>
 
