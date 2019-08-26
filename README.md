@@ -525,7 +525,7 @@ scp ./local-file.txt my-workspace:/workspace
 To copy the `/workspace` directory from `my-workspace` to the working directory of the local machine, execute:
 
 ```bash
-scp -r local-workspace:/workspace .
+scp -r my-workspace:/workspace .
 ```
 
 > 📖 _For more information about scp, we recommend [this guide](https://www.garron.me/en/articles/scp.html)._
@@ -534,16 +534,21 @@ scp -r local-workspace:/workspace .
 <details>
 <summary><b>Sync Data via Rsync</b> (click to expand...)</summary>
 
-[Rsync](https://linux.die.net/man/1/rsync) is a utility for efficiently transferring and synchronizing files between different machines (e.g. via SSH connections) by comparing the modification times and sizes of files.
+[Rsync](https://linux.die.net/man/1/rsync) is a utility for efficiently transferring and synchronizing files between different machines (e.g., via SSH connections) by comparing the modification times and sizes of files. The rsync command will determine which files need to be updated each time it is run, which is far more efficient and convenient than using something like scp or sftp. For example, to sync all content of a local folder (`./local-project-folder/`) into the `/workspace/remote-project-folder/` folder inside the workspace, execute:
 
-```
-rsync -avzP source/ destination
+```bash
+rsync -rlptzvP --delete --exclude=".git" "./local-project-folder/" "my-workspace:/workspace/remote-project-folder/"
 ```
 
-https://github.com/dooblem/bsync
-https://github.com/bcpierce00/unison
-https://axkibe.github.io/lsyncd/
-https://github.com/deajan/osync
+If you have some changes inside the folder on the workspace, you can sync those changes back to the local folder by changing the source and destination arguments:
+
+```bash
+rsync -rlptzvP --delete --exclude=".git" "my-workspace:/workspace/remote-project-folder/" "./local-project-folder/"
+```
+
+You can rerun these commands each time you want to synchronize the latest copy of your files. Rsync will make sure that only updates will be transferred.
+
+> 📖 _You can find more information about rsync on [this man page](https://linux.die.net/man/1/rsync)._
 </details>
 
 <details>
