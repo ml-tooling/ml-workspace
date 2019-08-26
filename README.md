@@ -23,6 +23,7 @@
   <a href="#features">Features & Screenshots</a> •
   <a href="#support">Support</a> •
   <a href="https://github.com/ml-tooling/ml-workspace/issues/new?labels=bug&template=01_bug-report.md">Report a Bug</a> •
+  <a href="#faq">FAQ</a> •
   <a href="#contribution">Contribution</a>
 </p>
 
@@ -42,7 +43,7 @@ The ML workspace is an all-in-one web-based IDE specialized for machine learning
 ## Getting Started
 
 <p>
-<a href="https://labs.play-with-docker.com/?stack=https://raw.githubusercontent.com/ml-tooling/ml-workspace/develop/deployment/play-with-docker/docker-compose.yml" title="Docker Image Metadata" target="_blank"><img src="https://cdn.rawgit.com/play-with-docker/stacks/cff22438/assets/images/button.png" alt="Try in PWD" width="100px"></a>
+<a href="https://labs.play-with-docker.com/?stack=https://raw.githubusercontent.com/ml-tooling/ml-workspace/master/deployment/play-with-docker/docker-compose.yml" title="Docker Image Metadata" target="_blank"><img src="https://cdn.rawgit.com/play-with-docker/stacks/cff22438/assets/images/button.png" alt="Try in PWD" width="100px"></a>
 </p>
 
 ### Prerequisites
@@ -340,9 +341,10 @@ valuable if it's shared publicly so that more people can benefit from it.
   <a href="#jupyterlab">JupyterLab</a> •
   <a href="#hardware-monitoring">Hardware Monitoring</a> •
   <a href="#tensorboard">Tensorboard</a> •
+  <a href="#extensibility">Extensibility</a> •
   <a href="#ssh-access">SSH Access</a> •
   <a href="#remote-development">Remote Development</a> •
- <a href="#run-as-a-job">Job Execution</a>
+  <a href="#run-as-a-job">Job Execution</a>
 </p>
 
 The workspace is equipped with a selection of best-in-class open-source development tools to help with the machine learning workflow. Many of these tools can be started from the `Open Tool` menu from Jupyter (the main application of the workspace):
@@ -359,7 +361,7 @@ The workspace is equipped with a selection of best-in-class open-source developm
 
 A new notebook can be created by clicking on the `New` drop-down button at the top of the list and selecting the desired language kernel.
 
-> 💡 _You can spawn interactive **terminal** instances as well by selecting `New -> Terminal` in the file-browser._
+> ℹ️ _You can spawn interactive **terminal** instances as well by selecting `New -> Terminal` in the file-browser._
 
 <img style="width: 100%" src="./docs/images/feature-jupyter-notebook.png"/>
 
@@ -511,7 +513,7 @@ Port tunneling is quite useful when you have started any server-based tool withi
 - `3389`: RDP server.
 - `22`: SSH server.
 
-You can find port information on all the tools in the [supervisor configuration](https://github.com/ml-tooling/ml-workspace/blob/develop/docker-res/config/supervisord.conf).
+You can find port information on all the tools in the [supervisor configuration](https://github.com/ml-tooling/ml-workspace/blob/master/docker-res/config/supervisord.conf).
 
 > 📖 _For more information about port tunneling/forwarding, we recommend [this guide](https://www.everythingcli.org/ssh-tunnelling-for-fun-and-profit-local-vs-remote/)._
 
@@ -584,17 +586,22 @@ To a running
 
 > ℹ️ _A job is defined as any computational task that runs for a certain time to completion, such as a model training or a data pipeline._
 
-The workspace image can also be used to execute arbitrary Python code without starting any of the preinstalled tools. This provides a seamless way to productize your ML projects since the code that has been developed interactively within the workspace will have the same environment and configuration when run as a job via the same workspace image. To run Python code as a job, you need to provide a path or URL to a code directory (or script) via `EXECUTE_CODE`. The code can be either already mounted into the workspace container or downloaded from a version control system (e.g., git or svn) as described in the following sections. The selected code path needs to be python executable. In case the selected code is a directory (e.g., whenever you download the code from a VCS) you need to put a `__main__.py` file at the root of this directory. The `__main__.py` needs to contain the code that starts your job.
+The workspace image can also be used to execute arbitrary Python code without starting any of the preinstalled tools. This provides a seamless way to productize your ML projects since the code that has been developed interactively within the workspace will have the same environment and configuration when run as a job via the same workspace image.
+
+<details>
+<summary><b>Run Python code as a job via the workspace image (click to expand...)</b></summary>
+
+To run Python code as a job, you need to provide a path or URL to a code directory (or script) via `EXECUTE_CODE`. The code can be either already mounted into the workspace container or downloaded from a version control system (e.g., git or svn) as described in the following sections. The selected code path needs to be python executable. In case the selected code is a directory (e.g., whenever you download the code from a VCS) you need to put a `__main__.py` file at the root of this directory. The `__main__.py` needs to contain the code that starts your job.
 
 #### Run code from version control system
 
-You can execute code directly from Git, Mercurial, Subversion, or Bazaar by using the pip-vcs format as described in [this guide](https://pip.pypa.io/en/stable/reference/pip_install/#vcs-support). For example, to execute code from a [subdirectory](https://github.com/ml-tooling/ml-workspace/tree/develop/docker-res/tests/ml-job) of a git repository, just run:
+You can execute code directly from Git, Mercurial, Subversion, or Bazaar by using the pip-vcs format as described in [this guide](https://pip.pypa.io/en/stable/reference/pip_install/#vcs-support). For example, to execute code from a [subdirectory](https://github.com/ml-tooling/ml-workspace/tree/master/docker-res/tests/ml-job) of a git repository, just run:
 
 ```bash
 docker run --env EXECUTE_CODE="git+https://github.com/ml-tooling/ml-workspace.git#subdirectory=docker-res/tests/ml-job" mltooling/ml-workspace:latest
 ```
 
-> ℹ️ _For additional information on how to specify branches, commits, or tags please refer to [this guide](https://pip.pypa.io/en/stable/reference/pip_install/#vcs-support)._
+> 📖 _For additional information on how to specify branches, commits, or tags please refer to [this guide](https://pip.pypa.io/en/stable/reference/pip_install/#vcs-support)._
 
 #### Run code mounted into workspace
 
@@ -639,6 +646,11 @@ RUN python /resources/scripts/execute_code.py --requirements-only
 # Execute only the code at container startup
 CMD ["python", "/resources/run.py", "--code-only"]
 ```
+</details>
+
+### Extensibility
+
+The workspace provides a high degree of extensibility. 
 
 ### Preinstalled Libraries and Runtimes
 
@@ -650,6 +662,34 @@ The workspace is pre-installed with many popular runtimes, data science librarie
 The full list of installed tools can be found within the [Dockerfile](https://github.com/ml-tooling/ml-workspace/blob/master/Dockerfile).
 
 > ℹ️ _**An R-Runtime** installation script is provided in the `Tools` folder on the desktop of the VNC GUI._
+
+## FAQ
+
+<details>
+<summary><b>How to customize the workspace image (create your own flavor)?</b></summary>
+
+The workspace can be extended in many ways at runtime, as explained [here](#extensibility). However, if you like to customize the workspace image with your own software or configuration, you can do that via a Dockerfile as shown below:
+
+```dockerfile
+# Extend from any of the workspace versions/flavors
+# Using latest as version is not recommended, please specify a specific version
+FROM mltooling/ml-workspace:latest
+
+# Run you customizations, e.g.
+RUN \
+    # Install r-runtime, r-kernel, and r-studio web server from provided install scripts
+    /bin/bash $RESOURCES_PATH/tools/r-runtime.sh --install && \
+    /bin/bash $RESOURCES_PATH/tools/r-studio-server.sh --install && \
+    # Cleanup Layer - removes unneccessary cache files
+    clean-layer.sh
+```
+
+Finally, use [docker build](https://docs.docker.com/engine/reference/commandline/build/) to build your customized Docker image.
+
+> 📖 _For a more comprehensive Dockerfile example, take a look at the [Dockerfile of the R-flavor](https://github.com/ml-tooling/ml-workspace/blob/master/r-flavor/Dockerfile)._
+
+
+</details>
 
 ## Contributors
 
