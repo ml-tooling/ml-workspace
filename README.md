@@ -19,7 +19,6 @@
 
 <p align="center">
   <a href="#getting-started">Getting Started</a> •
-  <a href="#highlights">Highlights</a> •
   <a href="#features">Features & Screenshots</a> •
   <a href="#support">Support</a> •
   <a href="https://github.com/ml-tooling/ml-workspace/issues/new?labels=bug&template=01_bug-report.md">Report a Bug</a> •
@@ -62,7 +61,7 @@ docker run -p 8091:8091 mltooling/ml-workspace:latest
 
 Voilà, that was easy! Now, Docker will pull the latest workspace image to your machine. This may take a few minutes, depending on your internet speed. Once the workspace is started, you can access it via: http://localhost:8091.
 
-> ℹ️ _If started on a remote machine or with a different port, make sure to use the machine's IP/DNS and/or the exposed port._
+> ℹ️ _If started on a another machine or with a different port, make sure to use the machine's IP/DNS and/or the exposed port._
 
 To deploy a single instance for productive usage, we recommend to apply at least the following options:
 
@@ -101,6 +100,11 @@ The container can be configured with the following environment variables (via do
         <td>WORKSPACE_AUTH_PASSWORD</td>
         <td>Basic auth user password. To enable basic auth, both the user and password need to be set. We recommend to use the <code>AUTHENTICATE_VIA_JUPYTER</code> for securing the workspace.</td>
         <td></td>
+    </tr>
+    <tr>
+        <td>WORKSPACE_PORT</td>
+        <td>Configures the main container-internal port of the workspace proxy. For most scenarios, this configuration should not be changed, and the port configuration via Docker should be used instead of the workspace should be accessible from a different port.</td>
+        <td>8091</td>
     </tr>
     <tr>
         <td>CONFIG_BACKUP_ENABLED</td>
@@ -503,7 +507,7 @@ If you prefer to see the tensorboard directly within your notebook, you can make
 
 SSH provides a powerful set of features that enables you to be more productive with your development tasks. You can easily setup a secure and passwordless SSH connection to a workspace by selecting `Open Tool -> SSH`. This will download a customized setup script and shows some additional instructions:
 
-> ℹ️ _The setup script only runs on Mac and Linux, Windows is currently not supported._
+> ℹ️ _The setup script only runs on Mac and Linux. Windows is currently not supported._
 
 Just run the setup script on the machine from where you want to setup a connection to the workspace and input a name for the connection (e.g. `my-workspace`). You might also get asked for some additional input during the process. Once the connection is successfully setup and tested, you can securely connect to the workspace by simply executing `ssh my-workspace`.
 
@@ -591,26 +595,31 @@ Once the remote directory is mounted, you can interact with the remote file syst
 
 ### Remote Development
 
-The workspace can be integrated and used as remote runtime for a variety of common development tools and IDE's.
+The workspace can be integrated and used as a remote runtime (also known as remote kernel/machine/interpreter) for a variety of popular development tools and IDEs, such as Jupyter, VS Code, PyCharm, Colab, or Atom Hydrogen. Thereby, you can connect your favorite development tool running on your local machine to a remote machine for code execution. These integrations usually require a passwordless SSH connection from the local machine to the workspace. To set up an SSH connection, please follow the steps explained in the [SSH Access section](#ssh-access).
 
+<details>
+<summary><b>Jupyter - Remote Kernel</b> (click to expand...)</summary>
 
-. All of those integrations require a passwordless SSH connection from the local machine to the workspace. You can easily setup a
+The workspace can be added to a Jupyter instance as a remote kernel by using the [remote_ikernel](https://bitbucket.org/tdaff/remote_ikernel/) tool. If you have installed remote_ikernel (`pip install remote_ikernel`) on your local machine, the SSH setup script of the workspace will automatically offer you the option to set up a remote kernel connection. In case you want to manually set up and manage remote kernels, you can use the [remote_ikernel](https://bitbucket.org/tdaff/remote_ikernel/src/default/README.rst) command-line tool, as shown below:
 
-_WIP: Remote Kernels, VS Code remote development, and usage as Colab local runtime._
+```bash
+# Change my-workspace with the name of a workspace SSH connection
+remote_ikernel manage --add \
+    --interface=ssh \
+    --kernel_cmd="ipython kernel -f {connection_file}" \
+    --name="Remote Py3" \
+    --host="my-workspace"
+```
 
-#### Jupyter - Remote Kernel
+_WIP: Add Screenshot_
 
-The workspace can be added to a Jupyter instance as a remote kernel. 
+> ℹ️ _When running kernels on remote machines, the notebooks themselves will be saved onto the local filesystem, but the kernel will only have access to the filesystem of the remote machine running the kernel. If you need to sync data, you can make use of rsync, scp, or sshfs as explained in the [SSH Access section](#ssh-access)._
+</details>
 
-To a running 
+<details>
+<summary><b>VS Code - Remote Machine</b> (click to expand...)</summary>
 
-#### VS Code - Remote Machine
-
-
-#### PyCharm - Remote Interpreter
-
-
-#### Colab - Local Runtime
+</details>
 
 ### Run as a job
 
