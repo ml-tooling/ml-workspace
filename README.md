@@ -470,39 +470,6 @@ TODO: Add screenshot
 
 To deactivate or manage (e.g., provide edit permissions) shared links, open the Filebrowser via `Open Tool -> Filebrowser` and select `Settings->User Management`.
 
-### Hardware Monitoring
-
-The workspace provides two pre-installed web-based tools to help developers during model training and other experimentation tasks to get insights into everything happening on the system and figure out performance bottlenecks.
-
-[Netdata](https://github.com/netdata/netdata) (`Open Tool -> Netdata`) is a real-time hardware and performance monitoring dashboard that visualize the processes and services on your Linux systems. It monitors metrics about CPU, GPU, memory, disks, networks, processes, and more.
-
-<img style="width: 100%" src="./docs/images/feature-netdata.png" />
-
-[Glances](https://github.com/nicolargo/glances) (`Open Tool -> Glances`) is a web-based hardware monitoring dashboard as well and can be used as an alternative to Netdata.
-
-<img style="width: 100%" src="./docs/images/feature-glances.png"/>
-
-> ℹ️ _Netdata and Glances will show you the hardware statistics for the entire machine on which the workspace container is running._
-
-### Tensorboard
-
-[Tensorboard](https://www.tensorflow.org/tensorboard) provides a suite of visualization tools to make it easier to understand, debug, and optimize your experiment runs. It includes logging features for scalar, histogram, model structure, embeddings, and text & image visualization. The workspace comes pre-installed with [jupyter_tensorboard extension](https://github.com/lspvic/jupyter_tensorboard) that integrates Tensorboard into the Jupyter interface with functionalities to start, manage, and stop instances. You can open a new instance for a valid logs directory as shown below:
-
-<img style="width: 100%" src="./docs/images/feature-tensorboard-open.png" />
-
-If you have opened a Tensorboard instance in a valid log directory, you will see the visualizations of your logged data:
-
-<img style="width: 100%" src="./docs/images/feature-tensorboard-overview.png" />
-
-> ℹ️ _Tensorboard can be used in combination with many other ML frameworks besides Tensorflow. By using the [tensorboardX](https://github.com/lanpa/tensorboardX) library you can log basically from any python based library. Also, PyTorch has a direct Tensorboard integration as described [here](https://pytorch.org/docs/stable/tensorboard.html)._
-
-If you prefer to see the tensorboard directly within your notebook, you can make use of following **Jupyter magic**:
-
-```
-%load_ext tensorboard.notebook
-%tensorboard --logdir /workspace/path/to/logs
-```
-
 ### SSH Access
 
 SSH provides a powerful set of features that enables you to be more productive with your development tasks. You can easily setup a secure and passwordless SSH connection to a workspace by selecting `Open Tool -> SSH`. This will download a customized setup script and shows some additional instructions:
@@ -600,7 +567,7 @@ The workspace can be integrated and used as a remote runtime (also known as remo
 <details>
 <summary><b>Jupyter - Remote Kernel</b> (click to expand...)</summary>
 
-The workspace can be added to a Jupyter instance as a remote kernel by using the [remote_ikernel](https://bitbucket.org/tdaff/remote_ikernel/) tool. If you have installed remote_ikernel (`pip install remote_ikernel`) on your local machine, the SSH setup script of the workspace will automatically offer you the option to set up a remote kernel connection. In case you want to manually set up and manage remote kernels, you can use the [remote_ikernel](https://bitbucket.org/tdaff/remote_ikernel/src/default/README.rst) command-line tool, as shown below:
+The workspace can be added to a Jupyter instance as a remote kernel by using the [remote_ikernel](https://bitbucket.org/tdaff/remote_ikernel/) tool. If you have installed remote_ikernel (`pip install remote_ikernel`) on your local machine, the SSH setup script of the workspace will automatically offer you the option to setup a remote kernel connection. In case you want to manually setup and manage remote kernels, you can use the [remote_ikernel](https://bitbucket.org/tdaff/remote_ikernel/src/default/README.rst) command-line tool, as shown below:
 
 ```bash
 # Change my-workspace with the name of a workspace SSH connection
@@ -620,6 +587,39 @@ _WIP: Add Screenshot_
 <summary><b>VS Code - Remote Machine</b> (click to expand...)</summary>
 
 </details>
+
+### Hardware Monitoring
+
+The workspace provides two pre-installed web-based tools to help developers during model training and other experimentation tasks to get insights into everything happening on the system and figure out performance bottlenecks.
+
+[Netdata](https://github.com/netdata/netdata) (`Open Tool -> Netdata`) is a real-time hardware and performance monitoring dashboard that visualize the processes and services on your Linux systems. It monitors metrics about CPU, GPU, memory, disks, networks, processes, and more.
+
+<img style="width: 100%" src="./docs/images/feature-netdata.png" />
+
+[Glances](https://github.com/nicolargo/glances) (`Open Tool -> Glances`) is a web-based hardware monitoring dashboard as well and can be used as an alternative to Netdata.
+
+<img style="width: 100%" src="./docs/images/feature-glances.png"/>
+
+> ℹ️ _Netdata and Glances will show you the hardware statistics for the entire machine on which the workspace container is running._
+
+### Tensorboard
+
+[Tensorboard](https://www.tensorflow.org/tensorboard) provides a suite of visualization tools to make it easier to understand, debug, and optimize your experiment runs. It includes logging features for scalar, histogram, model structure, embeddings, and text & image visualization. The workspace comes pre-installed with [jupyter_tensorboard extension](https://github.com/lspvic/jupyter_tensorboard) that integrates Tensorboard into the Jupyter interface with functionalities to start, manage, and stop instances. You can open a new instance for a valid logs directory as shown below:
+
+<img style="width: 100%" src="./docs/images/feature-tensorboard-open.png" />
+
+If you have opened a Tensorboard instance in a valid log directory, you will see the visualizations of your logged data:
+
+<img style="width: 100%" src="./docs/images/feature-tensorboard-overview.png" />
+
+> ℹ️ _Tensorboard can be used in combination with many other ML frameworks besides Tensorflow. By using the [tensorboardX](https://github.com/lanpa/tensorboardX) library you can log basically from any python based library. Also, PyTorch has a direct Tensorboard integration as described [here](https://pytorch.org/docs/stable/tensorboard.html)._
+
+If you prefer to see the tensorboard directly within your notebook, you can make use of following **Jupyter magic**:
+
+```
+%load_ext tensorboard.notebook
+%tensorboard --logdir /workspace/path/to/logs
+```
 
 ### Run as a job
 
