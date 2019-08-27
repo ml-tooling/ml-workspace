@@ -1,6 +1,6 @@
 <h1 align="center">
     <a href="https://github.com/ml-tooling/ml-workspace" title="ML Workspace Home">
-    <img width=50% alt="" src="./docs/images/ml-workspace-logo.png"> </a>
+    <img width=50% alt="" src="https://github.com/ml-tooling/ml-workspace/raw/master/docs/images/ml-workspace-logo.png"> </a>
     <br>
 </h1>
 
@@ -59,17 +59,17 @@ The workspace requires **Docker** to be installed on your machine ([Installation
 Deploying a single workspace instance is as simple as:
 
 ```bash
-docker run -p 8091:8091 mltooling/ml-workspace:latest
+docker run -p 8080:8080 mltooling/ml-workspace:latest
 ```
 
-Voilà, that was easy! Now, Docker will pull the latest workspace image to your machine. This may take a few minutes, depending on your internet speed. Once the workspace is started, you can access it via: http://localhost:8091.
+Voilà, that was easy! Now, Docker will pull the latest workspace image to your machine. This may take a few minutes, depending on your internet speed. Once the workspace is started, you can access it via: http://localhost:8080.
 
 > ℹ️ _If started on a another machine or with a different port, make sure to use the machine's IP/DNS and/or the exposed port._
 
 To deploy a single instance for productive usage, we recommend to apply at least the following options:
 
 ```bash
-docker run -d -p 8091:8091 -v "${PWD}:/workspace" --env AUTHENTICATE_VIA_JUPYTER="mytoken" --shm-size=512m --restart always mltooling/ml-workspace:latest
+docker run -d -p 8080:8080 -v "${PWD}:/workspace" --env AUTHENTICATE_VIA_JUPYTER="mytoken" --shm-size=512m --restart always mltooling/ml-workspace:latest
 ```
 
 This command runs the container in background (`-d`), mounts your current working directory into the `/workspace` folder (`-v`), secures the workspace via a provided token (`--env AUTHENTICATE_VIA_JUPYTER`), provides 512MB of shared memory (`--shm-size`) to prevent unexpected crashes (see [known issues section](#known-issues)), and keeps the container running even on system restarts (`--restart always`). You can find additional options for docker run [here](https://docs.docker.com/engine/reference/commandline/run/) and workspace configuration options in [the section below](#Configuration).
@@ -110,7 +110,7 @@ The workspace provides a variety of configuration options that can be used by se
     <tr>
         <td>WORKSPACE_PORT</td>
         <td>Configures the main container-internal port of the workspace proxy. For most scenarios, this configuration should not be changed, and the port configuration via Docker should be used instead of the workspace should be accessible from a different port.</td>
-        <td>8091</td>
+        <td>8080</td>
     </tr>
     <tr>
         <td>CONFIG_BACKUP_ENABLED</td>
@@ -176,7 +176,7 @@ We strongly recommend enabling authentication via one of the following two optio
 Activate the token-based authentication based on the authentication implementation of Jupyter via the `AUTHENTICATE_VIA_JUPYTER` variable:
 
 ```bash
-docker run -p 8091:8091 --env AUTHENTICATE_VIA_JUPYTER="mytoken" mltooling/ml-workspace:latest
+docker run -p 8080:8080 --env AUTHENTICATE_VIA_JUPYTER="mytoken" mltooling/ml-workspace:latest
 ```
 
 You can also use `<generated>` to let Jupyter generate a random token that is printed out on the container logs. A value of `true` will not set any token but activate that every request to any tool in the workspace will be checked with the Jupyter instance if the user is authenticated. This is used for tools like JupyterHub, which configures its own way of authentication.
@@ -186,7 +186,7 @@ You can also use `<generated>` to let Jupyter generate a random token that is pr
 Activate the basic authentication via the `WORKSPACE_AUTH_USER` and `WORKSPACE_AUTH_PASSWORD` variable:
 
 ```bash
-docker run -p 8091:8091 --env WORKSPACE_AUTH_USER="user" --env WORKSPACE_AUTH_PASSWORD="pwd" mltooling/ml-workspace:latest
+docker run -p 8080:8080 --env WORKSPACE_AUTH_USER="user" --env WORKSPACE_AUTH_PASSWORD="pwd" mltooling/ml-workspace:latest
 ```
 
 The basic authentication is configured via the nginx proxy and might be more performant compared to the other option since with `AUTHENTICATE_VIA_JUPYTER` every request to any tool in the workspace will check via the Jupyter instance if the user (based on the request cookies) is authenticated.
@@ -203,7 +203,7 @@ We recommend enabling SSL so that the workspace is accessible via HTTPS (encrypt
 When set to `true`, either the `cert.crt` and `cert.key` file must be mounted to `/resources/ssl` or, if the certificate files do not exist, the container generates self-signed certificates. For example, if the `/path/with/certificate/files` on the local system contains a valid certificate for the host domain (`cert.crt` and `cert.key` file), it can be used from the workspace as shown below:
 
 ```bash
-docker run -p 8091:8091 --env WORKSPACE_SSL_ENABLED="true" -v /path/with/certificate/files:/resources/ssl:ro mltooling/ml-workspace:latest
+docker run -p 8080:8080 --env WORKSPACE_SSL_ENABLED="true" -v /path/with/certificate/files:/resources/ssl:ro mltooling/ml-workspace:latest
 ```
 
 If you want to host the workspace on a public domain, we recommend to use [Let's encrypt](https://letsencrypt.org/getting-started/) to get a trusted certificate for your domain.  To use the generated certificate (e.g. via [certbot](https://certbot.eff.org/) tool) for the workspace, the `privkey.pem` corresponds to the `cert.key` file and the `fullchain.pem` to the `cert.crt` file.
@@ -222,7 +222,7 @@ By default, the workspace container has no resource constraints and can use as m
 For example, the following command restricts the workspace to only use a maximum of 8 CPUs, 16 GB of memory, and 1 GB of shared memory (see [Known Issues](#known-issues)):
 
 ```bash
-docker run -p 8091:8091 --cpus=8 --memory=16g --shm-size=1G mltooling/ml-workspace:latest
+docker run -p 8080:8080 --cpus=8 --memory=16g --shm-size=1G mltooling/ml-workspace:latest
 ```
 
 > 📖 _For more options and documentation on resource constraints, please refer to the [official docker guide](https://docs.docker.com/config/containers/resource_constraints/)._
@@ -250,7 +250,7 @@ In addition to the main workspace image (`mltooling/ml-workspace`), we provide o
 The minimal flavor (`mltooling/ml-workspace-minimal`) is our smallest image that contains most of the tools and features described in the [features section](#features) without most of the python libraries that are pre-installed in our main image. Any Python library or excluded tool can be installed manually during runtime by the user.
 
 ```bash
-docker run -p 8091:8091 mltooling/ml-workspace-minimal:latest
+docker run -p 8080:8080 mltooling/ml-workspace-minimal:latest
 ```
 </details>
 
@@ -267,7 +267,7 @@ docker run -p 8091:8091 mltooling/ml-workspace-minimal:latest
 The light flavor (`mltooling/ml-workspace-light`) has all of the tools and features described in the [features section](#features), but only a small collection of popular python machine learning libraries pre-installed. Any Python library can be installed manually during runtime.
 
 ```bash
-docker run -p 8091:8091 mltooling/ml-workspace-light:latest
+docker run -p 8080:8080 mltooling/ml-workspace-light:latest
 ```
 </details>
 
@@ -284,7 +284,7 @@ docker run -p 8091:8091 mltooling/ml-workspace-light:latest
 The R flavor (`mltooling/ml-workspace-r`) is based on our default workspace image and extends it with the R-interpreter, R-Jupyter kernel, RStudio server (access via `Open Tool -> RStudio`), and a variety of popular packages from the R ecosystem.
 
 ```bash
-docker run -p 8091:8091 mltooling/ml-workspace-r:latest
+docker run -p 8080:8080 mltooling/ml-workspace-r:latest
 ```
 </details>
 
@@ -304,13 +304,13 @@ The GPU flavor (`mltooling/ml-workspace-gpu`) is based on our default workspace 
 - (Docker >= 19.03) Nvidia Container Toolkit ([📖 Instructions](https://github.com/NVIDIA/nvidia-docker/wiki/Installation-(Native-GPU-Support))).
 
 ```bash
-docker run -p 8091:8091 --gpus all mltooling/ml-workspace-gpu:latest
+docker run -p 8080:8080 --gpus all mltooling/ml-workspace-gpu:latest
 ```
 
 - (Docker < 19.03) Nvidia Docker 2.0 ([📖 Instructions](https://github.com/NVIDIA/nvidia-docker/wiki/Installation-(version-2.0))).
 
 ```bash
-docker run -p 8091:8091 --runtime nvidia --env NVIDIA_VISIBLE_DEVICES="all" mltooling/ml-workspace-gpu:latest
+docker run -p 8080:8080 --runtime nvidia --env NVIDIA_VISIBLE_DEVICES="all" mltooling/ml-workspace-gpu:latest
 ```
 
 The GPU flavor also comes with a few additional configuration options as explained below:
@@ -349,7 +349,7 @@ The workspace is designed as a single-user development environment. For a multi-
 ML Hub makes it easy to set up on a single server (via Docker) or a cluster (via Kubernetes) and supports a variety of usage scenarios & authentication providers. You can try out ML Hub via:
 
 ```bash
-docker run -p 8091:8091 -v /var/run/docker.sock:/var/run/docker.sock mltooling/ml-hub:latest
+docker run -p 8080:8080 -v /var/run/docker.sock:/var/run/docker.sock mltooling/ml-hub:latest
 ```
 
 For more information and documentation about ML Hub, please take a look at the [Github Site](https://github.com/ml-tooling/ml-hub).
@@ -398,7 +398,7 @@ valuable if it's shared publicly so that more people can benefit from it.
 
 The workspace is equipped with a selection of best-in-class open-source development tools to help with the machine learning workflow. Many of these tools can be started from the `Open Tool` menu from Jupyter (the main application of the workspace):
 
-<img style="width: 100%" src="./docs/images/features/open-tools.png"/>
+<img style="width: 100%" src="https://github.com/ml-tooling/ml-workspace/raw/master/docs/images/features/open-tools.png"/>
 
 > ℹ️ _Within your workspace you have **full root & sudo privileges** to install any library or tool you need via terminal (e.g., `pip`, `apt-get`, `conda`, or `npm`). You can find more ways to extend the workspace within the [Extensibility](#extensibility) section_
 
@@ -406,13 +406,13 @@ The workspace is equipped with a selection of best-in-class open-source developm
 
 [Jupyter Notebook](https://jupyter.org/) is a web-based interactive environment for writing and running code. The main building blocks of Jupyter are the file-browser, the notebook editor, and kernels. The file-browser provides an interactive file manager for all notebooks, files, and folders in the `/workspace` directory.
 
-<img style="width: 100%" src="./docs/images/features/jupyter-tree.png"/>
+<img style="width: 100%" src="https://github.com/ml-tooling/ml-workspace/raw/master/docs/images/features/jupyter-tree.png"/>
 
 A new notebook can be created by clicking on the `New` drop-down button at the top of the list and selecting the desired language kernel.
 
 > ℹ️ _You can spawn interactive **terminal** instances as well by selecting `New -> Terminal` in the file-browser._
 
-<img style="width: 100%" src="./docs/images/features/jupyter-notebook.png"/>
+<img style="width: 100%" src="https://github.com/ml-tooling/ml-workspace/raw/master/docs/images/features/jupyter-notebook.png"/>
 
 The notebook editor enables users to author documents that include live code, markdown text, shell commands, LaTeX equations, interactive widgets, plots, and images. These notebook documents provide a complete and self-contained record of a computation that can be converted to various formats and shared with others.
 
@@ -426,13 +426,13 @@ The Notebook allows code to be run in a range of different programming languages
 
 This workspace provides an HTTP-based VNC access to the workspace via [noVNC](https://github.com/novnc/noVNC). Thereby, you can access and work within the workspace with a fully featured desktop GUI. To access this desktop GUI, go to `Open Tool`, select `VNC`, and click the `Connect` button. In the case you are asked for a password, use `vncpassword`.
 
-<img style="width: 100%" src="./docs/images/features/desktop-vnc.png"/>
+<img style="width: 100%" src="https://github.com/ml-tooling/ml-workspace/raw/master/docs/images/features/desktop-vnc.png"/>
 
 Once you are connected, you will see a desktop GUI that allows you to install and use full-fledged web-browsers or any other tool that is available for Ubuntu. Within the `Tools` folder on the desktop, you will find a collection of install scripts that makes it straightforward to install some of the most commonly used development tools, such as Atom, PyCharm, R-Runtime, R-Studio, or Postman (just double-click on the script).
 
 **Clipboard:** If you want to share the clipboard between your machine and the workspace, you can use the copy-paste functionality as described below:
 
-<img style="width: 100%" src="./docs/images/features/desktop-vnc-clipboard.png"/>
+<img style="width: 100%" src="https://github.com/ml-tooling/ml-workspace/raw/master/docs/images/features/desktop-vnc-clipboard.png"/>
 
 > 💡 _**Long-running tasks:** Use the desktop GUI for long-running Jupyter executions. By running notebooks from the browser of your workspace desktop GUI, all output will be synchronized to the notebook even if you have disconnected your browser from the notebook._
 
@@ -440,13 +440,13 @@ Once you are connected, you will see a desktop GUI that allows you to install an
 
 [Visual Studio Code](https://github.com/microsoft/vscode) (`Open Tool -> VS Code`) is an open-source lightweight but powerful code editor with built-in support for a variety of languages and a rich ecosystem of extensions. It combines the simplicity of a source code editor with powerful developer tooling, like IntelliSense code completion and debugging. The workspace integrates VS Code as a web-based application accessible through the browser based on the awesome [code-server](https://github.com/cdr/code-server) project. It allows you to customize every feature to your liking and install any number of third-party extensions.
 
-<p align="center"><img src="./docs/images/features/vs-code.png"/></p>
+<p align="center"><img src="https://github.com/ml-tooling/ml-workspace/raw/master/docs/images/features/vs-code.png"/></p>
 
 ### JupyterLab
 
 [JupyterLab](https://github.com/jupyterlab/jupyterlab) (`Open Tool -> JupyterLab`) is the next-generation user interface for Project Jupyter. It offers all the familiar building blocks of the classic Jupyter Notebook (notebook, terminal, text editor, file browser, rich outputs, etc.) in a flexible and powerful user interface. This JupyterLab instance comes pre-installed with a few helpful extensions such as a the [jupyterlab-toc](https://github.com/jupyterlab/jupyterlab-toc), [jupyterlab-git](https://github.com/jupyterlab/jupyterlab-git), and [juptyterlab-tensorboard](https://github.com/chaoleili/jupyterlab_tensorboard).
 
-<img style="width: 100%" src="./docs/images/features/jupyterlab.png"/>
+<img style="width: 100%" src="https://github.com/ml-tooling/ml-workspace/raw/master/docs/images/features/jupyterlab.png"/>
 
 ### Git Integration
 
@@ -456,17 +456,17 @@ Version control is a crucial aspect for productive collaboration. To make this p
 
 For cloning repositories via `https`, we recommend to navigate to the desired root folder and to click on the `git` button as shown below:
 
-<img style="width: 100%" src="./docs/images/features/git-open.png"/>
+<img style="width: 100%" src="https://github.com/ml-tooling/ml-workspace/raw/master/docs/images/features/git-open.png"/>
 
 This might ask for some required settings and, subsequently, opens [ungit](https://github.com/FredrikNoren/ungit), a web-based Git client with a clean and intuitive UI that makes it convenient to sync your code artifacts. Within ungit, you can clone any repository. If authentication is required, you will get asked for your credentials.
 
-<img style="width: 100%" src="./docs/images/features/git-ungit-credentials.png"/>
+<img style="width: 100%" src="https://github.com/ml-tooling/ml-workspace/raw/master/docs/images/features/git-ungit-credentials.png"/>
 
 #### Push, Pull, Merge, and Other Git Actions
 
 To commit and push a single notebook to a remote Git repository, we recommend to use the Git plugin integrated into Jupyter as shown below:
 
-<img style="width: 100%" src="./docs/images/features/git-push-notebook.png"/>
+<img style="width: 100%" src="https://github.com/ml-tooling/ml-workspace/raw/master/docs/images/features/git-push-notebook.png"/>
 
 For more advanced Git operations we recommend to use [ungit](https://github.com/FredrikNoren/ungit). With ungit, you can do most of the common git actions such as push, pull, merge, branch, tag, checkout, and many more.
 
@@ -474,11 +474,11 @@ For more advanced Git operations we recommend to use [ungit](https://github.com/
 
 Jupyter notebooks are great, but they often are huge files, with a very specific JSON file format. To enable seamless diffing and merging via Git this workspace is pre-installed with [nbdime](https://github.com/jupyter/nbdime). Nbdime understands the structure of notebook documents and, therefore, automatically makes intelligent decisions when diffing and merging notebooks. In the case you have merge conflicts, nbdime will make sure that the notebook is still readable by Jupyter, as shown below:
 
-<img style="width: 100%" src="./docs/images/features/git-nbdime-merging.png"/>
+<img style="width: 100%" src="https://github.com/ml-tooling/ml-workspace/raw/master/docs/images/features/git-nbdime-merging.png"/>
 
 Furthermore, the workspace comes pre-installed with [jupytext](https://github.com/mwouts/jupytext), a Jupyter plugin that reads and writes notebooks as plain text files. This allows you to open, edit, and run scripts or markdown files (e.g., `.py`, `.md`) as notebooks within Jupyter. In the following screenshot, we have opened a markdown file via Jupyter:
 
-<img style="width: 100%" src="./docs/images/features/git-jupytext.png"/>
+<img style="width: 100%" src="https://github.com/ml-tooling/ml-workspace/raw/master/docs/images/features/git-jupytext.png"/>
 
 In combination with Git, jupytext enables a clear diff history and easy merging of version conflicts. With both of those tools, collaborating on Jupyter notebooks with Git becomes straightforward.
 
@@ -486,11 +486,11 @@ In combination with Git, jupytext enables a clear diff history and easy merging 
 
 The workspace has a feature to share any file or folder with anyone via a token-protected link. To share data via link, select any file or folder from the Jupyter directory tree and click on the share button as shown in the following screenshot:
 
-<img style="width: 100%" src="./docs/images/features/file-sharing-open.png"/>
+<img style="width: 100%" src="https://github.com/ml-tooling/ml-workspace/raw/master/docs/images/features/file-sharing-open.png"/>
 
 This will generate a unique link protected via a token that gives anyone with the link access to view and download the selected data via the [Filebrowser](https://github.com/filebrowser/filebrowser) UI:
 
-<img style="width: 100%" src="./docs/images/features/file-sharing-filebrowser.png"/>
+<img style="width: 100%" src="https://github.com/ml-tooling/ml-workspace/raw/master/docs/images/features/file-sharing-filebrowser.png"/>
 
 To deactivate or manage (e.g., provide edit permissions) shared links, open the Filebrowser via `Open Tool -> Filebrowser` and select `Settings->User Management`.
 
@@ -498,7 +498,7 @@ To deactivate or manage (e.g., provide edit permissions) shared links, open the 
 
 It is possible to securely access any workspace internal port by selecting `Open Tool -> Access Port`. With this feature, you are able to access a REST API or web application running inside the workspace directly with your browser. The feature enables developers  to build, run, test, and debug REST APIs or web applications directly from the workspace.
 
-<img style="width: 100%" src="./docs/images/features/access-port.png"/>
+<img style="width: 100%" src="https://github.com/ml-tooling/ml-workspace/raw/master/docs/images/features/access-port.png"/>
 
 If you want to use an HTTP client or share access to a given port, you can select the `Get shareable link` option. This generates a token-secured link that anyone with access to the link can use to access the specified port.
 
@@ -519,7 +519,7 @@ If you want to use an HTTP client or share access to a given port, you can selec
 
 SSH provides a powerful set of features that enables you to be more productive with your development tasks. You can easily set up a secure and passwordless SSH connection to a workspace by selecting `Open Tool -> SSH`. This will generate a secure setup command that can be run on any Linux or Mac machine to configure a passwordless & secure SSH connection to the workspace. Alternatively, you can also download the setup script and run it (instead of using the command).
 
-<img style="width: 100%" src="./docs/images/features/ssh-access.png"/>
+<img style="width: 100%" src="https://github.com/ml-tooling/ml-workspace/raw/master/docs/images/features/ssh-access.png"/>
 
 > ℹ️ _The setup script only runs on Mac and Linux. Windows is currently not supported._
 
@@ -546,7 +546,7 @@ autossh -M 0 -f -nNT -L 5000:localhost:5901 my-workspace
 
 Port tunneling is quite useful when you have started any server-based tool within the workspace that you like to make accessible for another machine. In its default setting, the workspace has a variety of tools already running on different ports, such as:
 
-- `8091`: Main workspace port with access to all integrated tools.
+- `8080`: Main workspace port with access to all integrated tools.
 - `8090`: Jupyter server.
 - `8054`: VS Code server.
 - `5901`: VNC server.
@@ -638,7 +638,7 @@ remote_ikernel manage --add \
 
 You can use the remote_ikernel command line functionality to list (`remote_ikernel manage --show`) or delete (`remote_ikernel manage --delete <REMOTE_KERNEL_NAME>`) remote kernel connections.
 
-<img style="width: 100%" src="./docs/images/features/remote-dev-jupyter-kernel.png"/>
+<img style="width: 100%" src="https://github.com/ml-tooling/ml-workspace/raw/master/docs/images/features/remote-dev-jupyter-kernel.png"/>
 
 </details>
 
@@ -651,7 +651,7 @@ The Visual Studio Code [Remote - SSH](https://marketplace.visualstudio.com/item
 2. Run the SSH setup script of a selected workspace as explained in the [SSH Access](#ssh-access) section.
 3. Open the Remote-SSH panel in your local VS Code. All configured SSH connections should be automatically discovered. Just select any configured workspace connection you like to connect to as shown below:
 
-<img style="width: 100%" src="./docs/images/features/remote-dev-vscode.gif"/>
+<img style="width: 100%" src="https://github.com/ml-tooling/ml-workspace/raw/master/docs/images/features/remote-dev-vscode.gif"/>
 
 > 📖 _You can find additional features and information about the Remote SSH extension in [this guide](https://code.visualstudio.com/docs/remote/ssh)._
 
@@ -661,11 +661,11 @@ The Visual Studio Code [Remote - SSH](https://marketplace.visualstudio.com/item
 
 [Tensorboard](https://www.tensorflow.org/tensorboard) provides a suite of visualization tools to make it easier to understand, debug, and optimize your experiment runs. It includes logging features for scalar, histogram, model structure, embeddings, and text & image visualization. The workspace comes pre-installed with [jupyter_tensorboard extension](https://github.com/lspvic/jupyter_tensorboard) that integrates Tensorboard into the Jupyter interface with functionalities to start, manage, and stop instances. You can open a new instance for a valid logs directory as shown below:
 
-<img style="width: 100%" src="./docs/images/features/tensorboard-open.png" />
+<img style="width: 100%" src="https://github.com/ml-tooling/ml-workspace/raw/master/docs/images/features/tensorboard-open.png" />
 
 If you have opened a Tensorboard instance in a valid log directory, you will see the visualizations of your logged data:
 
-<img style="width: 100%" src="./docs/images/features/tensorboard-dashboard.png" />
+<img style="width: 100%" src="https://github.com/ml-tooling/ml-workspace/raw/master/docs/images/features/tensorboard-dashboard.png" />
 
 > ℹ️ _Tensorboard can be used in combination with many other ML frameworks besides Tensorflow. By using the [tensorboardX](https://github.com/lanpa/tensorboardX) library you can log basically from any python based library. Also, PyTorch has a direct Tensorboard integration as described [here](https://pytorch.org/docs/stable/tensorboard.html)._
 
@@ -682,11 +682,11 @@ The workspace provides two pre-installed web-based tools to help developers duri
 
 [Netdata](https://github.com/netdata/netdata) (`Open Tool -> Netdata`) is a real-time hardware and performance monitoring dashboard that visualize the processes and services on your Linux systems. It monitors metrics about CPU, GPU, memory, disks, networks, processes, and more.
 
-<img style="width: 100%" src="./docs/images/features/hardware-monitoring-netdata.png" />
+<img style="width: 100%" src="https://github.com/ml-tooling/ml-workspace/raw/master/docs/images/features/hardware-monitoring-netdata.png" />
 
 [Glances](https://github.com/nicolargo/glances) (`Open Tool -> Glances`) is a web-based hardware monitoring dashboard as well and can be used as an alternative to Netdata.
 
-<img style="width: 100%" src="./docs/images/features/hardware-monitoring-glances.png"/>
+<img style="width: 100%" src="https://github.com/ml-tooling/ml-workspace/raw/master/docs/images/features/hardware-monitoring-glances.png"/>
 
 > ℹ️ _Netdata and Glances will show you the hardware statistics for the entire machine on which the workspace container is running._
 
@@ -752,12 +752,12 @@ ENV EXECUTE_CODE=/workspace/ml-job
 RUN python /resources/scripts/execute_code.py --requirements-only
 
 # Execute only the code at container startup
-CMD ["python", "/resources/run.py", "--code-only"]
+CMD ["python", "/resources/docker-entrypoint.py", "--code-only"]
 ```
 
 </details>
 
-### Pre-installed Libraries and Runtimes
+### Pre-installed Libraries and Interpreters
 
 The workspace is pre-installed with many popular interpreters, data science libraries, and ubuntu packages:
 

@@ -57,4 +57,4 @@ patch_fastapi(app)
 
 if __name__ == '__main__':
     import uvicorn
-    uvicorn.run(app, host="0.0.0.0", port=8091, log_level="info", reload=True)
+    uvicorn.run(app, host="0.0.0.0", port=8080, log_level="info", reload=True)

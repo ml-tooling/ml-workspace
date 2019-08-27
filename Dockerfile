@@ -856,7 +856,7 @@ RUN \
 
 # Copy files into workspace
 COPY \
-    docker-res/run.py \
+    docker-res/docker-entrypoint.py \
     docker-res/5xx.html \
     $RESOURCES_PATH/
 
@@ -1005,7 +1005,7 @@ ENV CONFIG_BACKUP_ENABLED="true" \
     WORKSPACE_BASE_URL="/" \
     INCLUDE_TUTORIALS="true" \
     # Main port used for sshl proxy -> can be changed
-    WORKSPACE_PORT="8091" \
+    WORKSPACE_PORT="8080" \
     # set number of threads various programs should use, if not-set, it tries to use all
     # this can be problematic since docker restricts CPUs by stil showing all
     MAX_NUM_THREADS="auto"
@@ -1025,7 +1025,7 @@ LABEL \
     "io.k8s.description"="All-in-one web-based development environment for machine learning." \
     "io.k8s.display-name"="Machine Learning Workspace" \
     # Openshift labels: https://docs.okd.io/latest/creating_images/metadata.html
-    "io.openshift.expose-services"="8091:http, 5901:xvnc" \
+    "io.openshift.expose-services"="8080:http, 5901:xvnc" \
     "io.openshift.non-scalable"="true" \
     "io.openshift.tags"="workspace, machine learning, vnc, ubuntu, xfce" \
     "io.openshift.min-memory"="1Gi" \
@@ -1062,13 +1062,13 @@ LABEL \
 # use global option with tini to kill full process groups: https://github.com/krallin/tini#process-group-killing
 ENTRYPOINT ["/tini", "-g", "--"]
 
-CMD ["python", "/resources/run.py"] 
+CMD ["python", "/resources/docker-entrypoint.py"] 
 
-# Port 8091 is the main access port (also includes SSH)
+# Port 8080 is the main access port (also includes SSH)
 # Port 5091 is the VNC port
 # Port 3389 is the RDP port
 # Port 8090 is the Jupyter Notebook Server
 # See supervisor.conf for more ports
 
-EXPOSE 8091
+EXPOSE 8080
 ###
