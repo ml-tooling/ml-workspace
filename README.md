@@ -367,8 +367,8 @@ valuable if it's shared publicly so that more people can benefit from it.
   <a href="#file-sharing">File Sharing</a> •
   <a href="#access-ports">Access Ports</a> •
   <a href="#tensorboard">Tensorboard</a> •
-  <a href="#hardware-monitoring">Hardware Monitoring</a> •
   <a href="#extensibility">Extensibility</a> •
+  <a href="#hardware-monitoring">Hardware Monitoring</a> •
   <a href="#ssh-access">SSH Access</a> •
   <a href="#remote-development">Remote Development</a> •
   <a href="#run-as-a-job">Job Execution</a>
@@ -378,7 +378,7 @@ The workspace is equipped with a selection of best-in-class open-source developm
 
 <img style="width: 100%" src="./docs/images/feature-open-tools.png"/>
 
-> ℹ️ _Within your workspace you have **full root & sudo privileges** to install any library or tool you need via terminal (e.g., `pip`, `apt-get`, `conda`, or `npm`)._
+> ℹ️ _Within your workspace you have **full root & sudo privileges** to install any library or tool you need via terminal (e.g., `pip`, `apt-get`, `conda`, or `npm`). You can find more ways to extend the workspace within the [Extensibility](#extensibility) section_
 
 ### Jupyter
 
@@ -756,13 +756,21 @@ The workspace provides a high degree of extensibility. Within the workspace, you
 - **JupyterLab:** `File -> New -> Terminal`
 - **VS Code:** `Terminal -> New Terminal`
 
-Additionally, pre-installed tools such as Jupyter, JupyterLab, and Visual Studio Code each provide their own rich ecosystem of extensions. The workspace also contains a [collection of installer scripts](https://github.com/ml-tooling/ml-workspace/tree/master/docker-res/tools) for many commonly used development tools or libraries (e.g., `PyCharm`, `Zeppelin`, `RStudio`, `Starspace`). Those scripts can be either executed from the Desktop VNC (double-click on the script within the `Tools` folder on the Desktop) or from a terminal (execute any tool script from the `/resources/tools/` folder). For example, to install the [Apache Zeppelin](https://zeppelin.apache.org/) notebook server, simply execute:
+Additionally, pre-installed tools such as Jupyter, JupyterLab, and Visual Studio Code each provide their own rich ecosystem of extensions. The workspace also contains a [collection of installer scripts](https://github.com/ml-tooling/ml-workspace/tree/master/docker-res/tools) for many commonly used development tools or libraries (e.g., `PyCharm`, `Zeppelin`, `RStudio`, `Starspace`). Those scripts can be either executed from the Desktop VNC (double-click on the script within the `Tools` folder on the Desktop) or from a terminal (execute any tool script from the `/resources/tools/` folder).
+
+<details>
+<summary>Example (click to expand...)</summary>
+
+For example, to install the [Apache Zeppelin](https://zeppelin.apache.org/) notebook server, simply execute:
 
 ```bash
 /resources/tools/zeppelin.sh --port=1234
 ```
 
 After installation, refresh the Jupyter website and the Zeppelin tool will be available under `Open Tool -> Zeppelin`. Other tools might only be available within the Desktop VNC (e.g., `atom` or `pycharm`) or do not provide any UI (e.g., `starspace`, `docker-client`).
+</details>
+
+Alternativly to extending the workspace at runtime, you can also customize the workspace Docker image to create your own flavor as explained in the [FAQ](#faq) section.
 
 ## FAQ
 
