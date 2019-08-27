@@ -856,7 +856,7 @@ RUN \
 
 # Copy files into workspace
 COPY \
-    docker-res/run.py \
+    docker-res/docker-entrypoint.py \
     docker-res/5xx.html \
     $RESOURCES_PATH/
 
@@ -1062,7 +1062,7 @@ LABEL \
 # use global option with tini to kill full process groups: https://github.com/krallin/tini#process-group-killing
 ENTRYPOINT ["/tini", "-g", "--"]
 
-CMD ["python", "/resources/run.py"] 
+CMD ["python", "/resources/docker-entrypoint.py"] 
 
 # Port 8091 is the main access port (also includes SSH)
 # Port 5091 is the VNC port

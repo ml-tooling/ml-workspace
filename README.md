@@ -752,7 +752,7 @@ ENV EXECUTE_CODE=/workspace/ml-job
 RUN python /resources/scripts/execute_code.py --requirements-only
 
 # Execute only the code at container startup
-CMD ["python", "/resources/run.py", "--code-only"]
+CMD ["python", "/resources/docker-entrypoint.py", "--code-only"]
 ```
 
 </details>
