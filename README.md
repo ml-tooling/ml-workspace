@@ -467,7 +467,7 @@ _WIP: Screenshot_
 
 If you want to use an HTTP client or share access to a given port, you can select the `Get shareable link` option. This generates a token-secured link that anyone with access to the link can use to access the specified port.
 
-> ℹ️ _The web application requires to be resolved from a relative URL path or use a correct base path (e.g., /tools/PORT/)._
+> ℹ️ _The HTTP application requires to be resolved from a relative URL path or configure the base path (e.g., /tools/PORT/)._
 
 <details>
 
