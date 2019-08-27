@@ -754,20 +754,17 @@ RUN python /resources/scripts/execute_code.py --requirements-only
 # Execute only the code at container startup
 CMD ["python", "/resources/run.py", "--code-only"]
 ```
+
 </details>
 
 ### Pre-installed Libraries and Runtimes
 
-_WIP: Feature Table_
+The workspace is pre-installed with many popular interpreters, data science libraries, and ubuntu packages:
 
-The workspace is pre-installed with many popular runtimes, data science libraries, and ubuntu packages:
-
-- **Interpreter:** Miniconda 3 (Python 3.6), Java 8, NodeJS 11, Go, Ruby
-- **Python libraries:** Tensorflow, Keras, Pytorch, Sklearn, CNTK, XGBoost, Theano, Fastai, and [many more](https://github.com/ml-tooling/ml-workspace/blob/master/docker-res/requirements.txt)
+- **Interpreter:** Miniconda 3 (Python 3.6), Java 8, NodeJS 11
+- **Python libraries:** Tensorflow, Keras, Pytorch, Sklearn, CNTK, XGBoost, Theano, Fastai, and [many more](https://github.com/ml-tooling/ml-workspace/tree/master/docker-res/libraries)
 
 The full list of installed tools can be found within the [Dockerfile](https://github.com/ml-tooling/ml-workspace/blob/master/Dockerfile).
-
-> ℹ️ _**An R-Runtime** installation script is provided in the `Tools` folder on the desktop of the VNC GUI._
 
 ### Extensibility
 
@@ -880,6 +877,8 @@ docker run --shm-size=2G mltooling/ml-workspace:latest
 ## Contributors
 
 [![](https://sourcerer.io/fame/LukasMasuch/ml-tooling/ml-workspace/images/0)](https://sourcerer.io/fame/LukasMasuch/ml-tooling/ml-workspace/links/0)[![](https://sourcerer.io/fame/LukasMasuch/ml-tooling/ml-workspace/images/1)](https://sourcerer.io/fame/LukasMasuch/ml-tooling/ml-workspace/links/1)[![](https://sourcerer.io/fame/LukasMasuch/ml-tooling/ml-workspace/images/2)](https://sourcerer.io/fame/LukasMasuch/ml-tooling/ml-workspace/links/2)[![](https://sourcerer.io/fame/LukasMasuch/ml-tooling/ml-workspace/images/3)](https://sourcerer.io/fame/LukasMasuch/ml-tooling/ml-workspace/links/3)[![](https://sourcerer.io/fame/LukasMasuch/ml-tooling/ml-workspace/images/4)](https://sourcerer.io/fame/LukasMasuch/ml-tooling/ml-workspace/links/4)[![](https://sourcerer.io/fame/LukasMasuch/ml-tooling/ml-workspace/images/5)](https://sourcerer.io/fame/LukasMasuch/ml-tooling/ml-workspace/links/5)[![](https://sourcerer.io/fame/LukasMasuch/ml-tooling/ml-workspace/images/6)](https://sourcerer.io/fame/LukasMasuch/ml-tooling/ml-workspace/links/6)[![](https://sourcerer.io/fame/LukasMasuch/ml-tooling/ml-workspace/images/7)](https://sourcerer.io/fame/LukasMasuch/ml-tooling/ml-workspace/links/7)
+
+---
 
 <br>
 
