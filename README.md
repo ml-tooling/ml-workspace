@@ -1,6 +1,6 @@
 <h1 align="center">
     <a href="https://github.com/ml-tooling/ml-workspace" title="ML Workspace Home">
-    <img width=50% alt="" src="./docs/images/ml-workspace-logo.png"> </a>
+    <img width=50% alt="" src="https://github.com/ml-tooling/ml-workspace/raw/master/docs/images/ml-workspace-logo.png"> </a>
     <br>
 </h1>
 
@@ -398,7 +398,7 @@ valuable if it's shared publicly so that more people can benefit from it.
 
 The workspace is equipped with a selection of best-in-class open-source development tools to help with the machine learning workflow. Many of these tools can be started from the `Open Tool` menu from Jupyter (the main application of the workspace):
 
-<img style="width: 100%" src="./docs/images/features/open-tools.png"/>
+<img style="width: 100%" src="https://github.com/ml-tooling/ml-workspace/raw/master/docs/images/features/open-tools.png"/>
 
 > ℹ️ _Within your workspace you have **full root & sudo privileges** to install any library or tool you need via terminal (e.g., `pip`, `apt-get`, `conda`, or `npm`). You can find more ways to extend the workspace within the [Extensibility](#extensibility) section_
 
@@ -406,13 +406,13 @@ The workspace is equipped with a selection of best-in-class open-source developm
 
 [Jupyter Notebook](https://jupyter.org/) is a web-based interactive environment for writing and running code. The main building blocks of Jupyter are the file-browser, the notebook editor, and kernels. The file-browser provides an interactive file manager for all notebooks, files, and folders in the `/workspace` directory.
 
-<img style="width: 100%" src="./docs/images/features/jupyter-tree.png"/>
+<img style="width: 100%" src="https://github.com/ml-tooling/ml-workspace/raw/master/docs/images/features/jupyter-tree.png"/>
 
 A new notebook can be created by clicking on the `New` drop-down button at the top of the list and selecting the desired language kernel.
 
 > ℹ️ _You can spawn interactive **terminal** instances as well by selecting `New -> Terminal` in the file-browser._
 
-<img style="width: 100%" src="./docs/images/features/jupyter-notebook.png"/>
+<img style="width: 100%" src="https://github.com/ml-tooling/ml-workspace/raw/master/docs/images/features/jupyter-notebook.png"/>
 
 The notebook editor enables users to author documents that include live code, markdown text, shell commands, LaTeX equations, interactive widgets, plots, and images. These notebook documents provide a complete and self-contained record of a computation that can be converted to various formats and shared with others.
 
@@ -426,13 +426,13 @@ The Notebook allows code to be run in a range of different programming languages
 
 This workspace provides an HTTP-based VNC access to the workspace via [noVNC](https://github.com/novnc/noVNC). Thereby, you can access and work within the workspace with a fully featured desktop GUI. To access this desktop GUI, go to `Open Tool`, select `VNC`, and click the `Connect` button. In the case you are asked for a password, use `vncpassword`.
 
-<img style="width: 100%" src="./docs/images/features/desktop-vnc.png"/>
+<img style="width: 100%" src="https://github.com/ml-tooling/ml-workspace/raw/master/docs/images/features/desktop-vnc.png"/>
 
 Once you are connected, you will see a desktop GUI that allows you to install and use full-fledged web-browsers or any other tool that is available for Ubuntu. Within the `Tools` folder on the desktop, you will find a collection of install scripts that makes it straightforward to install some of the most commonly used development tools, such as Atom, PyCharm, R-Runtime, R-Studio, or Postman (just double-click on the script).
 
 **Clipboard:** If you want to share the clipboard between your machine and the workspace, you can use the copy-paste functionality as described below:
 
-<img style="width: 100%" src="./docs/images/features/desktop-vnc-clipboard.png"/>
+<img style="width: 100%" src="https://github.com/ml-tooling/ml-workspace/raw/master/docs/images/features/desktop-vnc-clipboard.png"/>
 
 > 💡 _**Long-running tasks:** Use the desktop GUI for long-running Jupyter executions. By running notebooks from the browser of your workspace desktop GUI, all output will be synchronized to the notebook even if you have disconnected your browser from the notebook._
 
@@ -440,13 +440,13 @@ Once you are connected, you will see a desktop GUI that allows you to install an
 
 [Visual Studio Code](https://github.com/microsoft/vscode) (`Open Tool -> VS Code`) is an open-source lightweight but powerful code editor with built-in support for a variety of languages and a rich ecosystem of extensions. It combines the simplicity of a source code editor with powerful developer tooling, like IntelliSense code completion and debugging. The workspace integrates VS Code as a web-based application accessible through the browser based on the awesome [code-server](https://github.com/cdr/code-server) project. It allows you to customize every feature to your liking and install any number of third-party extensions.
 
-<p align="center"><img src="./docs/images/features/vs-code.png"/></p>
+<p align="center"><img src="https://github.com/ml-tooling/ml-workspace/raw/master/docs/images/features/vs-code.png"/></p>
 
 ### JupyterLab
 
 [JupyterLab](https://github.com/jupyterlab/jupyterlab) (`Open Tool -> JupyterLab`) is the next-generation user interface for Project Jupyter. It offers all the familiar building blocks of the classic Jupyter Notebook (notebook, terminal, text editor, file browser, rich outputs, etc.) in a flexible and powerful user interface. This JupyterLab instance comes pre-installed with a few helpful extensions such as a the [jupyterlab-toc](https://github.com/jupyterlab/jupyterlab-toc), [jupyterlab-git](https://github.com/jupyterlab/jupyterlab-git), and [juptyterlab-tensorboard](https://github.com/chaoleili/jupyterlab_tensorboard).
 
-<img style="width: 100%" src="./docs/images/features/jupyterlab.png"/>
+<img style="width: 100%" src="https://github.com/ml-tooling/ml-workspace/raw/master/docs/images/features/jupyterlab.png"/>
 
 ### Git Integration
 
@@ -456,17 +456,17 @@ Version control is a crucial aspect for productive collaboration. To make this p
 
 For cloning repositories via `https`, we recommend to navigate to the desired root folder and to click on the `git` button as shown below:
 
-<img style="width: 100%" src="./docs/images/features/git-open.png"/>
+<img style="width: 100%" src="https://github.com/ml-tooling/ml-workspace/raw/master/docs/images/features/git-open.png"/>
 
 This might ask for some required settings and, subsequently, opens [ungit](https://github.com/FredrikNoren/ungit), a web-based Git client with a clean and intuitive UI that makes it convenient to sync your code artifacts. Within ungit, you can clone any repository. If authentication is required, you will get asked for your credentials.
 
-<img style="width: 100%" src="./docs/images/features/git-ungit-credentials.png"/>
+<img style="width: 100%" src="https://github.com/ml-tooling/ml-workspace/raw/master/docs/images/features/git-ungit-credentials.png"/>
 
 #### Push, Pull, Merge, and Other Git Actions
 
 To commit and push a single notebook to a remote Git repository, we recommend to use the Git plugin integrated into Jupyter as shown below:
 
-<img style="width: 100%" src="./docs/images/features/git-push-notebook.png"/>
+<img style="width: 100%" src="https://github.com/ml-tooling/ml-workspace/raw/master/docs/images/features/git-push-notebook.png"/>
 
 For more advanced Git operations we recommend to use [ungit](https://github.com/FredrikNoren/ungit). With ungit, you can do most of the common git actions such as push, pull, merge, branch, tag, checkout, and many more.
 
@@ -474,11 +474,11 @@ For more advanced Git operations we recommend to use [ungit](https://github.com/
 
 Jupyter notebooks are great, but they often are huge files, with a very specific JSON file format. To enable seamless diffing and merging via Git this workspace is pre-installed with [nbdime](https://github.com/jupyter/nbdime). Nbdime understands the structure of notebook documents and, therefore, automatically makes intelligent decisions when diffing and merging notebooks. In the case you have merge conflicts, nbdime will make sure that the notebook is still readable by Jupyter, as shown below:
 
-<img style="width: 100%" src="./docs/images/features/git-nbdime-merging.png"/>
+<img style="width: 100%" src="https://github.com/ml-tooling/ml-workspace/raw/master/docs/images/features/git-nbdime-merging.png"/>
 
 Furthermore, the workspace comes pre-installed with [jupytext](https://github.com/mwouts/jupytext), a Jupyter plugin that reads and writes notebooks as plain text files. This allows you to open, edit, and run scripts or markdown files (e.g., `.py`, `.md`) as notebooks within Jupyter. In the following screenshot, we have opened a markdown file via Jupyter:
 
-<img style="width: 100%" src="./docs/images/features/git-jupytext.png"/>
+<img style="width: 100%" src="https://github.com/ml-tooling/ml-workspace/raw/master/docs/images/features/git-jupytext.png"/>
 
 In combination with Git, jupytext enables a clear diff history and easy merging of version conflicts. With both of those tools, collaborating on Jupyter notebooks with Git becomes straightforward.
 
@@ -486,11 +486,11 @@ In combination with Git, jupytext enables a clear diff history and easy merging 
 
 The workspace has a feature to share any file or folder with anyone via a token-protected link. To share data via link, select any file or folder from the Jupyter directory tree and click on the share button as shown in the following screenshot:
 
-<img style="width: 100%" src="./docs/images/features/file-sharing-open.png"/>
+<img style="width: 100%" src="https://github.com/ml-tooling/ml-workspace/raw/master/docs/images/features/file-sharing-open.png"/>
 
 This will generate a unique link protected via a token that gives anyone with the link access to view and download the selected data via the [Filebrowser](https://github.com/filebrowser/filebrowser) UI:
 
-<img style="width: 100%" src="./docs/images/features/file-sharing-filebrowser.png"/>
+<img style="width: 100%" src="https://github.com/ml-tooling/ml-workspace/raw/master/docs/images/features/file-sharing-filebrowser.png"/>
 
 To deactivate or manage (e.g., provide edit permissions) shared links, open the Filebrowser via `Open Tool -> Filebrowser` and select `Settings->User Management`.
 
@@ -498,7 +498,7 @@ To deactivate or manage (e.g., provide edit permissions) shared links, open the 
 
 It is possible to securely access any workspace internal port by selecting `Open Tool -> Access Port`. With this feature, you are able to access a REST API or web application running inside the workspace directly with your browser. The feature enables developers  to build, run, test, and debug REST APIs or web applications directly from the workspace.
 
-<img style="width: 100%" src="./docs/images/features/access-port.png"/>
+<img style="width: 100%" src="https://github.com/ml-tooling/ml-workspace/raw/master/docs/images/features/access-port.png"/>
 
 If you want to use an HTTP client or share access to a given port, you can select the `Get shareable link` option. This generates a token-secured link that anyone with access to the link can use to access the specified port.
 
@@ -519,7 +519,7 @@ If you want to use an HTTP client or share access to a given port, you can selec
 
 SSH provides a powerful set of features that enables you to be more productive with your development tasks. You can easily set up a secure and passwordless SSH connection to a workspace by selecting `Open Tool -> SSH`. This will generate a secure setup command that can be run on any Linux or Mac machine to configure a passwordless & secure SSH connection to the workspace. Alternatively, you can also download the setup script and run it (instead of using the command).
 
-<img style="width: 100%" src="./docs/images/features/ssh-access.png"/>
+<img style="width: 100%" src="https://github.com/ml-tooling/ml-workspace/raw/master/docs/images/features/ssh-access.png"/>
 
 > ℹ️ _The setup script only runs on Mac and Linux. Windows is currently not supported._
 
@@ -638,7 +638,7 @@ remote_ikernel manage --add \
 
 You can use the remote_ikernel command line functionality to list (`remote_ikernel manage --show`) or delete (`remote_ikernel manage --delete <REMOTE_KERNEL_NAME>`) remote kernel connections.
 
-<img style="width: 100%" src="./docs/images/features/remote-dev-jupyter-kernel.png"/>
+<img style="width: 100%" src="https://github.com/ml-tooling/ml-workspace/raw/master/docs/images/features/remote-dev-jupyter-kernel.png"/>
 
 </details>
 
@@ -651,7 +651,7 @@ The Visual Studio Code [Remote - SSH](https://marketplace.visualstudio.com/item
 2. Run the SSH setup script of a selected workspace as explained in the [SSH Access](#ssh-access) section.
 3. Open the Remote-SSH panel in your local VS Code. All configured SSH connections should be automatically discovered. Just select any configured workspace connection you like to connect to as shown below:
 
-<img style="width: 100%" src="./docs/images/features/remote-dev-vscode.gif"/>
+<img style="width: 100%" src="https://github.com/ml-tooling/ml-workspace/raw/master/docs/images/features/remote-dev-vscode.gif"/>
 
 > 📖 _You can find additional features and information about the Remote SSH extension in [this guide](https://code.visualstudio.com/docs/remote/ssh)._
 
@@ -661,11 +661,11 @@ The Visual Studio Code [Remote - SSH](https://marketplace.visualstudio.com/item
 
 [Tensorboard](https://www.tensorflow.org/tensorboard) provides a suite of visualization tools to make it easier to understand, debug, and optimize your experiment runs. It includes logging features for scalar, histogram, model structure, embeddings, and text & image visualization. The workspace comes pre-installed with [jupyter_tensorboard extension](https://github.com/lspvic/jupyter_tensorboard) that integrates Tensorboard into the Jupyter interface with functionalities to start, manage, and stop instances. You can open a new instance for a valid logs directory as shown below:
 
-<img style="width: 100%" src="./docs/images/features/tensorboard-open.png" />
+<img style="width: 100%" src="https://github.com/ml-tooling/ml-workspace/raw/master/docs/images/features/tensorboard-open.png" />
 
 If you have opened a Tensorboard instance in a valid log directory, you will see the visualizations of your logged data:
 
-<img style="width: 100%" src="./docs/images/features/tensorboard-dashboard.png" />
+<img style="width: 100%" src="https://github.com/ml-tooling/ml-workspace/raw/master/docs/images/features/tensorboard-dashboard.png" />
 
 > ℹ️ _Tensorboard can be used in combination with many other ML frameworks besides Tensorflow. By using the [tensorboardX](https://github.com/lanpa/tensorboardX) library you can log basically from any python based library. Also, PyTorch has a direct Tensorboard integration as described [here](https://pytorch.org/docs/stable/tensorboard.html)._
 
@@ -682,11 +682,11 @@ The workspace provides two pre-installed web-based tools to help developers duri
 
 [Netdata](https://github.com/netdata/netdata) (`Open Tool -> Netdata`) is a real-time hardware and performance monitoring dashboard that visualize the processes and services on your Linux systems. It monitors metrics about CPU, GPU, memory, disks, networks, processes, and more.
 
-<img style="width: 100%" src="./docs/images/features/hardware-monitoring-netdata.png" />
+<img style="width: 100%" src="https://github.com/ml-tooling/ml-workspace/raw/master/docs/images/features/hardware-monitoring-netdata.png" />
 
 [Glances](https://github.com/nicolargo/glances) (`Open Tool -> Glances`) is a web-based hardware monitoring dashboard as well and can be used as an alternative to Netdata.
 
-<img style="width: 100%" src="./docs/images/features/hardware-monitoring-glances.png"/>
+<img style="width: 100%" src="https://github.com/ml-tooling/ml-workspace/raw/master/docs/images/features/hardware-monitoring-glances.png"/>
 
 > ℹ️ _Netdata and Glances will show you the hardware statistics for the entire machine on which the workspace container is running._
 
