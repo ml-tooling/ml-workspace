@@ -467,7 +467,7 @@ _WIP: Screenshot_
 
 If you want to use an HTTP client or share access to a given port, you can select the `Get shareable link` option. This generates a token-secured link that anyone with access to the link can use to access the specified port.
 
-> ℹ️ _The HTTP application requires to be resolved from a relative URL path or configure the base path (e.g., /tools/PORT/)._
+> ℹ️ _The HTTP app requires to be resolved from a relative URL path or configure a base path (`/tools/PORT/`)._
 
 <details>
 
@@ -475,7 +475,7 @@ If you want to use an HTTP client or share access to a given port, you can selec
 
 1. Start an HTTP server on port `1234` by running this command in a terminal within the workspace: `python -m http.server 1234`
 2. Select `Open Tool -> Access Port`, input port `1234`, and select the `Get shareable link` option.
-3. Click `Access`, and you will see the folder structure of the command's working dir.
+3. Click `Access`, and you will see the content provided by Python's `http.server`.
 4. The opened link can also be shared to other people or called from external applications (e.g., try with Incognito Mode in Chrome).
 
 </details>
