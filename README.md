@@ -346,7 +346,7 @@ The workspace is designed as a single-user development environment. For a multi-
 <details>
 <summary>Deployment (click to expand...)</summary>
 
-It is easy to set up on a single server (via Docker) or a cluster (via Kubernetes) and supports a variety of usage scenarios & authentication providers. You can try out ML Hub  via:
+ML Hub makes it easy to set up on a single server (via Docker) or a cluster (via Kubernetes) and supports a variety of usage scenarios & authentication providers. You can try out ML Hub via:
 
 ```bash
 docker run -p 8091:8091 -v /var/run/docker.sock:/var/run/docker.sock mltooling/ml-hub:latest
@@ -355,6 +355,8 @@ docker run -p 8091:8091 -v /var/run/docker.sock:/var/run/docker.sock mltooling/m
 For more information and documentation about ML Hub, please take a look at the [Github Site](https://github.com/ml-tooling/ml-hub).
 
 </details>
+
+---
 
 <br>
 
@@ -371,6 +373,8 @@ valuable if it's shared publicly so that more people can benefit from it.
 | 🎁 **Feature Requests**  | <a href="https://github.com/ml-tooling/ml-workspace/issues?q=is%3Aopen+is%3Aissue+label%3Afeature-request+sort%3Areactions-%2B1-desc" title="Open Feature Request"><img src="https://img.shields.io/github/issues/ml-tooling/ml-workspace/feature-request.svg?label=feature%20requests"></a>                                 |
 | 👩‍💻 **Usage Questions**   |  <a href="https://stackoverflow.com/questions/tagged/ml-tooling" title="Open Question on Stackoverflow"><img src="https://img.shields.io/badge/stackoverflow-ml--tooling-orange.svg"></a> <a href="https://gitter.im/ml-tooling/ml-workspace" title="Chat on Gitter"><img src="https://badges.gitter.im/ml-tooling/ml-workspace.svg"></a> |
 | 🗯 **General Discussion** | <a href="https://gitter.im/ml-tooling/ml-workspace" title="Chat on Gitter"><img src="https://badges.gitter.im/ml-tooling/ml-workspace.svg"></a>  <a href="https://twitter.com/mltooling" title="ML Tooling on Twitter"><img src="https://img.shields.io/twitter/follow/mltooling.svg?style=social"></a>                  |
+
+---
 
 <br>
 
@@ -790,6 +794,8 @@ After installation, refresh the Jupyter website and the Zeppelin tool will be av
 
 As an alternative to extending the workspace at runtime, you can also customize the workspace Docker image to create your own flavor as explained in the [FAQ](#faq) section.
 
+---
+
 <br>
 
 ## FAQ
@@ -849,6 +855,8 @@ If you want to directly connect to the workspace via a VNC client (not using the
 
 </details>
 
+---
+
 <br>
 
 ## Known Issues
@@ -864,6 +872,8 @@ docker run --shm-size=2G mltooling/ml-workspace:latest
 ```
 
 </details>
+
+---
 
 <br>
 
