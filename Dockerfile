@@ -842,9 +842,9 @@ RUN \
                 tf-encrypted \
                 lazycluster \
                 flake8 \
-                docker \
+                docker && \
                 # size: 7MB?
-                jupyterthemes && \
+                # jupyterthemes && \
                 # requires newer spacy version: spacy-pytorch-transformers \     
                 # too many/specific dependencies: pip install tensorflow-data-validation
     # Cleanup
