@@ -76,7 +76,10 @@ This command runs the container in background (`-d`), mounts your current workin
 
 ### Configuration Options
 
-The container can be configured with the following environment variables (via docker run option: `--env`):
+The workspace provides a variety of configuration options that can be used by setting environment variables (via docker run option: `--env`).
+
+<details>
+<summary>Configuration options (click to expand...)</summary>
 
 <table>
     <tr>
@@ -148,6 +151,8 @@ The container can be configured with the following environment variables (via do
         <td></td>
     </tr>
 </table>
+
+</details>
 
 ### Persist Data
 
@@ -336,13 +341,20 @@ The GPU flavor also comes with a few additional configuration options as explain
 
 ### Multi-user setup
 
-The workspace is designed as a single user development environment. For a multi-user setup, we recommend to deploy [🧰 ML Hub](https://github.com/ml-tooling/ml-hub). ML Hub is based on JupyterHub and spawns, manages, and proxies multiple workspace instances. It is easy to set up on a single server (via Docker) or a cluster (via Kubernetes) and supports a variety of usage scenarios & authentication providers. You can try out ML Hub  via:
+The workspace is designed as a single-user development environment. For a multi-user setup, we recommend to deploy [🧰 ML Hub](https://github.com/ml-tooling/ml-hub). ML Hub is based on JupyterHub with the task to spawn, manage, and proxy workspace instances for multiple users.
+
+<details>
+<summary>Deployment (click to expand...)</summary>
+
+It is easy to set up on a single server (via Docker) or a cluster (via Kubernetes) and supports a variety of usage scenarios & authentication providers. You can try out ML Hub  via:
 
 ```bash
 docker run -p 8091:8091 -v /var/run/docker.sock:/var/run/docker.sock mltooling/ml-hub:latest
 ```
 
 For more information and documentation about ML Hub, please take a look at the [Github Site](https://github.com/ml-tooling/ml-hub).
+
+</details>
 
 <br>
 
