@@ -770,7 +770,7 @@ For example, to install the [Apache Zeppelin](https://zeppelin.apache.org/) note
 After installation, refresh the Jupyter website and the Zeppelin tool will be available under `Open Tool -> Zeppelin`. Other tools might only be available within the Desktop VNC (e.g., `atom` or `pycharm`) or do not provide any UI (e.g., `starspace`, `docker-client`).
 </details>
 
-Alternativly to extending the workspace at runtime, you can also customize the workspace Docker image to create your own flavor as explained in the [FAQ](#faq) section.
+As an alternative to extending the workspace at runtime, you can also customize the workspace Docker image to create your own flavor as explained in the [FAQ](#faq) section.
 
 ## FAQ
 
