@@ -59,17 +59,17 @@ The workspace requires **Docker** to be installed on your machine ([Installation
 Deploying a single workspace instance is as simple as:
 
 ```bash
-docker run -p 8091:8091 mltooling/ml-workspace:latest
+docker run -p 8080:8080 mltooling/ml-workspace:latest
 ```
 
-Voilà, that was easy! Now, Docker will pull the latest workspace image to your machine. This may take a few minutes, depending on your internet speed. Once the workspace is started, you can access it via: http://localhost:8091.
+Voilà, that was easy! Now, Docker will pull the latest workspace image to your machine. This may take a few minutes, depending on your internet speed. Once the workspace is started, you can access it via: http://localhost:8080.
 
 > ℹ️ _If started on a another machine or with a different port, make sure to use the machine's IP/DNS and/or the exposed port._
 
 To deploy a single instance for productive usage, we recommend to apply at least the following options:
 
 ```bash
-docker run -d -p 8091:8091 -v "${PWD}:/workspace" --env AUTHENTICATE_VIA_JUPYTER="mytoken" --shm-size=512m --restart always mltooling/ml-workspace:latest
+docker run -d -p 8080:8080 -v "${PWD}:/workspace" --env AUTHENTICATE_VIA_JUPYTER="mytoken" --shm-size=512m --restart always mltooling/ml-workspace:latest
 ```
 
 This command runs the container in background (`-d`), mounts your current working directory into the `/workspace` folder (`-v`), secures the workspace via a provided token (`--env AUTHENTICATE_VIA_JUPYTER`), provides 512MB of shared memory (`--shm-size`) to prevent unexpected crashes (see [known issues section](#known-issues)), and keeps the container running even on system restarts (`--restart always`). You can find additional options for docker run [here](https://docs.docker.com/engine/reference/commandline/run/) and workspace configuration options in [the section below](#Configuration).
@@ -110,7 +110,7 @@ The workspace provides a variety of configuration options that can be used by se
     <tr>
         <td>WORKSPACE_PORT</td>
         <td>Configures the main container-internal port of the workspace proxy. For most scenarios, this configuration should not be changed, and the port configuration via Docker should be used instead of the workspace should be accessible from a different port.</td>
-        <td>8091</td>
+        <td>8080</td>
     </tr>
     <tr>
         <td>CONFIG_BACKUP_ENABLED</td>
@@ -176,7 +176,7 @@ We strongly recommend enabling authentication via one of the following two optio
 Activate the token-based authentication based on the authentication implementation of Jupyter via the `AUTHENTICATE_VIA_JUPYTER` variable:
 
 ```bash
-docker run -p 8091:8091 --env AUTHENTICATE_VIA_JUPYTER="mytoken" mltooling/ml-workspace:latest
+docker run -p 8080:8080 --env AUTHENTICATE_VIA_JUPYTER="mytoken" mltooling/ml-workspace:latest
 ```
 
 You can also use `<generated>` to let Jupyter generate a random token that is printed out on the container logs. A value of `true` will not set any token but activate that every request to any tool in the workspace will be checked with the Jupyter instance if the user is authenticated. This is used for tools like JupyterHub, which configures its own way of authentication.
@@ -186,7 +186,7 @@ You can also use `<generated>` to let Jupyter generate a random token that is pr
 Activate the basic authentication via the `WORKSPACE_AUTH_USER` and `WORKSPACE_AUTH_PASSWORD` variable:
 
 ```bash
-docker run -p 8091:8091 --env WORKSPACE_AUTH_USER="user" --env WORKSPACE_AUTH_PASSWORD="pwd" mltooling/ml-workspace:latest
+docker run -p 8080:8080 --env WORKSPACE_AUTH_USER="user" --env WORKSPACE_AUTH_PASSWORD="pwd" mltooling/ml-workspace:latest
 ```
 
 The basic authentication is configured via the nginx proxy and might be more performant compared to the other option since with `AUTHENTICATE_VIA_JUPYTER` every request to any tool in the workspace will check via the Jupyter instance if the user (based on the request cookies) is authenticated.
@@ -203,7 +203,7 @@ We recommend enabling SSL so that the workspace is accessible via HTTPS (encrypt
 When set to `true`, either the `cert.crt` and `cert.key` file must be mounted to `/resources/ssl` or, if the certificate files do not exist, the container generates self-signed certificates. For example, if the `/path/with/certificate/files` on the local system contains a valid certificate for the host domain (`cert.crt` and `cert.key` file), it can be used from the workspace as shown below:
 
 ```bash
-docker run -p 8091:8091 --env WORKSPACE_SSL_ENABLED="true" -v /path/with/certificate/files:/resources/ssl:ro mltooling/ml-workspace:latest
+docker run -p 8080:8080 --env WORKSPACE_SSL_ENABLED="true" -v /path/with/certificate/files:/resources/ssl:ro mltooling/ml-workspace:latest
 ```
 
 If you want to host the workspace on a public domain, we recommend to use [Let's encrypt](https://letsencrypt.org/getting-started/) to get a trusted certificate for your domain.  To use the generated certificate (e.g. via [certbot](https://certbot.eff.org/) tool) for the workspace, the `privkey.pem` corresponds to the `cert.key` file and the `fullchain.pem` to the `cert.crt` file.
@@ -222,7 +222,7 @@ By default, the workspace container has no resource constraints and can use as m
 For example, the following command restricts the workspace to only use a maximum of 8 CPUs, 16 GB of memory, and 1 GB of shared memory (see [Known Issues](#known-issues)):
 
 ```bash
-docker run -p 8091:8091 --cpus=8 --memory=16g --shm-size=1G mltooling/ml-workspace:latest
+docker run -p 8080:8080 --cpus=8 --memory=16g --shm-size=1G mltooling/ml-workspace:latest
 ```
 
 > 📖 _For more options and documentation on resource constraints, please refer to the [official docker guide](https://docs.docker.com/config/containers/resource_constraints/)._
@@ -250,7 +250,7 @@ In addition to the main workspace image (`mltooling/ml-workspace`), we provide o
 The minimal flavor (`mltooling/ml-workspace-minimal`) is our smallest image that contains most of the tools and features described in the [features section](#features) without most of the python libraries that are pre-installed in our main image. Any Python library or excluded tool can be installed manually during runtime by the user.
 
 ```bash
-docker run -p 8091:8091 mltooling/ml-workspace-minimal:latest
+docker run -p 8080:8080 mltooling/ml-workspace-minimal:latest
 ```
 </details>
 
@@ -267,7 +267,7 @@ docker run -p 8091:8091 mltooling/ml-workspace-minimal:latest
 The light flavor (`mltooling/ml-workspace-light`) has all of the tools and features described in the [features section](#features), but only a small collection of popular python machine learning libraries pre-installed. Any Python library can be installed manually during runtime.
 
 ```bash
-docker run -p 8091:8091 mltooling/ml-workspace-light:latest
+docker run -p 8080:8080 mltooling/ml-workspace-light:latest
 ```
 </details>
 
@@ -284,7 +284,7 @@ docker run -p 8091:8091 mltooling/ml-workspace-light:latest
 The R flavor (`mltooling/ml-workspace-r`) is based on our default workspace image and extends it with the R-interpreter, R-Jupyter kernel, RStudio server (access via `Open Tool -> RStudio`), and a variety of popular packages from the R ecosystem.
 
 ```bash
-docker run -p 8091:8091 mltooling/ml-workspace-r:latest
+docker run -p 8080:8080 mltooling/ml-workspace-r:latest
 ```
 </details>
 
@@ -304,13 +304,13 @@ The GPU flavor (`mltooling/ml-workspace-gpu`) is based on our default workspace 
 - (Docker >= 19.03) Nvidia Container Toolkit ([📖 Instructions](https://github.com/NVIDIA/nvidia-docker/wiki/Installation-(Native-GPU-Support))).
 
 ```bash
-docker run -p 8091:8091 --gpus all mltooling/ml-workspace-gpu:latest
+docker run -p 8080:8080 --gpus all mltooling/ml-workspace-gpu:latest
 ```
 
 - (Docker < 19.03) Nvidia Docker 2.0 ([📖 Instructions](https://github.com/NVIDIA/nvidia-docker/wiki/Installation-(version-2.0))).
 
 ```bash
-docker run -p 8091:8091 --runtime nvidia --env NVIDIA_VISIBLE_DEVICES="all" mltooling/ml-workspace-gpu:latest
+docker run -p 8080:8080 --runtime nvidia --env NVIDIA_VISIBLE_DEVICES="all" mltooling/ml-workspace-gpu:latest
 ```
 
 The GPU flavor also comes with a few additional configuration options as explained below:
@@ -349,7 +349,7 @@ The workspace is designed as a single-user development environment. For a multi-
 ML Hub makes it easy to set up on a single server (via Docker) or a cluster (via Kubernetes) and supports a variety of usage scenarios & authentication providers. You can try out ML Hub via:
 
 ```bash
-docker run -p 8091:8091 -v /var/run/docker.sock:/var/run/docker.sock mltooling/ml-hub:latest
+docker run -p 8080:8080 -v /var/run/docker.sock:/var/run/docker.sock mltooling/ml-hub:latest
 ```
 
 For more information and documentation about ML Hub, please take a look at the [Github Site](https://github.com/ml-tooling/ml-hub).
@@ -546,7 +546,7 @@ autossh -M 0 -f -nNT -L 5000:localhost:5901 my-workspace
 
 Port tunneling is quite useful when you have started any server-based tool within the workspace that you like to make accessible for another machine. In its default setting, the workspace has a variety of tools already running on different ports, such as:
 
-- `8091`: Main workspace port with access to all integrated tools.
+- `8080`: Main workspace port with access to all integrated tools.
 - `8090`: Jupyter server.
 - `8054`: VS Code server.
 - `5901`: VNC server.

@@ -39,7 +39,7 @@ Also, be sure to check our documentation first: https://github.com/ml-tooling/ml
 - Workspace version <!-- run `echo $WORKSPACE_VERSION` inside the workspace -->: 
 - Docker version <!-- run `docker version` on host machine -->: 
 - Host Machine OS (Windows/Linux/Mac): 
-- Command used to start the workspace <!-- e.g. `docker run -p 8091:8091 mltooling/ml-workspace:latest` -->:
+- Command used to start the workspace <!-- e.g. `docker run mltooling/ml-workspace:latest` -->:
 - Browser (Chrome/Firefox/Safari):
 
 **Possible Fix:**
