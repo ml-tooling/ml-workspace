@@ -384,7 +384,7 @@ The workspace is equipped with a selection of best-in-class open-source developm
 
 [Jupyter Notebook](https://jupyter.org/) is a web-based interactive environment for writing and running code. The main building blocks of Jupyter are the file-browser, the notebook editor, and kernels. The file-browser provides an interactive file manager for all notebooks, files, and folders in the `/workspace` directory.
 
-<img style="width: 100%" src="./docs/images/feature-jupyter-tree.png"/>
+<img style="width: 100%" src="./docs/images/features/jupyter-tree.png"/>
 
 A new notebook can be created by clicking on the `New` drop-down button at the top of the list and selecting the desired language kernel.
 
