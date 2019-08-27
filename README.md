@@ -40,6 +40,8 @@ The ML workspace is an all-in-one web-based IDE specialized for machine learning
 - 🎛 Usable as remote kernel (Jupyter) or remote machine (VS Code) via SSH.
 - 🐳 Easy to deploy on Mac, Linux, and Windows via Docker.
 
+<br>
+
 ## Getting Started
 
 <p>
@@ -776,6 +778,8 @@ After installation, refresh the Jupyter website and the Zeppelin tool will be av
 
 As an alternative to extending the workspace at runtime, you can also customize the workspace Docker image to create your own flavor as explained in the [FAQ](#faq) section.
 
+<br>
+
 ## FAQ
 
 <details>
@@ -833,6 +837,8 @@ If you want to directly connect to the workspace via a VNC client (not using the
 
 </details>
 
+<br>
+
 ## Known Issues
 
 <details>
@@ -847,9 +853,13 @@ docker run --shm-size=2G mltooling/ml-workspace:latest
 
 </details>
 
+<br>
+
 ## Contributors
 
 [![](https://sourcerer.io/fame/LukasMasuch/ml-tooling/ml-workspace/images/0)](https://sourcerer.io/fame/LukasMasuch/ml-tooling/ml-workspace/links/0)[![](https://sourcerer.io/fame/LukasMasuch/ml-tooling/ml-workspace/images/1)](https://sourcerer.io/fame/LukasMasuch/ml-tooling/ml-workspace/links/1)[![](https://sourcerer.io/fame/LukasMasuch/ml-tooling/ml-workspace/images/2)](https://sourcerer.io/fame/LukasMasuch/ml-tooling/ml-workspace/links/2)[![](https://sourcerer.io/fame/LukasMasuch/ml-tooling/ml-workspace/images/3)](https://sourcerer.io/fame/LukasMasuch/ml-tooling/ml-workspace/links/3)[![](https://sourcerer.io/fame/LukasMasuch/ml-tooling/ml-workspace/images/4)](https://sourcerer.io/fame/LukasMasuch/ml-tooling/ml-workspace/links/4)[![](https://sourcerer.io/fame/LukasMasuch/ml-tooling/ml-workspace/images/5)](https://sourcerer.io/fame/LukasMasuch/ml-tooling/ml-workspace/links/5)[![](https://sourcerer.io/fame/LukasMasuch/ml-tooling/ml-workspace/images/6)](https://sourcerer.io/fame/LukasMasuch/ml-tooling/ml-workspace/links/6)[![](https://sourcerer.io/fame/LukasMasuch/ml-tooling/ml-workspace/images/7)](https://sourcerer.io/fame/LukasMasuch/ml-tooling/ml-workspace/links/7)
+
+<br>
 
 ## Contribution
 
