@@ -390,7 +390,7 @@ A new notebook can be created by clicking on the `New` drop-down button at the t
 
 > ℹ️ _You can spawn interactive **terminal** instances as well by selecting `New -> Terminal` in the file-browser._
 
-<img style="width: 100%" src="./docs/images/feature-jupyter-notebook.png"/>
+<img style="width: 100%" src="./docs/images/features/jupyter-notebook.png"/>
 
 The notebook editor enables users to author documents that include live code, markdown text, shell commands, LaTeX equations, interactive widgets, plots, and images. These notebook documents provide a complete and self-contained record of a computation that can be converted to various formats and shared with others.
 
@@ -462,13 +462,13 @@ In combination with Git, jupytext enables a clear diff history and easy merging 
 
 ### File Sharing
 
-The workspace has a feature to share any file or folder with anyone via a token-protected link. To share data via link, select any file or folder from the Jupyter directory tree and click on the Share button as shown in the following screenshot:
+The workspace has a feature to share any file or folder with anyone via a token-protected link. To share data via link, select any file or folder from the Jupyter directory tree and click on the share button as shown in the following screenshot:
 
-TODO: Add screenshot
+<img style="width: 100%" src="./docs/images/features/file-sharing-open.png"/>
 
 This will generate a unique link protected via a token that gives anyone with the link access to view and download the selected data via the [Filebrowser](https://github.com/filebrowser/filebrowser) UI:
 
-TODO: Add screenshot
+<img style="width: 100%" src="./docs/images/features/file-sharing-filebrowser.png"/>
 
 To deactivate or manage (e.g., provide edit permissions) shared links, open the Filebrowser via `Open Tool -> Filebrowser` and select `Settings->User Management`.
 
@@ -639,7 +639,7 @@ The Visual Studio Code [Remote - SSH](https://marketplace.visualstudio.com/item
 
 [Tensorboard](https://www.tensorflow.org/tensorboard) provides a suite of visualization tools to make it easier to understand, debug, and optimize your experiment runs. It includes logging features for scalar, histogram, model structure, embeddings, and text & image visualization. The workspace comes pre-installed with [jupyter_tensorboard extension](https://github.com/lspvic/jupyter_tensorboard) that integrates Tensorboard into the Jupyter interface with functionalities to start, manage, and stop instances. You can open a new instance for a valid logs directory as shown below:
 
-<img style="width: 100%" src="./docs/images/feature-tensorboard-open.png" />
+<img style="width: 100%" src="./docs/images/features/tensorboard-open.png" />
 
 If you have opened a Tensorboard instance in a valid log directory, you will see the visualizations of your logged data:
 
