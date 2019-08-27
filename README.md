@@ -454,9 +454,9 @@ Jupyter notebooks are great, but they often are huge files, with a very specific
 
 <img style="width: 100%" src="./docs/images/features/git-nbdime-merging.png"/>
 
-Furthermore, the workspace comes pre-installed with [jupytext](https://github.com/mwouts/jupytext), a Jupyter plugin that reads and writes notebooks as plain text files. This allows you to open, edit, and run scripts or markdown files (e.g., `.py`, `.md`) as notebooks within Jupyter. In the following screenshot, we have opened this `README.md` file via Jupyter:
+Furthermore, the workspace comes pre-installed with [jupytext](https://github.com/mwouts/jupytext), a Jupyter plugin that reads and writes notebooks as plain text files. This allows you to open, edit, and run scripts or markdown files (e.g., `.py`, `.md`) as notebooks within Jupyter. In the following screenshot, we have opened a markdown file via Jupyter:
 
-<img style="width: 100%" src="./docs/images/feature-git-jupytext.png"/>
+<img style="width: 100%" src="./docs/images/features/git-jupytext.png"/>
 
 In combination with Git, jupytext enables a clear diff history and easy merging of version conflicts. With both of those tools, collaborating on Jupyter notebooks with Git becomes straightforward.
 
@@ -476,7 +476,7 @@ To deactivate or manage (e.g., provide edit permissions) shared links, open the 
 
 It is possible to securely access any workspace internal port by selecting `Open Tool -> Access Port`. With this feature, you are able to access a REST API or web application running inside the workspace directly with your browser. The feature enables developers  to build, run, test, and debug REST APIs or web applications directly from the workspace.
 
-_WIP: Screenshot_
+<img style="width: 100%" src="./docs/images/features/access-port.png"/>
 
 If you want to use an HTTP client or share access to a given port, you can select the `Get shareable link` option. This generates a token-secured link that anyone with access to the link can use to access the specified port.
 
@@ -497,7 +497,7 @@ If you want to use an HTTP client or share access to a given port, you can selec
 
 SSH provides a powerful set of features that enables you to be more productive with your development tasks. You can easily set up a secure and passwordless SSH connection to a workspace by selecting `Open Tool -> SSH`. This will generate a secure setup command that can be run on any Linux or Mac machine to configure a passwordless & secure SSH connection to the workspace. Alternatively, you can also download the setup script and run it (instead of using the command).
 
-_WIP: Screenshot_
+<img style="width: 100%" src="./docs/images/features/ssh-access.png"/>
 
 > ℹ️ _The setup script only runs on Mac and Linux. Windows is currently not supported._
 
@@ -610,13 +610,13 @@ In case you want to manually setup and manage remote kernels, use the [remote_ik
 remote_ikernel manage --add \
     --interface=ssh \
     --kernel_cmd="ipython kernel -f {connection_file}" \
-    --name="Remote Py3" \
+    --name="ml-server Py 3.6" \
     --host="my-workspace"
 ```
 
 You can use the remote_ikernel command line functionality to list (`remote_ikernel manage --show`) or delete (`remote_ikernel manage --delete <REMOTE_KERNEL_NAME>`) remote kernel connections.
 
-_WIP: Add Screenshot_
+<img style="width: 100%" src="./docs/images/features/remote-dev-jupyter-kernel.png"/>
 
 </details>
 
@@ -660,7 +660,7 @@ The workspace provides two pre-installed web-based tools to help developers duri
 
 [Netdata](https://github.com/netdata/netdata) (`Open Tool -> Netdata`) is a real-time hardware and performance monitoring dashboard that visualize the processes and services on your Linux systems. It monitors metrics about CPU, GPU, memory, disks, networks, processes, and more.
 
-<img style="width: 100%" src="./docs/images/features/hardware-m-netdata.png" />
+<img style="width: 100%" src="./docs/images/features/hardware-monitoring-netdata.png" />
 
 [Glances](https://github.com/nicolargo/glances) (`Open Tool -> Glances`) is a web-based hardware monitoring dashboard as well and can be used as an alternative to Netdata.
 
