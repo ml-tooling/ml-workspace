@@ -804,7 +804,7 @@ RUN \
     # Install odbc drivers
     apt-get install -y --no-install-recommends unixodbc unixodbc-dev && \
     # Dev tools
-    apt-get install -y --no-install-recommends less bash-completion && \
+    apt-get install -y --no-install-recommends less bash-completion tree && \
     # Cleanup
     clean-layer.sh
 
