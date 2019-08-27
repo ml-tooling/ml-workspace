@@ -23,7 +23,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends ca-certificates
     echo "deb https://developer.download.nvidia.com/compute/machine-learning/repos/ubuntu1604/x86_64 /" > /etc/apt/sources.list.d/nvidia-ml.list && \
     # Cleanup - cannot use cleanup script here, otherwise too much is removed
     apt-get clean && \ 
-    rm -rf /root/.cache/* && \
+    rm -rf $HOME/.cache/* && \
     rm -rf /tmp/* && \
     rm -rf /var/lib/apt/lists/*
 
@@ -38,7 +38,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     rm -rf /var/lib/apt/lists/* && \
     # Cleanup - cannot use cleanup script here, otherwise too much is removed
     apt-get clean && \ 
-    rm -rf /root/.cache/* && \
+    rm -rf $HOME/.cache/* && \
     rm -rf /tmp/* && \
     rm -rf /var/lib/apt/lists/*
 
@@ -68,7 +68,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     rm -rf /var/lib/apt/lists/* && \
     # Cleanup - cannot use cleanup script here, otherwise too much is removed
     apt-get clean && \ 
-    rm -rf /root/.cache/* && \
+    rm -rf $HOME/.cache/* && \
     rm -rf /tmp/* && \
     rm -rf /var/lib/apt/lists/*
 
