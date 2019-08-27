@@ -757,7 +757,7 @@ CMD ["python", "/resources/docker-entrypoint.py", "--code-only"]
 
 </details>
 
-### Pre-installed Libraries and Runtimes
+### Pre-installed Libraries and Interpreters
 
 The workspace is pre-installed with many popular interpreters, data science libraries, and ubuntu packages:
 
