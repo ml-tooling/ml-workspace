@@ -410,7 +410,7 @@ Once you are connected, you will see a desktop GUI that allows you to install an
 
 **Clipboard:** If you want to share the clipboard between your machine and the workspace, you can use the copy-paste functionality as described below:
 
-<img style="width: 100%" src="./docs/images/feature-desktop-vnc-clipboard.png"/>
+<img style="width: 100%" src="./docs/images/features/desktop-vnc-clipboard.png"/>
 
 > 💡 _**Long-running tasks:** Use the desktop GUI for long-running Jupyter executions. By running notebooks from the browser of your workspace desktop GUI, all output will be synchronized to the notebook even if you have disconnected your browser from the notebook._
 
