@@ -1,10 +1,12 @@
-ARG WORKSPACE_VERSION="latest"
+ARG ARG_WORKSPACE_VERSION="latest"
 # Build from full flavor of workspace with same version
-FROM mltooling/ml-workspace:$WORKSPACE_VERSION
+FROM mltooling/ml-workspace:$ARG_WORKSPACE_VERSION
 
-ARG WORKSPACE_FLAVOR="gpu"
-ENV WORKSPACE_FLAVOR=$WORKSPACE_FLAVOR
-ENV WORKSPACE_VERSION=$WORKSPACE_VERSION
+ARG ARG_WORKSPACE_FLAVOR="gpu"
+ENV WORKSPACE_FLAVOR=$ARG_WORKSPACE_FLAVOR
+# argument needs to be initalized again
+ARG ARG_WORKSPACE_VERSION="latest"
+ENV WORKSPACE_VERSION=$ARG_WORKSPACE_VERSION
 
 USER root
 
@@ -198,18 +200,18 @@ RUN \
     echo 'Defaults env_keep += "ftp_proxy http_proxy https_proxy no_proxy"' >> /etc/sudoers
 
 # Overwrite & add Labels
-ARG BUILD_DATE="unknown"
-ARG VCS_REF="unknown"
+ARG ARG_BUILD_DATE="unknown"
+ARG ARG_VCS_REF="unknown"
 
 LABEL \
     "workspace.version"=$WORKSPACE_VERSION \
     "workspace.flavor"=$WORKSPACE_FLAVOR \
     "org.opencontainers.image.version"=$WORKSPACE_VERSION \
-    "org.opencontainers.image.revision"=$VCS_REF \
-    "org.opencontainers.image.created"=$BUILD_DATE \ 
+    "org.opencontainers.image.revision"=$ARG_VCS_REF \
+    "org.opencontainers.image.created"=$ARG_BUILD_DATE \ 
     "org.label-schema.version"=$WORKSPACE_VERSION \
-    "org.label-schema.vcs-ref"=$VCS_REF \
-    "org.label-schema.build-date"=$BUILD_DATE
+    "org.label-schema.vcs-ref"=$ARG_VCS_REF \
+    "org.label-schema.build-date"=$ARG_BUILD_DATE
 
 # TODO use temp as data environment to use temp folder?
 # DATA_ENVIRONMENT="temp"

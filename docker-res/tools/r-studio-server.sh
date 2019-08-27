@@ -40,6 +40,8 @@ if [ $INSTALL_ONLY = 0 ] ; then
     fi
 
     echo "Starting Rstudio server on port "$PORT
+    # Create tool entry for tooling plugin
+    echo '{"id": "rstudio-link", "name": "RStudio", "url_path": "/tools/'$PORT'/", "description": "Development environment for R"}' > $HOME/.workspace/tools/rstudio-server.json
     cd $RESOURCES_PATH
     USER=rstudio /usr/lib/rstudio-server/bin/rserver --server-daemonize=0 --auth-none=1 --auth-validate-users=0 --www-port $PORT
     sleep 10

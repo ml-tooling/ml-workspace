@@ -19,12 +19,12 @@ if [ ! -d "/usr/share/tomcat8/" ]; then
     echo "Installing tomcat8 server."
     # Not working because of user problems: apt-get install tomcat8 tomcat8-admin tomcat8-common tomcat8-user 
     cd $RESOURCES_PATH
-    wget --quiet http://apache.spinellicreations.com/tomcat/tomcat-8/v8.5.43/bin/apache-tomcat-8.5.43.tar.gz
-    tar xvzf apache-tomcat-8.5.43.tar.gz
+    wget --quiet http://ftp-stud.hs-esslingen.de/pub/Mirrors/ftp.apache.org/dist/tomcat/tomcat-8/v8.5.45/bin/apache-tomcat-8.5.45.tar.gz
+    tar xvzf apache-tomcat-8.5.45.tar.gz
     mkdir -p /usr/share/tomcat8/
-    mv apache-tomcat-8.5.43/* /usr/share/tomcat8/
-    rm apache-tomcat-8.5.43.tar.gz
-    rm -r apache-tomcat-8.5.43/
+    mv apache-tomcat-8.5.45/* /usr/share/tomcat8/
+    rm apache-tomcat-8.5.45.tar.gz
+    rm -r apache-tomcat-8.5.45/
 else
     echo "Tomcat is already installed"
 fi
@@ -100,6 +100,8 @@ if [ $INSTALL_ONLY = 0 ] ; then
     fi
 
     echo "Starting guacamole on port "$PORT
+    # Create tool entry for tooling plugin
+    echo '{"id": "guacamole-link", "name": "Guacamole", "url_path": "/tools/'$PORT'/", "description": "Remote desktop web-gateway"}' > $HOME/.workspace/tools/guacamole.json
     # Change port in tomcat config
     sed -i 's/Connector port="[0-9]*"/Connector port="'$PORT'"/g' /usr/share/tomcat8/conf/server.xml
     service guacd restart

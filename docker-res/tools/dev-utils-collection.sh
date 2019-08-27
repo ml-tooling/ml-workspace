@@ -13,13 +13,19 @@ for arg in "$@"; do
 done
 
 echo "Installing Dev Utils Collection"
+# Add bazel repo: https://docs.bazel.build/versions/master/install-ubuntu.html
+echo "deb [arch=amd64] https://storage.googleapis.com/bazel-apt stable jdk1.8" | sudo tee /etc/apt/sources.list.d/bazel.list
+curl https://bazel.build/bazel-release.pub.gpg | sudo apt-key add -
+
 apt-get update
 apt-get install -y --no-install-recommends \
         apache2 \
         redis-server \
         mercurial \
         bzr \
+        bazel \
         postgresql \
+        mysql-client \
         mysql-server \
         debian-archive-keyring debian-keyring \
         xvfb dbus-x11 x11-xserver-utils x11-utils wmctrl x11-apps \
@@ -30,4 +36,3 @@ apt-get install -y --no-install-recommends \
         aptitude \
         sshuttle \
         libgnome-keyring*
-

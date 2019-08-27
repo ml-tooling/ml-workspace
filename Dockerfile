@@ -643,6 +643,8 @@ RUN \
 RUN \
     # Required for jupytext and matplotlib plugins
     jupyter lab build && \
+    # jupyterlab installed in requirements section
+    jupyter labextension install @jupyter-widgets/jupyterlab-manager && \
     # If minimal flavor - do not install jupyterlab extensions
     if [ "$WORKSPACE_FLAVOR" = "minimal" ]; then \
         # Cleanup
@@ -652,8 +654,6 @@ RUN \
         clean-layer.sh && \
         exit 0 ; \
     fi && \
-    # jupyterlab installed in requirements section
-    jupyter labextension install @jupyter-widgets/jupyterlab-manager && \
     jupyter labextension install @jupyterlab/toc && \
     jupyter labextension install jupyterlab_tensorboard && \
     # install jupyterlab git
@@ -713,6 +713,9 @@ RUN \
     # Install jupyterlab system monitor: https://github.com/jtpio/jupyterlab-system-monitor
     # DO not install for now jupyter labextension install jupyterlab-topbar-extension jupyterlab-system-monitor && \
     # Too big dependency: https://github.com/InsightSoftwareConsortium/itkwidgets
+    # Too Big: Install ipyleaflet
+    # pip install --no-cache-dir ipyleaflet && \
+    # jupyter labextension install jupyter-leaflet && \
     # Cleanup
     # Clean jupyter lab cache: https://github.com/jupyterlab/jupyterlab/issues/4930
     jupyter lab clean && \
@@ -741,11 +744,11 @@ RUN \
     fi && \
     cd $RESOURCES_PATH && \
     mkdir -p $HOME/.vscode/extensions/ && \
-    # Install python extension
-    wget --quiet https://github.com/microsoft/vscode-python/releases/download/2019.8.30787/ms-python-release.vsix && \
+    # Install python extension - higher version do not work with vscode version 1.33
+    wget --quiet https://github.com/microsoft/vscode-python/releases/download/2019.6.24221/ms-python-release.vsix && \
     bsdtar -xf ms-python-release.vsix extension && \
     rm ms-python-release.vsix && \
-    mv extension $HOME/.vscode/extensions/ms-python.python-2019.8.30787 && \
+    mv extension $HOME/.vscode/extensions/ms-python.python-2019.6.24221 && \
     # Install remote development extension
     # https://marketplace.visualstudio.com/items?itemName=ms-vscode-remote.remote-ssh
     wget --quiet https://marketplace.visualstudio.com/_apis/public/gallery/publishers/ms-vscode-remote/vsextensions/remote-ssh/0.45.5/vspackage -O ms-vscode-remote.remote-ssh.vsix && \
@@ -798,33 +801,53 @@ RUN \
     apt-get install -y gftp && \
     # Minimalistic C client for Redis
     apt-get install -y libhiredis-dev && \
+    # Install odbc drivers
+    apt-get install -y --no-install-recommends unixodbc unixodbc-dev && \
+    # Dev tools
+    apt-get install -y --no-install-recommends less bash-completion && \
     # Cleanup
     clean-layer.sh
 
 RUN \
-    apt-get update && \
-    # Install 
-    apt-get install -y --no-install-recommends unixodbc unixodbc-dev && \
+   # If minimal or light flavor -> exit here
+    if [ "$WORKSPACE_FLAVOR" = "minimal" ] || [ "$WORKSPACE_FLAVOR" = "light" ]; then \
+        exit 0 ; \
+    fi && \
     # New Python Libraries:
     pip install --no-cache-dir \
                 facets-overview \
                 virtualenv \
                 handout \
                 filedepot \
+                numexpr \
                 blosc \
                 graphene \
                 knockknock \
                 pyodbc \
+                patsy \
+                swifter \
+                xlrd \
+                seaborn \
+                sympy \
+                stormssh \
                 pytorch-transformers \
                 pytorch-lightning \
-                ipyleaflet \
+                python-language-server \
+                opencv-python \
+                imageai \
+                rope \
+                pep8 \
+                pylama \
+                pydocstyle \
+                tf-encrypted \
+                lazycluster \
+                flake8 \
+                docker \
                 # size: 7MB?
                 jupyterthemes && \
                 # requires newer spacy version: spacy-pytorch-transformers \     
                 # too many/specific dependencies: pip install tensorflow-data-validation
-    jupyter labextension install jupyter-leaflet && \
     # Cleanup
-    jupyter lab clean && \
     clean-layer.sh
 
 ### END INCUBATION ZONE ###
@@ -850,6 +873,7 @@ COPY docker-res/nginx/nginx.conf /etc/nginx/nginx.conf
 COPY docker-res/config/xrdp.ini /etc/xrdp/xrdp.ini
 COPY docker-res/config/netdata.conf /etc/netdata/netdata.conf
 COPY docker-res/config/supervisord.conf /etc/supervisor/supervisord.conf
+COPY docker-res/config/workspace-tools.json $HOME/.workspace/tools/1_workspace-tools.json
 COPY docker-res/config/mimeapps.list $HOME/.config/mimeapps.list
 COPY docker-res/config/bookmarks $HOME/.config/gtk-3.0/bookmarks
 COPY docker-res/config/chromium-browser.init $HOME/.chromium-browser.init
@@ -920,13 +944,13 @@ COPY docker-res/icons $RESOURCES_PATH/icons
 
 RUN \
     # ungit:
-    echo "[Desktop Entry]\nVersion=1.0\nType=Link\nName=Ungit\nComment=Git Client\nCategories=Development;\nIcon=/resources/icons/ungit-icon.png\nURL=http://localhost:8091/tools/ungit" > /usr/share/applications/ungit.desktop && \
+    echo "[Desktop Entry]\nVersion=1.0\nType=Link\nName=Ungit\nComment=Git Client\nCategories=Development;\nIcon=/resources/icons/ungit-icon.png\nURL=http://localhost:8092/tools/ungit" > /usr/share/applications/ungit.desktop && \
     chmod +x /usr/share/applications/ungit.desktop && \
     # netdata:
-    echo "[Desktop Entry]\nVersion=1.0\nType=Link\nName=Netdata\nComment=Hardware Monitoring\nCategories=System;Utility;Development;\nIcon=/resources/icons/netdata-icon.png\nURL=http://localhost:8091/tools/netdata" > /usr/share/applications/netdata.desktop && \
+    echo "[Desktop Entry]\nVersion=1.0\nType=Link\nName=Netdata\nComment=Hardware Monitoring\nCategories=System;Utility;Development;\nIcon=/resources/icons/netdata-icon.png\nURL=http://localhost:8092/tools/netdata" > /usr/share/applications/netdata.desktop && \
     chmod +x /usr/share/applications/netdata.desktop && \
     # glances:
-    echo "[Desktop Entry]\nVersion=1.0\nType=Link\nName=Glances\nComment=Hardware Monitoring\nCategories=System;Utility;\nIcon=/resources/icons/glances-icon.png\nURL=http://localhost:8091/tools/glances" > /usr/share/applications/glances.desktop && \
+    echo "[Desktop Entry]\nVersion=1.0\nType=Link\nName=Glances\nComment=Hardware Monitoring\nCategories=System;Utility;\nIcon=/resources/icons/glances-icon.png\nURL=http://localhost:8092/tools/glances" > /usr/share/applications/glances.desktop && \
     chmod +x /usr/share/applications/glances.desktop && \
     # Remove mail and logout desktop icons
     rm /usr/share/applications/exo-mail-reader.desktop && \
@@ -980,6 +1004,8 @@ ENV CONFIG_BACKUP_ENABLED="true" \
     DATA_ENVIRONMENT="/workspace/environment" \
     WORKSPACE_BASE_URL="/" \
     INCLUDE_TUTORIALS="true" \
+    # Main port used for sshl proxy -> can be changed
+    WORKSPACE_PORT="8091" \
     # set number of threads various programs should use, if not-set, it tries to use all
     # this can be problematic since docker restricts CPUs by stil showing all
     MAX_NUM_THREADS="auto"

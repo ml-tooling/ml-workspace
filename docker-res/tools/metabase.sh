@@ -29,6 +29,8 @@ if [ $INSTALL_ONLY = 0 ] ; then
     fi
 
     echo "Starting metabase on port "$PORT
+    # Create tool entry for tooling plugin
+    echo '{"id": "metabase-link", "name": "Metabase", "url_path": "/tools/'$PORT'/", "description": "Business intelligence & analytics webapp"}' > $HOME/.workspace/tools/metabase.json
     export MB_JETTY_PORT=$PORT
     cd $RESOURCES_PATH
     java -jar metabase.jar

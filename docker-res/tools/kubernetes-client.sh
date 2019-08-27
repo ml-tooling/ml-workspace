@@ -1,0 +1,41 @@
+#!/bin/sh
+
+# Stops script execution if a command has an error
+set -e
+
+INSTALL_ONLY=0
+# Loop through arguments and process them: https://pretzelhands.com/posts/command-line-flags
+for arg in "$@"; do
+    case $arg in
+        -i|--install) INSTALL_ONLY=1 ; shift ;;
+        *) break ;;
+    esac
+done
+
+if ! hash kubectl 2>/dev/null; then
+    echo "Installing Kubernetes Client (kubectl)"
+    mkdir -p $RESOURCES_PATH"/kubernetes"
+    cd $RESOURCES_PATH"/kubernetes"
+    curl -LO https://storage.googleapis.com/kubernetes-release/release/`curl -s https://storage.googleapis.com/kubernetes-release/release/stable.txt`/bin/linux/amd64/kubectl
+    mv ./kubectl /usr/local/bin
+    chmod a+rwx /usr/local/bin/kubectl
+    # kube-prompt
+    wget --quiet https://github.com/c-bata/kube-prompt/releases/download/v1.0.7/kube-prompt_v1.0.7_linux_amd64.zip
+    unzip kube-prompt_v1.0.7_linux_amd64.zip
+    chmod +x kube-prompt
+    mv ./kube-prompt /usr/local/bin/kube-prompt
+    # Install python kubernetes client
+    pip install --no-cache-dir kubernetes
+    # Remove temp dir
+    cd $RESOURCES_PATH
+    rm -rf ./kubernetes
+else
+    echo " Kubernetes Client is already installed"
+fi
+
+# Run
+if [ $INSTALL_ONLY = 0 ] ; then
+    echo "Use Kubernetes Client via command line:"
+    kubectl --help
+    sleep 20
+fi

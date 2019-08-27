@@ -35,12 +35,12 @@ def patch_fastapi(app: FastAPI):
         request_interceptor = 'requestInterceptor: (e)  => {' \
             '\n\t\t\tvar url = window.location.origin + window.location.pathname' \
             '\n\t\t\turl = url.substring( 0, url.lastIndexOf( "/" ) + 1);' \
-            '\n\t\t\turl = e.url.replace(/https:\/\/[^/]*\//i, url);' \
+            '\n\t\t\turl = e.url.replace(/http(s)?:\/\/[^/]*\//i, url);' \
             '\n\t\t\te.contextUrl = url' \
             '\n\t\t\te.url = url' \
             '\n\t\t\treturn e;}'
 
-        return HTMLResponse(swagger_ui.body.decode("utf-8").replace("deepLinking: true", "deepLinking: true,\n\t\t" + request_interceptor))
+        return HTMLResponse(swagger_ui.body.decode("utf-8").replace("dom_id: '#swagger-ui',", "dom_id: '#swagger-ui',\n\t\t" + request_interceptor + ",") )
 
     # remove old docs route and add our patched route
     routes_new = []
@@ -52,7 +52,7 @@ def patch_fastapi(app: FastAPI):
     app.router.routes = routes_new
     app.add_route(app.docs_url, swagger_ui_html, include_in_schema=False)
 
-
+print("Patch Fastapi to allow relative path resolution.")
 patch_fastapi(app)
 
 if __name__ == '__main__':

@@ -1,4 +1,5 @@
 import json
+import glob
 import os
 import subprocess
 from subprocess import call
@@ -18,6 +19,7 @@ from notebook .utils import url_path_join
 from tornado import web
 
 SHARED_SSH_SETUP_PATH = "/shared/ssh/setup"
+HOME = os.getenv("HOME", "/root")
 
 # -------------- HANDLER -------------------------
 class HelloWorldHandler(IPythonHandler):
@@ -61,6 +63,41 @@ class PingHandler(IPythonHandler):
     def get(self):
         # Used by Jupyterhub to test if user cookies are valid
         self.finish("Successful")
+
+class ToolingHandler(IPythonHandler):
+
+    @web.authenticated
+    def get(self):
+        try:
+            workspace_tooling_folder =  HOME + '/.workspace/tools/'
+            workspace_tools = []
+            for f in glob.glob(os.path.join(workspace_tooling_folder, '*.json')):
+                try:
+                    with open(f, "rb") as tool_file:
+                        tool_data = json.load(tool_file)
+                        if not tool_data:
+                            continue
+                        if isinstance(tool_data, dict):
+                            workspace_tools.append(tool_data)
+                        else:
+                            # tool data is probably an array
+                            for tool in tool_data:
+                                workspace_tools.append(tool)
+                except:
+                    log.warn("Failed to load tools file: " + f.name)
+                    continue
+
+            if not workspace_tools:
+                log.warn("No workspace tools found at path: " + workspace_tooling_folder)
+                # Backup if file does not exist
+                workspace_tools.append({"id": "vnc-link",
+                            "name": "VNC",
+                            "url_path": "/tools/vnc/?password=vncpassword",
+                            "description": "Desktop GUI for the workspace"})
+            self.finish(json.dumps(workspace_tools))
+        except Exception as ex:
+            handle_error(self, 500, exception=ex)
+            return
 
 class GitCommitHandler(IPythonHandler):
 
@@ -250,7 +287,7 @@ class SharedFilesHandler(IPythonHandler):
                     + " --perm.admin=false --perm.create=false --perm.delete=false" \
                     + " --perm.download=true --perm.execute=false --perm.modify=false" \
                     + " --perm.rename=false --perm.share=false --lockPassword=true" \
-                    + " --database=/root/filebrowser.db --scope=\"" + path + "\""
+                    + " --database=" + HOME + "/filebrowser.db --scope=\"" + path + "\""
 
                 call(add_user_command, shell=True)
             except:
@@ -467,9 +504,9 @@ def parse_endpoint_origin(endpoint_url: str):
         if endpoint_url.scheme == "https":
             port = 443
     return hostname, str(port)
-
+    
 def generate_token(base_url: str):
-    private_ssh_key_path = "/root/.ssh/id_ed25519"
+    private_ssh_key_path = HOME + "/.ssh/id_ed25519"
     with open(private_ssh_key_path, "r") as f:
         runtime_private_key = f.read()
 
@@ -485,7 +522,7 @@ def generate_token(base_url: str):
 
 def get_setup_script(hostname: str = None, port: str = None):
     
-    private_ssh_key_path = "/root/.ssh/id_ed25519"
+    private_ssh_key_path = HOME + "/.ssh/id_ed25519"
     with open(private_ssh_key_path, "r") as f:
         runtime_private_key = f.read()
 
@@ -502,7 +539,7 @@ def get_setup_script(hostname: str = None, port: str = None):
         HOSTNAME_RUNTIME = SSH_JUMPHOST_TARGET
         HOSTNAME_MANAGER = hostname
         PORT_MANAGER = port
-        PORT_RUNTIME = 8091
+        PORT_RUNTIME = os.getenv("WORKSPACE_PORT", "8091")
 
         RUNTIME_CONFIG_NAME = RUNTIME_CONFIG_NAME + "{}-{}-{}".format(HOSTNAME_RUNTIME, HOSTNAME_MANAGER, PORT_MANAGER)
                     
@@ -575,6 +612,9 @@ def load_jupyter_server_extension(nb_server_app) -> None:
 
     route_pattern = url_path_join(web_app.settings['base_url'], '/tooling/ping')
     web_app.add_handlers(host_pattern, [(route_pattern, PingHandler)])
+
+    route_pattern = url_path_join(web_app.settings['base_url'], '/tooling/tools')
+    web_app.add_handlers(host_pattern, [(route_pattern, ToolingHandler)])
 
     route_pattern = url_path_join(web_app.settings['base_url'], '/tooling/token')
     web_app.add_handlers(host_pattern, [(route_pattern, SharedTokenHandler)])

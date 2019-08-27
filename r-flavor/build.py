@@ -4,10 +4,10 @@ import argparse
 import datetime
 
 parser = argparse.ArgumentParser()
-parser.add_argument('--name', help='name of docker container', default="ml-workspace")
+parser.add_argument('--name', help='base name of docker container', default="ml-workspace")
 parser.add_argument('--version', help='version tag of docker container', default="latest")
 parser.add_argument('--deploy', help='deploy docker container to remote', action='store_true')
-parser.add_argument('--flavor', help='flavor (full, light, minimal) used for docker container', default='full')
+parser.add_argument('--flavor', help='flavor (r) used for docker container', default='r')
 
 REMOTE_IMAGE_PREFIX = "mltooling/"
 
@@ -47,25 +47,17 @@ def build(module="."):
         sys.exit(1)
 
 if not args.flavor:
-    args.flavor = "full"
+    args.flavor = "r"
 
 args.flavor = str(args.flavor).lower()
 
 if args.flavor == "all":
-    args.flavor = "full"
-    build()
-    args.flavor = "light"
-    build()
-    args.flavor = "minimal"
-    build()
     args.flavor = "r"
-    build()
-    args.flavor = "gpu"
     build()
     sys.exit(0)
 
 # unknown flavor -> try to build from subdirectory
-if args.flavor not in ["full", "minimal", "light"]:
+if args.flavor not in ["r"]:
     # assume that flavor has its own directory with build.py
     build(args.flavor + "-flavor")
     sys.exit(0)
@@ -74,9 +66,8 @@ service_name = os.path.basename(os.path.dirname(os.path.realpath(__file__)))
 if args.name:
     service_name = args.name
 
-# Build full image without suffix if the flavor is not minimal or light
-if args.flavor in ["minimal", "light"]:
-    service_name += "-" + args.flavor
+# add flavor to service name
+service_name += "-" + args.flavor
 
 # docker build
 git_rev = "unknown"
@@ -91,10 +82,10 @@ try:
 except:
     pass
 
-vcs_ref_build_arg = " --build-arg VCS_REF=" + str(git_rev)
-build_date_build_arg = " --build-arg BUILD_DATE=" + str(build_date)
-flavor_build_arg = " --build-arg WORKSPACE_FLAVOR=" + str(args.flavor)
-version_build_arg = " --build-arg WORKSPACE_VERSION=" + str(args.version)
+vcs_ref_build_arg = " --build-arg ARG_VCS_REF=" + str(git_rev)
+build_date_build_arg = " --build-arg ARG_BUILD_DATE=" + str(build_date)
+flavor_build_arg = " --build-arg ARG_WORKSPACE_FLAVOR=" + str(args.flavor)
+version_build_arg = " --build-arg ARG_WORKSPACE_VERSION=" + str(args.version)
 
 versioned_image = service_name+":"+str(args.version)
 latest_image = service_name+":latest"
