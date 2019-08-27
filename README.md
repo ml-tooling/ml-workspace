@@ -298,6 +298,8 @@ docker run -p 8080:8080 mltooling/ml-workspace-r:latest
 <details>
 <summary>Details (click to expand...)</summary>
 
+> ℹ️ _Currently, the GPU-flavor only supports CUDA 10. Support for other CUDA versions might be added in the future._
+
 The GPU flavor (`mltooling/ml-workspace-gpu`) is based on our default workspace image and extends it with CUDA 10 and GPU-ready versions of various machine learning libraries (e.g. tensorflow, pytorch, cntk, jax). This GPU image has the following additional requirements for the system:
 
 - Nvidia Drivers for the GPUs. Drivers need to be CUDA 10 compatible, version `>= 410.48` ([📖 Instructions](https://github.com/NVIDIA/nvidia-docker/wiki/Frequently-Asked-Questions#how-do-i-install-the-nvidia-driver)).
