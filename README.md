@@ -365,8 +365,9 @@ valuable if it's shared publicly so that more people can benefit from it.
   <a href="#jupyterlab">JupyterLab</a> •
   <a href="#git-integration">Git Integration</a> •
   <a href="#file-sharing">File Sharing</a> •
-  <a href="#hardware-monitoring">Hardware Monitoring</a> •
+  <a href="#access-ports">Access Ports</a> •
   <a href="#tensorboard">Tensorboard</a> •
+  <a href="#hardware-monitoring">Hardware Monitoring</a> •
   <a href="#extensibility">Extensibility</a> •
   <a href="#ssh-access">SSH Access</a> •
   <a href="#remote-development">Remote Development</a> •
@@ -459,6 +460,18 @@ Furthermore, the workspace comes pre-installed with [jupytext](https://github.co
 
 In combination with Git, jupytext enables a clear diff history and easy merging of version conflicts. With both of those tools, collaborating on Jupyter notebooks with Git becomes straightforward.
 
+### File Sharing
+
+The workspace has a feature to share any file or folder with anyone via a token-protected link. To share data via link, select any file or folder from the Jupyter directory tree and click on the Share button as shown in the following screenshot:
+
+TODO: Add screenshot
+
+This will generate a unique link protected via a token that gives anyone with the link access to view and download the selected data via the [Filebrowser](https://github.com/filebrowser/filebrowser) UI:
+
+TODO: Add screenshot
+
+To deactivate or manage (e.g., provide edit permissions) shared links, open the Filebrowser via `Open Tool -> Filebrowser` and select `Settings->User Management`.
+
 ### Access Ports
 
 It is possible to securely access any workspace internal port by selecting `Open Tool -> Access Port`. With this feature, you are able to access a REST API or web application running inside the workspace directly with your browser. The feature enables developers  to build, run, test, and debug REST APIs or web applications directly from the workspace.
@@ -479,18 +492,6 @@ If you want to use an HTTP client or share access to a given port, you can selec
 4. The opened link can also be shared to other people or called from external applications (e.g., try with Incognito Mode in Chrome).
 
 </details>
-
-### File Sharing
-
-The workspace has a feature to share any file or folder with anyone via a token-protected link. To share data via link, select any file or folder from the Jupyter directory tree and click on the Share button as shown in the following screenshot:
-
-TODO: Add screenshot
-
-This will generate a unique link protected via a token that gives anyone with the link access to view and download the selected data via the [Filebrowser](https://github.com/filebrowser/filebrowser) UI:
-
-TODO: Add screenshot
-
-To deactivate or manage (e.g., provide edit permissions) shared links, open the Filebrowser via `Open Tool -> Filebrowser` and select `Settings->User Management`.
 
 ### SSH Access
 
@@ -634,20 +635,6 @@ The Visual Studio Code [Remote - SSH](https://marketplace.visualstudio.com/item
 
 </details>
 
-### Hardware Monitoring
-
-The workspace provides two pre-installed web-based tools to help developers during model training and other experimentation tasks to get insights into everything happening on the system and figure out performance bottlenecks.
-
-[Netdata](https://github.com/netdata/netdata) (`Open Tool -> Netdata`) is a real-time hardware and performance monitoring dashboard that visualize the processes and services on your Linux systems. It monitors metrics about CPU, GPU, memory, disks, networks, processes, and more.
-
-<img style="width: 100%" src="./docs/images/feature-netdata.png" />
-
-[Glances](https://github.com/nicolargo/glances) (`Open Tool -> Glances`) is a web-based hardware monitoring dashboard as well and can be used as an alternative to Netdata.
-
-<img style="width: 100%" src="./docs/images/feature-glances.png"/>
-
-> ℹ️ _Netdata and Glances will show you the hardware statistics for the entire machine on which the workspace container is running._
-
 ### Tensorboard
 
 [Tensorboard](https://www.tensorflow.org/tensorboard) provides a suite of visualization tools to make it easier to understand, debug, and optimize your experiment runs. It includes logging features for scalar, histogram, model structure, embeddings, and text & image visualization. The workspace comes pre-installed with [jupyter_tensorboard extension](https://github.com/lspvic/jupyter_tensorboard) that integrates Tensorboard into the Jupyter interface with functionalities to start, manage, and stop instances. You can open a new instance for a valid logs directory as shown below:
@@ -666,6 +653,20 @@ If you prefer to see the tensorboard directly within your notebook, you can make
 %load_ext tensorboard.notebook
 %tensorboard --logdir /workspace/path/to/logs
 ```
+
+### Hardware Monitoring
+
+The workspace provides two pre-installed web-based tools to help developers during model training and other experimentation tasks to get insights into everything happening on the system and figure out performance bottlenecks.
+
+[Netdata](https://github.com/netdata/netdata) (`Open Tool -> Netdata`) is a real-time hardware and performance monitoring dashboard that visualize the processes and services on your Linux systems. It monitors metrics about CPU, GPU, memory, disks, networks, processes, and more.
+
+<img style="width: 100%" src="./docs/images/feature-netdata.png" />
+
+[Glances](https://github.com/nicolargo/glances) (`Open Tool -> Glances`) is a web-based hardware monitoring dashboard as well and can be used as an alternative to Netdata.
+
+<img style="width: 100%" src="./docs/images/feature-glances.png"/>
+
+> ℹ️ _Netdata and Glances will show you the hardware statistics for the entire machine on which the workspace container is running._
 
 ### Run as a job
 
