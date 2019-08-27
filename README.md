@@ -459,6 +459,27 @@ Furthermore, the workspace comes pre-installed with [jupytext](https://github.co
 
 In combination with Git, jupytext enables a clear diff history and easy merging of version conflicts. With both of those tools, collaborating on Jupyter notebooks with Git becomes straightforward.
 
+### Access Ports
+
+It is possible to securely access any workspace internal port by selecting `Open Tool -> Access Port`. With this feature, you are able to access a REST API or web application running inside the workspace directly with your browser. The feature enables developers  to build, run, test, and debug REST APIs or web tools directly from the workspace.
+
+_WIP: Screenshot_
+
+If you want to use an HTTP client or share access to a given port, you can select the `Get shareable link` option. This generates a token-secured link that anyone with access to the link can use to access the specified port.
+
+> ℹ️ _The REST API or webtool needs to be able to resolve from a relative URL path or use a correct base path (e.g., /tools/PORT/)._
+
+<details>
+
+<summary>Example (click to expand...)</summary>
+
+1. Start an HTTP server on port `1234` by running this command in a terminal within the workspace: `python -m http.server 1234`
+2. Select `Open Tool -> Access Port`, input port `1234`, and select the `Get shareable link` option.
+3. Click `Access`, and you will see the folder structure of the command's working dir.
+4. The opened link can also be shared to other people or called from external applications (e.g., try with Incognito Mode in Chrome).
+
+</details>
+
 ### File Sharing
 
 The workspace has a feature to share any file or folder with anyone via a token-protected link. To share data via link, select any file or folder from the Jupyter directory tree and click on the Share button as shown in the following screenshot:
@@ -473,11 +494,13 @@ To deactivate or manage (e.g., provide edit permissions) shared links, open the 
 
 ### SSH Access
 
-SSH provides a powerful set of features that enables you to be more productive with your development tasks. You can easily setup a secure and passwordless SSH connection to a workspace by selecting `Open Tool -> SSH`. This will download a customized setup script and shows some additional instructions:
+SSH provides a powerful set of features that enables you to be more productive with your development tasks. You can easily set up a secure and passwordless SSH connection to a workspace by selecting `Open Tool -> SSH`. This will generate a secure setup command that can be run on any Linux or Mac machine to configure a passwordless & secure SSH connection to the workspace. Alternatively, you can also download the setup script and run it (instead of using the command).
+
+_WIP: Screenshot_
 
 > ℹ️ _The setup script only runs on Mac and Linux. Windows is currently not supported._
 
-Just run the setup script on the machine from where you want to setup a connection to the workspace and input a name for the connection (e.g. `my-workspace`). You might also get asked for some additional input during the process. Once the connection is successfully setup and tested, you can securely connect to the workspace by simply executing `ssh my-workspace`.
+Just run the setup command or script on the machine from where you want to setup a connection to the workspace and input a name for the connection (e.g. `my-workspace`). You might also get asked for some additional input during the process, e.g. to install a remote kernel if `remote_ikernel` is installed. Once the passwordless SSH connection is successfully setup and tested, you can securely connect to the workspace by simply executing `ssh my-workspace`.
 
 Besides the ability to execute commands on a remote machine, SSH also provides a variety of other features that can improve your development workflow as described in the following sections.
 
@@ -568,7 +591,7 @@ Once the remote directory is mounted, you can interact with the remote file syst
 
 ### Remote Development
 
-The workspace can be integrated and used as a remote runtime (also known as remote kernel/machine/interpreter) for a variety of popular development tools and IDEs, such as Jupyter, VS Code, PyCharm, Colab, or Atom Hydrogen. Thereby, you can connect your favorite development tool running on your local machine to a remote machine for code execution. This enables a **local-quality development experience with remote hosted compute resources**.
+The workspace can be integrated and used as a remote runtime (also known as remote kernel/machine/interpreter) for a variety of popular development tools and IDEs, such as Jupyter, VS Code, PyCharm, Colab, or Atom Hydrogen. Thereby, you can connect your favorite development tool running on your local machine to a remote machine for code execution. This enables a **local-quality development experience with remote-hosted compute resources**.
 
 These integrations usually require a passwordless SSH connection from the local machine to the workspace. To set up an SSH connection, please follow the steps explained in the [SSH Access](#ssh-access) section.
 
