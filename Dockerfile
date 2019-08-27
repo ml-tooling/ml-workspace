@@ -866,21 +866,17 @@ COPY docker-res/scripts $RESOURCES_PATH/scripts
 # Create Desktop Icons for Tooling
 COPY docker-res/branding $RESOURCES_PATH/branding
 
+# Configure Home folder (e.g. xfce)
+COPY docker-res/home/ $HOME/
+
 # Copy some configuration files
-COPY docker-res/config/ssh_config /etc/ssh/ssh_config
-COPY docker-res/config/sshd_config /etc/ssh/sshd_config
+COPY docker-res/ssh/ssh_config /etc/ssh/ssh_config
+COPY docker-res/ssh/sshd_config /etc/ssh/sshd_config
 COPY docker-res/nginx/nginx.conf /etc/nginx/nginx.conf
 COPY docker-res/config/xrdp.ini /etc/xrdp/xrdp.ini
-COPY docker-res/config/netdata.conf /etc/netdata/netdata.conf
 COPY docker-res/config/supervisord.conf /etc/supervisor/supervisord.conf
-COPY docker-res/config/workspace-tools.json $HOME/.workspace/tools/1_workspace-tools.json
-COPY docker-res/config/mimeapps.list $HOME/.config/mimeapps.list
-COPY docker-res/config/bookmarks $HOME/.config/gtk-3.0/bookmarks
-COPY docker-res/config/chromium-browser.init $HOME/.chromium-browser.init
 # Assume yes to all apt commands, to avoid user confusion around stdin.
 COPY docker-res/config/90assumeyes /etc/apt/apt.conf.d/
-# Configure xfce
-COPY docker-res/xfce/ $HOME/
 
 # Monkey Patching novnc: Styling and added clipboard support. All changed sections are marked with CUSTOM CODE
 COPY docker-res/novnc/ $RESOURCES_PATH/novnc/
@@ -923,6 +919,9 @@ RUN \
     git config --global http.sslVerify false && \
     # Use store or credentialstore instead? timout == 365 days validity
     git config --global credential.helper 'cache --timeout=31540000'
+
+# Configure netdata
+COPY docker-res/netdata/ /etc/netdata/
 
 # Configure conda
 RUN \
