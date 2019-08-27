@@ -461,13 +461,13 @@ In combination with Git, jupytext enables a clear diff history and easy merging 
 
 ### Access Ports
 
-It is possible to securely access any workspace internal port by selecting `Open Tool -> Access Port`. With this feature, you are able to access a REST API or web application running inside the workspace directly with your browser. The feature enables developers  to build, run, test, and debug REST APIs or web tools directly from the workspace.
+It is possible to securely access any workspace internal port by selecting `Open Tool -> Access Port`. With this feature, you are able to access a REST API or web application running inside the workspace directly with your browser. The feature enables developers  to build, run, test, and debug REST APIs or web applications directly from the workspace.
 
 _WIP: Screenshot_
 
 If you want to use an HTTP client or share access to a given port, you can select the `Get shareable link` option. This generates a token-secured link that anyone with access to the link can use to access the specified port.
 
-> ℹ️ _The REST API or webtool needs to be able to resolve from a relative URL path or use a correct base path (e.g., /tools/PORT/)._
+> ℹ️ _The web application requires to be resolved from a relative URL path or use a correct base path (e.g., /tools/PORT/)._
 
 <details>
 
