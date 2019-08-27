@@ -404,7 +404,7 @@ The Notebook allows code to be run in a range of different programming languages
 
 This workspace provides an HTTP-based VNC access to the workspace via [noVNC](https://github.com/novnc/noVNC). Thereby, you can access and work within the workspace with a fully featured desktop GUI. To access this desktop GUI, go to `Open Tool`, select `VNC`, and click the `Connect` button. In the case you are asked for a password, use `vncpassword`.
 
-<img style="width: 100%" src="./docs/images/feature-desktop-vnc.png"/>
+<img style="width: 100%" src="./docs/images/features/desktop-vnc.png"/>
 
 Once you are connected, you will see a desktop GUI that allows you to install and use full-fledged web-browsers or any other tool that is available for Ubuntu. Within the `Tools` folder on the desktop, you will find a collection of install scripts that makes it straightforward to install some of the most commonly used development tools, such as Atom, PyCharm, R-Runtime, R-Studio, or Postman (just double-click on the script).
 
@@ -418,7 +418,7 @@ Once you are connected, you will see a desktop GUI that allows you to install an
 
 [Visual Studio Code](https://github.com/microsoft/vscode) (`Open Tool -> VS Code`) is an open-source lightweight but powerful code editor with built-in support for a variety of languages and a rich ecosystem of extensions. It combines the simplicity of a source code editor with powerful developer tooling, like IntelliSense code completion and debugging. The workspace integrates VS Code as a web-based application accessible through the browser based on the awesome [code-server](https://github.com/cdr/code-server) project. It allows you to customize every feature to your liking and install any number of third-party extensions.
 
-<p align="center"><img src="./docs/images/feature-vs-code.png"/></p>
+<p align="center"><img src="./docs/images/features/vs-code.png"/></p>
 
 ### JupyterLab
 
@@ -438,7 +438,7 @@ For cloning repositories via `https`, we recommend to navigate to the desired ro
 
 This might ask for some required settings and, subsequently, opens [ungit](https://github.com/FredrikNoren/ungit), a web-based Git client with a clean and intuitive UI that makes it convenient to sync your code artifacts. Within ungit, you can clone any repository. If authentication is required, you will get asked for your credentials.
 
-<img style="width: 100%" src="./docs/images/feature-clone-repo.png"/>
+<img style="width: 100%" src="./docs/images/features/git-ungit-credentials.png"/>
 
 #### Push, Pull, Merge, and Other Git Actions
 
@@ -452,7 +452,7 @@ For more advanced Git operations we recommend to use [ungit](https://github.com/
 
 Jupyter notebooks are great, but they often are huge files, with a very specific JSON file format. To enable seamless diffing and merging via Git this workspace is pre-installed with [nbdime](https://github.com/jupyter/nbdime). Nbdime understands the structure of notebook documents and, therefore, automatically makes intelligent decisions when diffing and merging notebooks. In the case you have merge conflicts, nbdime will make sure that the notebook is still readable by Jupyter, as shown below:
 
-<img style="width: 100%" src="./docs/images/feature-git-merging.png"/>
+<img style="width: 100%" src="./docs/images/features/git-nbdime-merging.png"/>
 
 Furthermore, the workspace comes pre-installed with [jupytext](https://github.com/mwouts/jupytext), a Jupyter plugin that reads and writes notebooks as plain text files. This allows you to open, edit, and run scripts or markdown files (e.g., `.py`, `.md`) as notebooks within Jupyter. In the following screenshot, we have opened this `README.md` file via Jupyter:
 
@@ -629,7 +629,7 @@ The Visual Studio Code [Remote - SSH](https://marketplace.visualstudio.com/item
 2. Run the SSH setup script of a selected workspace as explained in the [SSH Access](#ssh-access) section.
 3. Open the Remote-SSH panel in your local VS Code. All configured SSH connections should be automatically discovered. Just select any configured workspace connection you like to connect to as shown below:
 
-<img style="width: 100%" src="./docs/images/feature-remote-dev-vscode.gif"/>
+<img style="width: 100%" src="./docs/images/features/remote-dev-vscode.gif"/>
 
 > 📖 _You can find additional features and information about the Remote SSH extension in [this guide](https://code.visualstudio.com/docs/remote/ssh)._
 
@@ -643,7 +643,7 @@ The Visual Studio Code [Remote - SSH](https://marketplace.visualstudio.com/item
 
 If you have opened a Tensorboard instance in a valid log directory, you will see the visualizations of your logged data:
 
-<img style="width: 100%" src="./docs/images/feature-tensorboard-overview.png" />
+<img style="width: 100%" src="./docs/images/features/tensorboard-dashboard.png" />
 
 > ℹ️ _Tensorboard can be used in combination with many other ML frameworks besides Tensorflow. By using the [tensorboardX](https://github.com/lanpa/tensorboardX) library you can log basically from any python based library. Also, PyTorch has a direct Tensorboard integration as described [here](https://pytorch.org/docs/stable/tensorboard.html)._
 
@@ -660,11 +660,11 @@ The workspace provides two pre-installed web-based tools to help developers duri
 
 [Netdata](https://github.com/netdata/netdata) (`Open Tool -> Netdata`) is a real-time hardware and performance monitoring dashboard that visualize the processes and services on your Linux systems. It monitors metrics about CPU, GPU, memory, disks, networks, processes, and more.
 
-<img style="width: 100%" src="./docs/images/feature-netdata.png" />
+<img style="width: 100%" src="./docs/images/features/hardware-m-netdata.png" />
 
 [Glances](https://github.com/nicolargo/glances) (`Open Tool -> Glances`) is a web-based hardware monitoring dashboard as well and can be used as an alternative to Netdata.
 
-<img style="width: 100%" src="./docs/images/feature-glances.png"/>
+<img style="width: 100%" src="./docs/images/features/hardware-monitoring-glances.png"/>
 
 > ℹ️ _Netdata and Glances will show you the hardware statistics for the entire machine on which the workspace container is running._
 
