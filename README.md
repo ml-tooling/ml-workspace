@@ -376,7 +376,7 @@ valuable if it's shared publicly so that more people can benefit from it.
 
 The workspace is equipped with a selection of best-in-class open-source development tools to help with the machine learning workflow. Many of these tools can be started from the `Open Tool` menu from Jupyter (the main application of the workspace):
 
-<img style="width: 100%" src="./docs/images/feature-open-tools.png"/>
+<img style="width: 100%" src="./docs/images/features/open-tools.png"/>
 
 > ℹ️ _Within your workspace you have **full root & sudo privileges** to install any library or tool you need via terminal (e.g., `pip`, `apt-get`, `conda`, or `npm`). You can find more ways to extend the workspace within the [Extensibility](#extensibility) section_
 
@@ -424,7 +424,7 @@ Once you are connected, you will see a desktop GUI that allows you to install an
 
 [JupyterLab](https://github.com/jupyterlab/jupyterlab) (`Open Tool -> JupyterLab`) is the next-generation user interface for Project Jupyter. It offers all the familiar building blocks of the classic Jupyter Notebook (notebook, terminal, text editor, file browser, rich outputs, etc.) in a flexible and powerful user interface. This JupyterLab instance comes pre-installed with a few helpful extensions such as a the [jupyterlab-toc](https://github.com/jupyterlab/jupyterlab-toc), [jupyterlab-git](https://github.com/jupyterlab/jupyterlab-git), and [juptyterlab-tensorboard](https://github.com/chaoleili/jupyterlab_tensorboard).
 
-<img style="width: 100%" src="./docs/images/feature-jupyterlab.png"/>
+<img style="width: 100%" src="./docs/images/features/jupyterlab.png"/>
 
 ### Git Integration
 
@@ -434,7 +434,7 @@ Version control is a crucial aspect for productive collaboration. To make this p
 
 For cloning repositories via `https`, we recommend to navigate to the desired root folder and to click on the `git` button as shown below:
 
-<img style="width: 100%" src="./docs/images/feature-git-open.png"/>
+<img style="width: 100%" src="./docs/images/features/git-open.png"/>
 
 This might ask for some required settings and, subsequently, opens [ungit](https://github.com/FredrikNoren/ungit), a web-based Git client with a clean and intuitive UI that makes it convenient to sync your code artifacts. Within ungit, you can clone any repository. If authentication is required, you will get asked for your credentials.
 
@@ -444,7 +444,7 @@ This might ask for some required settings and, subsequently, opens [ungit](https
 
 To commit and push a single notebook to a remote Git repository, we recommend to use the Git plugin integrated into Jupyter as shown below:
 
-<img style="width: 100%" src="./docs/images/feature-git-extension.png"/>
+<img style="width: 100%" src="./docs/images/features/git-push-notebook.png"/>
 
 For more advanced Git operations we recommend to use [ungit](https://github.com/FredrikNoren/ungit). With ungit, you can do most of the common git actions such as push, pull, merge, branch, tag, checkout, and many more.
 
