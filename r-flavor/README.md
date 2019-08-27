@@ -17,7 +17,7 @@
     <a href="https://twitter.com/mltooling" title="ML Tooling on Twitter"><img src="https://img.shields.io/twitter/follow/mltooling.svg?style=social"></a>
 </p>
 
-Please visit our [Github repository](https://github.com/ml-tooling/ml-workspace) for documentation and deployment information.
+Please visit our [Github repository](https://github.com/ml-tooling/ml-workspace#r-flavor) for documentation and deployment information.
 
 ---
 
