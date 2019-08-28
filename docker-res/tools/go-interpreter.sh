@@ -13,11 +13,11 @@ for arg in "$@"; do
 done
 
 if ! hash go 2>/dev/null; then
-    echo "Installing Go Runtime"
+    echo "Installing Go Interpreter"
     apt-get update
     apt-get install -y golang-go
 else
-    echo "Go Runtime is already installed"
+    echo "Go Interpreter is already installed"
 fi
 
 # Run

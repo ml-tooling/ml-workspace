@@ -15,7 +15,7 @@ done
 if ! hash nteract 2>/dev/null; then
     echo "Installing nteract"
     cd $RESOURCES_PATH
-    wget --quiet https://github.com/nteract/nteract/releases/download/v0.14.4/nteract_0.14.4_amd64.deb -O ./nteract.deb
+    wget --quiet https://github.com/nteract/nteract/releases/download/v0.14.5/nteract_0.14.5_amd64.deb -O ./nteract.deb
     dpkg -i ./nteract.deb
     rm ./nteract.deb
 else

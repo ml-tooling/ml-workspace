@@ -12,17 +12,9 @@ for arg in "$@"; do
     esac
 done
 
-if ! hash ruby 2>/dev/null; then
-    echo "Installing Ruby Runtime"
-    apt-get update
-    apt-get install -y ruby-full
-else
-    echo "Ruby Runtime is already installed"
-fi
+echo "Installing Java Utils Collection"
 
-# Run
-if [ $INSTALL_ONLY = 0 ] ; then
-    ruby --help
-    sleep 20
-fi
-
+apt-get update
+apt-get install -y --no-install-recommends \
+        scala \
+        gradle
