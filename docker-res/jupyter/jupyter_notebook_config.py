@@ -75,6 +75,7 @@ else:
 try:
     if not base_url.startswith("/"):
         base_url = "/" + base_url
+    # iframe plugin currently needs absolut URLS
     c.JupyterLabIFrame.iframes = [base_url + 'tools/ungit', base_url + 'tools/netdata', base_url + 'tools/vnc', base_url + 'tools/glances', base_url + 'tools/vscode']
 except:
     pass
