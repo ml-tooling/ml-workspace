@@ -1,0 +1,36 @@
+# Minimum Requirements
+
+## Utilities
+tqdm==4.35.0 # Fast, Extensible Progress Meter
+cloudpickle==1.2.1 # Extended pickling support for Python objects
+msgpack==0.6.1 # MessagePack (de)serializer.
+msgpack-numpy==0.4.4.3 # Numpy data serialization using msgpack
+cysignals==1.10.2 # Interrupt and signal handling for Cython
+h5py==2.9.0 # Read and write HDF5 files from Python
+PyYAML==5.1.2 # YAML parser and emitter for Python
+seaborn==0.9.0 # Python visualization library based on matplotlib  - Basic
+SQLAlchemy==1.3.8 # Database Abstraction Library
+virtualenv==16.7.4 # Virtual Python Environment builder
+pytest==5.1.1 # pytest: simple powerful testing with Python
+autopep8==1.4.4 # A tool that automatically formats Python code to conform to the PEP 8 style guide
+pylint==2.3.1 # python code static checker
+pycodestyle==2.5.0 # Python style guide checker
+pydocstyle==4.0.1 # Python docstring style checker
+
+## Glances
+psutil==5.6.3 # Cross-platform lib for process and system monitoring in Python.
+bottle==0.12.17 # Fast and simple WSGI-framework for small web-applications.
+netifaces==0.10.9 # Portable network interface information.
+py-cpuinfo==5.0.0 # Get CPU info with pure Python 2 & 3
+glances==3.1.2 # A cross-platform curses-based monitoring tool
+pymdstat==0.4.2 # Python library to parse Linux /proc/mdstat
+
+## Jupyter
+jupytext==1.2.1 # Jupyter notebooks as Markdown documents, Julia, Python or R scripts
+nbresuse==0.3.2 # Simple Jupyter extension to show how much resources (RAM) your notebook is using
+pyzmq==18.1.0 # Python bindings for 0MQ - Update pyzmq to newest version, otherwise warning message is shown
+ipympl==0.3.3 # Matplotlib Jupyter Extension
+jupyterhub==1.0.0 # JupyterHub: A multi-user server for Jupyter notebooks
+remote_ikernel==0.4.6 # Running IPython kernels through batch queues
+jupyter_contrib_nbextensions==0.5.1 # A collection of Jupyter nbextensions.
+jupyter_nbextensions_configurator==0.4.1 # jupyter serverextension providing configuration interfaces for nbextensions.

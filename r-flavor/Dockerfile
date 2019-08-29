@@ -17,7 +17,7 @@ RUN \
 
 ### CONFIGURATION ###
 
-COPY docker-res/rstudio-service.conf  /etc/supervisor/conf.d/
+COPY resources/rstudio-service.conf  /etc/supervisor/conf.d/
 
 # Overwrite & add Labels
 ARG ARG_BUILD_DATE="unknown"
