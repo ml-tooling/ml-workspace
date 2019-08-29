@@ -28,8 +28,8 @@ RUN \
     mkdir $SSL_RESOURCES_PATH && chmod a+rwx $SSL_RESOURCES_PATH
 
 # Layer cleanup script
-COPY docker-res/scripts/clean-layer.sh  /usr/bin/clean-layer.sh
-COPY docker-res/scripts/fix-permissions.sh  /usr/bin/fix-permissions.sh
+COPY resources/scripts/clean-layer.sh  /usr/bin/clean-layer.sh
+COPY resources/scripts/fix-permissions.sh  /usr/bin/fix-permissions.sh
 
  # Make clean-layer and fix-permissions executable
  RUN \
@@ -40,7 +40,7 @@ COPY docker-res/scripts/fix-permissions.sh  /usr/bin/fix-permissions.sh
 # https://stackoverflow.com/questions/28405902/how-to-set-the-locale-inside-a-debian-ubuntu-docker-container#38553499
 RUN \
     apt-get update && \
-    apt-get install locales --yes && \
+    apt-get install -y locales && \
     # install locales-all?
     sed -i -e 's/# en_US.UTF-8 UTF-8/en_US.UTF-8 UTF-8/' /etc/locale.gen && \
     locale-gen && \
@@ -56,14 +56,12 @@ ENV LC_ALL="en_US.UTF-8" \
 # Install basics
 RUN \
     apt-get update --fix-missing && \
-    apt-get install sudo --yes && \
-    # too big apt-get install -y -q debian-archive-keyring debian-keyring && \
-    # apt-get update --fix-missing && \
-    apt-get install --yes --no-install-recommends \
+    apt-get install -y sudo apt-utils && \
+    apt-get upgrade -y && \
+    apt-get update && \
+    apt-get install -y --no-install-recommends \
         # This is necessary for apt to access HTTPS sources: 
         apt-transport-https \
-        # Solve debconf warning
-        apt-utils \
         ca-certificates \
         build-essential \
         pkg-config \
@@ -74,8 +72,26 @@ RUN \
         curl libcurl3 \
         wget \
         cron \
+        openssl \
         tmux \
+        # Editor
         nano \
+        # Find files
+        locate \
+        # Dev Tools
+        sqlite3 \
+        # XML Utils
+        xmlstarlet \
+        # Search text and binary files
+        yara \
+        # Minimalistic C client for Redis
+        libhiredis-dev \
+        # style sheet preprocessor
+        less \
+        # Print dir tree
+        tree \
+        # Bash autocompletion functionality
+        bash-completion \
         # ping support
         iputils-ping \
         # Json Processor
@@ -85,6 +101,8 @@ RUN \
         git \
         subversion \
         jed \
+        # odbc drivers
+        unixodbc unixodbc-dev \
         # Image support
         libtiff-dev \
         libjpeg-dev \
@@ -101,7 +119,6 @@ RUN \
         protobuf-compiler \
         libprotobuf-dev \
         libprotoc-dev \
-        # cntk deps
         autoconf \
         automake \
         libtool \
@@ -109,14 +126,15 @@ RUN \
         fonts-liberation \
         google-perftools \
         # Compression Libs
+        # also install rar/unrar? but both are propriatory
         zip \
         gzip \
         unzip \
         unrar \
         bzip2 \
+        lzop \
         bsdtar \
         zlib1g-dev && \
-    # Removed 
     chmod -R a+rwx /usr/local/bin/ && \
     # configure dynamic linker run-time bindings
     ldconfig && \
@@ -157,16 +175,19 @@ RUN \
 
 ENV PATH=/usr/local/openresty/nginx/sbin:$PATH
 
-COPY docker-res/nginx/lua-extensions /etc/nginx/nginx_plugins
+COPY resources/nginx/lua-extensions /etc/nginx/nginx_plugins
 
 # prepare ssh for inter-container communication for remote python kernel
 RUN \
     apt-get update && \
-    apt-get install --yes --no-install-recommends \
+    apt-get install -y --no-install-recommends \
         openssh-client \
         openssh-server \
         # SSLH for SSH + HTTP(s) Multiplexing
-        sslh && \
+        sslh \
+        # SSH Tooling
+        autossh \
+        mussh && \
     chmod go-w $HOME && \
     mkdir -p $HOME/.ssh/ && \
     # create empty config file if not exists
@@ -194,15 +215,15 @@ RUN wget --quiet https://repo.anaconda.com/miniconda/Miniconda3-${CONDA_VERSION}
     export PATH=$CONDA_DIR/bin:$PATH && \
     rm ~/miniconda.sh && \
     # Update conda
-    $CONDA_DIR/bin/conda update -n base -c defaults conda && \
+    $CONDA_DIR/bin/conda update -y -n base -c defaults conda && \
     # TODO -y?
-    $CONDA_DIR/bin/conda install conda-build && \
+    $CONDA_DIR/bin/conda install -y conda-build && \
     # Add conda forge - Append so that conda forge has lower priority than the main channel
     $CONDA_DIR/bin/conda config --system --append channels conda-forge && \
     $CONDA_DIR/bin/conda config --system --set auto_update_conda false && \
     $CONDA_DIR/bin/conda config --system --set show_channel_urls true && \
-    # Update selected packages - install python 3.6
-    $CONDA_DIR/bin/conda install -y --update-all python=3.6 && \
+    # Update selected packages - install python 3.6.9
+    $CONDA_DIR/bin/conda install -y --update-all python=3.6.9 && \
     # Link Conda
     ln -s $CONDA_DIR/bin/python /usr/local/bin/python && \
     ln -s $CONDA_DIR/bin/conda /usr/bin/conda && \
@@ -212,8 +233,8 @@ RUN wget --quiet https://repo.anaconda.com/miniconda/Miniconda3-${CONDA_VERSION}
     # Cleanup - Remove all here since conda is not in path as of now
     # find /opt/conda/ -follow -type f -name '*.a' -delete && \
     # find /opt/conda/ -follow -type f -name '*.js.map' -delete && \
-    $CONDA_DIR/bin/conda clean --packages && \
-    $CONDA_DIR/bin/conda clean -all -f -y  && \
+    $CONDA_DIR/bin/conda clean -y --packages && \
+    $CONDA_DIR/bin/conda clean -y -all -f  && \
     $CONDA_DIR/bin/conda build purge-all && \
     # Fix permissions
     fix-permissions.sh $CONDA_DIR && \
@@ -228,7 +249,7 @@ ENV LD_LIBRARY_PATH=$CONDA_DIR/lib
 RUN \
     apt-get update && \
     curl -sL https://deb.nodesource.com/setup_11.x | sudo -E bash - && \
-    apt-get install nodejs --yes && \
+    apt-get install -y nodejs && \
     # As conda is first in path, the commands 'node' and 'npm' reference to the version of conda. 
     # Replace those versions with the newly installed versions of node
     rm -f /opt/conda/bin/node && ln -s /usr/bin/node /opt/conda/bin/node && \
@@ -244,7 +265,9 @@ RUN \
     curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | sudo apt-key add - && \
     echo "deb https://dl.yarnpkg.com/debian/ stable main" | sudo tee /etc/apt/sources.list.d/yarn.list && \
     apt-get update && \
-    apt-get install --yes --no-install-recommends yarn && \
+    apt-get install -y --no-install-recommends yarn && \
+    # Install typescript 
+    /usr/bin/npm install -g typescript && \
     # Install webpack - 32 MB
     /usr/bin/npm install -g webpack && \
     # Cleanup
@@ -256,7 +279,7 @@ ENV PATH=/opt/node/bin:$PATH
 RUN \
     apt-get update && \
     # libgl1-mesa-dri > 150 MB -> Install jdk-headless version (without gui support)?
-    # TODO: Install apt-get install -y scala gradle ?
+    # java runtime is extenable via the java-utils.sh tool intstaller script
     apt-get install -y --no-install-recommends openjdk-8-jdk maven && \
     # Cleanup
     clean-layer.sh
@@ -280,7 +303,7 @@ RUN \
 # Install rdp support via xrdp
 RUN \
     apt-get update && \
-    apt-get install --yes --no-install-recommends xrdp && \
+    apt-get install -y --no-install-recommends xrdp && \
     # use xfce
     sudo sed -i.bak '/fi/a #xrdp multiple users configuration \n xfce-session \n' /etc/xrdp/startwm.sh && \
     # generate /etc/xrdp/rsakeys.ini
@@ -294,7 +317,7 @@ RUN \
     # Create sshd run directory - required for starting process via supervisor
     mkdir -p /var/run/sshd && chmod 400 /var/run/sshd && \
     # Install rsyslog for syslog logging
-    apt-get install --yes --no-install-recommends rsyslog && \
+    apt-get install -y --no-install-recommends rsyslog && \
     pip install --no-cache-dir --upgrade supervisor supervisor-stdout && \
     # supervisor needs this logging path
     mkdir -p /var/log/supervisor/ && \
@@ -316,9 +339,8 @@ RUN \
     mkdir -p ./novnc/utils/websockify && \
     # Before updating the noVNC version, we need to make sure that our monkey patching scripts still work!!
     wget -qO- https://github.com/novnc/noVNC/archive/v1.1.0.tar.gz | tar xz --strip 1 -C ./novnc && \
-    # use older version of websockify to prevent hanging connections on offline containers, see https://github.com/ConSol/docker-headless-vnc-container/issues/50
-    # Use newest version of websockify instead of: https://github.com/novnc/websockify/archive/v0.8.0.tar.gz 
-    wget -qO- https://github.com/novnc/websockify/tarball/master | tar xz --strip 1 -C ./novnc/utils/websockify && \
+    # use older version of websockify to prevent hanging connections on offline containers?, see https://github.com/ConSol/docker-headless-vnc-container/issues/50
+    wget -qO- https://github.com/novnc/websockify/archive/v0.9.0.tar.gz | tar xz --strip 1 -C ./novnc/utils/websockify && \
     chmod +x -v ./novnc/utils/*.sh && \
     # create user vnc directory
     mkdir -p $HOME/.vnc && \
@@ -343,6 +365,8 @@ RUN \
     apt-get install -y --no-install-recommends catfish && \
     apt-get install -y --no-install-recommends gnome-search-tool && \
     apt-get install -y --no-install-recommends font-manager && \
+    # vs support for thunar
+    apt-get install -y thunar-vcs-plugin && \
     # Streaming text editor for large files
     apt-get install -y --no-install-recommends glogg  && \
     apt-get install -y --no-install-recommends baobab && \
@@ -350,7 +374,7 @@ RUN \
     apt-get install -y mousepad && \
     apt-get install -y --no-install-recommends vim && \
     apt-get install -y htop && \
-    # Install Zipping Tools 
+    # Install Archive/Compression Tools: https://wiki.ubuntuusers.de/Archivmanager/
     apt-get install -y p7zip p7zip-rar && \
     apt-get install -y --no-install-recommends thunar-archive-plugin && \
     apt-get install -y xarchiver && \
@@ -360,6 +384,10 @@ RUN \
     apt-get install -y --no-install-recommends nautilus gvfs-backends && \
     # Install gigolo - Access remote systems
     apt-get install -y --no-install-recommends gigolo gvfs-bin && \
+    # xfce systemload panel plugin - needs to be activated
+    apt-get install -y --no-install-recommends xfce4-systemload-plugin && \
+    # Leightweight ftp client that supports sftp, http, ...
+    apt-get install -y --no-install-recommends gftp && \
     # Install chrome
     apt-get install -y chromium-browser chromium-browser-l10n chromium-codecs-ffmpeg && \
     ln -s /usr/bin/chromium-browser /usr/bin/google-chrome && \
@@ -374,65 +402,53 @@ ENV LD_LIBRARY_PATH=/lib/x86_64-linux-gnu:$CONDA_DIR/lib
 
 # Install Web Tools - Offered via Jupyter Tooling Plugin
 
-## VS Code Webapp: https://github.com/codercom/code-server
+## VS Code Server: https://github.com/codercom/code-server
+COPY resources/tools/vs-code-server.sh $RESOURCES_PATH/tools/vs-code-server.sh
 RUN \
-    cd ${RESOURCES_PATH} && \
-    VS_CODE_VERSION=1.1156-vsc1.33.1 && \
-    apt-get update --fix-missing && \
-    apt-get install --yes openssl && \
-    wget --quiet https://github.com/cdr/code-server/releases/download/$VS_CODE_VERSION/code-server$VS_CODE_VERSION-linux-x64.tar.gz -O ./vscode-web.tar.gz && \
-    tar xfz ./vscode-web.tar.gz && \
-    mv ./code-server$VS_CODE_VERSION-linux-x64/code-server /usr/local/bin && \
-    chmod -R a+rwx /usr/local/bin/code-server && \
-    rm ./vscode-web.tar.gz && \
-    rm -rf ./code-server$VS_CODE_VERSION-linux-x64 && \
+    /bin/bash $RESOURCES_PATH/tools/vs-code-server.sh --install && \
     # Cleanup
     clean-layer.sh
 
 ## ungit
+COPY resources/tools/ungit.sh $RESOURCES_PATH/tools/ungit.sh
 RUN \
-    npm update && \
-    npm install -g ungit@1.4.46 && \
+    /bin/bash $RESOURCES_PATH/tools/ungit.sh --install && \
     # Cleanup
     clean-layer.sh
 
 ## netdata
+COPY resources/tools/netdata.sh $RESOURCES_PATH/tools/netdata.sh
 RUN \
-    apt-get update && \
-    wget --quiet https://my-netdata.io/kickstart.sh -O $RESOURCES_PATH/netdata-install.sh && \
-    # Surpress output - if there is a problem remove to see logs > /dev/null
-    /bin/bash $RESOURCES_PATH/netdata-install.sh --dont-wait --dont-start-it --stable-channel --disable-telemetry > /dev/null && \
-    rm $RESOURCES_PATH/netdata-install.sh && \
+    /bin/bash $RESOURCES_PATH/tools/netdata.sh --install && \
     # Cleanup
     clean-layer.sh
 
 ## Glances webtool is installed in python section below
 
 ## Filebrowser
+COPY resources/tools/filebrowser.sh $RESOURCES_PATH/tools/filebrowser.sh
 RUN \
-    cd $RESOURCES_PATH && \
-    curl -fsSL https://raw.githubusercontent.com/filebrowser/get/master/get.sh | bash && \
+    /bin/bash $RESOURCES_PATH/tools/filebrowser.sh --install && \
     # Cleanup
     clean-layer.sh
 
-ARG WORKSPACE_FLAVOR="full"
-ENV WORKSPACE_FLAVOR=$WORKSPACE_FLAVOR
+ARG ARG_WORKSPACE_FLAVOR="full"
+ENV WORKSPACE_FLAVOR=$ARG_WORKSPACE_FLAVOR
 
 # Install Visual Studio Code
-COPY docker-res/tools/visual-studio-code.sh $RESOURCES_PATH/tools/visual-studio-code.sh
-
+COPY resources/tools/vs-code-desktop.sh $RESOURCES_PATH/tools/vs-code-desktop.sh
 RUN \
     # If minimal flavor - do not install
     if [ "$WORKSPACE_FLAVOR" = "minimal" ]; then \
         exit 0 ; \
     fi && \
-    /bin/bash $RESOURCES_PATH/tools/visual-studio-code.sh --install && \
+    /bin/bash $RESOURCES_PATH/tools/vs-code-desktop.sh --install && \
     # Cleanup
     clean-layer.sh
 
 # Install Firefox
 
-COPY docker-res/tools/firefox.sh $RESOURCES_PATH/tools/firefox.sh
+COPY resources/tools/firefox.sh $RESOURCES_PATH/tools/firefox.sh
 
 RUN \
     # If minimal flavor - do not install
@@ -449,7 +465,7 @@ RUN \
 
 ## Python 3
 # Data science libraries requirements
-COPY docker-res/libraries ${RESOURCES_PATH}/libraries
+COPY resources/libraries ${RESOURCES_PATH}/libraries
 
 ### Install main data science libs
 RUN \ 
@@ -462,9 +478,6 @@ RUN \
     ln -s -f $CONDA_DIR/bin/python /usr/bin/python && \
     # upgrade pip
     pip install --upgrade pip && \
-    # Install Packages
-    apt-get update -y && \
-    apt-get install -y --no-install-recommends graphviz && \
     # If minimal flavor - install 
     if [ "$WORKSPACE_FLAVOR" = "minimal" ]; then \
         # Install nomkl - mkl needs lots of space
@@ -475,13 +488,14 @@ RUN \
     fi && \
     # Install some basics - required to run container
     conda install -y --update-all \
+            'python=3.6.9' \
             cython \
+            graphviz \
             numpy \
             matplotlib \
             scipy \
             requests \
             urllib3 \
-            tqdm \
             pandas \
             six \
             future \
@@ -491,11 +505,11 @@ RUN \
             python-crontab \
             ipykernel \
             cmake \
+            Pillow \
             'ipython=7.7.*' \
+            # Do not update to notebook 6.x for now
             'notebook=5.7.*' \
-            'jupyterlab=1.0.*' && \
-    # Install glances and requirements
-    pip install --no-cache-dir glances py-cpuinfo netifaces bottle && \
+            'jupyterlab=1.1.*' && \
     # Install minimal pip requirements
     pip install --no-cache-dir --upgrade -r ${RESOURCES_PATH}/libraries/minimal-requirements.txt && \
     # If minimal flavor - exit here
@@ -506,6 +520,7 @@ RUN \
         clean-layer.sh && \
         exit 0 ; \
     fi && \
+    apt-get update && \
     # OpenMPI support
     apt-get install -y --no-install-recommends libopenmpi-dev openmpi-bin && \
     # Install mkl, mkl-include & mkldnn
@@ -516,7 +531,7 @@ RUN \
     # Install tensorflow - cpu only -  mkl support
     conda install -y tensorflow && \
     # Install pytorch - cpu only
-    conda install -y -c pytorch pytorch-cpu torchvision-cpu && \
+    conda install -y pytorch torchvision cpuonly -c pytorch && \
     # Install light pip requirements
     pip install --no-cache-dir --upgrade -r ${RESOURCES_PATH}/libraries/light-requirements.txt && \
     # If light light flavor - exit here
@@ -583,9 +598,9 @@ RUN \
 ### JUPYTER ###
 
 COPY \
-    docker-res/jupyter/start.sh \
-    docker-res/jupyter/start-notebook.sh \
-    docker-res/jupyter/start-singleuser.sh \
+    resources/jupyter/start.sh \
+    resources/jupyter/start-notebook.sh \
+    resources/jupyter/start-singleuser.sh \
     /usr/local/bin/
 
 # install jupyter extensions
@@ -690,12 +705,8 @@ RUN \
     jupyter serverextension enable --py jupyterlab_templates && \
     # Install voyagar data grid
     jupyter labextension install jupyterlab_voyager && \
-    # Install ipysheet
-    pip install --no-cache-dir ipysheet && \
+    # Install ipysheet jupyterlab extension
     jupyter labextension install ipysheet && \
-    # Install jupyterlab sql: https://github.com/pbugnion/jupyterlab-sql
-    pip install jupyterlab_sql && \
-    jupyter serverextension enable jupyterlab_sql --py --sys-prefix && \
     jupyter lab build && \
     # Install jupyterlab variable inspector - https://github.com/lckr/jupyterlab-variableInspector
     jupyter labextension install @lckr/jupyterlab_variableinspector && \
@@ -708,6 +719,9 @@ RUN \
     # Activate ipygrid in jupterlab
     jupyter labextension install ipyaggrid && \
     # Deprecation and validations:
+    # Install jupyterlab sql: https://github.com/pbugnion/jupyterlab-sql
+    # pip install jupyterlab_sql && \
+    # jupyter serverextension enable jupyterlab_sql --py --sys-prefix && \
     # Install jupyterlab-data-explorer: https://github.com/jupyterlab/jupyterlab-data-explorer
     # alpha version jupyter labextension install @jupyterlab/dataregistry-extension && \
     # Install jupyterlab system monitor: https://github.com/jtpio/jupyterlab-system-monitor
@@ -725,7 +739,7 @@ RUN \
     clean-layer.sh
 
 # Install Jupyter Tooling Extension
-COPY docker-res/jupyter/extensions $RESOURCES_PATH/jupyter-extensions
+COPY resources/jupyter/extensions $RESOURCES_PATH/jupyter-extensions
 
 RUN \
     pip install --no-cache-dir $RESOURCES_PATH/jupyter-extensions/tooling-extension/ && \
@@ -749,6 +763,12 @@ RUN \
     bsdtar -xf ms-python-release.vsix extension && \
     rm ms-python-release.vsix && \
     mv extension $HOME/.vscode/extensions/ms-python.python-2019.6.24221 && \
+    # Install git lens
+    wget --quiet https://github.com/eamodio/vscode-gitlens/releases/download/v9.9.3/gitlens-9.9.3.vsix && \
+    bsdtar -xf gitlens-9.9.3.vsix extension && \
+    rm gitlens-9.9.3.vsix && \
+    mv extension $HOME/.vscode/extensions/eamodio.gitlens-9.9.3 && \
+    # TODO Install markdown lint
     # Install remote development extension
     # https://marketplace.visualstudio.com/items?itemName=ms-vscode-remote.remote-ssh
     wget --quiet https://marketplace.visualstudio.com/_apis/public/gallery/publishers/ms-vscode-remote/vsextensions/remote-ssh/0.45.5/vspackage -O ms-vscode-remote.remote-ssh.vsix && \
@@ -777,76 +797,13 @@ RUN \
 ### INCUBATION ZONE ### 
 
 RUN \
-    apt-get update && \
-    # SSH Tooling
-    apt-get install -y autossh mussh && \
-    # Find files
-    apt-get install -y locate && \
-    # Compression Programs: https://wiki.ubuntuusers.de/Archivmanager/
-    # also install rar/unrar? but both are propriatory
-    apt-get install -y lzop && \
-    # SQLite
-    apt-get install -y sqlite3 && \
-    # XML Utils
-    apt-get install -y xmlstarlet && \
-    # Search text and binary files
-    apt-get install -y yara && \
-    # SVN support
-    apt-get install -y subversion && \
-    # vs support for thunar
-    apt-get install -y thunar-vcs-plugin && \
-    # xfce systemload panel plugin - needs to be activated
-    apt-get install -y xfce4-systemload-plugin && \
-    # Leightweight ftp client that supports sftp, http, ...
-    apt-get install -y gftp && \
-    # Minimalistic C client for Redis
-    apt-get install -y libhiredis-dev && \
-    # Install odbc drivers
-    apt-get install -y --no-install-recommends unixodbc unixodbc-dev && \
-    # Dev tools
-    apt-get install -y --no-install-recommends less bash-completion tree && \
-    # Cleanup
-    clean-layer.sh
-
-RUN \
    # If minimal or light flavor -> exit here
     if [ "$WORKSPACE_FLAVOR" = "minimal" ] || [ "$WORKSPACE_FLAVOR" = "light" ]; then \
         exit 0 ; \
     fi && \
     # New Python Libraries:
     pip install --no-cache-dir \
-                facets-overview \
-                virtualenv \
-                handout \
-                filedepot \
-                numexpr \
-                blosc \
-                graphene \
-                knockknock \
-                pyodbc \
-                patsy \
-                swifter \
-                xlrd \
-                seaborn \
-                sympy \
-                stormssh \
-                pytorch-transformers \
-                pytorch-lightning \
-                python-language-server \
-                opencv-python \
-                imageai \
-                rope \
-                pep8 \
-                pylama \
-                pydocstyle \
-                tf-encrypted \
-                lazycluster \
-                flake8 \
-                docker && \
-                # size: 7MB?
-                # jupyterthemes && \
-                # requires newer spacy version: spacy-pytorch-transformers \     
-                # too many/specific dependencies: pip install tensorflow-data-validation
+                lazycluster && \
     # Cleanup
     clean-layer.sh
 
@@ -856,30 +813,30 @@ RUN \
 
 # Copy files into workspace
 COPY \
-    docker-res/docker-entrypoint.py \
-    docker-res/5xx.html \
+    resources/docker-entrypoint.py \
+    resources/5xx.html \
     $RESOURCES_PATH/
 
 # Copy scripts into workspace
-COPY docker-res/scripts $RESOURCES_PATH/scripts
+COPY resources/scripts $RESOURCES_PATH/scripts
 
 # Create Desktop Icons for Tooling
-COPY docker-res/branding $RESOURCES_PATH/branding
+COPY resources/branding $RESOURCES_PATH/branding
 
 # Configure Home folder (e.g. xfce)
-COPY docker-res/home/ $HOME/
+COPY resources/home/ $HOME/
 
 # Copy some configuration files
-COPY docker-res/ssh/ssh_config /etc/ssh/ssh_config
-COPY docker-res/ssh/sshd_config /etc/ssh/sshd_config
-COPY docker-res/nginx/nginx.conf /etc/nginx/nginx.conf
-COPY docker-res/config/xrdp.ini /etc/xrdp/xrdp.ini
-COPY docker-res/config/supervisord.conf /etc/supervisor/supervisord.conf
+COPY resources/ssh/ssh_config /etc/ssh/ssh_config
+COPY resources/ssh/sshd_config /etc/ssh/sshd_config
+COPY resources/nginx/nginx.conf /etc/nginx/nginx.conf
+COPY resources/config/xrdp.ini /etc/xrdp/xrdp.ini
+COPY resources/config/supervisord.conf /etc/supervisor/supervisord.conf
 # Assume yes to all apt commands, to avoid user confusion around stdin.
-COPY docker-res/config/90assumeyes /etc/apt/apt.conf.d/
+COPY resources/config/90assumeyes /etc/apt/apt.conf.d/
 
 # Monkey Patching novnc: Styling and added clipboard support. All changed sections are marked with CUSTOM CODE
-COPY docker-res/novnc/ $RESOURCES_PATH/novnc/
+COPY resources/novnc/ $RESOURCES_PATH/novnc/
 
 RUN \
     ## create index.html to forward automatically to `vnc.html`
@@ -893,11 +850,11 @@ ENV \
     VNC_COL_DEPTH=24
 
 # Configure Jupyter / JupyterLab
-COPY docker-res/jupyter/jupyter_notebook_config.py /etc/jupyter/
-COPY docker-res/jupyter/sidebar.jupyterlab-settings $HOME/.jupyter/lab/user-settings/@jupyterlab/application-extension/
-COPY docker-res/jupyter/plugin.jupyterlab-settings $HOME/.jupyter/lab/user-settings/@jupyterlab/extensionmanager-extension/
+COPY resources/jupyter/jupyter_notebook_config.py /etc/jupyter/
+COPY resources/jupyter/sidebar.jupyterlab-settings $HOME/.jupyter/lab/user-settings/@jupyterlab/application-extension/
+COPY resources/jupyter/plugin.jupyterlab-settings $HOME/.jupyter/lab/user-settings/@jupyterlab/extensionmanager-extension/
 # Add tensorboard patch - use tensorboard jupyter plugin instead of the actual tensorboard magic
-COPY docker-res/jupyter/tensorboard_notebook_patch.py /opt/conda/lib/python3.6/site-packages/tensorboard/notebook.py
+COPY resources/jupyter/tensorboard_notebook_patch.py /opt/conda/lib/python3.6/site-packages/tensorboard/notebook.py
 
 # Branding of various components
 RUN \
@@ -921,7 +878,7 @@ RUN \
     git config --global credential.helper 'cache --timeout=31540000'
 
 # Configure netdata
-COPY docker-res/netdata/ /etc/netdata/
+COPY resources/netdata/ /etc/netdata/
 
 # Configure conda
 RUN \
@@ -939,7 +896,7 @@ RUN \
     mkdir -p /etc/ipython/ && echo "c = get_config(); c.IPKernelApp.matplotlib = 'inline'" > /etc/ipython/ipython_config.py
 
 # Create Desktop Icons for Tooling
-COPY docker-res/icons $RESOURCES_PATH/icons
+COPY resources/icons $RESOURCES_PATH/icons
 
 RUN \
     # ungit:
@@ -956,9 +913,9 @@ RUN \
     rm /usr/share/applications/xfce4-session-logout.desktop
 
 # Copy resources into workspace
-COPY docker-res/tools $RESOURCES_PATH/tools
-COPY docker-res/tests $RESOURCES_PATH/tests
-COPY docker-res/tutorials $RESOURCES_PATH/tutorials
+COPY resources/tools $RESOURCES_PATH/tools
+COPY resources/tests $RESOURCES_PATH/tests
+COPY resources/tutorials $RESOURCES_PATH/tutorials
 
 # Various configurations
 RUN \
@@ -1010,10 +967,10 @@ ENV CONFIG_BACKUP_ENABLED="true" \
     MAX_NUM_THREADS="auto"
 
 ### END CONFIGURATION ###
-ARG BUILD_DATE="unknown"
-ARG VCS_REF="unknown"
-ARG WORKSPACE_VERSION="unknown"
-ENV WORKSPACE_VERSION=$WORKSPACE_VERSION
+ARG ARG_BUILD_DATE="unknown"
+ARG ARG_VCS_REF="unknown"
+ARG ARG_WORKSPACE_VERSION="unknown"
+ENV WORKSPACE_VERSION=$ARG_WORKSPACE_VERSION
 
 # Overwrite & add Labels
 LABEL \
@@ -1038,8 +995,8 @@ LABEL \
     "org.opencontainers.image.version"=$WORKSPACE_VERSION \
     "org.opencontainers.image.vendor"="ML Tooling" \
     "org.opencontainers.image.authors"="Lukas Masuch & Benjamin Raehtlein" \
-    "org.opencontainers.image.revision"=$VCS_REF \
-    "org.opencontainers.image.created"=$BUILD_DATE \ 
+    "org.opencontainers.image.revision"=$ARG_VCS_REF \
+    "org.opencontainers.image.created"=$ARG_BUILD_DATE \ 
     # Label Schema Convention (deprecated): http://label-schema.org/rc1/
     "org.label-schema.name"="Machine Learning Workspace" \
     "org.label-schema.description"="All-in-one web-based development environment for machine learning." \
@@ -1049,14 +1006,15 @@ LABEL \
     "org.label-schema.vendor"="ML Tooling" \
     "org.label-schema.version"=$WORKSPACE_VERSION \
     "org.label-schema.schema-version"="1.0" \
-    "org.label-schema.vcs-ref"=$VCS_REF \
-    "org.label-schema.build-date"=$BUILD_DATE
+    "org.label-schema.vcs-ref"=$ARG_VCS_REF \
+    "org.label-schema.build-date"=$ARG_BUILD_DATE
 
 # Removed - is run during startup since a few env variables are dynamically changed: RUN printenv > $HOME/.ssh/environment
 
 # This assures we have a volume mounted even if the user forgot to do bind mount.
 # So that they do not lose their data if they delete the container.
 # TODO: VOLUME [ "/workspace" ]
+# TODO: WORKDIR /workspace?
 
 # use global option with tini to kill full process groups: https://github.com/krallin/tini#process-group-killing
 ENTRYPOINT ["/tini", "-g", "--"]
@@ -1071,3 +1029,5 @@ CMD ["python", "/resources/docker-entrypoint.py"]
 
 EXPOSE 8080
 ###
+
+# TODO add s3cmd libsqlite3-dev dpkg-sig 

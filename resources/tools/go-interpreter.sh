@@ -16,6 +16,10 @@ if ! hash go 2>/dev/null; then
     echo "Installing Go Interpreter"
     apt-get update
     apt-get install -y golang-go
+    # Set env variables?:
+    # export GOROOT=/usr/local/go
+    # export GOPATH=$HOME/go
+    # export PATH=$PATH:$GOROOT/bin:$GOPATH/bin
 else
     echo "Go Interpreter is already installed"
 fi

@@ -67,7 +67,7 @@ blaze==0.10.1 # Blaze translates a subset of modified NumPy and Pandas-like synt
 geojson==2.5.0 # Python bindings and utilities for GeoJSON
 annoy==1.16.0 # Approximate Nearest Neighbors in C++/Python optimized for memory usage and loading/saving to disk.
 easydict==1.9 # Access dict values as attributes (works recursively).
-swifter==0.292 # A package which efficiently applies any function to a pandas dataframe or series in the fastest available manner
+swifter==0.293 # A package which efficiently applies any function to a pandas dataframe or series in the fastest available manner
 blosc==1.8.1 # Blosc data compressor
 xlrd==1.2.0 # Library for developers to extract data from Microsoft Excel (tm) spreadsheet files
 # 190MB pyarrow==0.14.1 # cross-language development platform for in-memory data.
@@ -116,11 +116,11 @@ librosa==0.7.0 # Python module for audio and music processing
 
 ## Graph
 networkx==2.3 # Data structures for graphs, digraphs, and multigraphs
-dgl==0.3 # Deep Graph Library
+dgl==0.3.1 # Deep Graph Library
 graph-nets==1.0.4 # Library for building graph networks in Tensorflow and Sonnet.
 deepwalk==1.0.3 # DeepWalk online learning of social representations.
 torch-cluster==1.4.4 # PyTorch Extension Library of Optimized Graph Cluster Algorithms
-torch-geometric==1.3.0 # Geometric Deep Learning Extension Library for PyTorch
+torch-geometric==1.3.1 # Geometric Deep Learning Extension Library for PyTorch
 torchbiggraph==1.dev1 # A distributed system to learn embeddings of large graphs
 
 # Reinforcement learning
@@ -133,7 +133,7 @@ trfl==1.0.1 # trfl is a library of building blocks for reinforcement learning al
 tsfresh==0.12.0 # tsfresh extracts relevant characteristics from time series
 
 ## Recommender Systems
-scikit-surprise==1.0.6 # An easy-to-use library for recommender systems.
+scikit-surprise==1.0.6 # An easy-tfo-use library for recommender systems.
 lightfm==1.15 # A Python implementation of LightFM, a hybrid recommendation algorithm.
 implicit==0.4.0 # Collaborative Filtering for Implicit Datasets
 tensorrec==0.26.2 # A TensorFlow recommendation algorithm and framework in Python.
@@ -142,7 +142,7 @@ tensorrec==0.26.2 # A TensorFlow recommendation algorithm and framework in Pytho
 hyperopt==0.1.2 # Distributed Asynchronous Hyperparameter Optimization - 0.1.2 has a problem with tqdm write
 talos==0.6.3  # Talos Hyperparameter Scanner for Keras 
 scikit-optimize==0.5.2 # Sequential model-based optimization toolbox.
-optuna==0.14.0 # A hyperparameter optimization framework
+optuna==0.15.0 # A hyperparameter optimization framework
 tpot==0.10.2 # Tree-based Pipeline Optimization Tool
 hpbandster==0.7.4 # HyPerBAND on STERoids, a distributed Hyperband implementation with lots of room for improvement
 dragonfly-opt==0.1.3 # Scalable Bayesian optimisation.
@@ -173,7 +173,7 @@ tensorflow-probability==0.7.0 # Probabilistic modeling and statistical inference
 tensorflow-datasets==1.2.0 # tensorflow/datasets is a library of datasets ready to use with TensorFlow.
 tensorpack==0.9.7.1 # Neural Network Toolbox on TensorFlow
 tensor2tensor==1.14.0 # Library of deep learning models and datasets designed to make deep learning more accessible and accelerate ML research.
-tensorflow-hub==0.5.0 # TensorFlow Hub is a library to foster the publication, discovery, and consumption of reusable parts of machine learning models.
+tensorflow-hub==0.6.0 # TensorFlow Hub is a library to foster the publication, discovery, and consumption of reusable parts of machine learning models.
 tensorflow-graphics==1.0.0 # A library that contains well defined, reusable and cleanly written graphics related ops and utility functions for TensorFlow.
 tf-encrypted==0.5.8 # A Framework for Machine Learning on Encrypted Data.
 
@@ -263,8 +263,8 @@ tensorboard_logger==0.1.0
 visualdl==1.3.0 # Visualize Deep Learning
 
 ## ML Model Exploration
-yellowbrick==0.9.1 # A suite of visual analysis and diagnostic tools for machine learning.
-eli5==0.10.0 # Debug machine learning classifiers and explain their predictions
+yellowbrick==1.0 # A suite of visual analysis and diagnostic tools for machine learning.
+eli5==0.10.1 # Debug machine learning classifiers and explain their predictions
 shap==0.29.3 # A unified approach to explain and visualize the output of any machine learning model.
 lime==0.1.1.36 # Local Interpretable Model-Agnostic Explanations for machine learning classifiers
 scikit-plot==0.3.7 # An intuitive library to add plotting functionality to scikit-learn objects.
@@ -282,7 +282,7 @@ visdom==0.1.8.8 # A tool for visualizing live, rich data for Torch and Numpy
 ####### Database Libs #######
 #
 dataset==1.1.2 # Toolkit for Python-based database access.
-minio==4.0.20 # S3 client
+minio==4.0.21 # S3 client
 pymongo==3.9.0 # Mongo Client
 db.py==0.5.3 # easier way to interact with your databases, support for  PostgreSQL, MySQL, SQLite, Redshift, MS SQL Server, Oracle
 elasticsearch==7.0.4 # Python client for Elasticsearch
@@ -293,16 +293,16 @@ cx-Oracle==7.2.2 # Python interface to Oracle
 kafka-python==1.4.6 # Pure Python client for Apache Kafka
 tinydb==3.13.0 # TinyDB is a tiny, document oriented database optimized for your happiness :)
 PyMySQL==0.9.3 # Pure Python MySQL Driver
-boto3==1.9.217 # The AWS SDK for Python
-apache-libcloud==2.5.0 # A standard Python library that abstracts away differences among multiple cloud provider APIs.
-pyhdb==0.3.4  # SAP HANA Database Client for Python
-hdbcli==2.4.151 # SAP HANA Python Client
-google-cloud-storage==1.18.0 # Google Cloud Storage API client library
+boto3==1.9.218 # The AWS SDK for Python
+apache-libcloud==2.6.0 # A standard Python library that abstracts away differences among multiple cloud provider APIs.
+google-cloud-storage==1.19.0 # Google Cloud Storage API client library
 filedepot==0.7.0 # Toolkit for storing files and attachments in web applications
 prometheus_client==0.7.1 # Python client for the Prometheus monitoring system.
 cloudant==2.12.0 # Cloudant / CouchDB Client Library
 influxdb==5.2.3 # InfluxDB client
 pyodbc==4.0.27 # DB API Module for ODBC
+pyhdb==0.3.4  # SAP HANA Database Client for Python
+# too big: 70MB hdbcli==2.4.151 # SAP HANA Python Client
 
 #
 ####### Web Frameworks #######
@@ -314,7 +314,7 @@ graphene==2.1.8 # GraphQL Framework for Python
 uvicorn==0.8.6 # The lightning-fast ASGI server.
 websockets==7.0 # uvicorn requires websockets 7.0 - An implementation of the WebSocket Protocol (RFC 6455 & 7692)
 gunicorn==19.9.0 # WSGI HTTP Server for UNIX
-django==2.2.4 # A high-level Python Web framework that encourages rapid development and clean, pragmatic design.
+# too big 40MB django==2.2.4 # A high-level Python Web framework that encourages rapid development and clean, pragmatic design.
 
 #
 ####### Others #######
@@ -323,6 +323,8 @@ stormssh==0.7.0 # Management commands to ssh config files.
 handout==1.1.1 # Turn Python scripts into handouts with Markdown and figures
 numexpr==2.7.0 # Fast numerical expression evaluator for NumPy
 docker==4.0.2 # A Python library for the Docker Engine API.
+safety==1.8.5 # Safety checks your installed dependencies for known security vulnerabilities.
+pipdeptree==0.13.2 # Command line utility to show dependency tree of packages
 
 #
 ####### Deprecated/Removed #######

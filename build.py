@@ -91,10 +91,10 @@ try:
 except:
     pass
 
-vcs_ref_build_arg = " --build-arg VCS_REF=" + str(git_rev)
-build_date_build_arg = " --build-arg BUILD_DATE=" + str(build_date)
-flavor_build_arg = " --build-arg WORKSPACE_FLAVOR=" + str(args.flavor)
-version_build_arg = " --build-arg WORKSPACE_VERSION=" + str(args.version)
+vcs_ref_build_arg = " --build-arg ARG_VCS_REF=" + str(git_rev)
+build_date_build_arg = " --build-arg ARG_BUILD_DATE=" + str(build_date)
+flavor_build_arg = " --build-arg ARG_WORKSPACE_FLAVOR=" + str(args.flavor)
+version_build_arg = " --build-arg ARG_WORKSPACE_VERSION=" + str(args.version)
 
 versioned_image = service_name+":"+str(args.version)
 latest_image = service_name+":latest"

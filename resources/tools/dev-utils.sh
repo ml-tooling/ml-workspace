@@ -23,6 +23,7 @@ apt-get install -y --no-install-recommends \
         redis-server \
         mercurial \
         bzr \
+        cvs \
         bazel \
         postgresql \
         mysql-client \

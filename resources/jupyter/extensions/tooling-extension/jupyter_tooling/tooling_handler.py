@@ -71,6 +71,14 @@ class ToolingHandler(IPythonHandler):
         try:
             workspace_tooling_folder =  HOME + '/.workspace/tools/'
             workspace_tools = []
+
+            def tool_is_duplicated(tool_array, tool):
+                """ Tools with same ID should only be added once to the list"""
+                for t in tool_array:
+                    if "id" in t and "id" in tool and tool["id"] == t["id"]:
+                        return True
+                return False
+            
             for f in glob.glob(os.path.join(workspace_tooling_folder, '*.json')):
                 try:
                     with open(f, "rb") as tool_file:
@@ -78,11 +86,13 @@ class ToolingHandler(IPythonHandler):
                         if not tool_data:
                             continue
                         if isinstance(tool_data, dict):
-                            workspace_tools.append(tool_data)
+                            if not tool_is_duplicated(workspace_tools, tool_data):
+                                workspace_tools.append(tool_data)
                         else:
                             # tool data is probably an array
                             for tool in tool_data:
-                                workspace_tools.append(tool)
+                                if not tool_is_duplicated(workspace_tools, tool):
+                                    workspace_tools.append(tool)
                 except:
                     log.warn("Failed to load tools file: " + f.name)
                     continue

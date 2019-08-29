@@ -57,13 +57,18 @@ define(['base/js/namespace', 'jquery', 'base/js/dialog', 'base/js/utils', 'requi
         // Commit & push file button
         $(".dynamic-buttons:first").append('<button id="#commit-push-button" title="Commit and push file" class="commit-push-button btn btn-default btn-xs">Commit & Push</button>');
         $(".dynamic-buttons:first").append('<button id="#share-data-button" title="Share data" style="margin-left: 4px;" class="share-data-button btn btn-default btn-xs"><i class="fa fa-share-alt"></i></button>');
-       
+        $(".dynamic-buttons:first").append('<button id="#vs-code-button" title="Open VS Code" style="margin-left: 4px;" class="vs-code-button btn btn-default btn-xs">VS Code</button>');
+
         $(".commit-push-button").click(function () {
             components.openCommitSingleDialog(Jupyter.notebook_list.selected[0].path);
         });
 
         $(".share-data-button").click(function () {
             components.shareData(Jupyter.notebook_list.selected[0].path);
+        });
+
+        $(".vs-code-button").click(function () {
+            window.open(basePath + "tools/vscode/?folder=/workspace/" + Jupyter.notebook_list.selected[0].path, '_blank');
         });
 
         var _selection_changed = Jupyter.notebook_list.__proto__._selection_changed;
@@ -73,12 +78,15 @@ define(['base/js/namespace', 'jquery', 'base/js/dialog', 'base/js/utils', 'requi
             if (selected.length == 1 && selected[0].type !== 'directory') {
                 $('.commit-push-button').css('display', 'inline-block');
                 $('.share-data-button').css('display', 'inline-block');
+                $('.vs-code-button').css('display', 'none');
             } else if (selected.length == 1 && selected[0].type == 'directory') {
                 $('.commit-push-button').css('display', 'none');
                 $('.share-data-button').css('display', 'inline-block');
+                $('.vs-code-button').css('display', 'inline-block');
             } else {
                 $('.commit-push-button').css('display', 'none');
                 $('.share-data-button').css('display', 'none');
+                $('.vs-code-button').css('display', 'none');
             }
         };
         Jupyter.notebook_list._selection_changed();
