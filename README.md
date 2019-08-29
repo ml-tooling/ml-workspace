@@ -69,7 +69,7 @@ Voilà, that was easy! Now, Docker will pull the latest workspace image to your 
 To deploy a single instance for productive usage, we recommend to apply at least the following options:
 
 ```bash
-docker run -d -p 8080:8080 -v "${PWD}:/workspace" --env AUTHENTICATE_VIA_JUPYTER="mytoken" --shm-size=512m --restart always mltooling/ml-workspace:latest
+docker run -d -p 8080:8080 --name "ml-workspace" -v "${PWD}:/workspace" --env AUTHENTICATE_VIA_JUPYTER="mytoken" --shm-size 512m --restart always mltooling/ml-workspace:latest
 ```
 
 This command runs the container in background (`-d`), mounts your current working directory into the `/workspace` folder (`-v`), secures the workspace via a provided token (`--env AUTHENTICATE_VIA_JUPYTER`), provides 512MB of shared memory (`--shm-size`) to prevent unexpected crashes (see [known issues section](#known-issues)), and keeps the container running even on system restarts (`--restart always`). You can find additional options for docker run [here](https://docs.docker.com/engine/reference/commandline/run/) and workspace configuration options in [the section below](#Configuration).
@@ -239,10 +239,12 @@ In addition to the main workspace image (`mltooling/ml-workspace`), we provide o
 
 #### Minimal Flavor
 
+<p>
 <a href="https://hub.docker.com/r/mltooling/ml-workspace-minimal" title="Docker Image Version"><img src="https://images.microbadger.com/badges/version/mltooling/ml-workspace-minimal.svg"></a>
 <a href="https://hub.docker.com/r/mltooling/ml-workspace-minimal" title="Docker Image Metadata"><img src="https://images.microbadger.com/badges/image/mltooling/ml-workspace-minimal.svg"></a>
 <a href="https://hub.docker.com/r/mltooling/ml-workspace-minimal" title="Docker Pulls"><img src="https://img.shields.io/docker/pulls/mltooling/ml-workspace-minimal.svg"></a>
 <a href="https://hub.docker.com/r/mltooling/ml-workspace-minimal" title="Docker Stars"><img src="https://img.shields.io/docker/stars/mltooling/ml-workspace-minimal"></a>
+</p>
 
 <details>
 <summary>Details (click to expand...)</summary>
@@ -256,10 +258,12 @@ docker run -p 8080:8080 mltooling/ml-workspace-minimal:latest
 
 #### Light Flavor
 
+<p>
 <a href="https://hub.docker.com/r/mltooling/ml-workspace-light" title="Docker Image Version"><img src="https://images.microbadger.com/badges/version/mltooling/ml-workspace-light.svg"></a>
 <a href="https://hub.docker.com/r/mltooling/ml-workspace-light" title="Docker Image Metadata"><img src="https://images.microbadger.com/badges/image/mltooling/ml-workspace-light.svg"></a>
 <a href="https://hub.docker.com/r/mltooling/ml-workspace-light" title="Docker Pulls"><img src="https://img.shields.io/docker/pulls/mltooling/ml-workspace-light.svg"></a>
 <a href="https://hub.docker.com/r/mltooling/ml-workspace-light" title="Docker Stars"><img src="https://img.shields.io/docker/stars/mltooling/ml-workspace-light"></a>
+</p>
 
 <details>
 <summary>Details (click to expand...)</summary>
@@ -273,10 +277,12 @@ docker run -p 8080:8080 mltooling/ml-workspace-light:latest
 
 #### R Flavor
 
+<p>
 <a href="https://hub.docker.com/r/mltooling/ml-workspace-r" title="Docker Image Version"><img src="https://images.microbadger.com/badges/version/mltooling/ml-workspace-r.svg"></a>
 <a href="https://hub.docker.com/r/mltooling/ml-workspace-r" title="Docker Image Metadata"><img src="https://images.microbadger.com/badges/image/mltooling/ml-workspace-r.svg"></a>
 <a href="https://hub.docker.com/r/mltooling/ml-workspace-r" title="Docker Pulls"><img src="https://img.shields.io/docker/pulls/mltooling/ml-workspace-r.svg"></a>
 <a href="https://hub.docker.com/r/mltooling/ml-workspace-r" title="Docker Stars"><img src="https://img.shields.io/docker/stars/mltooling/ml-workspace-r"></a>
+</p>
 
 <details>
 <summary>Details (click to expand...)</summary>
@@ -290,10 +296,12 @@ docker run -p 8080:8080 mltooling/ml-workspace-r:latest
 
 #### GPU Flavor
 
+<p>
 <a href="https://hub.docker.com/r/mltooling/ml-workspace-gpu" title="Docker Image Version"><img src="https://images.microbadger.com/badges/version/mltooling/ml-workspace-gpu.svg"></a>
 <a href="https://hub.docker.com/r/mltooling/ml-workspace-gpu" title="Docker Image Metadata"><img src="https://images.microbadger.com/badges/image/mltooling/ml-workspace-gpu.svg"></a>
 <a href="https://hub.docker.com/r/mltooling/ml-workspace-gpu" title="Docker Pulls"><img src="https://img.shields.io/docker/pulls/mltooling/ml-workspace-gpu.svg"></a>
 <a href="https://hub.docker.com/r/mltooling/ml-workspace-gpu" title="Docker Stars"><img src="https://img.shields.io/docker/stars/mltooling/ml-workspace-gpu"></a>
+</p>
 
 <details>
 <summary>Details (click to expand...)</summary>
@@ -555,7 +563,7 @@ Port tunneling is quite useful when you have started any server-based tool withi
 - `3389`: RDP server.
 - `22`: SSH server.
 
-You can find port information on all the tools in the [supervisor configuration](https://github.com/ml-tooling/ml-workspace/blob/master/docker-res/config/supervisord.conf).
+You can find port information on all the tools in the [supervisor configuration](https://github.com/ml-tooling/ml-workspace/blob/master/resources/config/supervisord.conf).
 
 > 📖 _For more information about port tunneling/forwarding, we recommend [this guide](https://www.everythingcli.org/ssh-tunnelling-for-fun-and-profit-local-vs-remote/)._
 
@@ -705,10 +713,10 @@ To run Python code as a job, you need to provide a path or URL to a code directo
 
 #### Run code from version control system
 
-You can execute code directly from Git, Mercurial, Subversion, or Bazaar by using the pip-vcs format as described in [this guide](https://pip.pypa.io/en/stable/reference/pip_install/#vcs-support). For example, to execute code from a [subdirectory](https://github.com/ml-tooling/ml-workspace/tree/master/docker-res/tests/ml-job) of a git repository, just run:
+You can execute code directly from Git, Mercurial, Subversion, or Bazaar by using the pip-vcs format as described in [this guide](https://pip.pypa.io/en/stable/reference/pip_install/#vcs-support). For example, to execute code from a [subdirectory](https://github.com/ml-tooling/ml-workspace/tree/master/resources/tests/ml-job) of a git repository, just run:
 
 ```bash
-docker run --env EXECUTE_CODE="git+https://github.com/ml-tooling/ml-workspace.git#subdirectory=docker-res/tests/ml-job" mltooling/ml-workspace:latest
+docker run --env EXECUTE_CODE="git+https://github.com/ml-tooling/ml-workspace.git#subdirectory=resources/tests/ml-job" mltooling/ml-workspace:latest
 ```
 
 > 📖 _For additional information on how to specify branches, commits, or tags please refer to [this guide](https://pip.pypa.io/en/stable/reference/pip_install/#vcs-support)._
@@ -764,7 +772,7 @@ CMD ["python", "/resources/docker-entrypoint.py", "--code-only"]
 The workspace is pre-installed with many popular interpreters, data science libraries, and ubuntu packages:
 
 - **Interpreter:** Miniconda 3 (Python 3.6), Java 8, NodeJS 11
-- **Python libraries:** Tensorflow, Keras, Pytorch, Sklearn, CNTK, XGBoost, Theano, Fastai, and [many more](https://github.com/ml-tooling/ml-workspace/tree/master/docker-res/libraries)
+- **Python libraries:** Tensorflow, Keras, Pytorch, Sklearn, CNTK, XGBoost, Theano, Fastai, and [many more](https://github.com/ml-tooling/ml-workspace/tree/master/resources/libraries)
 
 The full list of installed tools can be found within the [Dockerfile](https://github.com/ml-tooling/ml-workspace/blob/master/Dockerfile).
 
@@ -777,7 +785,7 @@ The workspace provides a high degree of extensibility. Within the workspace, you
 - **JupyterLab:** `File -> New -> Terminal`
 - **VS Code:** `Terminal -> New Terminal`
 
-Additionally, pre-installed tools such as Jupyter, JupyterLab, and Visual Studio Code each provide their own rich ecosystem of extensions. The workspace also contains a [collection of installer scripts](https://github.com/ml-tooling/ml-workspace/tree/master/docker-res/tools) for many commonly used development tools or libraries (e.g., `PyCharm`, `Zeppelin`, `RStudio`, `Starspace`). Those scripts can be either executed from the Desktop VNC (double-click on the script within the `Tools` folder on the Desktop) or from a terminal (execute any tool script from the `/resources/tools/` folder).
+Additionally, pre-installed tools such as Jupyter, JupyterLab, and Visual Studio Code each provide their own rich ecosystem of extensions. The workspace also contains a [collection of installer scripts](https://github.com/ml-tooling/ml-workspace/tree/master/resources/tools) for many commonly used development tools or libraries (e.g., `PyCharm`, `Zeppelin`, `RStudio`, `Starspace`). Those scripts can be either executed from the Desktop VNC (double-click on the script within the `Tools` folder on the Desktop) or from a terminal (execute any tool script from the `/resources/tools/` folder).
 
 <details>
 <summary>Example (click to expand...)</summary>
@@ -926,4 +934,4 @@ python build.py --help
 
 ---
 
-Licensed **Apache 2.0**. Created and maintained with ❤️ by developers from SAP in Berlin. 
+Licensed **Apache 2.0**. Created and maintained with ❤️ by developers from SAP in Berlin.
