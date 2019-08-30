@@ -39,6 +39,7 @@ define(['base/js/namespace', 'jquery', 'base/js/dialog', 'base/js/utils', 'requi
      * Adds the jupyter extension to the notebook view (including the respective handler)
      */
     function load_ipython_extension() {
+        console.info('Loaded Jupyter extension: Tooling Notebook Widget')
         // add button for new action
         Jupyter.toolbar.add_buttons_group([Jupyter.actions.register(git_helper, 'commit_push', 'notebook')])
         Jupyter.toolbar.add_buttons_group([Jupyter.actions.register(share_notebook, 'share_notebook', 'notebook')])
