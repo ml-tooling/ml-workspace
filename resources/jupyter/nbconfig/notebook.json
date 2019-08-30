@@ -1,0 +1,6 @@
+{
+  "load_extensions": {
+    "jupyter_tooling/open-tools-widget": true,
+    "jupyter_tooling/tooling-notebook-widget": true
+  }
+}

@@ -19,7 +19,7 @@ define(['base/js/namespace', 'jquery', 'base/js/dialog', 'base/js/utils', 'requi
      */
     function load_ipython_extension() {
         // log to console
-        console.info('Loaded Jupyter extension: Juypter Git Helper')
+        console.info('Loaded Jupyter extension: Tooling Tree Widget')
         base_url = utils.get_body_data('base-url')
 
         btGitButton = '<div id="start-git-btn" style="margin-right: 5px;">' +

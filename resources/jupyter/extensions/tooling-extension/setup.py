@@ -10,8 +10,8 @@ EXTENSION_NAME = "jupyter_tooling"
 HANDLER_NAME = "tooling_handler"
 
 OPEN_TOOLS_WIDGET = "open-tools-widget"
-GIT_TREE_WIDGET = "git-tree-widget"
-GIT_NOTEBOOK_WIDGET = "git-notebook-widget"
+GIT_TREE_WIDGET = "tooling-tree-widget"
+GIT_NOTEBOOK_WIDGET = "tooling-notebook-widget"
 
 EXT_DIR = os.path.join(os.path.dirname(__file__), EXTENSION_NAME)
 

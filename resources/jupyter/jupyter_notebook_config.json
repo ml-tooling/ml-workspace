@@ -1,0 +1,11 @@
+{
+    "NotebookApp": {
+        "nbserver_extensions": {
+            "jupyter_nbextensions_configurator": true,
+            "jupyter_tooling.tooling_handler": true
+        },
+        "server_extensions": [
+            "jupyter_tooling.tooling_handler"
+        ]
+    }
+}

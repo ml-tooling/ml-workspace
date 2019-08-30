@@ -509,7 +509,7 @@ RUN \
             'ipython=7.7.*' \
             # Do not update to notebook 6.x for now
             'notebook=5.7.*' \
-            'jupyterlab=1.1.*' && \
+            'jupyterlab=1.1.1' && \
     # Install minimal pip requirements
     pip install --no-cache-dir --upgrade -r ${RESOURCES_PATH}/libraries/minimal-requirements.txt && \
     # If minimal flavor - exit here
@@ -699,15 +699,6 @@ RUN \
     pip install jupyterlab_iframe && \
     jupyter labextension install jupyterlab_iframe && \
     jupyter serverextension enable --py jupyterlab_iframe && \
-    # Install jupyterlab_templates - https://github.com/timkpaine/jupyterlab_templates
-    pip install jupyterlab_templates && \
-    jupyter labextension install jupyterlab_templates && \
-    jupyter serverextension enable --py jupyterlab_templates && \
-    # Install voyagar data grid
-    jupyter labextension install jupyterlab_voyager && \
-    # Install ipysheet jupyterlab extension
-    jupyter labextension install ipysheet && \
-    jupyter lab build && \
     # Install jupyterlab variable inspector - https://github.com/lckr/jupyterlab-variableInspector
     jupyter labextension install @lckr/jupyterlab_variableinspector && \
     # Install jupyterlab code formattor - https://github.com/ryantam626/jupyterlab_code_formatter
@@ -718,7 +709,14 @@ RUN \
     jupyter labextension install @krassowski/jupyterlab_go_to_definition && \
     # Activate ipygrid in jupterlab
     jupyter labextension install ipyaggrid && \
+    # Install ipysheet jupyterlab extension
+    jupyter labextension install ipysheet && \
     # Deprecation and validations:
+    # Install jupyterlab_templates - https://github.com/timkpaine/jupyterlab_templates
+    # Does not work currently
+    # pip install jupyterlab_templates && \
+    # jupyter labextension install jupyterlab_templates && \
+    # jupyter serverextension enable --py jupyterlab_templates && \
     # Install jupyterlab sql: https://github.com/pbugnion/jupyterlab-sql
     # pip install jupyterlab_sql && \
     # jupyter serverextension enable jupyterlab_sql --py --sys-prefix && \
@@ -726,10 +724,13 @@ RUN \
     # alpha version jupyter labextension install @jupyterlab/dataregistry-extension && \
     # Install jupyterlab system monitor: https://github.com/jtpio/jupyterlab-system-monitor
     # DO not install for now jupyter labextension install jupyterlab-topbar-extension jupyterlab-system-monitor && \
+     # Install voyagar data grid
+    # Does not work with 1.1.1: jupyter labextension install jupyterlab_voyager && \
     # Too big dependency: https://github.com/InsightSoftwareConsortium/itkwidgets
     # Too Big: Install ipyleaflet
     # pip install --no-cache-dir ipyleaflet && \
     # jupyter labextension install jupyter-leaflet && \
+    jupyter lab build && \
     # Cleanup
     # Clean jupyter lab cache: https://github.com/jupyterlab/jupyterlab/issues/4930
     jupyter lab clean && \
@@ -759,10 +760,10 @@ RUN \
     cd $RESOURCES_PATH && \
     mkdir -p $HOME/.vscode/extensions/ && \
     # Install python extension - higher version do not work with vscode version 1.33
-    wget --quiet https://github.com/microsoft/vscode-python/releases/download/2019.6.24221/ms-python-release.vsix && \
+    wget --quiet https://github.com/microsoft/vscode-python/releases/download/2019.8.30787/ms-python-release.vsix && \
     bsdtar -xf ms-python-release.vsix extension && \
     rm ms-python-release.vsix && \
-    mv extension $HOME/.vscode/extensions/ms-python.python-2019.6.24221 && \
+    mv extension $HOME/.vscode/extensions/ms-python.python-2019.8.30787 && \
     # Install git lens
     wget --quiet https://github.com/eamodio/vscode-gitlens/releases/download/v9.9.3/gitlens-9.9.3.vsix && \
     bsdtar -xf gitlens-9.9.3.vsix extension && \
@@ -771,22 +772,22 @@ RUN \
     # TODO Install markdown lint
     # Install remote development extension
     # https://marketplace.visualstudio.com/items?itemName=ms-vscode-remote.remote-ssh
-    wget --quiet https://marketplace.visualstudio.com/_apis/public/gallery/publishers/ms-vscode-remote/vsextensions/remote-ssh/0.45.5/vspackage -O ms-vscode-remote.remote-ssh.vsix && \
+    wget --quiet https://marketplace.visualstudio.com/_apis/public/gallery/publishers/ms-vscode-remote/vsextensions/remote-ssh/0.45.6/vspackage -O ms-vscode-remote.remote-ssh.vsix && \
     bsdtar -xf ms-vscode-remote.remote-ssh.vsix extension && \
     rm ms-vscode-remote.remote-ssh.vsix && \
-    mv extension $HOME/.vscode/extensions/ms-vscode-remote.remote-ssh-0.45.5 && \
+    mv extension $HOME/.vscode/extensions/ms-vscode-remote.remote-ssh-0.45.6 && \
     # Install remote development ssh - editing configuration files
     # https://marketplace.visualstudio.com/items?itemName=ms-vscode-remote.remote-ssh-edit
-    wget --quiet https://marketplace.visualstudio.com/_apis/public/gallery/publishers/ms-vscode-remote/vsextensions/remote-ssh-edit/0.45.5/vspackage -O ms-vscode-remote.remote-ssh-edit.vsix && \
+    wget --quiet https://marketplace.visualstudio.com/_apis/public/gallery/publishers/ms-vscode-remote/vsextensions/remote-ssh-edit/0.45.6/vspackage -O ms-vscode-remote.remote-ssh-edit.vsix && \
     bsdtar -xf ms-vscode-remote.remote-ssh-edit.vsix extension && \
     rm ms-vscode-remote.remote-ssh-edit.vsix && \
-    mv extension $HOME/.vscode/extensions/ms-vscode-remote.remote-ssh-edit-0.45.5 && \
+    mv extension $HOME/.vscode/extensions/ms-vscode-remote.remote-ssh-edit-0.45.6 && \
     # Install remote development ssh - explorer
     # https://marketplace.visualstudio.com/items?itemName=ms-vscode-remote.remote-ssh-explorer
-    wget --quiet https://marketplace.visualstudio.com/_apis/public/gallery/publishers/ms-vscode-remote/vsextensions/remote-ssh-explorer/0.45.5/vspackage -O ms-vscode-remote.remote-ssh-explorer.vsix && \
+    wget --quiet https://marketplace.visualstudio.com/_apis/public/gallery/publishers/ms-vscode-remote/vsextensions/remote-ssh-explorer/0.45.6/vspackage -O ms-vscode-remote.remote-ssh-explorer.vsix && \
     bsdtar -xf ms-vscode-remote.remote-ssh-explorer.vsix extension && \
     rm ms-vscode-remote.remote-ssh-explorer.vsix && \
-    mv extension $HOME/.vscode/extensions/ms-vscode-remote.remote-ssh-explorer-0.45.5 && \
+    mv extension $HOME/.vscode/extensions/ms-vscode-remote.remote-ssh-explorer-0.45.6 && \
     # Fix permissions
     fix-permissions.sh $HOME/.vscode/extensions/ && \
     # Cleanup
@@ -827,8 +828,7 @@ COPY resources/branding $RESOURCES_PATH/branding
 COPY resources/home/ $HOME/
 
 # Copy some configuration files
-COPY resources/ssh/ssh_config /etc/ssh/ssh_config
-COPY resources/ssh/sshd_config /etc/ssh/sshd_config
+COPY resources/ssh/ssh_config resources/ssh/sshd_config  /etc/ssh/
 COPY resources/nginx/nginx.conf /etc/nginx/nginx.conf
 COPY resources/config/xrdp.ini /etc/xrdp/xrdp.ini
 COPY resources/config/supervisord.conf /etc/supervisor/supervisord.conf
@@ -850,7 +850,9 @@ ENV \
     VNC_COL_DEPTH=24
 
 # Configure Jupyter / JupyterLab
-COPY resources/jupyter/jupyter_notebook_config.py /etc/jupyter/
+# Add as jupyter system configuration
+COPY resources/jupyter/nbconfig /etc/jupyter/nbconfig
+COPY resources/jupyter/jupyter_notebook_config.py resources/jupyter/jupyter_notebook_config.json resources/jupyter/nbconfig /etc/jupyter/
 COPY resources/jupyter/sidebar.jupyterlab-settings $HOME/.jupyter/lab/user-settings/@jupyterlab/application-extension/
 COPY resources/jupyter/plugin.jupyterlab-settings $HOME/.jupyter/lab/user-settings/@jupyterlab/extensionmanager-extension/
 # Add tensorboard patch - use tensorboard jupyter plugin instead of the actual tensorboard magic
