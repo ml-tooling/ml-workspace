@@ -372,8 +372,8 @@ For more information and documentation about ML Hub, please take a look at the [
 
 ## Support
 
-The ML Workspace project is maintained by [@LukasMasuch](https://twitter.com/LukasMasuch)
-and [@raethlein](https://twitter.com/raethlein). Please understand that we won't be able
+The ML Workspace project is maintained by [Lukas Masuch](https://twitter.com/LukasMasuch)
+and [Benjamin Räthlein](https://twitter.com/raethlein). Please understand that we won't be able
 to provide individual support via email. We also believe that help is much more
 valuable if it's shared publicly so that more people can benefit from it.
 
