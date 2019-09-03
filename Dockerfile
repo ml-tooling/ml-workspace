@@ -216,7 +216,6 @@ RUN wget --quiet https://repo.anaconda.com/miniconda/Miniconda3-${CONDA_VERSION}
     rm ~/miniconda.sh && \
     # Update conda
     $CONDA_DIR/bin/conda update -y -n base -c defaults conda && \
-    # TODO -y?
     $CONDA_DIR/bin/conda install -y conda-build && \
     # Add conda forge - Append so that conda forge has lower priority than the main channel
     $CONDA_DIR/bin/conda config --system --append channels conda-forge && \
@@ -294,7 +293,6 @@ ENV JAVA_HOME /usr/lib/jvm/java-8-openjdk-amd64
 RUN \
     apt-get update && \
     # Install custom font
-    # TODO necessary? apt-get install -y ttf-wqy-zenhei && \
     apt-get install -y xfce4 xfce4-terminal xterm && \
     apt-get purge -y pm-utils xscreensaver* && \
     # Cleanup
@@ -1033,5 +1031,3 @@ CMD ["python", "/resources/docker-entrypoint.py"]
 
 EXPOSE 8080
 ###
-
-# TODO add s3cmd libsqlite3-dev dpkg-sig 
