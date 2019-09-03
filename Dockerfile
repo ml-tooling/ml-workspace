@@ -918,6 +918,8 @@ RUN \
 COPY resources/tools $RESOURCES_PATH/tools
 COPY resources/tests $RESOURCES_PATH/tests
 COPY resources/tutorials $RESOURCES_PATH/tutorials
+COPY resources/licenses $RESOURCES_PATH/licenses
+COPY resources/reports $RESOURCES_PATH/reports
 
 # Various configurations
 RUN \
