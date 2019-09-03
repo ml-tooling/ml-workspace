@@ -14,7 +14,7 @@ done
 
 echo "Installing GUI Tool Collection"
 apt-get update
-LD_LIBRARY_PATH="" apt-get install -y --no-install-recommends \
+LD_LIBRARY_PATH="" LD_PRELOAD="" apt-get install -y --no-install-recommends \
         gnome-tweak-tool \
         file-roller \
         gitg \
