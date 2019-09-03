@@ -62,9 +62,9 @@ Deploying a single workspace instance is as simple as:
 docker run -p 8080:8080 mltooling/ml-workspace:latest
 ```
 
-Voilà, that was easy! Now, Docker will pull the latest workspace image to your machine. This may take a few minutes, depending on your internet speed. Once the workspace is started, you can access it via: http://localhost:8080.
+Voilà, that was easy! Now, Docker will pull the latest workspace image to your machine. This may take a few minutes, depending on your internet speed. Once the workspace is started, you can access it via http://localhost:8080.
 
-> ℹ️ _If started on a another machine or with a different port, make sure to use the machine's IP/DNS and/or the exposed port._
+> ℹ️ _If started on another machine or with a different port, make sure to use the machine's IP/DNS and/or the exposed port._
 
 To deploy a single instance for productive usage, we recommend to apply at least the following options:
 
@@ -94,7 +94,7 @@ The workspace provides a variety of configuration options that can be used by se
     </tr>
     <tr>
         <td>WORKSPACE_SSL_ENABLED</td>
-        <td>Enable or disable SSL. When set to true, either certificates (cert.crt) must be mounted to <code>/resources/ssl</code> or, if not, the container generates self-signed certificates.</td>
+        <td>Enable or disable SSL. When set to true, either certificate (cert.crt) must be mounted to <code>/resources/ssl</code> or, if not, the container generates self-signed certificate.</td>
         <td>false</td>
     </tr>
     <tr>
@@ -137,7 +137,7 @@ The workspace provides a variety of configuration options that can be used by se
     </tr>
     <tr>
         <td>SHUTDOWN_INACTIVE_KERNELS</td>
-        <td>Automatically shutdown inactive kernels after a given timeout (to cleanup memory or gpu resources). Value can be either a timeout in seconds or set to <code>true</code> with a default value of 48h.</td>
+        <td>Automatically shutdown inactive kernels after a given timeout (to clean up memory or GPU resources). Value can be either a timeout in seconds or set to <code>true</code> with a default value of 48h.</td>
         <td>false</td>
     </tr>
     <tr>
@@ -161,7 +161,7 @@ To persist the data, you need to mount a volume into `/workspace` (via docker ru
 <details>
 <summary>Details (click to expand...)</summary>
 
-The default work directory within the container is `/workspace`, which is also the root directory of the Jupyter instance. The `/workspace` directory is intended to be used for all the important work artifacts. Data within other directories of the server (e.g. `/root`) might get lost at container restarts.
+The default work directory within the container is `/workspace`, which is also the root directory of the Jupyter instance. The `/workspace` directory is intended to be used for all the important work artifacts. Data within other directories of the server (e.g., `/root`) might get lost at container restarts.
 </details>
 
 ### Enable Authentication
@@ -206,7 +206,7 @@ When set to `true`, either the `cert.crt` and `cert.key` file must be mounted to
 docker run -p 8080:8080 --env WORKSPACE_SSL_ENABLED="true" -v /path/with/certificate/files:/resources/ssl:ro mltooling/ml-workspace:latest
 ```
 
-If you want to host the workspace on a public domain, we recommend to use [Let's encrypt](https://letsencrypt.org/getting-started/) to get a trusted certificate for your domain.  To use the generated certificate (e.g. via [certbot](https://certbot.eff.org/) tool) for the workspace, the `privkey.pem` corresponds to the `cert.key` file and the `fullchain.pem` to the `cert.crt` file.
+If you want to host the workspace on a public domain, we recommend to use [Let's encrypt](https://letsencrypt.org/getting-started/) to get a trusted certificate for your domain.  To use the generated certificate (e.g., via [certbot](https://certbot.eff.org/) tool) for the workspace, the `privkey.pem` corresponds to the `cert.key` file and the `fullchain.pem` to the `cert.crt` file.
 
 > ℹ️ _When you enable SSL support, you must access the workspace over `https://`, not over plain `http://`._
 
@@ -231,7 +231,7 @@ docker run -p 8080:8080 --cpus=8 --memory=16g --shm-size=1G mltooling/ml-workspa
 
 ### Enable Proxy
 
-If a proxy is required, you can pass the proxy configuration via the `HTTP_PROXY`,`HTTPS_PROXY`, and `NO_PROXY` environment variables.
+If a proxy is required, you can pass the proxy configuration via the `HTTP_PROXY`, `HTTPS_PROXY`, and `NO_PROXY` environment variables.
 
 ### Workspace Flavors
 
@@ -308,7 +308,7 @@ docker run -p 8080:8080 mltooling/ml-workspace-r:latest
 
 > ℹ️ _Currently, the GPU-flavor only supports CUDA 10. Support for other CUDA versions might be added in the future._
 
-The GPU flavor (`mltooling/ml-workspace-gpu`) is based on our default workspace image and extends it with CUDA 10 and GPU-ready versions of various machine learning libraries (e.g. tensorflow, pytorch, cntk, jax). This GPU image has the following additional requirements for the system:
+The GPU flavor (`mltooling/ml-workspace-gpu`) is based on our default workspace image and extends it with CUDA 10 and GPU-ready versions of various machine learning libraries (e.g., tensorflow, pytorch, cntk, jax). This GPU image has the following additional requirements for the system:
 
 - Nvidia Drivers for the GPUs. Drivers need to be CUDA 10 compatible, version `>= 410.48` ([📖 Instructions](https://github.com/NVIDIA/nvidia-docker/wiki/Frequently-Asked-Questions#how-do-i-install-the-nvidia-driver)).
 - (Docker >= 19.03) Nvidia Container Toolkit ([📖 Instructions](https://github.com/NVIDIA/nvidia-docker/wiki/Installation-(Native-GPU-Support))).
@@ -323,7 +323,7 @@ docker run -p 8080:8080 --gpus all mltooling/ml-workspace-gpu:latest
 docker run -p 8080:8080 --runtime nvidia --env NVIDIA_VISIBLE_DEVICES="all" mltooling/ml-workspace-gpu:latest
 ```
 
-The GPU flavor also comes with a few additional configuration options as explained below:
+The GPU flavor also comes with a few additional configuration options, as explained below:
 
 <table>
     <tr>
@@ -333,12 +333,12 @@ The GPU flavor also comes with a few additional configuration options as explain
     </tr>
     <tr>
         <td>NVIDIA_VISIBLE_DEVICES</td>
-        <td>Controls which GPUs will be accessible inside the workspace. By default, all GPUs from the host are accessible within the workspace. You can either use <code>all</code>, <code>none</code>, or specify a comma-separated list of device IDs (e.g. <code>0,1</code>). You can find out the list of available device IDs by running <code>nvidia-smi</code> on the host machine.</td>
+        <td>Controls which GPUs will be accessible inside the workspace. By default, all GPUs from the host are accessible within the workspace. You can either use <code>all</code>, <code>none</code>, or specify a comma-separated list of device IDs (e.g., <code>0,1</code>). You can find out the list of available device IDs by running <code>nvidia-smi</code> on the host machine.</td>
         <td>all</td>
     </tr>
     <tr>
         <td>CUDA_VISIBLE_DEVICES</td>
-        <td>Controls which GPUs CUDA applications running inside the workspace will see. By default, all GPUs that the workspace has access to will be visible. To restrict applications, provide a comma-separated list of internal device IDs (e.g. <code>0,2</code>) based on the available devices within the workspace (run <code>nvidia-smi</code>). In comparison to <code>NVIDIA_VISIBLE_DEVICES</code>, the workspace user will still able to access other GPUs by overwriting this configuration from within the workspace.</td>
+        <td>Controls which GPUs CUDA applications running inside the workspace will see. By default, all GPUs that the workspace has access to will be visible. To restrict applications, provide a comma-separated list of internal device IDs (e.g., <code>0,2</code>) based on the available devices within the workspace (run <code>nvidia-smi</code>). In comparison to <code>NVIDIA_VISIBLE_DEVICES</code>, the workspace user will be still able to access other GPUs by overwriting this configuration from within the workspace.</td>
         <td></td>
     </tr>
     <tr>
@@ -351,7 +351,7 @@ The GPU flavor also comes with a few additional configuration options as explain
 
 ### Multi-user setup
 
-The workspace is designed as a single-user development environment. For a multi-user setup, we recommend to deploy [🧰 ML Hub](https://github.com/ml-tooling/ml-hub). ML Hub is based on JupyterHub with the task to spawn, manage, and proxy workspace instances for multiple users.
+The workspace is designed as a single-user development environment. For a multi-user setup, we recommend deploying [🧰 ML Hub](https://github.com/ml-tooling/ml-hub). ML Hub is based on JupyterHub with the task to spawn, manage, and proxy workspace instances for multiple users.
 
 <details>
 <summary>Deployment (click to expand...)</summary>
@@ -434,7 +434,7 @@ The Notebook allows code to be run in a range of different programming languages
 
 ### Desktop GUI
 
-This workspace provides an HTTP-based VNC access to the workspace via [noVNC](https://github.com/novnc/noVNC). Thereby, you can access and work within the workspace with a fully featured desktop GUI. To access this desktop GUI, go to `Open Tool`, select `VNC`, and click the `Connect` button. In the case you are asked for a password, use `vncpassword`.
+This workspace provides an HTTP-based VNC access to the workspace via [noVNC](https://github.com/novnc/noVNC). Thereby, you can access and work within the workspace with a fully-featured desktop GUI. To access this desktop GUI, go to `Open Tool`, select `VNC`, and click the `Connect` button. In the case you are asked for a password, use `vncpassword`.
 
 <img style="width: 100%" src="https://github.com/ml-tooling/ml-workspace/raw/master/docs/images/features/desktop-vnc.png"/>
 
@@ -448,7 +448,7 @@ Once you are connected, you will see a desktop GUI that allows you to install an
 
 ### Visual Studio Code
 
-[Visual Studio Code](https://github.com/microsoft/vscode) (`Open Tool -> VS Code`) is an open-source lightweight but powerful code editor with built-in support for a variety of languages and a rich ecosystem of extensions. It combines the simplicity of a source code editor with powerful developer tooling, like IntelliSense code completion and debugging. The workspace integrates VS Code as a web-based application accessible through the browser based on the awesome [code-server](https://github.com/cdr/code-server) project. It allows you to customize every feature to your liking and install any number of third-party extensions.
+[Visual Studio Code](https://github.com/microsoft/vscode) (`Open Tool -> VS Code`) is an open-source lightweight but powerful code editor with built-in support for a variety of languages and a rich ecosystem of extensions. It combines the simplicity of a source code editor with powerful developer tooling, like IntelliSense code completion and debugging. The workspace integrates VS Code as a web-based application accessible through the browser-based on the awesome [code-server](https://github.com/cdr/code-server) project. It allows you to customize every feature to your liking and install any number of third-party extensions.
 
 <p align="center"><img src="https://github.com/ml-tooling/ml-workspace/raw/master/docs/images/features/vs-code.png"/></p>
 
@@ -464,7 +464,7 @@ The workspace also provides a VS Code integration into Jupyter allowing you to o
 
 ### Git Integration
 
-Version control is a crucial aspect for productive collaboration. To make this process as smooth as possible, we have integrated a custom-made Jupyter extension specialized on pushing single notebooks, a full-fledged web-based Git client ([ungit](https://github.com/FredrikNoren/ungit)), a tool to open and edit plain text documents (e.g., `.py`, `.md`) as notebooks ([jupytext](https://github.com/mwouts/jupytext)), as well as a notebook merging tool ([nbdime](https://github.com/jupyter/nbdime)). Additionally, JupyterLab and VS Code also provide GUI-based Git clients.
+Version control is a crucial aspect of productive collaboration. To make this process as smooth as possible, we have integrated a custom-made Jupyter extension specialized on pushing single notebooks, a full-fledged web-based Git client ([ungit](https://github.com/FredrikNoren/ungit)), a tool to open and edit plain text documents (e.g., `.py`, `.md`) as notebooks ([jupytext](https://github.com/mwouts/jupytext)), as well as a notebook merging tool ([nbdime](https://github.com/jupyter/nbdime)). Additionally, JupyterLab and VS Code also provide GUI-based Git clients.
 
 #### Clone Repository
 
@@ -478,11 +478,11 @@ This might ask for some required settings and, subsequently, opens [ungit](https
 
 #### Push, Pull, Merge, and Other Git Actions
 
-To commit and push a single notebook to a remote Git repository, we recommend to use the Git plugin integrated into Jupyter as shown below:
+To commit and push a single notebook to a remote Git repository, we recommend to use the Git plugin integrated into Jupyter, as shown below:
 
 <img style="width: 100%" src="https://github.com/ml-tooling/ml-workspace/raw/master/docs/images/features/git-push-notebook.png"/>
 
-For more advanced Git operations we recommend to use [ungit](https://github.com/FredrikNoren/ungit). With ungit, you can do most of the common git actions such as push, pull, merge, branch, tag, checkout, and many more.
+For more advanced Git operations, we recommend to use [ungit](https://github.com/FredrikNoren/ungit). With ungit, you can do most of the common git actions such as push, pull, merge, branch, tag, checkout, and many more.
 
 #### Diffing and Merging Notebooks
 
@@ -498,7 +498,7 @@ In combination with Git, jupytext enables a clear diff history and easy merging 
 
 ### File Sharing
 
-The workspace has a feature to share any file or folder with anyone via a token-protected link. To share data via link, select any file or folder from the Jupyter directory tree and click on the share button as shown in the following screenshot:
+The workspace has a feature to share any file or folder with anyone via a token-protected link. To share data via a link, select any file or folder from the Jupyter directory tree and click on the share button as shown in the following screenshot:
 
 <img style="width: 100%" src="https://github.com/ml-tooling/ml-workspace/raw/master/docs/images/features/file-sharing-open.png"/>
 
@@ -537,7 +537,7 @@ SSH provides a powerful set of features that enables you to be more productive w
 
 > ℹ️ _The setup script only runs on Mac and Linux. Windows is currently not supported._
 
-Just run the setup command or script on the machine from where you want to setup a connection to the workspace and input a name for the connection (e.g. `my-workspace`). You might also get asked for some additional input during the process, e.g. to install a remote kernel if `remote_ikernel` is installed. Once the passwordless SSH connection is successfully setup and tested, you can securely connect to the workspace by simply executing `ssh my-workspace`.
+Just run the setup command or script on the machine from where you want to setup a connection to the workspace and input a name for the connection (e.g., `my-workspace`). You might also get asked for some additional input during the process, e.g. to install a remote kernel if `remote_ikernel` is installed. Once the passwordless SSH connection is successfully setup and tested, you can securely connect to the workspace by simply executing `ssh my-workspace`.
 
 Besides the ability to execute commands on a remote machine, SSH also provides a variety of other features that can improve your development workflow as described in the following sections.
 
@@ -673,7 +673,7 @@ The Visual Studio Code [Remote - SSH](https://marketplace.visualstudio.com/item
 
 ### Tensorboard
 
-[Tensorboard](https://www.tensorflow.org/tensorboard) provides a suite of visualization tools to make it easier to understand, debug, and optimize your experiment runs. It includes logging features for scalar, histogram, model structure, embeddings, and text & image visualization. The workspace comes pre-installed with [jupyter_tensorboard extension](https://github.com/lspvic/jupyter_tensorboard) that integrates Tensorboard into the Jupyter interface with functionalities to start, manage, and stop instances. You can open a new instance for a valid logs directory as shown below:
+[Tensorboard](https://www.tensorflow.org/tensorboard) provides a suite of visualization tools to make it easier to understand, debug, and optimize your experiment runs. It includes logging features for scalar, histogram, model structure, embeddings, and text & image visualization. The workspace comes pre-installed with [jupyter_tensorboard extension](https://github.com/lspvic/jupyter_tensorboard) that integrates Tensorboard into the Jupyter interface with functionalities to start, manage, and stop instances. You can open a new instance for a valid logs directory, as shown below:
 
 <img style="width: 100%" src="https://github.com/ml-tooling/ml-workspace/raw/master/docs/images/features/tensorboard-open.png" />
 
@@ -725,7 +725,7 @@ docker run --env EXECUTE_CODE="git+https://github.com/ml-tooling/ml-workspace.gi
 
 > 📖 _For additional information on how to specify branches, commits, or tags please refer to [this guide](https://pip.pypa.io/en/stable/reference/pip_install/#vcs-support)._
 
-#### Run code mounted into workspace
+#### Run code mounted into the workspace
 
 In the following example, we mount and execute the current working directory (expected to contain our code) into the `/workspace/ml-job/` directory of the workspace:
 
@@ -901,8 +901,8 @@ docker run --shm-size=2G mltooling/ml-workspace:latest
 ## Contribution
 
 - Pull requests are encouraged and always welcome. Read [`CONTRIBUTING.md`](https://github.com/ml-tooling/ml-workspace/tree/master/CONTRIBUTING.md) and check out [help-wanted](https://github.com/ml-tooling/ml-workspace/issues?utf8=%E2%9C%93&q=is%3Aopen+is%3Aissue+label%3A"help+wanted"+sort%3Areactions-%2B1-desc+) issues.
-- Submit github issues for any [feature enhancements](https://github.com/ml-tooling/ml-workspace/issues/new?assignees=&labels=feature-request&template=02_feature-request.md&title=), [bugs](https://github.com/ml-tooling/ml-workspace/issues/new?assignees=&labels=bug&template=01_bug-report.md&title=), or [documentation](https://github.com/ml-tooling/ml-workspace/issues/new?assignees=&labels=enhancement%2C+docs&template=03_documentation.md&title=) problems. 
-- By participating in this project you agree to abide by its [Code of Conduct](https://github.com/ml-tooling/ml-workspace/tree/master/CODE_OF_CONDUCT.md).
+- Submit Github issues for any [feature enhancements](https://github.com/ml-tooling/ml-workspace/issues/new?assignees=&labels=feature-request&template=02_feature-request.md&title=), [bugs](https://github.com/ml-tooling/ml-workspace/issues/new?assignees=&labels=bug&template=01_bug-report.md&title=), or [documentation](https://github.com/ml-tooling/ml-workspace/issues/new?assignees=&labels=enhancement%2C+docs&template=03_documentation.md&title=) problems. 
+- By participating in this project, you agree to abide by its [Code of Conduct](https://github.com/ml-tooling/ml-workspace/tree/master/CODE_OF_CONDUCT.md).
 
 <details>
 
