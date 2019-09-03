@@ -48,23 +48,25 @@ We plan to do a full workspace image update (all libraries and tools) about ever
    - metabase.sh: [latest release](https://github.com/metabase/metabase/releases/latest)
    - fasttext.sh: [latest release](https://github.com/facebookresearch/fastText/releases/latest)
    - kubernetes-client.sh: [kube-prompt release](https://github.com/c-bata/kube-prompt/releases/latest)
-   - guacamole.sh: TBD
+   - guacamole.sh: [latest relesase](https://guacamole.apache.org/releases/)
   
 7. Evaluate & test main workspace image:
    - Build main workspace flavor via `python build.py`
    - Deploy new workspace image and check startup logs
    - Check/Compare layer sizes of new image with previous version (via Portainer)
    - Check Image Labels (via Portainer)
-   - Check all webtools/features (just open and see of running):
-     - Jupyter, VNC, JupyterLab, VS-Code (extensions enabled?), Ungit, Netdata, Glances, Filebrowser, Access Port, SSH Access, Git Integration
-   - Check all gui-tools in VNC Desktop (just open and see of running)
    - Check folder sizes via `Disk Usage Analyzer` within the Desktop VNC
    - Run from inside workspace: `/bin/bash /resources/tests/log-environment-info.sh`
    - Run from inside workspace: `tutorials/workspace-test-utilities.ipynb`
+   - Check all webtools/features (just open and see of running):
+     - Jupyter, VNC, JupyterLab, VS-Code (extensions enabled?), Ungit, Netdata, Glances, Filebrowser, Access Port, SSH Access, Git Integration
+   - Check all gui-tools in VNC Desktop (just open and see of running)
    - Run from inside workspace: `python /resources/tests/test-installers.py`
    - Run from inside workspace: `/bin/bash /resources/tests/scan-python-vulnerabilities.sh`
    - Run from inside workspace: `/bin/bash /resources/tests/scan-clamav-virus.sh`
    - Run from inside workspace: `/bin/bash /resources/tests/scan-system-vulnerabilities.sh`
-   - Save reports to git repo
+   - Run from inside workspace: `python /resources/tests/test-code-execution.py`
+   - Update reports and licenses in git repo
+   - Check if tutorials are still working in `/workspace/tutorials`
 
 8. Build all flavors via `python build.py --flavor=all`
