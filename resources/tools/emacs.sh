@@ -15,7 +15,7 @@ done
 if ! hash emacs 2>/dev/null; then
     echo "Installing Emacs"
     apt-get update
-    apt-get install --yes emacs
+    LD_LIBRARY_PATH="" LD_PRELOAD="" apt-get install --yes emacs
 else
     echo "Emacs is already installed"
 fi
@@ -23,6 +23,6 @@ fi
 # Run
 if [ $INSTALL_ONLY = 0 ] ; then
     echo "Starting Emacs"
-    emacs
+    LD_LIBRARY_PATH="" LD_PRELOAD="" emacs
     sleep 10
 fi
