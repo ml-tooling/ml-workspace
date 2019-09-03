@@ -22,6 +22,8 @@ fi
 # Run
 if [ $INSTALL_ONLY = 0 ] ; then
     mkdir -p $WORKSPACE_HOME/reports/
+    echo "Starting environment variables scan"
+    printenv > $WORKSPACE_HOME/reports/environment-variables.txt
     echo "Starting largest file scan"
     find / -type f -printf "%k\t %p\n" 2>/dev/null | sort -rn | awk '{printf("%7.1f MB\t%s\n", ($1/1024),$0)}' | head -100 > $WORKSPACE_HOME/reports/largest-files.txt
     echo "Starting root folders scan"
