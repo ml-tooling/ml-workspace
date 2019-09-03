@@ -18,6 +18,7 @@ def call(command):
 
 ENV_RESOURCES_PATH = os.getenv("RESOURCES_PATH", "/resources")
 TOOLS_DIR = os.path.join(ENV_RESOURCES_PATH, "tools")
+WORKSPACE_HOME = os.getenv("WORKSPACE_HOME", "/workspace")
 
 test_results = {}
 
@@ -33,5 +34,10 @@ for filename in os.listdir(TOOLS_DIR):
         print(filename + ": " + test_results[filename])
 
 print("###### TEST RESULTS ######")
+test_results = ""
 for tool in test_results:
     print(tool + ": " + test_results[tool])
+    test_results += tool + ": " + test_results[tool] + "/n"
+
+with open(os.path.join(WORKSPACE_HOME, "reports", "tool-installers-test.txt","w+")) as f:
+    f.write(test_results)
