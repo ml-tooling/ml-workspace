@@ -39,5 +39,6 @@ for tool in test_results:
     print(tool + ": " + test_results[tool])
     test_results += tool + ": " + test_results[tool] + "/n"
 
+os.makedirs(os.path.join(WORKSPACE_HOME, "reports"))
 with open(os.path.join(WORKSPACE_HOME, "reports", "tool-installers-test.txt","w+")) as f:
     f.write(test_results)
