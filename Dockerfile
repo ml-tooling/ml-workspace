@@ -802,6 +802,7 @@ RUN \
     fi && \
     # New Python Libraries:
     pip install --no-cache-dir \
+                mxnet \
                 lazycluster && \
     # Cleanup
     clean-layer.sh
