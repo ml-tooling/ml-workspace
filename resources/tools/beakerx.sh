@@ -14,7 +14,7 @@ done
 
 if ! hash beakerx 2>/dev/null; then
     echo "Installing BeakerX"
-    pip install --no-cache-dir beakerx
+    pip install --no-cache-dir py4j beakerx 
     beakerx install
     jupyter labextension install beakerx-jupyterlab
 else

@@ -128,38 +128,48 @@ RUN \
     pip install --no-cache-dir tensorflow-gpu && \
     # Install ONNX GPU Runtime
     pip uninstall -y onnxruntime && \
-    pip install --no-cache-dir onnxruntime-gpu==0.4.0 && \
+    pip install --no-cache-dir onnxruntime-gpu==0.5.0 && \
     # Install cntk
     pip uninstall -y cntk && \
     pip install --no-cache-dir cntk-gpu && \
-    # Install pytorch gpu - conda uninstall removes too much and conda remove corrupts environment
+    # Install pytorch gpu
+    # TODO: deprecated? most likely not installed
     pip uninstall -y pytorch-cpu torchvision-cpu && \
+    # uninstall cpu only packages via conda
+    conda uninstall -y pytorch torchvision cpuonly -c pytorch && \
     # https://pytorch.org/get-started/locally/
-    conda install -y pytorch torchvision cudatoolkit=10.0 -c pytorch --yes && \
+    conda install -y pytorch torchvision cudatoolkit=10.0 -c pytorch && \
     # pip install https://download.pytorch.org/whl/cu100/torch-1.1.0-cp36-cp36m-linux_x86_64.whl && \
     # pip install https://download.pytorch.org/whl/cu100/torchvision-0.3.0-cp36-cp36m-linux_x86_64.whl && \
     # install jax: https://github.com/google/jax#pip-installation
+    # TODO: Update jaxlib to 0.1.26
     pip install --no-cache-dir --upgrade https://storage.googleapis.com/jax-wheels/cuda100/jaxlib-0.1.22-cp36-none-linux_x86_64.whl && \
     pip install --no-cache-dir --upgrade jax  && \
-    # Install Rapids: https://rapids.ai/start.html#conda-install
-    conda install -y -c nvidia -c rapidsai -c numba -c conda-forge -c pytorch -c defaults \
-            cudatoolkit=10.0 \
-            cudf=0.8 \
-            cuml=0.8 \
-            cugraph=0.8 \
-            nvstrings=0.8 \
-            dask-cuda=0.8 \ 
-            dask-cudf=0.8 \
-            dask-cuml=0.8 && \
-    # Install pygpu - Required for theano: http://deeplearning.net/software/libgpuarray/
-    conda install -y pygpu && \
     # Install Spacy GPU Support:
     pip install --no-cache-dir thinc-gpu-ops && \
+    # Install Rapids: https://rapids.ai/start.html#conda-install
+    conda install -c rapidsai -c nvidia -c numba -c pytorch -c conda-forge -c defaults \
+            cudatoolkit=10.0 \
+            libiconv \
+            python=3.6 \
+            pillow=6.1.0 \
+            cudf=0.9 \
+            cuml=0.9 \
+            cugraph=0.9 \
+            nvstrings=0.9 \
+            dask-cuda=0.9 && \
+    # Install pygpu - Required for theano: http://deeplearning.net/software/libgpuarray/
+    conda install -y pygpu && \
+    # MXNet with GPU Support:
+    pip uninstall mxnet && \
+    pip install --no-cache-dir --upgrade mxnet-cu100 && \
+    # nvidia python ml lib
+    pip install --upgrade --force-reinstall nvidia-ml-py3 && \ 
+    # Install graphvite graph embedding lib: https://github.com/DeepGraphLearning/graphvite
+    conda install -c milagraph graphvite cudatoolkit=10.0 && \ 
     # Install Jupyterlab GPU Plugin: https://github.com/jacobtomlinson/jupyterlab-nvdashboard - TODO deactivate jupyter plugin
     # pip install --no-cache-dir jupyterlab-nvdashboard && \
     # jupyter labextension install jupyterlab-nvdashboard && \
-    # MXNet with GPU Support:
-    # pip install --no-cache-dir --upgrade mxnet-cu100 && \
     # Cleanup
     clean-layer.sh
 
@@ -177,7 +187,6 @@ ENV TF_FORCE_GPU_ALLOW_GROWTH true
 
 # Install Glances & Netdata GPU Support
 RUN \
-    pip install --upgrade --force-reinstall nvidia-ml-py3 && \ 
     apt-get update -y && \
     apt-get install lm-sensors -y && \
     apt-get install netcat -y && \

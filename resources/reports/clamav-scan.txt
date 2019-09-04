@@ -1,0 +1,1 @@
+/usr/lib/chromium-browser/chromium-browser: Unix.Trojan.Mirai-5932143-0 FOUND

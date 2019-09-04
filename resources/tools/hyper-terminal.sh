@@ -16,9 +16,10 @@ if [ ! -f "/opt/Hyper/hyper" ]; then
     echo "Installing Hyper Terminal"
     cd $RESOURCES_PATH
     apt-get update
-    apt-get -f install
+    apt-get install libappindicator1
     wget --quiet https://releases.hyper.is/download/deb -O ./hyper.deb
     dpkg -i ./hyper.deb
+    apt-get -f install
     rm ./hyper.deb
 else
     echo "Hyper Terminal is already installed"

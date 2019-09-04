@@ -55,9 +55,9 @@ define(['base/js/namespace', 'jquery', 'base/js/dialog', 'base/js/utils', 'requi
         });
 
         // Commit & push file button
-        $(".dynamic-buttons:first").append('<button id="#commit-push-button" title="Commit and push file" class="commit-push-button btn btn-default btn-xs">Commit & Push</button>');
-        $(".dynamic-buttons:first").append('<button id="#share-data-button" title="Share data" style="margin-left: 4px;" class="share-data-button btn btn-default btn-xs"><i class="fa fa-share-alt"></i></button>');
-        $(".dynamic-buttons:first").append('<button id="#vs-code-button" title="Open VS Code" style="margin-left: 4px;" class="vs-code-button btn btn-default btn-xs">VS Code</button>');
+        $(".dynamic-buttons:first").append('<button id="#commit-push-button" title="Commit and push file" style="margin-right: 4px;" class="commit-push-button btn btn-default btn-xs">Commit & Push</button>');
+        $(".dynamic-buttons:first").append('<button id="#share-data-button" title="Share data" style="margin-right: 4px;" class="share-data-button btn btn-default btn-xs"><i class="fa fa-share-alt"></i></button>');
+        $(".dynamic-buttons:first").append('<button id="#vs-code-button" title="Open VS Code" style="margin-right: 4px;" class="vs-code-button btn btn-default btn-xs">VS Code</button>');
 
         $(".commit-push-button").click(function () {
             components.openCommitSingleDialog(Jupyter.notebook_list.selected[0].path);
