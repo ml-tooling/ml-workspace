@@ -26,11 +26,21 @@ if ! hash kubectl 2>/dev/null; then
     mv ./kube-prompt /usr/local/bin/kube-prompt
     # Install python kubernetes client
     pip install --no-cache-dir kubernetes
+    # Install helm 
+    curl -L https://git.io/get_helm.sh | bash
     # Remove temp dir
     cd $RESOURCES_PATH
     rm -rf ./kubernetes
 else
     echo " Kubernetes Client is already installed"
+fi
+
+# Install vscode docker extension 
+if hash code 2>/dev/null; then
+    # https://marketplace.visualstudio.com/items?itemName=ms-kubernetes-tools.vscode-kubernetes-tools
+    LD_LIBRARY_PATH="" LD_PRELOAD="" code --user-data-dir=$HOME/.config/Code/ --extensions-dir=$HOME/.vscode/extensions/ --install-extension ms-kubernetes-tools.vscode-kubernetes-tools
+else
+    echo "Please install the desktop version of vscode via the vs-code-desktop.sh script to install kubernetes vscode extensions."
 fi
 
 # Run

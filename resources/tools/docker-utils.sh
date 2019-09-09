@@ -34,6 +34,14 @@ else
     echo "Docker Client is already installed"
 fi
 
+# Install vscode docker extension 
+if hash code 2>/dev/null; then
+    # https://marketplace.visualstudio.com/items?itemName=ms-azuretools.vscode-docker
+    LD_LIBRARY_PATH="" LD_PRELOAD="" code --user-data-dir=$HOME/.config/Code/ --extensions-dir=$HOME/.vscode/extensions/ --install-extension ms-azuretools.vscode-docker
+else
+    echo "Please install the desktop version of vscode via the vs-code-desktop.sh script to install docker vscode extensions."
+fi
+
 # Run
 if [ $INSTALL_ONLY = 0 ] ; then
     echo "Use Docker Client via command line:"

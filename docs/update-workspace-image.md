@@ -30,9 +30,11 @@ We plan to do a full workspace image update (all libraries and tools) about ever
    - Ungit: [latest release](https://www.npmjs.com/package/ungit)
 
 5. Update vs-code extensions:
-
-   - vscode-python: [latest release](https://github.com/microsoft/vscode-python/releases/latest)
+   - python: [latest release](https://github.com/microsoft/vscode-python/releases/latest)
    - git-lens: [latest release](https://github.com/eamodio/vscode-gitlens/releases/latest)
+   - code-runner: [latest release](https://github.com/formulahendry/vscode-code-runner/releases/latest)
+   - eslint: [latest release](https://marketplace.visualstudio.com/items?itemName=dbaeumer.vscode-eslint)
+   - markdownlint: [latest release](https://marketplace.visualstudio.com/items?itemName=DavidAnson.vscode-markdownlint)
    - remote-ssh: [latest release](https://marketplace.visualstudio.com/items?itemName=ms-vscode-remote.remote-ssh)
 
 6. Update tool installer scripts:
@@ -49,7 +51,7 @@ We plan to do a full workspace image update (all libraries and tools) about ever
    - fasttext.sh: [latest release](https://github.com/facebookresearch/fastText/releases/latest)
    - kubernetes-client.sh: [kube-prompt release](https://github.com/c-bata/kube-prompt/releases/latest)
    - guacamole.sh: [latest relesase](https://guacamole.apache.org/releases/)
-  
+
 7. Evaluate & test main workspace image:
    - Build main workspace flavor via `python build.py`
    - Deploy new workspace image and check startup logs

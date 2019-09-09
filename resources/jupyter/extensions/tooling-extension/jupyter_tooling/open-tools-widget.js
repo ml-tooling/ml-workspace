@@ -1,7 +1,7 @@
 define(['base/js/namespace', 'jquery', 'base/js/dialog', 'base/js/utils', 'require', './tooling-shared-components'], function (Jupyter, $, dialog, utils, require, sharedComponents) {
 
     // -------- GLOBAL VARIABLES -----------------------
-    var basePathRegex = "^(\/.+)+\/(tree|notebooks|edit|terminals)";
+    var basePathRegex = "^(\/.+?)\/(tree|notebooks|edit|terminals)";
     var basePath = (window.location.pathname.match(basePathRegex) == null) ? "" : (window.location.pathname.match(basePathRegex)[1] + '/');
     if (!basePath) {
         basePath = "/"

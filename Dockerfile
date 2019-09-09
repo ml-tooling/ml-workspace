@@ -715,9 +715,6 @@ RUN \
     # pip install jupyterlab_templates && \
     # jupyter labextension install jupyterlab_templates && \
     # jupyter serverextension enable --py jupyterlab_templates && \
-    # Install jupyterlab sql: https://github.com/pbugnion/jupyterlab-sql
-    # pip install jupyterlab_sql && \
-    # jupyter serverextension enable jupyterlab_sql --py --sys-prefix && \
     # Install jupyterlab-data-explorer: https://github.com/jupyterlab/jupyterlab-data-explorer
     # alpha version jupyter labextension install @jupyterlab/dataregistry-extension && \
     # Install jupyterlab system monitor: https://github.com/jtpio/jupyterlab-system-monitor
@@ -757,17 +754,31 @@ RUN \
     fi && \
     cd $RESOURCES_PATH && \
     mkdir -p $HOME/.vscode/extensions/ && \
-    # Install python extension - higher version do not work with vscode version 1.33
-    wget --quiet https://github.com/microsoft/vscode-python/releases/download/2019.8.30787/ms-python-release.vsix && \
+    # Install python extension
+    wget --quiet --no-check-certificate https://github.com/microsoft/vscode-python/releases/download/2019.9.34911/ms-python-release.vsix && \
     bsdtar -xf ms-python-release.vsix extension && \
     rm ms-python-release.vsix && \
-    mv extension $HOME/.vscode/extensions/ms-python.python-2019.8.30787 && \
+    mv extension $HOME/.vscode/extensions/ms-python.python-2019.9.34911 && \
     # Install git lens
-    wget --quiet https://github.com/eamodio/vscode-gitlens/releases/download/v9.9.3/gitlens-9.9.3.vsix && \
+    wget --quiet --no-check-certificate https://github.com/eamodio/vscode-gitlens/releases/download/v9.9.3/gitlens-9.9.3.vsix && \
     bsdtar -xf gitlens-9.9.3.vsix extension && \
     rm gitlens-9.9.3.vsix && \
     mv extension $HOME/.vscode/extensions/eamodio.gitlens-9.9.3 && \
-    # TODO Install markdown lint
+    # Install code runner: https://github.com/formulahendry/vscode-code-runner/releases/latest
+    wget --quiet --no-check-certificate https://github.com/formulahendry/vscode-code-runner/releases/download/0.9.14/code-runner-0.9.14.vsix && \
+    bsdtar -xf code-runner-0.9.14.vsix extension && \
+    rm code-runner-0.9.14.vsix && \
+    mv extension $HOME/.vscode/extensions/code-runner-0.9.14 && \
+    # Install ESLint extension: https://marketplace.visualstudio.com/items?itemName=dbaeumer.vscode-eslint
+    wget --quiet --no-check-certificate https://marketplace.visualstudio.com/_apis/public/gallery/publishers/dbaeumer/vsextensions/vscode-eslint/1.9.1/vspackage -O dbaeumer.vscode-eslint.vsix && \
+    bsdtar -xf dbaeumer.vscode-eslint.vsix extension && \
+    rm dbaeumer.vscode-eslint.vsix && \
+    mv extension $HOME/.vscode/extensions/dbaeumer.vscode-eslint-1.9.1.vsix && \
+    # Install Markdown lint extension: https://marketplace.visualstudio.com/items?itemName=DavidAnson.vscode-markdownlint
+    wget --quiet --no-check-certificate https://marketplace.visualstudio.com/_apis/public/gallery/publishers/DavidAnson/vsextensions/vscode-markdownlint/0.30.2/vspackage -O davidanson.vscode-markdownlint.vsix && \
+    bsdtar -xf davidanson.vscode-markdownlint.vsix extension && \
+    rm davidanson.vscode-markdownlint.vsix && \
+    mv extension $HOME/.vscode/extensions/davidanson.vscode-markdownlint-0.30.2.vsix && \
     # Install remote development extension
     # https://marketplace.visualstudio.com/items?itemName=ms-vscode-remote.remote-ssh
     wget --quiet https://marketplace.visualstudio.com/_apis/public/gallery/publishers/ms-vscode-remote/vsextensions/remote-ssh/0.45.6/vspackage -O ms-vscode-remote.remote-ssh.vsix && \
@@ -786,6 +797,7 @@ RUN \
     bsdtar -xf ms-vscode-remote.remote-ssh-explorer.vsix extension && \
     rm ms-vscode-remote.remote-ssh-explorer.vsix && \
     mv extension $HOME/.vscode/extensions/ms-vscode-remote.remote-ssh-explorer-0.45.6 && \
+    # TODO install beautify (smaller - 16MB) or prettier?
     # Fix permissions
     fix-permissions.sh $HOME/.vscode/extensions/ && \
     # Cleanup
@@ -800,9 +812,18 @@ RUN \
     if [ "$WORKSPACE_FLAVOR" = "minimal" ] || [ "$WORKSPACE_FLAVOR" = "light" ]; then \
         exit 0 ; \
     fi && \
+    apt-get update && \
+    apt-get install -y --no-install-recommends \
+        dpkg-sig \
+        liblzma-dev \
+        uuid-dev \
+        zlibc \
+        libgdbm-dev \
+        libncurses5-dev && \
     # New Python Libraries:
     pip install --no-cache-dir \
-                mxnet \
+                # 80MB: mxnet \
+                # 20MB: interpret \
                 lazycluster && \
     # Cleanup
     clean-layer.sh

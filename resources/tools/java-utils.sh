@@ -18,3 +18,13 @@ apt-get update
 apt-get install -y --no-install-recommends \
         scala \
         gradle
+
+# Install vscode java extension pack
+if hash code 2>/dev/null; then
+    # https://marketplace.visualstudio.com/items?itemName=vscjava.vscode-java-pack
+    LD_LIBRARY_PATH="" LD_PRELOAD="" code --user-data-dir=$HOME/.config/Code/ --extensions-dir=$HOME/.vscode/extensions/ --install-extension vscjava.vscode-java-pack
+else
+    echo "Please install the desktop version of vscode via the vs-code-desktop.sh script to install java vscode extensions."
+fi
+
+# TODO install java kernel? https://github.com/SpencerPark/IJava

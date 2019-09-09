@@ -1,0 +1,7 @@
+{
+    "gitlens.showWhatsNewAfterUpgrades": false,
+    "gitlens.advanced.telemetry.enabled": false,
+    "update.mode": "manual",
+    "update.showReleaseNotes": false,
+    "extensions.autoUpdate": false
+}
