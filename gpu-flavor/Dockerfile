@@ -143,7 +143,7 @@ RUN \
     # pip install https://download.pytorch.org/whl/cu100/torchvision-0.3.0-cp36-cp36m-linux_x86_64.whl && \
     # install jax: https://github.com/google/jax#pip-installation
     # TODO: Update jaxlib to 0.1.26
-    pip install --no-cache-dir --upgrade https://storage.googleapis.com/jax-wheels/cuda100/jaxlib-0.1.22-cp36-none-linux_x86_64.whl && \
+    pip install --no-cache-dir --upgrade https://storage.googleapis.com/jax-wheels/cuda100/jaxlib-0.1.28-cp36-none-linux_x86_64.whl && \
     pip install --no-cache-dir --upgrade jax  && \
     # Install Spacy GPU Support:
     pip install --no-cache-dir thinc-gpu-ops && \
