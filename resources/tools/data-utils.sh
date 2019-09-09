@@ -21,11 +21,13 @@ apt-get install -y --no-install-recommends \
         mysql-client \
         mysql-server \
         s3cmd \
+        libsqlite3-dev \
         libhdf5-serial-dev
 
 # Install jupyterlab sql: https://github.com/pbugnion/jupyterlab-sql
 pip install jupyterlab_sql
 jupyter serverextension enable jupyterlab_sql --py --sys-prefix
+jupyter lab build
 jupyter lab clean
 jlpm cache clean
 
