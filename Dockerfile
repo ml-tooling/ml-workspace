@@ -768,7 +768,7 @@ RUN \
     wget --quiet --no-check-certificate https://github.com/formulahendry/vscode-code-runner/releases/download/0.9.14/code-runner-0.9.14.vsix && \
     bsdtar -xf code-runner-0.9.14.vsix extension && \
     rm code-runner-0.9.14.vsix && \
-    mv extension $HOME/.vscode/extensions/eamodio.gitlens-0.9.14 && \
+    mv extension $HOME/.vscode/extensions/code-runner-0.9.14 && \
     # Install ESLint extension: https://marketplace.visualstudio.com/items?itemName=dbaeumer.vscode-eslint
     wget --quiet --no-check-certificate https://marketplace.visualstudio.com/_apis/public/gallery/publishers/dbaeumer/vsextensions/vscode-eslint/1.9.1/vspackage -O dbaeumer.vscode-eslint.vsix && \
     bsdtar -xf dbaeumer.vscode-eslint.vsix extension && \
@@ -797,6 +797,7 @@ RUN \
     bsdtar -xf ms-vscode-remote.remote-ssh-explorer.vsix extension && \
     rm ms-vscode-remote.remote-ssh-explorer.vsix && \
     mv extension $HOME/.vscode/extensions/ms-vscode-remote.remote-ssh-explorer-0.45.6 && \
+    # TODO install beautify (smaller - 16MB) or prettier?
     # Fix permissions
     fix-permissions.sh $HOME/.vscode/extensions/ && \
     # Cleanup
@@ -813,13 +814,12 @@ RUN \
     fi && \
     apt-get update && \
     apt-get install -y --no-install-recommends \
-                    dpkg-sig \
-                    libsqlite3-dev \
-                    liblzma-dev \
-                    uuid-dev \
-                    zlibc \
-                    libgdbm-dev \
-                    libncurses5-dev && \
+        dpkg-sig \
+        liblzma-dev \
+        uuid-dev \
+        zlibc \
+        libgdbm-dev \
+        libncurses5-dev && \
     # New Python Libraries:
     pip install --no-cache-dir \
                 # 80MB: mxnet \
