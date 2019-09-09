@@ -20,7 +20,7 @@ pip install --no-cache-dir \
         azure-mgmt-datalake-store
 
 # Install vscode azure extension 
-if ! hash code 2>/dev/null; then
+if hash code 2>/dev/null; then
     # https://marketplace.visualstudio.com/items?itemName=ms-vscode.vscode-node-azure-pack
     LD_LIBRARY_PATH="" LD_PRELOAD="" code --user-data-dir=$HOME/.config/Code/ --extensions-dir=$HOME/.vscode/extensions/ --install-extension ms-vscode.vscode-node-azure-pack
 else

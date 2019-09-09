@@ -25,7 +25,7 @@ else
 fi
 
 # Install vscode R extension 
-if ! hash code 2>/dev/null; then
+if hash code 2>/dev/null; then
     # https://marketplace.visualstudio.com/items?itemName=Ikuyadeu.r
     LD_LIBRARY_PATH="" LD_PRELOAD="" code --user-data-dir=$HOME/.config/Code/ --extensions-dir=$HOME/.vscode/extensions/ --install-extension Ikuyadeu.r
 else

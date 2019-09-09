@@ -20,7 +20,7 @@ apt-get install -y --no-install-recommends \
         gradle
 
 # Install vscode java extension pack
-if ! hash code 2>/dev/null; then
+if hash code 2>/dev/null; then
     # https://marketplace.visualstudio.com/items?itemName=vscjava.vscode-java-pack
     LD_LIBRARY_PATH="" LD_PRELOAD="" code --user-data-dir=$HOME/.config/Code/ --extensions-dir=$HOME/.vscode/extensions/ --install-extension vscjava.vscode-java-pack
 else
