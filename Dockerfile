@@ -757,35 +757,49 @@ RUN \
     fi && \
     cd $RESOURCES_PATH && \
     mkdir -p $HOME/.vscode/extensions/ && \
-    # Install python extension - higher version do not work with vscode version 1.33
-    wget --quiet https://github.com/microsoft/vscode-python/releases/download/2019.8.30787/ms-python-release.vsix && \
+    # Install python extension
+    wget --quiet --no-check-certificate https://github.com/microsoft/vscode-python/releases/download/2019.9.34911/ms-python-release.vsix && \
     bsdtar -xf ms-python-release.vsix extension && \
     rm ms-python-release.vsix && \
-    mv extension $HOME/.vscode/extensions/ms-python.python-2019.8.30787 && \
-    # Install git lens
-    wget --quiet https://github.com/eamodio/vscode-gitlens/releases/download/v9.9.3/gitlens-9.9.3.vsix && \
+    mv extension $HOME/.vscode/extensions/ms-python.python-2019.9.34911 && \
+    # Install git lens - Do not install, otherwise gitlens screen appears at startup
+    wget --quiet --no-check-certificate https://github.com/eamodio/vscode-gitlens/releases/download/v9.9.3/gitlens-9.9.3.vsix && \
     bsdtar -xf gitlens-9.9.3.vsix extension && \
     rm gitlens-9.9.3.vsix && \
     mv extension $HOME/.vscode/extensions/eamodio.gitlens-9.9.3 && \
-    # TODO Install markdown lint
+    # Install yaml extension: https://github.com/redhat-developer/vscode-yaml
+    wget --quiet --no-check-certificate https://github.com/redhat-developer/vscode-yaml/releases/download/0.4.0/redhat.vscode-yaml-0.4.0.vsix && \
+    bsdtar -xf redhat.vscode-yaml-0.4.0.vsix extension && \
+    rm redhat.vscode-yaml-0.4.0.vsix && \
+    mv extension $HOME/.vscode/extensions/redhat.vscode-yaml-0.4.0 && \
+    # Install ESLint extension: https://marketplace.visualstudio.com/items?itemName=dbaeumer.vscode-eslint
+    wget --quiet --no-check-certificate https://marketplace.visualstudio.com/_apis/public/gallery/publishers/dbaeumer/vsextensions/vscode-eslint/1.9.1/vspackage -O dbaeumer.vscode-eslint.vsix && \
+    bsdtar -xf dbaeumer.vscode-eslint.vsix extension && \
+    rm dbaeumer.vscode-eslint.vsix && \
+    mv extension $HOME/.vscode/extensions/dbaeumer.vscode-eslint-1.9.1.vsix && \
+    # Install Markdown lint extension: https://marketplace.visualstudio.com/items?itemName=DavidAnson.vscode-markdownlint
+    wget --quiet --no-check-certificate https://marketplace.visualstudio.com/_apis/public/gallery/publishers/DavidAnson/vsextensions/vscode-markdownlint/0.30.2/vspackage -O davidanson.vscode-markdownlint.vsix && \
+    bsdtar -xf davidanson.vscode-markdownlint.vsix extension && \
+    rm davidanson.vscode-markdownlint.vsix && \
+    mv extension $HOME/.vscode/extensions/davidanson.vscode-markdownlint-0.30.2.vsix && \
     # Install remote development extension
     # https://marketplace.visualstudio.com/items?itemName=ms-vscode-remote.remote-ssh
-    wget --quiet https://marketplace.visualstudio.com/_apis/public/gallery/publishers/ms-vscode-remote/vsextensions/remote-ssh/0.45.6/vspackage -O ms-vscode-remote.remote-ssh.vsix && \
+    wget --quiet --no-check-certificate https://marketplace.visualstudio.com/_apis/public/gallery/publishers/ms-vscode-remote/vsextensions/remote-ssh/0.46.0/vspackage -O ms-vscode-remote.remote-ssh.vsix && \
     bsdtar -xf ms-vscode-remote.remote-ssh.vsix extension && \
     rm ms-vscode-remote.remote-ssh.vsix && \
-    mv extension $HOME/.vscode/extensions/ms-vscode-remote.remote-ssh-0.45.6 && \
+    mv extension $HOME/.vscode/extensions/ms-vscode-remote.remote-ssh-0.46.0 && \
     # Install remote development ssh - editing configuration files
     # https://marketplace.visualstudio.com/items?itemName=ms-vscode-remote.remote-ssh-edit
-    wget --quiet https://marketplace.visualstudio.com/_apis/public/gallery/publishers/ms-vscode-remote/vsextensions/remote-ssh-edit/0.45.6/vspackage -O ms-vscode-remote.remote-ssh-edit.vsix && \
+    wget --quiet --no-check-certificate https://marketplace.visualstudio.com/_apis/public/gallery/publishers/ms-vscode-remote/vsextensions/remote-ssh-edit/0.46.0/vspackage -O ms-vscode-remote.remote-ssh-edit.vsix && \
     bsdtar -xf ms-vscode-remote.remote-ssh-edit.vsix extension && \
     rm ms-vscode-remote.remote-ssh-edit.vsix && \
-    mv extension $HOME/.vscode/extensions/ms-vscode-remote.remote-ssh-edit-0.45.6 && \
+    mv extension $HOME/.vscode/extensions/ms-vscode-remote.remote-ssh-edit-0.46.0 && \
     # Install remote development ssh - explorer
     # https://marketplace.visualstudio.com/items?itemName=ms-vscode-remote.remote-ssh-explorer
-    wget --quiet https://marketplace.visualstudio.com/_apis/public/gallery/publishers/ms-vscode-remote/vsextensions/remote-ssh-explorer/0.45.6/vspackage -O ms-vscode-remote.remote-ssh-explorer.vsix && \
+    wget --quiet --no-check-certificate https://marketplace.visualstudio.com/_apis/public/gallery/publishers/ms-vscode-remote/vsextensions/remote-ssh-explorer/0.46.0/vspackage -O ms-vscode-remote.remote-ssh-explorer.vsix && \
     bsdtar -xf ms-vscode-remote.remote-ssh-explorer.vsix extension && \
     rm ms-vscode-remote.remote-ssh-explorer.vsix && \
-    mv extension $HOME/.vscode/extensions/ms-vscode-remote.remote-ssh-explorer-0.45.6 && \
+    mv extension $HOME/.vscode/extensions/ms-vscode-remote.remote-ssh-explorer-0.46.0 && \
     # Fix permissions
     fix-permissions.sh $HOME/.vscode/extensions/ && \
     # Cleanup
@@ -802,7 +816,8 @@ RUN \
     fi && \
     # New Python Libraries:
     pip install --no-cache-dir \
-                mxnet \
+                # 80MB: mxnet \
+                # 20MB: interpret \
                 lazycluster && \
     # Cleanup
     clean-layer.sh
