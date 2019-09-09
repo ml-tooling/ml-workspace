@@ -1,6 +1,6 @@
 define(['base/js/namespace', 'jquery', 'base/js/dialog', 'require', 'exports', 'module'], function (Jupyter, $, dialog, require, exports, module) {
 
-    var basePathRegex = "^(\/.+)+\/(tree|notebooks|edit|terminals)";
+    var basePathRegex = "^(\/.+?)\/(tree|notebooks|edit|terminals)";
     var basePath = (window.location.pathname.match(basePathRegex) == null) ? "" : (window.location.pathname.match(basePathRegex)[1] + '/');
     if (!basePath) {
         basePath = "/"
