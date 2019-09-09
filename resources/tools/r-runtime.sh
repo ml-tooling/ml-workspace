@@ -24,6 +24,14 @@ else
     echo "R runtime is already installed"
 fi
 
+# Install vscode R extension 
+if ! hash code 2>/dev/null; then
+    # https://marketplace.visualstudio.com/items?itemName=Ikuyadeu.r
+    LD_LIBRARY_PATH="" LD_PRELOAD="" code --user-data-dir=$HOME/.config/Code/ --extensions-dir=$HOME/.vscode/extensions/ --install-extension Ikuyadeu.r
+else
+    echo "Please install the desktop version of vscode via the vs-code-desktop.sh script to install R vscode extensions."
+fi
+
 # Run
 if [ $INSTALL_ONLY = 0 ] ; then
     Rscript --help

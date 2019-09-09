@@ -24,6 +24,14 @@ else
     echo "Go Interpreter is already installed"
 fi
 
+# Install vscode go extension 
+if ! hash code 2>/dev/null; then
+    # https://marketplace.visualstudio.com/items?itemName=ms-vscode.Go
+    LD_LIBRARY_PATH="" LD_PRELOAD="" code --user-data-dir=$HOME/.config/Code/ --extensions-dir=$HOME/.vscode/extensions/ --install-extension ms-vscode.Go
+else
+    echo "Please install the desktop version of vscode via the vs-code-desktop.sh script to install go vscode extensions."
+fi
+
 # Run
 if [ $INSTALL_ONLY = 0 ] ; then
     echo "Use go via command-line"
