@@ -824,7 +824,7 @@ RUN \
     pip install --no-cache-dir \
                 # 80MB: mxnet \
                 # 20MB: interpret \
-                fire && \
+                fire \
                 lazycluster && \
     # Cleanup
     clean-layer.sh
