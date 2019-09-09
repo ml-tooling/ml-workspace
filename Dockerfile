@@ -715,9 +715,6 @@ RUN \
     # pip install jupyterlab_templates && \
     # jupyter labextension install jupyterlab_templates && \
     # jupyter serverextension enable --py jupyterlab_templates && \
-    # Install jupyterlab sql: https://github.com/pbugnion/jupyterlab-sql
-    # pip install jupyterlab_sql && \
-    # jupyter serverextension enable jupyterlab_sql --py --sys-prefix && \
     # Install jupyterlab-data-explorer: https://github.com/jupyterlab/jupyterlab-data-explorer
     # alpha version jupyter labextension install @jupyterlab/dataregistry-extension && \
     # Install jupyterlab system monitor: https://github.com/jtpio/jupyterlab-system-monitor
@@ -814,6 +811,15 @@ RUN \
     if [ "$WORKSPACE_FLAVOR" = "minimal" ] || [ "$WORKSPACE_FLAVOR" = "light" ]; then \
         exit 0 ; \
     fi && \
+    apt-get update && \
+    apt-get install -y --no-install-recommends \
+                    dpkg-sig \
+                    libsqlite3-dev \
+                    liblzma-dev \
+                    uuid-dev \
+                    zlibc \
+                    libgdbm-dev \
+                    libncurses5-dev && \
     # New Python Libraries:
     pip install --no-cache-dir \
                 # 80MB: mxnet \
