@@ -32,7 +32,7 @@ We plan to do a full workspace image update (all libraries and tools) about ever
 5. Update vs-code extensions:
    - python: [latest release](https://github.com/microsoft/vscode-python/releases/latest)
    - git-lens: [latest release](https://github.com/eamodio/vscode-gitlens/releases/latest)
-   - yaml: [latest release](https://github.com/redhat-developer/vscode-yaml/releases/latest)
+   - code-runner: [latest release](https://github.com/formulahendry/vscode-code-runner/releases/latest)
    - eslint: [latest release](https://marketplace.visualstudio.com/items?itemName=dbaeumer.vscode-eslint)
    - markdownlint: [latest release](https://marketplace.visualstudio.com/items?itemName=DavidAnson.vscode-markdownlint)
    - remote-ssh: [latest release](https://marketplace.visualstudio.com/items?itemName=ms-vscode-remote.remote-ssh)
