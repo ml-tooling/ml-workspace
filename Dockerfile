@@ -822,8 +822,17 @@ RUN \
         libncurses5-dev && \
     # New Python Libraries:
     pip install --no-cache-dir \
+                # pyramid
                 # 80MB: mxnet \
                 # 20MB: interpret \
+                # not compatible with flake8; prospector
+                fire \
+                httpie \
+                rope \
+                steppy \
+                finetune \
+                # Activate fuck?
+                thefuck \
                 lazycluster && \
     # Cleanup
     clean-layer.sh

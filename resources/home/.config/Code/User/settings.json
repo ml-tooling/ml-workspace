@@ -3,5 +3,8 @@
     "gitlens.advanced.telemetry.enabled": false,
     "update.mode": "manual",
     "update.showReleaseNotes": false,
-    "extensions.autoUpdate": false
+    "extensions.autoUpdate": false,
+    "python.linting.pylintEnabled": false,
+    "python.dataScience.autoPreviewNotebooksInInteractivePane": true,
+    "python.linting.pylamaEnabled": true
 }

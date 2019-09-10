@@ -8,9 +8,14 @@ ENV WORKSPACE_FLAVOR=$ARG_WORKSPACE_FLAVOR
 ARG ARG_WORKSPACE_VERSION="latest"
 ENV WORKSPACE_VERSION=$ARG_WORKSPACE_VERSION
 
-# Install r-runtime, r-kernel, and r-studio web server
+# Install r-runtime and r-kernel
 RUN \
     /bin/bash $RESOURCES_PATH/tools/r-runtime.sh --install && \
+    # Cleanup
+    clean-layer.sh
+
+# Install RStudio server
+RUN \
     /bin/bash $RESOURCES_PATH/tools/r-studio-server.sh --install && \
     # Cleanup
     clean-layer.sh

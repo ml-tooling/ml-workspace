@@ -160,9 +160,9 @@ RUN \
             dask-cuda=0.9 && \
     # Install pygpu - Required for theano: http://deeplearning.net/software/libgpuarray/
     conda install -y pygpu && \
-    # MXNet with GPU Support:
-    pip uninstall mxnet && \
-    pip install --no-cache-dir --upgrade mxnet-cu100 && \
+    # MXNet with GPU Support - mxnet is currently not supported
+    # pip uninstall mxnet && \
+    # pip install --no-cache-dir --upgrade mxnet-cu100 && \
     # nvidia python ml lib
     pip install --upgrade --force-reinstall nvidia-ml-py3 && \ 
     # Install graphvite graph embedding lib: https://github.com/DeepGraphLearning/graphvite
