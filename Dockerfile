@@ -514,10 +514,10 @@ RUN \
             ipykernel \
             cmake \
             Pillow \
-            'ipython=7.7.*' \
+            'ipython=7.8.*' \
             # Do not update to notebook 6.x for now
             'notebook=5.7.*' \
-            'jupyterlab=1.1.1' && \
+            'jupyterlab=1.1.3' && \
     # Install minimal pip requirements
     pip install --no-cache-dir --upgrade -r ${RESOURCES_PATH}/libraries/requirements-minimal.txt && \
     # If minimal flavor - exit here
