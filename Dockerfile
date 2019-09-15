@@ -474,6 +474,15 @@ RUN \
     # rm /usr/bin/python3 && \
     # rm /usr/bin/python3.5
     ln -s -f $CONDA_DIR/bin/python /usr/bin/python && \
+    # Install packages - TODO move up to basics section
+    apt-get update && \
+    apt-get install -y --no-install-recommends \
+        dpkg-sig \
+        liblzma-dev \
+        uuid-dev \
+        zlibc \
+        libgdbm-dev \
+        libncurses5-dev && \
     # upgrade pip
     pip install --upgrade pip && \
     # If minimal flavor - install 
@@ -499,6 +508,7 @@ RUN \
             future \
             protobuf \
             zlib \
+            boost \
             psutil \
             python-crontab \
             ipykernel \
@@ -518,7 +528,6 @@ RUN \
         clean-layer.sh && \
         exit 0 ; \
     fi && \
-    apt-get update && \
     # OpenMPI support
     apt-get install -y --no-install-recommends libopenmpi-dev openmpi-bin && \
     # Install mkl, mkl-include & mkldnn
@@ -816,31 +825,11 @@ RUN \
     if [ "$WORKSPACE_FLAVOR" = "minimal" ] || [ "$WORKSPACE_FLAVOR" = "light" ]; then \
         exit 0 ; \
     fi && \
-    apt-get update && \
-    apt-get install -y --no-install-recommends \
-        dpkg-sig \
-        liblzma-dev \
-        uuid-dev \
-        zlibc \
-        libgdbm-dev \
-        libncurses5-dev && \
-    conda install -y boost && \
     # New Python Libraries:
     pip install --no-cache-dir \
                 # pyramid
-                # 80MB: mxnet \
                 # 20MB: interpret \
                 # not compatible with flake8; prospector
-                vowpalwabbit \
-                fire \
-                httpie \
-                rope \
-                steppy \
-                finetune \
-                sk-dist \
-                fast-bert \
-                # Activate fuck?
-                thefuck \
                 lazycluster && \
     # Cleanup
     clean-layer.sh
