@@ -18,7 +18,7 @@ done
 
 if hash nvidia-smi 2>/dev/null; then
     echo "Installing MXNet (GPU). Please wait..."
-    pip install -U --no-cache-dir mxnet-cu100mkl && \
+    pip install -U --no-cache-dir mxnet-cu100mkl
 else
     echo "Installing MXNet (CPU-MKL). Please wait..."
     pip install -U --no-cache-dir mxnet-mkl

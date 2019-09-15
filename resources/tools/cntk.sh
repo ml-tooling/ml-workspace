@@ -18,7 +18,7 @@ done
 
 if hash nvidia-smi 2>/dev/null; then
     echo "Installing CNTK (GPU). Please wait..."
-    pip install -U --no-cache-dir cntk-gpu && \
+    pip install -U --no-cache-dir cntk-gpu
 else
     echo "Installing CNTK (CPU). Please wait..."
     pip install -U --no-cache-dir cntk
