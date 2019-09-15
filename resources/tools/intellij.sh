@@ -13,9 +13,9 @@ for arg in "$@"; do
 done
 
 if ! hash intellij-community 2>/dev/null; then
-    echo "Installing IntelliJ Community"
+    echo "Installing IntelliJ Community. Please wait..."
     cd $RESOURCES_PATH
-    wget --quiet https://download.jetbrains.com/idea/ideaIC-2019.2.1.tar.gz -O ./ideaIC.tar.gz
+    wget https://download.jetbrains.com/idea/ideaIC-2019.2.1.tar.gz -O ./ideaIC.tar.gz
     tar xfz ideaIC.tar.gz
     mv idea-* /opt/idea
     rm ./ideaIC.tar.gz

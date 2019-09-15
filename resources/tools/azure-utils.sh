@@ -12,7 +12,7 @@ for arg in "$@"; do
     esac
 done
 
-echo "Installing Azure Tooling Collection"
+echo "Installing Azure Tooling Collection. Please wait..."
 pip install --no-cache-dir \
         azure \
         msrestazure \

@@ -13,9 +13,9 @@ for arg in "$@"; do
 done
 
 if [ ! -f "/usr/share/azuredatastudio/azuredatastudio" ]; then
-    echo "Installing Azure Data Studio"
+    echo "Installing Azure Data Studio. Please wait..."
     cd $RESOURCES_PATH
-    wget --quiet https://go.microsoft.com/fwlink/?linkid=2092022 -O ./azure-data-studio.deb
+    wget https://go.microsoft.com/fwlink/?linkid=2092022 -O ./azure-data-studio.deb
     dpkg -i ./azure-data-studio.deb
     rm ./azure-data-studio.deb
 else

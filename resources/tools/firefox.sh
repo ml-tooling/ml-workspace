@@ -54,7 +54,7 @@ function instFF() {
 }
 
 if ! hash firefox 2>/dev/null; then
-    echo "Installing Firefox"
+    echo "Installing Firefox. Please wait..."
     instFF '45.9.0esr' '/usr/lib/firefox'
 else
     echo "Firefox is already installed"

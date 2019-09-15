@@ -15,7 +15,7 @@ for arg in "$@"; do
 done
 
 if [ ! -f "/usr/local/bin/filebrowser"  ]; then
-    echo "Installing Filebrowser"
+    echo "Installing Filebrowser. Please wait..."
     cd $RESOURCES_PATH
     curl -fsSL https://raw.githubusercontent.com/filebrowser/get/master/get.sh | bash
 else

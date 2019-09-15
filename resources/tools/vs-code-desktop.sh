@@ -13,9 +13,9 @@ for arg in "$@"; do
 done
 
 if [ ! -f "/usr/share/code/code" ]; then
-    echo "Installing VS Code"
+    echo "Installing VS Code. Please wait..."
     cd $RESOURCES_PATH
-    wget --quiet https://go.microsoft.com/fwlink/?LinkID=760868 -O ./vscode.deb
+    wget https://go.microsoft.com/fwlink/?LinkID=760868 -O ./vscode.deb
     dpkg -i ./vscode.deb
     apt-get install -f -y
     rm ./vscode.deb

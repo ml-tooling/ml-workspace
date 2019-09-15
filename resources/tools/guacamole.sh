@@ -16,10 +16,10 @@ done
 
 # Install tomcat
 if [ ! -d "/usr/share/tomcat8/" ]; then
-    echo "Installing tomcat8 server."
+    echo "Installing tomcat8 server. Please wait..."
     # Not working because of user problems: apt-get install tomcat8 tomcat8-admin tomcat8-common tomcat8-user 
     cd $RESOURCES_PATH
-    wget --quiet http://ftp-stud.hs-esslingen.de/pub/Mirrors/ftp.apache.org/dist/tomcat/tomcat-8/v8.5.45/bin/apache-tomcat-8.5.45.tar.gz
+    wget http://ftp-stud.hs-esslingen.de/pub/Mirrors/ftp.apache.org/dist/tomcat/tomcat-8/v8.5.45/bin/apache-tomcat-8.5.45.tar.gz
     tar xvzf apache-tomcat-8.5.45.tar.gz
     mkdir -p /usr/share/tomcat8/
     mv apache-tomcat-8.5.45/* /usr/share/tomcat8/
@@ -31,14 +31,14 @@ fi
 
 # Install guacomole server and client
 if [ ! -d "/etc/guacamole/" ]; then
-    echo "Installing guacamole server."
+    echo "Installing guacamole server. Please wait..."
     cd $RESOURCES_PATH
     # Install guacamole dependencies
     apt-get update
     apt-get install -y libcairo2-dev libpng12-dev libjpeg-turbo8-dev \
     libgif-dev libossp-uuid-dev libavcodec-dev libavutil-dev libswscale-dev libfreerdp-dev \
     libpango1.0-dev libssh2-1-dev libvncserver-dev libssl-dev libvorbis-dev libwebp-dev
-    wget --quiet "http://apache.org/dyn/closer.cgi?action=download&filename=guacamole/1.0.0/source/guacamole-server-1.0.0.tar.gz" -O guacamole-server-1.0.0.tar.gz
+    wget "http://apache.org/dyn/closer.cgi?action=download&filename=guacamole/1.0.0/source/guacamole-server-1.0.0.tar.gz" -O guacamole-server-1.0.0.tar.gz
     tar -xzf guacamole-server-1.0.0.tar.gz
     rm guacamole-server-1.0.0.tar.gz
     cd guacamole-server-1.0.0/
@@ -49,7 +49,7 @@ if [ ! -d "/etc/guacamole/" ]; then
     echo "Installing guacamole client."
     # Install guacamole client
     mkdir /etc/guacamole
-    wget --quiet "http://apache.org/dyn/closer.cgi?action=download&filename=guacamole/1.0.0/binary/guacamole-1.0.0.war" -O /etc/guacamole/guacamole.war
+    wget "http://apache.org/dyn/closer.cgi?action=download&filename=guacamole/1.0.0/binary/guacamole-1.0.0.war" -O /etc/guacamole/guacamole.war
     ln -s /etc/guacamole/guacamole.war /usr/share/tomcat8/webapps/
     # Adapt settings - https://guacamole.apache.org/doc/gug/configuring-guacamole.html
     printf "guacd-hostname: localhost\nguacd-port: 4822\nenable-websocket: true" > /etc/guacamole/guacamole.properties

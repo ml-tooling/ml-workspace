@@ -15,7 +15,7 @@ for arg in "$@"; do
 done
 
 if ! hash ungit 2>/dev/null; then
-    echo "Installing Ungit"
+    echo "Installing Ungit. Please wait..."
     npm update
     npm install -g ungit@1.4.46
 else

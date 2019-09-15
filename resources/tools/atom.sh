@@ -13,7 +13,7 @@ for arg in "$@"; do
 done
 
 if ! hash atom 2>/dev/null; then
-    echo "Installing Atom"
+    echo "Installing Atom. Please wait..."
     add-apt-repository ppa:webupd8team/atom --yes
     apt-get update
     apt-get install atom --yes

@@ -13,9 +13,9 @@ for arg in "$@"; do
 done
 
 if ! hash nteract 2>/dev/null; then
-    echo "Installing nteract"
+    echo "Installing Nteract. Please wait..."
     cd $RESOURCES_PATH
-    wget --quiet https://github.com/nteract/nteract/releases/download/v0.14.5/nteract_0.14.5_amd64.deb -O ./nteract.deb
+    wget https://github.com/nteract/nteract/releases/download/v0.14.5/nteract_0.14.5_amd64.deb -O ./nteract.deb
     dpkg -i ./nteract.deb
     rm ./nteract.deb
 else

@@ -13,9 +13,9 @@ for arg in "$@"; do
 done
 
 if ! hash postman 2>/dev/null; then
-    echo "Installing Postman"
+    echo "Installing Postman. Please wait..."
     cd $RESOURCES_PATH
-    wget --quiet https://dl.pstmn.io/download/latest/linux64 -O ./postman.tar.gz
+    wget https://dl.pstmn.io/download/latest/linux64 -O ./postman.tar.gz
     tar -xzf ./postman.tar.gz -C /opt && \
     rm postman.tar.gz && \
     ln -s /opt/Postman/Postman /usr/bin/postman && \

@@ -13,7 +13,7 @@ for arg in "$@"; do
 done
 
 if ! hash ruby 2>/dev/null; then
-    echo "Installing Ruby Interpreter"
+    echo "Installing Ruby Interpreter. Please wait..."
     apt-get update
     apt-get install -y ruby-full
 else

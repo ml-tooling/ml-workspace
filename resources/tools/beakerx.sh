@@ -13,7 +13,7 @@ for arg in "$@"; do
 done
 
 if ! hash beakerx 2>/dev/null; then
-    echo "Installing BeakerX"
+    echo "Installing BeakerX. Please wait..."
     pip install --no-cache-dir py4j beakerx 
     beakerx install
     jupyter labextension install beakerx-jupyterlab

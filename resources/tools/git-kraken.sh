@@ -14,7 +14,7 @@ done
 
 if ! hash gitkraken 2>/dev/null; then
     cd $RESOURCES_PATH
-    echo "Installing Git Kraken"
+    echo "Installing Git Kraken. Please wait..."
     apt-get update
     wget https://release.gitkraken.com/linux/gitkraken-amd64.deb -O ./gitkraken.deb
     apt-get install --yes gvfs-bin

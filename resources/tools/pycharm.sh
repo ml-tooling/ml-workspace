@@ -13,9 +13,9 @@ for arg in "$@"; do
 done
 
 if ! hash pycharm-community 2>/dev/null; then
-    echo "Installing PyCharm Community"
+    echo "Installing PyCharm Community. Please wait..."
     cd /resources
-    wget --quiet https://download.jetbrains.com/python/pycharm-community-2019.2.1.tar.gz -O ./pycharm.tar.gz 
+    wget https://download.jetbrains.com/python/pycharm-community-2019.2.1.tar.gz -O ./pycharm.tar.gz 
     tar xfz ./pycharm.tar.gz
     mv pycharm-* /opt/pycharm
     rm ./pycharm.tar.gz

@@ -12,7 +12,7 @@ for arg in "$@"; do
     esac
 done
 
-echo "Installing GUI Tool Collection"
+echo "Installing GUI Tool Collection. Please wait..."
 apt-get update
 LD_LIBRARY_PATH="" LD_PRELOAD="" apt-get install -y --no-install-recommends \
         gnome-tweak-tool \

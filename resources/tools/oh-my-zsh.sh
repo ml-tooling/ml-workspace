@@ -13,7 +13,7 @@ for arg in "$@"; do
 done
 
 if ! hash zsh 2>/dev/null; then
-    echo "Installing Oh My ZSH"
+    echo "Installing Oh My ZSH. Please wait..."
     apt-get update
     apt-get install --yes zsh
     yes | sh -c "$(curl -fsSL https://raw.github.com/robbyrussell/oh-my-zsh/master/tools/install.sh)"
