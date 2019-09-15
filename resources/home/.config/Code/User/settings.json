@@ -4,7 +4,7 @@
     "update.mode": "manual",
     "update.showReleaseNotes": false,
     "extensions.autoUpdate": false,
-    "python.linting.pylintEnabled": false,
     "python.dataScience.autoPreviewNotebooksInInteractivePane": true,
-    "python.linting.pylamaEnabled": true
+    "python.linting.pylamaEnabled": true,
+    "python.linting.pylintEnabled": true
 }
