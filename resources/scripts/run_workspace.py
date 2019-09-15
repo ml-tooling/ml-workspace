@@ -54,6 +54,7 @@ call("python " + ENV_RESOURCES_PATH + "/scripts/run_custom_scripts.py", shell=Tr
 
 startup_custom_script = os.path.join(WORKSPACE_HOME, "on_startup.sh")
 if os.path.exists(startup_custom_script):
+    log.info("Run on_startup.sh user script from workspace folder")
     # run startup script from workspace folder - can be used to run installation routines on workspace updates
     call("/bin/bash " + startup_custom_script, shell=True)
 
