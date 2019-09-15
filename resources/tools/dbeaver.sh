@@ -13,7 +13,7 @@ for arg in "$@"; do
 done
 
 if ! hash dbeaver 2>/dev/null; then
-    echo "Installing DBeaver"
+    echo "Installing DBeaver. Please wait..."
     add-apt-repository ppa:serge-rider/dbeaver-ce --yes
     apt-get update
     apt-get install dbeaver-ce --yes

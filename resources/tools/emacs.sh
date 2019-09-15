@@ -13,7 +13,7 @@ for arg in "$@"; do
 done
 
 if ! hash emacs 2>/dev/null; then
-    echo "Installing Emacs"
+    echo "Installing Emacs. Please wait..."
     apt-get update
     LD_LIBRARY_PATH="" LD_PRELOAD="" apt-get install --yes emacs
 else

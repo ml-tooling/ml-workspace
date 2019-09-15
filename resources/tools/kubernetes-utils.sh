@@ -13,14 +13,14 @@ for arg in "$@"; do
 done
 
 if ! hash kubectl 2>/dev/null; then
-    echo "Installing Kubernetes Client (kubectl)"
+    echo "Installing Kubernetes Client (kubectl). Please wait..."
     mkdir -p $RESOURCES_PATH"/kubernetes"
     cd $RESOURCES_PATH"/kubernetes"
     curl -LO https://storage.googleapis.com/kubernetes-release/release/`curl -s https://storage.googleapis.com/kubernetes-release/release/stable.txt`/bin/linux/amd64/kubectl
     mv ./kubectl /usr/local/bin
     chmod a+rwx /usr/local/bin/kubectl
     # kube-prompt
-    wget --quiet https://github.com/c-bata/kube-prompt/releases/download/v1.0.7/kube-prompt_v1.0.7_linux_amd64.zip
+    wget https://github.com/c-bata/kube-prompt/releases/download/v1.0.7/kube-prompt_v1.0.7_linux_amd64.zip
     unzip kube-prompt_v1.0.7_linux_amd64.zip
     chmod +x kube-prompt
     mv ./kube-prompt /usr/local/bin/kube-prompt

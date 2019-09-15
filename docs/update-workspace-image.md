@@ -9,10 +9,10 @@ We plan to do a full workspace image update (all libraries and tools) about ever
 
 2. Update python libraries:
    - Update requirement files using [piprot](https://github.com/sesh/piprot), [pur](https://github.com/alanhamlett/pip-update-requirements), or [pip-upgrader](https://github.com/simion/pip-upgrader):
-     - `piprot ./resources/libraries/minimal-requirements.txt`
-     - `piprot ./resources/libraries/light-requirements.txt`
-     - `piprot ./resources/libraries/full-requirements.txt`
-     - [pur](https://github.com/alanhamlett/pip-update-requirements) example: `pur -i -r ./resources/libraries/minimal-requirements.txt`
+     - `piprot ./resources/libraries/requirements-minimal.txt`
+     - `piprot ./resources/libraries/requirements-light.txt`
+     - `piprot ./resources/libraries/requirements-full.txt`
+     - [pur](https://github.com/alanhamlett/pip-update-requirements) example: `pur -i -r ./resources/libraries/requirements-minimal.txt`
    - Update [conda packages](https://anaconda.org/conda-forge/): `ipython`, `notebook`, `jupyterlab`
    - Check other python installs
 

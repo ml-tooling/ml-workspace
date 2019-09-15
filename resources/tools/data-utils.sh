@@ -12,7 +12,7 @@ for arg in "$@"; do
     esac
 done
 
-echo "Installing Data Utils Collection"
+echo "Installing Data Utils Collection. Please wait..."
 
 apt-get update
 apt-get install -y --no-install-recommends \

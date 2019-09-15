@@ -13,10 +13,10 @@ for arg in "$@"; do
 done
 
 if ! hash fasttext 2>/dev/null; then
-    echo "Installing Fasttext"
+    echo "Installing Fasttext. Please wait..."
     mkdir $RESOURCES_PATH"/fasttext"
     cd $RESOURCES_PATH"/fasttext"
-    wget --quiet https://github.com/facebookresearch/fastText/archive/v0.9.1.zip
+    wget https://github.com/facebookresearch/fastText/archive/v0.9.1.zip
     unzip -q v0.9.1.zip
     rm v0.9.1.zip
     cd fastText-0.9.1

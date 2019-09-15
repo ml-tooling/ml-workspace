@@ -12,17 +12,12 @@ for arg in "$@"; do
     esac
 done
 
-if ! hash ruby 2>/dev/null; then
-    echo "Installing Ruby Interpreter. Please wait..."
-    apt-get update
-    apt-get install -y ruby-full
-else
-    echo "Ruby Interpreter is already installed"
-fi
+#https://github.com/epfml/sent2vec
+echo "Installing Sent2vec. Please wait..."
+pip install -U --no-cache-dir git+https://github.com/epfml/sent2vec
 
 # Run
 if [ $INSTALL_ONLY = 0 ] ; then
-    ruby --help
-    sleep 20
+    echo "Use sent2vec via python as described here: https://github.com/epfml/sent2vec#directly-from-python"
+    sleep 15
 fi
-

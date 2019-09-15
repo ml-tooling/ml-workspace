@@ -13,10 +13,10 @@ for arg in "$@"; do
 done
 
 if ! hash docker 2>/dev/null; then
-    echo "Installing Docker Client"
+    echo "Installing Docker Client. Please wait..."
     mkdir -p $RESOURCES_PATH"/docker"
     cd $RESOURCES_PATH"/docker"
-    wget --quiet https://get.docker.com/builds/Linux/x86_64/docker-latest.tgz -O ./docker.tar.gz
+    wget https://get.docker.com/builds/Linux/x86_64/docker-latest.tgz -O ./docker.tar.gz
     tar xfz ./docker.tar.gz
     rm -rf ./docker.tar.gz
     # TODO? only move the docker client to bin
@@ -29,7 +29,7 @@ if ! hash docker 2>/dev/null; then
     # Todo install docker compose
     # curl  -L "https://github.com/docker/compose/releases/download/1.7.1/docker-compose-`uname -s`-`uname -m`" > /usr/local/bin/docker-compose &&\
     # chmod +x /usr/local/bin/docker-compose
-    pip install --no-cache-dir docker
+    pip install -U --no-cache-dir docker
 else
     echo "Docker Client is already installed"
 fi

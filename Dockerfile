@@ -474,6 +474,15 @@ RUN \
     # rm /usr/bin/python3 && \
     # rm /usr/bin/python3.5
     ln -s -f $CONDA_DIR/bin/python /usr/bin/python && \
+    # Install packages - TODO move up to basics section
+    apt-get update && \
+    apt-get install -y --no-install-recommends \
+        dpkg-sig \
+        liblzma-dev \
+        uuid-dev \
+        zlibc \
+        libgdbm-dev \
+        libncurses5-dev && \
     # upgrade pip
     pip install --upgrade pip && \
     # If minimal flavor - install 
@@ -499,17 +508,18 @@ RUN \
             future \
             protobuf \
             zlib \
+            boost \
             psutil \
             python-crontab \
             ipykernel \
             cmake \
             Pillow \
-            'ipython=7.7.*' \
+            'ipython=7.8.*' \
             # Do not update to notebook 6.x for now
             'notebook=5.7.*' \
-            'jupyterlab=1.1.1' && \
+            'jupyterlab=1.1.3' && \
     # Install minimal pip requirements
-    pip install --no-cache-dir --upgrade -r ${RESOURCES_PATH}/libraries/minimal-requirements.txt && \
+    pip install --no-cache-dir --upgrade -r ${RESOURCES_PATH}/libraries/requirements-minimal.txt && \
     # If minimal flavor - exit here
     if [ "$WORKSPACE_FLAVOR" = "minimal" ]; then \
         # Fix permissions
@@ -518,7 +528,6 @@ RUN \
         clean-layer.sh && \
         exit 0 ; \
     fi && \
-    apt-get update && \
     # OpenMPI support
     apt-get install -y --no-install-recommends libopenmpi-dev openmpi-bin && \
     # Install mkl, mkl-include & mkldnn
@@ -531,7 +540,7 @@ RUN \
     # Install pytorch - cpu only
     conda install -y pytorch torchvision cpuonly -c pytorch && \
     # Install light pip requirements
-    pip install --no-cache-dir --upgrade -r ${RESOURCES_PATH}/libraries/light-requirements.txt && \
+    pip install --no-cache-dir --upgrade -r ${RESOURCES_PATH}/libraries/requirements-light.txt && \
     # If light light flavor - exit here
     if [ "$WORKSPACE_FLAVOR" = "light" ]; then \
         # Fix permissions
@@ -545,7 +554,7 @@ RUN \
     # Faiss - A library for efficient similarity search and clustering of dense vectors. 
     conda install -y -c pytorch faiss-cpu && \
     # Install full pip requirements
-    pip install --no-cache-dir --upgrade -r ${RESOURCES_PATH}/libraries/full-requirements.txt && \
+    pip install --no-cache-dir --upgrade -r ${RESOURCES_PATH}/libraries/requirements-full.txt && \
     # Setup Spacy
     # Spacy - download and large language removal
     python -m spacy download en && \
@@ -555,6 +564,10 @@ RUN \
     # Fix permissions
     fix-permissions.sh $CONDA_DIR && \
     # Cleanup
+    # Cleanup python bytecode files - not needed: https://jcrist.github.io/conda-docker-tips.html
+    # TODO move to clean-layer?
+    find ${CONDA_DIR} -type f -name '*.pyc' -delete && \
+    find ${CONDA_DIR} -type l -name '*.pyc' -delete && \
     clean-layer.sh
 
 # Fix conda version
@@ -812,27 +825,11 @@ RUN \
     if [ "$WORKSPACE_FLAVOR" = "minimal" ] || [ "$WORKSPACE_FLAVOR" = "light" ]; then \
         exit 0 ; \
     fi && \
-    apt-get update && \
-    apt-get install -y --no-install-recommends \
-        dpkg-sig \
-        liblzma-dev \
-        uuid-dev \
-        zlibc \
-        libgdbm-dev \
-        libncurses5-dev && \
     # New Python Libraries:
     pip install --no-cache-dir \
                 # pyramid
-                # 80MB: mxnet \
                 # 20MB: interpret \
                 # not compatible with flake8; prospector
-                fire \
-                httpie \
-                rope \
-                steppy \
-                finetune \
-                # Activate fuck?
-                thefuck \
                 lazycluster && \
     # Cleanup
     clean-layer.sh
@@ -984,6 +981,7 @@ ENV KMP_DUPLICATE_LIB_OK="True" \
     KMP_AFFINITY="granularity=fine,verbose,compact,1,0" \
     KMP_BLOCKTIME=0
     # KMP_BLOCKTIME="1" -> is not faster in my tests
+    # TODO set PYTHONDONTWRITEBYTECODE
 
 # Set default values for environment variables
 ENV CONFIG_BACKUP_ENABLED="true" \

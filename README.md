@@ -776,7 +776,7 @@ CMD ["python", "/resources/docker-entrypoint.py", "--code-only"]
 The workspace is pre-installed with many popular interpreters, data science libraries, and ubuntu packages:
 
 - **Interpreter:** Miniconda 3 (Python 3.6), Java 8, NodeJS 11
-- **Python libraries:** Tensorflow, Keras, Pytorch, Sklearn, CNTK, XGBoost, Theano, Fastai, and [many more](https://github.com/ml-tooling/ml-workspace/tree/master/resources/libraries)
+- **Python libraries:** Tensorflow, Keras, Pytorch, Sklearn, XGBoost, Theano, Fastai, and [many more](https://github.com/ml-tooling/ml-workspace/tree/master/resources/libraries)
 
 The full list of installed tools can be found within the [Dockerfile](https://github.com/ml-tooling/ml-workspace/blob/master/Dockerfile).
 

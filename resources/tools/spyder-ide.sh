@@ -13,7 +13,7 @@ for arg in "$@"; do
 done
 
 if ! hash spyder 2>/dev/null; then
-    echo "Installing Spyder"
+    echo "Installing Spyder. Please wait..."
     conda install -y spyder
 else
     echo "Spyder is already installed"

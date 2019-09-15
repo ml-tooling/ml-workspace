@@ -15,10 +15,10 @@ for arg in "$@"; do
 done
 
 if [ ! -f "/usr/local/bin/code-server"  ]; then
-    echo "Installing VS Code Server"
+    echo "Installing VS Code Server. Please wait..."
     cd ${RESOURCES_PATH}
-    VS_CODE_VERSION=2.preview.11-vsc1.37.0
-    wget --quiet https://github.com/cdr/code-server/releases/download/$VS_CODE_VERSION/code-server$VS_CODE_VERSION-linux-x86_64.tar.gz -O ./vscode-web.tar.gz
+    VS_CODE_VERSION=2.1478-vsc1.38.1
+    wget https://github.com/cdr/code-server/releases/download/$VS_CODE_VERSION/code-server$VS_CODE_VERSION-linux-x86_64.tar.gz -O ./vscode-web.tar.gz
     tar xfz ./vscode-web.tar.gz
     mv ./code-server$VS_CODE_VERSION-linux-x86_64/code-server /usr/local/bin
     chmod -R a+rwx /usr/local/bin/code-server

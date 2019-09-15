@@ -5,6 +5,8 @@ set -e
 
 # No install argument needed
 
+echo "Installing Pillow SIMD. Please wait..."
+
 # Install libjpeg-turbo and Pillow-SIMD for faster Image Processing
 # https://docs.fast.ai/performance.html#faster-image-processing
 # Use better pillow simd install: https://github.com/uploadcare/pillow-simd/issues/44

@@ -13,7 +13,7 @@ for arg in "$@"; do
 done
 
 if ! hash go 2>/dev/null; then
-    echo "Installing Go Interpreter"
+    echo "Installing Go Interpreter. Please wait..."
     apt-get update
     apt-get install -y golang-go
     # Set env variables?:

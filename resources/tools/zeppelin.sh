@@ -15,11 +15,11 @@ for arg in "$@"; do
 done
 
 if [ ! -f "/resources/zeppelin/zeppelin-0.8.1-bin-all/bin/zeppelin-daemon.sh"  ]; then
-    echo "Installing zeppelin"
+    echo "Installing Zeppelin. Please wait..."
     cd $RESOURCES_PATH
     mkdir ./zeppelin
     cd ./zeppelin
-    wget --quiet https://www.apache.org/dist/zeppelin/zeppelin-0.8.1/zeppelin-0.8.1-bin-all.tgz -O ./zeppelin-0.8.1-bin-all.tgz
+    wget https://www.apache.org/dist/zeppelin/zeppelin-0.8.1/zeppelin-0.8.1-bin-all.tgz -O ./zeppelin-0.8.1-bin-all.tgz
     tar -zxvf zeppelin-0.8.1-bin-all.tgz
     rm zeppelin-0.8.1-bin-all.tgz
 else

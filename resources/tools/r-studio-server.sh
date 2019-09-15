@@ -15,7 +15,7 @@ for arg in "$@"; do
 done
 
 if [ ! -f "/usr/lib/rstudio-server/bin/rserver" ]; then
-    echo "Installing RStudio Server"
+    echo "Installing RStudio Server. Please wait..."
     cd $RESOURCES_PATH
     conda install -y r-base
     apt-get update

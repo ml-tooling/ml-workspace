@@ -52,5 +52,11 @@ call("python " + ENV_RESOURCES_PATH + "/scripts/configure_cron_scripts.py", shel
 log.info("Configure and run custom scripts")
 call("python " + ENV_RESOURCES_PATH + "/scripts/run_custom_scripts.py", shell=True)
 
+startup_custom_script = os.path.join(WORKSPACE_HOME, "on_startup.sh")
+if os.path.exists(startup_custom_script):
+    log.info("Run on_startup.sh user script from workspace folder")
+    # run startup script from workspace folder - can be used to run installation routines on workspace updates
+    call("/bin/bash " + startup_custom_script, shell=True)
+
 # Run supervisor process - main container process
 call('supervisord -n -c /etc/supervisor/supervisord.conf', shell=True)

@@ -13,7 +13,7 @@ for arg in "$@"; do
 done
 
 if ! hash Rscript 2>/dev/null; then
-    echo "Installing R runtime"
+    echo "Installing R runtime. Please wait..."
     # See https://github.com/jupyter/docker-stacks/blob/master/r-notebook/Dockerfile
     apt-get update
     # R pre-requisites

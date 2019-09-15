@@ -15,10 +15,10 @@ for arg in "$@"; do
 done
 
 if [ ! -f "/usr/sbin/netdata"  ]; then
-    echo "Installing Netdata"
+    echo "Installing Netdata. Please wait..."
     cd $RESOURCES_PATH
     apt-get update
-    wget --quiet https://my-netdata.io/kickstart.sh -O $RESOURCES_PATH/netdata-install.sh
+    wget https://my-netdata.io/kickstart.sh -O $RESOURCES_PATH/netdata-install.sh
     # Surpress output - if there is a problem remove to see logs > /dev/null
     /bin/bash $RESOURCES_PATH/netdata-install.sh --dont-wait --dont-start-it --stable-channel --disable-telemetry > /dev/null
     rm $RESOURCES_PATH/netdata-install.sh

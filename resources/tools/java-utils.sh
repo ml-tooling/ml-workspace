@@ -12,7 +12,7 @@ for arg in "$@"; do
     esac
 done
 
-echo "Installing Java Utils Collection"
+echo "Installing Java Utils Collection. Please wait..."
 
 apt-get update
 apt-get install -y --no-install-recommends \

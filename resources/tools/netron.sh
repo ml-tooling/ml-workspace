@@ -15,7 +15,7 @@ for arg in "$@"; do
 done
 
 if ! hash netron 2>/dev/null; then
-    echo "Installing netron"
+    echo "Installing Netron. Please wait..."
     # https://github.com/lutzroeder/netron
     pip install --no-cache-dir  netron
 else

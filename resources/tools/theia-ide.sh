@@ -15,7 +15,7 @@ for arg in "$@"; do
 done
 
 if [ ! -f "$RESOURCES_PATH/theia/package.json" ]; then
-    echo "Installing Theia IDE"
+    echo "Installing Theia IDE. Please wait..."
     cd $RESOURCES_PATH
     mkdir -p ./theia
     cd ./theia

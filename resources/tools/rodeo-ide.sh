@@ -13,7 +13,7 @@ for arg in "$@"; do
 done
 
 if [ ! -f "/opt/Rodeo/rodeo" ]; then
-    echo "Installing Rodeo"
+    echo "Installing Rodeo. Please wait..."
     cd $RESOURCES_PATH
     apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 33D40BC6
     add-apt-repository -u "deb http://rodeo-deb.yhat.com/ rodeo main"

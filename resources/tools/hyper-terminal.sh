@@ -13,11 +13,11 @@ for arg in "$@"; do
 done
 
 if [ ! -f "/opt/Hyper/hyper" ]; then
-    echo "Installing Hyper Terminal"
+    echo "Installing Hyper Terminal. Please wait..."
     cd $RESOURCES_PATH
     apt-get update
     apt-get install libappindicator1
-    wget --quiet https://releases.hyper.is/download/deb -O ./hyper.deb
+    wget https://releases.hyper.is/download/deb -O ./hyper.deb
     dpkg -i ./hyper.deb
     apt-get -f install
     rm ./hyper.deb

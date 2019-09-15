@@ -129,9 +129,6 @@ RUN \
     # Install ONNX GPU Runtime
     pip uninstall -y onnxruntime && \
     pip install --no-cache-dir onnxruntime-gpu==0.5.0 && \
-    # Install cntk
-    pip uninstall -y cntk && \
-    pip install --no-cache-dir cntk-gpu && \
     # Install pytorch gpu
     # TODO: deprecated? most likely not installed
     pip uninstall -y pytorch-cpu torchvision-cpu && \
@@ -142,7 +139,6 @@ RUN \
     # pip install https://download.pytorch.org/whl/cu100/torch-1.1.0-cp36-cp36m-linux_x86_64.whl && \
     # pip install https://download.pytorch.org/whl/cu100/torchvision-0.3.0-cp36-cp36m-linux_x86_64.whl && \
     # install jax: https://github.com/google/jax#pip-installation
-    # TODO: Update jaxlib to 0.1.26
     pip install --no-cache-dir --upgrade https://storage.googleapis.com/jax-wheels/cuda100/jaxlib-0.1.28-cp36-none-linux_x86_64.whl && \
     pip install --no-cache-dir --upgrade jax  && \
     # Install Spacy GPU Support:
@@ -160,9 +156,6 @@ RUN \
             dask-cuda=0.9 && \
     # Install pygpu - Required for theano: http://deeplearning.net/software/libgpuarray/
     conda install -y pygpu && \
-    # MXNet with GPU Support - mxnet is currently not supported
-    # pip uninstall mxnet && \
-    # pip install --no-cache-dir --upgrade mxnet-cu100 && \
     # nvidia python ml lib
     pip install --upgrade --force-reinstall nvidia-ml-py3 && \ 
     # Install graphvite graph embedding lib: https://github.com/DeepGraphLearning/graphvite
@@ -171,6 +164,9 @@ RUN \
     # pip install --no-cache-dir jupyterlab-nvdashboard && \
     # jupyter labextension install jupyterlab-nvdashboard && \
     # Cleanup
+    # Cleanup python bytecode files - not needed: https://jcrist.github.io/conda-docker-tips.html
+    find ${CONDA_DIR} -type f -name '*.pyc' -delete && \
+    find ${CONDA_DIR} -type l -name '*.pyc' -delete && \
     clean-layer.sh
 
 # https://www.anaconda.com/getting-started-with-gpu-computing-in-anaconda/
