@@ -509,7 +509,7 @@ RUN \
             'notebook=5.7.*' \
             'jupyterlab=1.1.1' && \
     # Install minimal pip requirements
-    pip install --no-cache-dir --upgrade -r ${RESOURCES_PATH}/libraries/minimal-requirements.txt && \
+    pip install --no-cache-dir --upgrade -r ${RESOURCES_PATH}/libraries/requirements-minimal.txt && \
     # If minimal flavor - exit here
     if [ "$WORKSPACE_FLAVOR" = "minimal" ]; then \
         # Fix permissions
@@ -531,7 +531,7 @@ RUN \
     # Install pytorch - cpu only
     conda install -y pytorch torchvision cpuonly -c pytorch && \
     # Install light pip requirements
-    pip install --no-cache-dir --upgrade -r ${RESOURCES_PATH}/libraries/light-requirements.txt && \
+    pip install --no-cache-dir --upgrade -r ${RESOURCES_PATH}/libraries/requirements-light.txt && \
     # If light light flavor - exit here
     if [ "$WORKSPACE_FLAVOR" = "light" ]; then \
         # Fix permissions
@@ -545,7 +545,7 @@ RUN \
     # Faiss - A library for efficient similarity search and clustering of dense vectors. 
     conda install -y -c pytorch faiss-cpu && \
     # Install full pip requirements
-    pip install --no-cache-dir --upgrade -r ${RESOURCES_PATH}/libraries/full-requirements.txt && \
+    pip install --no-cache-dir --upgrade -r ${RESOURCES_PATH}/libraries/requirements-full.txt && \
     # Setup Spacy
     # Spacy - download and large language removal
     python -m spacy download en && \
