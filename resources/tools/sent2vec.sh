@@ -16,4 +16,8 @@ done
 echo "Installing Sent2vec. Please wait..."
 pip install -U --no-cache-dir git+https://github.com/epfml/sent2vec
 
-echo "User sent2vec via python as described here: https://github.com/epfml/sent2vec#directly-from-python"
+# Run
+if [ $INSTALL_ONLY = 0 ] ; then
+    echo "Use sent2vec via python as described here: https://github.com/epfml/sent2vec#directly-from-python"
+    sleep 15
+fi
