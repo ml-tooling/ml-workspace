@@ -555,6 +555,10 @@ RUN \
     # Fix permissions
     fix-permissions.sh $CONDA_DIR && \
     # Cleanup
+    # Cleanup python bytecode files - not needed: https://jcrist.github.io/conda-docker-tips.html
+    # TODO move to clean-layer?
+    find ${CONDA_DIR} -type f -name '*.pyc' -delete && \
+    find ${CONDA_DIR} -type l -name '*.pyc' -delete && \
     clean-layer.sh
 
 # Fix conda version
@@ -820,17 +824,21 @@ RUN \
         zlibc \
         libgdbm-dev \
         libncurses5-dev && \
+    conda install -y boost && \
     # New Python Libraries:
     pip install --no-cache-dir \
                 # pyramid
                 # 80MB: mxnet \
                 # 20MB: interpret \
                 # not compatible with flake8; prospector
+                vowpalwabbit \
                 fire \
                 httpie \
                 rope \
                 steppy \
                 finetune \
+                sk-dist \
+                fast-bert \
                 # Activate fuck?
                 thefuck \
                 lazycluster && \
@@ -984,6 +992,7 @@ ENV KMP_DUPLICATE_LIB_OK="True" \
     KMP_AFFINITY="granularity=fine,verbose,compact,1,0" \
     KMP_BLOCKTIME=0
     # KMP_BLOCKTIME="1" -> is not faster in my tests
+    # TODO set PYTHONDONTWRITEBYTECODE
 
 # Set default values for environment variables
 ENV CONFIG_BACKUP_ENABLED="true" \
