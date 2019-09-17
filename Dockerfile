@@ -514,6 +514,7 @@ RUN \
             ipykernel \
             cmake \
             Pillow \
+            # Downgrade to 7.7?
             'ipython=7.8.*' \
             # Do not update to notebook 6.x for now
             'notebook=5.7.*' \
@@ -830,6 +831,9 @@ RUN \
                 # pyramid
                 # 20MB: interpret \
                 # not compatible with flake8; prospector
+                fs \
+                speedtorch \
+                attrs \
                 lazycluster && \
     # Cleanup
     clean-layer.sh
