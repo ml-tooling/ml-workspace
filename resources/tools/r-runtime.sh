@@ -17,9 +17,9 @@ if ! hash Rscript 2>/dev/null; then
     # See https://github.com/jupyter/docker-stacks/blob/master/r-notebook/Dockerfile
     apt-get update
     # R pre-requisites
-    apt-get install -y --no-install-recommends fonts-dejavu unixodbc unixodbc-dev r-cran-rodbc gfortran
+    apt-get install -y --no-install-recommends fonts-dejavu unixodbc unixodbc-dev r-cran-rodbc gfortran libsasl2-dev libssl-dev
     # R basics and essentials: https://docs.anaconda.com/anaconda/packages/r-language-pkg-docs/
-    conda install --yes r-base r-irkernel r-reticulate r-essentials rpy2 r-rodbc unixodbc
+    conda install --yes r-base r-irkernel r-reticulate r-essentials rpy2 r-rodbc unixodbc cyrus-sasl
 else
     echo "R runtime is already installed"
 fi
