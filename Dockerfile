@@ -821,11 +821,17 @@ RUN \
 
 ### INCUBATION ZONE ### 
 
+COPY resources/tools/oh-my-zsh.sh $RESOURCES_PATH/tools/oh-my-zsh.sh
+
 RUN \
    # If minimal or light flavor -> exit here
     if [ "$WORKSPACE_FLAVOR" = "minimal" ] || [ "$WORKSPACE_FLAVOR" = "light" ]; then \
         exit 0 ; \
     fi && \
+    apt-get update && \
+    apt-get install  -y --no-install-recommends autojump git-flow && \
+    # ZSH 
+    /bin/bash $RESOURCES_PATH/tools/oh-my-zsh.sh --install && \
     # New Python Libraries:
     pip install --no-cache-dir \
                 # pyramid
@@ -912,11 +918,14 @@ RUN \
 # Configure netdata
 COPY resources/netdata/ /etc/netdata/
 
-# Configure conda
+# Configure shell (bash/zsh)
 RUN \
     # Initialize conda for command line activation
-    conda init bash && \
-    conda init zsh
+    # TODO do not activate for now, opening the bash shell is a bit slow
+    # conda init bash && \
+    # conda init zsh
+    # Make zsh the default shell
+    chsh -s $(which zsh) $NB_USER
 
 # Configure Matplotlib
 RUN \
@@ -997,6 +1006,8 @@ ENV CONFIG_BACKUP_ENABLED="true" \
     INCLUDE_TUTORIALS="true" \
     # Main port used for sshl proxy -> can be changed
     WORKSPACE_PORT="8080" \
+    # Set zsh as default shell (e.g. in jupyter)
+    SHELL="/usr/bin/zsh" \
     # set number of threads various programs should use, if not-set, it tries to use all
     # this can be problematic since docker restricts CPUs by stil showing all
     MAX_NUM_THREADS="auto"
