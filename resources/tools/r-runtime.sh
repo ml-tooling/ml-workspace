@@ -17,9 +17,14 @@ if ! hash Rscript 2>/dev/null; then
     # See https://github.com/jupyter/docker-stacks/blob/master/r-notebook/Dockerfile
     apt-get update
     # R pre-requisites
-    apt-get install -y --no-install-recommends fonts-dejavu unixodbc unixodbc-dev r-cran-rodbc gfortran libsasl2-dev libssl-dev
-    # R basics and essentials: https://docs.anaconda.com/anaconda/packages/r-language-pkg-docs/
-    conda install --yes r-base r-irkernel r-reticulate r-essentials rpy2 r-rodbc unixodbc cyrus-sasl
+    apt-get install -y --no-install-recommends fonts-dejavu unixodbc unixodbc-dev gfortran libsasl2-dev libssl-dev
+    # TODO install: r-cran-rodbc via apt-get -> removed since it install an r-base via apt-get
+    # Install newest version of r-interpreter -> needs to be installed without the other once to not be dowgraded
+    conda install -y -c r r-base
+    # Install basics, and essentials https://docs.anaconda.com/anaconda/packages/r-language-pkg-docs/
+    conda install -y -c r-reticulate rpy2 r-rodbc unixodbc cyrus-sasl r-essentials
+    # Install irkernel - needs to be installed from conda forge -> otherwise downgrades package
+    conda install -y -c conda-forge r-irkernel
 else
     echo "R runtime is already installed"
 fi
