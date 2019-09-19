@@ -514,6 +514,7 @@ RUN \
             ipykernel \
             cmake \
             Pillow \
+            # Downgrade to 7.7?
             'ipython=7.8.*' \
             # Do not update to notebook 6.x for now
             'notebook=5.7.*' \
@@ -820,16 +821,25 @@ RUN \
 
 ### INCUBATION ZONE ### 
 
+COPY resources/tools/oh-my-zsh.sh $RESOURCES_PATH/tools/oh-my-zsh.sh
+
 RUN \
    # If minimal or light flavor -> exit here
     if [ "$WORKSPACE_FLAVOR" = "minimal" ] || [ "$WORKSPACE_FLAVOR" = "light" ]; then \
         exit 0 ; \
     fi && \
+    apt-get update && \
+    apt-get install  -y --no-install-recommends autojump git-flow && \
+    # ZSH 
+    /bin/bash $RESOURCES_PATH/tools/oh-my-zsh.sh --install && \
     # New Python Libraries:
     pip install --no-cache-dir \
                 # pyramid
                 # 20MB: interpret \
                 # not compatible with flake8; prospector
+                fs \
+                speedtorch \
+                attrs \
                 lazycluster && \
     # Cleanup
     clean-layer.sh
@@ -908,11 +918,14 @@ RUN \
 # Configure netdata
 COPY resources/netdata/ /etc/netdata/
 
-# Configure conda
+# Configure shell (bash/zsh)
 RUN \
     # Initialize conda for command line activation
-    conda init bash && \
-    conda init zsh
+    # TODO do not activate for now, opening the bash shell is a bit slow
+    # conda init bash && \
+    # conda init zsh
+    # Make zsh the default shell
+    chsh -s $(which zsh) $NB_USER
 
 # Configure Matplotlib
 RUN \
@@ -982,6 +995,7 @@ ENV KMP_DUPLICATE_LIB_OK="True" \
     KMP_BLOCKTIME=0
     # KMP_BLOCKTIME="1" -> is not faster in my tests
     # TODO set PYTHONDONTWRITEBYTECODE
+    # TODO set XDG_CONFIG_HOME, CLICOLOR?
 
 # Set default values for environment variables
 ENV CONFIG_BACKUP_ENABLED="true" \
@@ -993,6 +1007,11 @@ ENV CONFIG_BACKUP_ENABLED="true" \
     INCLUDE_TUTORIALS="true" \
     # Main port used for sshl proxy -> can be changed
     WORKSPACE_PORT="8080" \
+    # Set zsh as default shell (e.g. in jupyter)
+    SHELL="/usr/bin/zsh" \
+    # Fix dark blue color for ls command (unreadable): 
+    # https://askubuntu.com/questions/466198/how-do-i-change-the-color-for-directories-with-ls-in-the-console
+    LS_COLORS=$LS_COLORS:'di=0;96:' \
     # set number of threads various programs should use, if not-set, it tries to use all
     # this can be problematic since docker restricts CPUs by stil showing all
     MAX_NUM_THREADS="auto"

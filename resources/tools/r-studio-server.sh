@@ -17,7 +17,7 @@ done
 if [ ! -f "/usr/lib/rstudio-server/bin/rserver" ]; then
     echo "Installing RStudio Server. Please wait..."
     cd $RESOURCES_PATH
-    conda install -y r-base
+    conda install -y -c r r-base
     apt-get update
     wget https://download2.rstudio.org/server/trusty/amd64/rstudio-server-1.2.1335-amd64.deb -O ./rstudio.deb
     # ld library path makes problems
@@ -28,7 +28,12 @@ if [ ! -f "/usr/lib/rstudio-server/bin/rserver" ]; then
     # https://stackoverflow.com/questions/33625593/rstudio-server-unable-to-connect-to-service
     # https://support.rstudio.com/hc/en-us/articles/217027968-Changing-the-system-account-for-RStudio-Server
     useradd -m -d /home/rstudio rstudio
+    # Make rstudio able to use passwordless sudo
     usermod -aG sudo rstudio
+    echo "rstudio ALL=(ALL) NOPASSWD:ALL" >> /etc/sudoers
+    # configure working directory to workspace
+    printf "session-default-working-dir="$WORKSPACE_HOME"\nsession-default-new-project-dir="$WORKSPACE_HOME > /etc/rstudio/rsession.conf
+    echo "setwd ('"$WORKSPACE_HOME"')" > /home/rstudio/.Rprofile
 else
     echo "RStudio Server is already installed"
 fi
@@ -43,6 +48,10 @@ if [ $INSTALL_ONLY = 0 ] ; then
     # Create tool entry for tooling plugin
     echo '{"id": "rstudio-link", "name": "RStudio", "url_path": "/tools/'$PORT'/", "description": "Development environment for R"}' > $HOME/.workspace/tools/rstudio-server.json
     cd $RESOURCES_PATH
-    USER=rstudio /usr/lib/rstudio-server/bin/rserver --server-daemonize=0 --auth-none=1 --auth-validate-users=0 --www-port $PORT
+    # Fix tmp permissions - does not work if tmp permissions are wrong
+    chmod 1777 /tmp
+    # Run rstudio
+    USER=rstudio /usr/lib/rstudio-server/bin/rserver --server-working-dir=$WORKSPACE_HOME --server-daemonize=0 --auth-none=1 --auth-validate-users=0 --www-port $PORT
     sleep 10
 fi
+
