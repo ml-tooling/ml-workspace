@@ -995,6 +995,7 @@ ENV KMP_DUPLICATE_LIB_OK="True" \
     KMP_BLOCKTIME=0
     # KMP_BLOCKTIME="1" -> is not faster in my tests
     # TODO set PYTHONDONTWRITEBYTECODE
+    # TODO set XDG_CONFIG_HOME, CLICOLOR?
 
 # Set default values for environment variables
 ENV CONFIG_BACKUP_ENABLED="true" \
@@ -1008,6 +1009,9 @@ ENV CONFIG_BACKUP_ENABLED="true" \
     WORKSPACE_PORT="8080" \
     # Set zsh as default shell (e.g. in jupyter)
     SHELL="/usr/bin/zsh" \
+    # Fix dark blue color for ls command (unreadable): 
+    # https://askubuntu.com/questions/466198/how-do-i-change-the-color-for-directories-with-ls-in-the-console
+    LS_COLORS=$LS_COLORS:'di=0;96:' \
     # set number of threads various programs should use, if not-set, it tries to use all
     # this can be problematic since docker restricts CPUs by stil showing all
     MAX_NUM_THREADS="auto"
