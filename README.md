@@ -845,10 +845,16 @@ To update a running workspace instance to a more recent version, the running Doc
 
 All data within the workspace that is not persisted to a mounted volume will be lost during this update process. As mentioned in the [persist data](#Persist-Data) section, a volume is expected to be mounted into the `/workspace` folder. All tools within the workspace are configured to make use of the `/workspace` folder as the root directory for all source code and data artifacts. During an update, data within other directories will be removed, including installed/updated libraries or certain machine configurations. We have integrated a backup and restore feature (`CONFIG_BACKUP_ENABLED`) for various selected configuration files/folders, such as the user's Jupyter/VS-Code configuration, `~/.gitconfig`, and `~/.ssh`.
 
+<details>
+
+<summary>Update Example (click to expand...)</summary>
+
 If the workspace is deployed via Docker (Kubernetes will have a different update process), you need to remove the existing container (via `docker rm`) and start a new one (via `docker run`) with the newer workspace image. Make sure to use the same configuration, volume, name, and port. For example, a workspace (image version `0.8.3`) was started with this command: `docker run -d -p 8080:8080 --name "ml-workspace" -v "/path/on/host:/workspace" --env AUTHENTICATE_VIA_JUPYTER="mytoken" --restart always mltooling/ml-workspace:0.8.3`) and needs to be updated to version `0.8.4`, you need to:
 
 1. Stop and remove the running workspace container: `docker stop "ml-workspace" && docker rm "ml-workspace"`
 2. Start a new workspace container with the newer image and same configuration: `docker run -d -p 8080:8080 --name "ml-workspace" -v "/path/on/host:/workspace" --env AUTHENTICATE_VIA_JUPYTER="mytoken" --restart always mltooling/ml-workspace:latest`
+
+</details>
 
 </details>
 
