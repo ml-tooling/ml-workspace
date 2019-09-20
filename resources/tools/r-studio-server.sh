@@ -50,8 +50,8 @@ if [ $INSTALL_ONLY = 0 ] ; then
     cd $RESOURCES_PATH
     # Fix tmp permissions - does not work if tmp permissions are wrong
     chmod 1777 /tmp
-    # Run rstudio
-    USER=rstudio /usr/lib/rstudio-server/bin/rserver --server-working-dir=$WORKSPACE_HOME --server-daemonize=0 --auth-none=1 --auth-validate-users=0 --www-port $PORT
+    # Run rstudio with rstudio user and empty ld_library_path (otherwise it gets stuck)
+    LD_LIBRARY_PATH="" USER=rstudio /usr/lib/rstudio-server/bin/rserver --server-working-dir=$WORKSPACE_HOME --server-daemonize=0 --auth-none=1 --auth-validate-users=0 --www-port $PORT
     sleep 10
 fi
 
