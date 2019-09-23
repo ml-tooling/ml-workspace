@@ -705,8 +705,6 @@ RUN \
     jupyter labextension install jupyterlab-chart-editor && \
     # For holoview
     jupyter labextension install @pyviz/jupyterlab_pyviz && \
-    # Install qgrid
-    jupyter labextension install qgrid && \
     # Install jupyterlab_iframe - https://github.com/timkpaine/jupyterlab_iframe
     pip install jupyterlab_iframe && \
     jupyter labextension install jupyterlab_iframe && \
@@ -719,8 +717,6 @@ RUN \
     jupyter serverextension enable --py jupyterlab_code_formatter && \
     # Install go-to-definition extension 
     jupyter labextension install @krassowski/jupyterlab_go_to_definition && \
-    # Activate ipygrid in jupterlab
-    jupyter labextension install ipyaggrid && \
     # Install ipysheet jupyterlab extension
     jupyter labextension install ipysheet && \
     # Deprecation and validations:
@@ -732,6 +728,10 @@ RUN \
     # Install jupyterlab-data-explorer: https://github.com/jupyterlab/jupyterlab-data-explorer
     # alpha version jupyter labextension install @jupyterlab/dataregistry-extension && \
     # Install jupyterlab system monitor: https://github.com/jtpio/jupyterlab-system-monitor
+    # Activate ipygrid in jupterlab
+    # Problems with terminal: jupyter labextension install ipyaggrid && \
+    # Install qgrid
+    # Not compatible to jupyterlab 1.x: https://github.com/quantopian/qgrid/issues/261
     # DO not install for now jupyter labextension install jupyterlab-topbar-extension jupyterlab-system-monitor && \
      # Install voyagar data grid
     # Does not work with 1.1.1: jupyter labextension install jupyterlab_voyager && \
