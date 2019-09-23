@@ -705,8 +705,6 @@ RUN \
     jupyter labextension install jupyterlab-chart-editor && \
     # For holoview
     jupyter labextension install @pyviz/jupyterlab_pyviz && \
-    # Install qgrid
-    jupyter labextension install qgrid && \
     # Install jupyterlab_iframe - https://github.com/timkpaine/jupyterlab_iframe
     pip install jupyterlab_iframe && \
     jupyter labextension install jupyterlab_iframe && \
@@ -719,8 +717,6 @@ RUN \
     jupyter serverextension enable --py jupyterlab_code_formatter && \
     # Install go-to-definition extension 
     jupyter labextension install @krassowski/jupyterlab_go_to_definition && \
-    # Activate ipygrid in jupterlab
-    jupyter labextension install ipyaggrid && \
     # Install ipysheet jupyterlab extension
     jupyter labextension install ipysheet && \
     # Deprecation and validations:
@@ -732,6 +728,10 @@ RUN \
     # Install jupyterlab-data-explorer: https://github.com/jupyterlab/jupyterlab-data-explorer
     # alpha version jupyter labextension install @jupyterlab/dataregistry-extension && \
     # Install jupyterlab system monitor: https://github.com/jtpio/jupyterlab-system-monitor
+    # Activate ipygrid in jupterlab
+    # Problems with terminal: jupyter labextension install ipyaggrid && \
+    # Install qgrid
+    # Not compatible to jupyterlab 1.x: https://github.com/quantopian/qgrid/issues/261
     # DO not install for now jupyter labextension install jupyterlab-topbar-extension jupyterlab-system-monitor && \
      # Install voyagar data grid
     # Does not work with 1.1.1: jupyter labextension install jupyterlab_voyager && \
@@ -773,11 +773,11 @@ RUN \
     bsdtar -xf ms-python-release.vsix extension && \
     rm ms-python-release.vsix && \
     mv extension $HOME/.vscode/extensions/ms-python.python-2019.9.34911 && \
-    # Install git lens
-    wget --quiet --no-check-certificate https://github.com/eamodio/vscode-gitlens/releases/download/v9.9.3/gitlens-9.9.3.vsix && \
-    bsdtar -xf gitlens-9.9.3.vsix extension && \
-    rm gitlens-9.9.3.vsix && \
-    mv extension $HOME/.vscode/extensions/eamodio.gitlens-9.9.3 && \
+    # Install git lens: https://github.com/eamodio/vscode-gitlens
+    wget --quiet --no-check-certificate https://github.com/eamodio/vscode-gitlens/releases/download/v10.0.0/gitlens-10.0.0.vsix && \
+    bsdtar -xf gitlens-10.0.0.vsix extension && \
+    rm gitlens-10.0.0.vsix && \
+    mv extension $HOME/.vscode/extensions/eamodio.gitlens-10.0.0 && \
     # Install code runner: https://github.com/formulahendry/vscode-code-runner/releases/latest
     wget --quiet --no-check-certificate https://github.com/formulahendry/vscode-code-runner/releases/download/0.9.14/code-runner-0.9.14.vsix && \
     bsdtar -xf code-runner-0.9.14.vsix extension && \
@@ -795,22 +795,22 @@ RUN \
     mv extension $HOME/.vscode/extensions/davidanson.vscode-markdownlint-0.30.2.vsix && \
     # Install remote development extension
     # https://marketplace.visualstudio.com/items?itemName=ms-vscode-remote.remote-ssh
-    wget --quiet https://marketplace.visualstudio.com/_apis/public/gallery/publishers/ms-vscode-remote/vsextensions/remote-ssh/0.45.6/vspackage -O ms-vscode-remote.remote-ssh.vsix && \
+    wget --quiet https://marketplace.visualstudio.com/_apis/public/gallery/publishers/ms-vscode-remote/vsextensions/remote-ssh/0.46.1/vspackage -O ms-vscode-remote.remote-ssh.vsix && \
     bsdtar -xf ms-vscode-remote.remote-ssh.vsix extension && \
     rm ms-vscode-remote.remote-ssh.vsix && \
-    mv extension $HOME/.vscode/extensions/ms-vscode-remote.remote-ssh-0.45.6 && \
+    mv extension $HOME/.vscode/extensions/ms-vscode-remote.remote-ssh-0.46.1 && \
     # Install remote development ssh - editing configuration files
     # https://marketplace.visualstudio.com/items?itemName=ms-vscode-remote.remote-ssh-edit
-    wget --quiet https://marketplace.visualstudio.com/_apis/public/gallery/publishers/ms-vscode-remote/vsextensions/remote-ssh-edit/0.45.6/vspackage -O ms-vscode-remote.remote-ssh-edit.vsix && \
+    wget --quiet https://marketplace.visualstudio.com/_apis/public/gallery/publishers/ms-vscode-remote/vsextensions/remote-ssh-edit/0.46.1/vspackage -O ms-vscode-remote.remote-ssh-edit.vsix && \
     bsdtar -xf ms-vscode-remote.remote-ssh-edit.vsix extension && \
     rm ms-vscode-remote.remote-ssh-edit.vsix && \
-    mv extension $HOME/.vscode/extensions/ms-vscode-remote.remote-ssh-edit-0.45.6 && \
+    mv extension $HOME/.vscode/extensions/ms-vscode-remote.remote-ssh-edit-0.46.1 && \
     # Install remote development ssh - explorer
     # https://marketplace.visualstudio.com/items?itemName=ms-vscode-remote.remote-ssh-explorer
-    wget --quiet https://marketplace.visualstudio.com/_apis/public/gallery/publishers/ms-vscode-remote/vsextensions/remote-ssh-explorer/0.45.6/vspackage -O ms-vscode-remote.remote-ssh-explorer.vsix && \
+    wget --quiet https://marketplace.visualstudio.com/_apis/public/gallery/publishers/ms-vscode-remote/vsextensions/remote-ssh-explorer/0.46.1/vspackage -O ms-vscode-remote.remote-ssh-explorer.vsix && \
     bsdtar -xf ms-vscode-remote.remote-ssh-explorer.vsix extension && \
     rm ms-vscode-remote.remote-ssh-explorer.vsix && \
-    mv extension $HOME/.vscode/extensions/ms-vscode-remote.remote-ssh-explorer-0.45.6 && \
+    mv extension $HOME/.vscode/extensions/ms-vscode-remote.remote-ssh-explorer-0.46.1 && \
     # TODO install beautify (smaller - 16MB) or prettier?
     # Fix permissions
     fix-permissions.sh $HOME/.vscode/extensions/ && \

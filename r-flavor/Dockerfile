@@ -22,7 +22,12 @@ RUN \
 
 ### CONFIGURATION ###
 
+# Add supervisor config to start rstudio on port 8071
 COPY resources/rstudio-service.conf  /etc/supervisor/conf.d/
+
+RUN \
+    # Create tool entry for R Studio Server
+    echo '{"id": "rstudio-link", "name": "RStudio", "url_path": "/tools/8071/", "description": "Development environment for R"}' > $HOME/.workspace/tools/rstudio-server.json
 
 # Overwrite & add Labels
 ARG ARG_BUILD_DATE="unknown"
