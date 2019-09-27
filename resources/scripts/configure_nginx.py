@@ -7,6 +7,7 @@ Configure and start nginx service
 from subprocess import call
 import os
 import sys
+from urllib.parse import quote, unquote
 
 # Enable logging
 import logging
@@ -34,7 +35,11 @@ if ENV_NAME_SERVICE_PASSWORD in os.environ:
 NGINX_FILE = "/etc/nginx/nginx.conf"
 
 # Replace base url placeholders with actual base url -> should 
-call("sed -i 's@{WORKSPACE_BASE_URL}@" + os.getenv("WORKSPACE_BASE_URL", "").rstrip('/') + "@g' " + NGINX_FILE, shell=True)
+decoded_base_url = unquote(os.getenv("WORKSPACE_BASE_URL", "").rstrip('/'))
+call("sed -i 's@{WORKSPACE_BASE_URL_DECODED}@" + decoded_base_url + "@g' " + NGINX_FILE, shell=True)
+# Set url escaped url
+encoded_base_url = quote(decoded_base_url, safe="/%")
+call("sed -i 's@{WORKSPACE_BASE_URL_ENCODED}@" + encoded_base_url + "@g' " + NGINX_FILE, shell=True)
 
 # Activate or deactivate jupyter based authentication for tooling
 call("sed -i 's@{AUTHENTICATE_VIA_JUPYTER}@" + os.getenv("AUTHENTICATE_VIA_JUPYTER", "false").lower().strip() + "@g' " + NGINX_FILE, shell=True)

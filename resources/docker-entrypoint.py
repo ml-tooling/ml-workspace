@@ -8,6 +8,7 @@ from subprocess import call
 import os
 import math
 import sys
+from urllib.parse import quote
 
 # Enable logging
 import logging
@@ -45,6 +46,8 @@ if not base_url.startswith("/"):
 
 # Remove trailing slash
 base_url = base_url.rstrip('/').strip()
+# always quote base url
+base_url = quote(base_url, safe="/%")
 
 set_env_variable(ENV_NAME_WORKSPACE_BASE_URL, base_url)
 
