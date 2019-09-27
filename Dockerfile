@@ -840,6 +840,7 @@ RUN \
                 fs \
                 speedtorch \
                 attrs \
+                transformers \
                 lazycluster && \
     # Cleanup
     clean-layer.sh
