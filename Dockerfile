@@ -990,8 +990,8 @@ RUN \
 ENV KMP_DUPLICATE_LIB_OK="True" \
     # TensorFlow uses less than half the RAM with tcmalloc relative to the default. - requires google-perftools
     LD_PRELOAD="/usr/lib/libtcmalloc.so.4" \
-    # Control how to bind OpenMP* threads to physical processing units
-    KMP_AFFINITY="granularity=fine,verbose,compact,1,0" \
+    # Control how to bind OpenMP* threads to physical processing units # verbose
+    KMP_AFFINITY="granularity=fine,compact,1,0" \
     KMP_BLOCKTIME=0
     # KMP_BLOCKTIME="1" -> is not faster in my tests
     # TODO set PYTHONDONTWRITEBYTECODE
