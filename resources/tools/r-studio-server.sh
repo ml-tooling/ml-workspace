@@ -17,7 +17,8 @@ done
 if [ ! -f "/usr/lib/rstudio-server/bin/rserver" ]; then
     echo "Installing RStudio Server. Please wait..."
     cd $RESOURCES_PATH
-    conda install -y -c r r-base
+    # r-base and r-cairo (for displaying plots)
+    conda install -y -c r r-base r-cairo
     apt-get update
     wget https://download2.rstudio.org/server/trusty/amd64/rstudio-server-1.2.1335-amd64.deb -O ./rstudio.deb
     # ld library path makes problems
@@ -31,9 +32,14 @@ if [ ! -f "/usr/lib/rstudio-server/bin/rserver" ]; then
     # Make rstudio able to use passwordless sudo
     usermod -aG sudo rstudio
     echo "rstudio ALL=(ALL) NOPASSWD:ALL" >> /etc/sudoers
+    # configure rserver:
+    # https://docs.rstudio.com/ide/server-pro/1.0.34/r-sessions.html
+    # https://support.rstudio.com/hc/en-us/articles/200552316-Configuring-the-Server
+    # add conda lib to ld library -> otherwise plotting does not work: https://github.com/ml-tooling/ml-workspace/issues/6
+    printf "rsession-ld-library-path=/opt/conda/lib/" > /etc/rstudio/rserver.conf
     # configure working directory to workspace
     printf "session-default-working-dir="$WORKSPACE_HOME"\nsession-default-new-project-dir="$WORKSPACE_HOME > /etc/rstudio/rsession.conf
-    echo "setwd ('"$WORKSPACE_HOME"')" > /home/rstudio/.Rprofile
+    printf "setwd ('"$WORKSPACE_HOME"')" > /home/rstudio/.Rprofile
 else
     echo "RStudio Server is already installed"
 fi
@@ -51,7 +57,7 @@ if [ $INSTALL_ONLY = 0 ] ; then
     # Fix tmp permissions - does not work if tmp permissions are wrong
     chmod 1777 /tmp
     # Run rstudio with rstudio user and empty ld_library_path (otherwise it gets stuck)
-    LD_LIBRARY_PATH="" LD_PRELOAD=="" USER=rstudio /usr/lib/rstudio-server/bin/rserver --server-working-dir=$WORKSPACE_HOME --server-daemonize=0 --auth-none=1 --auth-validate-users=0 --www-port $PORT
+    LD_LIBRARY_PATH="" LD_PRELOAD="" USER=rstudio /usr/lib/rstudio-server/bin/rserver --server-working-dir=$WORKSPACE_HOME --server-daemonize=0 --auth-none=1 --auth-validate-users=0 --www-port $PORT
     sleep 10
 fi
 
