@@ -840,6 +840,7 @@ RUN \
                 fs \
                 speedtorch \
                 attrs \
+                addict \
                 transformers \
                 lazycluster && \
     # Cleanup
