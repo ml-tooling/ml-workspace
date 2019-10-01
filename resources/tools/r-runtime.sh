@@ -20,7 +20,7 @@ if ! hash Rscript 2>/dev/null; then
     apt-get install -y --no-install-recommends fonts-dejavu unixodbc unixodbc-dev gfortran libsasl2-dev libssl-dev
     # TODO install: r-cran-rodbc via apt-get -> removed since it install an r-base via apt-get
     # Install newest version, basics, and essentials https://docs.anaconda.com/anaconda/packages/r-language-pkg-docs/
-    conda install -y -c r "r-base==3.6.*" r-reticulate rpy2 r-rodbc unixodbc cyrus-sasl r-essentials
+    conda install -y -c r "r-base==3.6.*" r-reticulate rpy2 r-rodbc unixodbc cyrus-sasl r-essentials r-cairo
     # Install irkernel - needs to be installed from conda forge -> otherwise downgrades package
     conda install -y -c conda-forge r-irkernel
     # Upgrade pyzmp to newest version -> gets downgraded for whatever reason...

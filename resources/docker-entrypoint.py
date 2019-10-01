@@ -8,6 +8,7 @@ from subprocess import call
 import os
 import math
 import sys
+from urllib.parse import quote
 
 # Enable logging
 import logging
@@ -26,7 +27,7 @@ def set_env_variable(env_variable: str, value: str):
     os.environ[env_variable] = value
 
 # Manage base path dynamically
-ENV_JUPYTERHUB_BASE_URL = os.getenv("JUPYTERHUB_BASE_URL")
+
 ENV_JUPYTERHUB_SERVICE_PREFIX = os.getenv("JUPYTERHUB_SERVICE_PREFIX")
 
 ENV_NAME_WORKSPACE_BASE_URL = "WORKSPACE_BASE_URL"
@@ -35,9 +36,13 @@ base_url = os.environ[ENV_NAME_WORKSPACE_BASE_URL]
 if not base_url:
     base_url = ""
 
-if ENV_JUPYTERHUB_BASE_URL and ENV_JUPYTERHUB_SERVICE_PREFIX:
-    # Installation with Jupyterhub -> use combination as base path
-    base_url = ENV_JUPYTERHUB_BASE_URL.rstrip('/') + ENV_JUPYTERHUB_SERVICE_PREFIX
+if ENV_JUPYTERHUB_SERVICE_PREFIX:
+    # Installation with Jupyterhub
+    
+    # Base Url is not needed, Service prefix contains full path
+    # ENV_JUPYTERHUB_BASE_URL = os.getenv("JUPYTERHUB_BASE_URL")
+    # ENV_JUPYTERHUB_BASE_URL.rstrip('/') + 
+    base_url = ENV_JUPYTERHUB_SERVICE_PREFIX
 
 # Add leading slash
 if not base_url.startswith("/"):
@@ -45,6 +50,8 @@ if not base_url.startswith("/"):
 
 # Remove trailing slash
 base_url = base_url.rstrip('/').strip()
+# always quote base url
+base_url = quote(base_url, safe="/%")
 
 set_env_variable(ENV_NAME_WORKSPACE_BASE_URL, base_url)
 
