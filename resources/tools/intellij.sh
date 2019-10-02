@@ -27,7 +27,8 @@ fi
 
 # Run
 if [ $INSTALL_ONLY = 0 ] ; then
-    echo "Starting IntelliJ Community"
+    echo "Starting IntelliJ Community..."
+    echo "IntelliJ is a GUI application. Make sure to run this script only within the VNC Desktop."
     intellij-community
     sleep 10
 fi

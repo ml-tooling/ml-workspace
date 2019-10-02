@@ -21,7 +21,8 @@ fi
 
 # Run
 if [ $INSTALL_ONLY = 0 ] ; then
-    echo "Starting Spyder"
+    echo "Starting Spyder..."
+    echo "Spyder is a GUI application. Make sure to run this script only within the VNC Desktop."
     spyder
     sleep 10
 fi

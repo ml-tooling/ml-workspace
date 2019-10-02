@@ -24,7 +24,8 @@ fi
 
 # Run
 if [ $INSTALL_ONLY = 0 ] ; then
-    echo "Starting Azure Data Studio"
+    echo "Starting Azure Data Studio..."
+    echo "Azure Data Studio is a GUI application. Make sure to run this script only within the VNC Desktop."
     /usr/share/azuredatastudio/azuredatastudio --unity-launch $WORKSPACE_HOME
     sleep 10
 fi

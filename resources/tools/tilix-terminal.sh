@@ -23,7 +23,8 @@ fi
 
 # Run
 if [ $INSTALL_ONLY = 0 ] ; then
-    echo "Starting Tilix Terminal"
+    echo "Starting Tilix Terminal..."
+    echo "Tilix Terminal is a GUI application. Make sure to run this script only within the VNC Desktop."
     tilix
     sleep 10
 fi

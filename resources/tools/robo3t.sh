@@ -26,7 +26,8 @@ fi
 
 # Run
 if [ $INSTALL_ONLY = 0 ] ; then
-    echo "Starting Robo3T"
+    echo "Starting Robo3T..."
+    echo "Robo3T is a GUI application. Make sure to run this script only within the VNC Desktop."
     robo3t
     sleep 10
 fi

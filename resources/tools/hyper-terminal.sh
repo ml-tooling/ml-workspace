@@ -27,7 +27,8 @@ fi
 
 # Run
 if [ $INSTALL_ONLY = 0 ] ; then
-    echo "Starting Hyper Terminal"
+    echo "Starting Hyper Terminal..."
+    echo "Hyper Terminal is a GUI application. Make sure to run this script only within the VNC Desktop."
     /opt/Hyper/hyper
     sleep 10
 fi
