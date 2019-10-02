@@ -841,6 +841,11 @@ RUN \
                 speedtorch \
                 attrs \
                 addict \
+                path.py \
+                catalyst \
+                lmdb \
+                # 5MB
+                pipenv \ 
                 transformers \
                 lazycluster && \
     # Cleanup
