@@ -36,7 +36,7 @@ if [ ! -f "/usr/lib/rstudio-server/bin/rserver" ]; then
     # https://docs.rstudio.com/ide/server-pro/1.0.34/r-sessions.html
     # https://support.rstudio.com/hc/en-us/articles/200552316-Configuring-the-Server
     # add conda lib to ld library -> otherwise plotting does not work: https://github.com/ml-tooling/ml-workspace/issues/6
-    printf "rsession-ld-library-path=/opt/conda/lib/" > /etc/rstudio/rserver.conf
+    printf "rsession-ld-library-path="$CONDA_DIR"/lib/" > /etc/rstudio/rserver.conf
     # configure working directory to workspace
     printf "session-default-working-dir="$WORKSPACE_HOME"\nsession-default-new-project-dir="$WORKSPACE_HOME > /etc/rstudio/rsession.conf
     printf "setwd ('"$WORKSPACE_HOME"')" > /home/rstudio/.Rprofile
