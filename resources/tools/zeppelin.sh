@@ -19,8 +19,9 @@ if [ ! -f "/resources/zeppelin/zeppelin-0.8.1-bin-all/bin/zeppelin-daemon.sh"  ]
     cd $RESOURCES_PATH
     mkdir ./zeppelin
     cd ./zeppelin
-    wget https://www.apache.org/dist/zeppelin/zeppelin-0.8.1/zeppelin-0.8.1-bin-all.tgz -O ./zeppelin-0.8.1-bin-all.tgz
-    tar -xfz zeppelin-0.8.1-bin-all.tgz
+    echo "Downloading. Please wait..."
+    wget -q https://www.apache.org/dist/zeppelin/zeppelin-0.8.1/zeppelin-0.8.1-bin-all.tgz -O ./zeppelin-0.8.1-bin-all.tgz
+    tar xfz zeppelin-0.8.1-bin-all.tgz
     rm zeppelin-0.8.1-bin-all.tgz
     # https://github.com/mirkoprescha/spark-zeppelin-docker/blob/master/Dockerfile#L40
     echo '{ "allow_root": true }' > $HOME/.bowerrc
