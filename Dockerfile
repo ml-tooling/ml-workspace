@@ -995,12 +995,12 @@ RUN \
 # http://astroa.physics.metu.edu.tr/MANUALS/intel_ifc/mergedProjects/optaps_for/common/optaps_par_var.htm
 # https://www.tensorflow.org/guide/performance/overview#tuning_mkl_for_the_best_performance
 ENV KMP_DUPLICATE_LIB_OK="True" \
-    # TensorFlow uses less than half the RAM with tcmalloc relative to the default. - requires google-perftools
-    LD_PRELOAD="/usr/lib/libtcmalloc.so.4" \
     # Control how to bind OpenMP* threads to physical processing units # verbose
     KMP_AFFINITY="granularity=fine,compact,1,0" \
     KMP_BLOCKTIME=0
     # KMP_BLOCKTIME="1" -> is not faster in my tests
+    # TensorFlow uses less than half the RAM with tcmalloc relative to the default. - requires google-perftools
+    # Too many issues: LD_PRELOAD="/usr/lib/libtcmalloc.so.4" \
     # TODO set PYTHONDONTWRITEBYTECODE
     # TODO set XDG_CONFIG_HOME, CLICOLOR?
 
