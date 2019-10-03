@@ -820,8 +820,13 @@ RUN \
 ### END VSCODE ###
 
 ### INCUBATION ZONE ### 
-
 COPY resources/tools/oh-my-zsh.sh $RESOURCES_PATH/tools/oh-my-zsh.sh
+
+RUN \
+    # ZSH 
+    /bin/bash $RESOURCES_PATH/tools/oh-my-zsh.sh --install && \
+    # Cleanup
+    clean-layer.sh
 
 RUN \
    # If minimal or light flavor -> exit here
@@ -830,20 +835,31 @@ RUN \
     fi && \
     apt-get update && \
     apt-get install  -y --no-install-recommends autojump git-flow csh libbz2-dev xclip libeigen3-dev clinfo && \
-    # ZSH 
-    /bin/bash $RESOURCES_PATH/tools/oh-my-zsh.sh --install && \
     # New Python Libraries:
+    # https://pyviz.org/tools.html
     pip install --no-cache-dir \
-                # pyramid
-                # 20MB: interpret \
-                # not compatible with flake8; prospector
                 fs \
                 speedtorch \
                 attrs \
                 addict \
                 path.py \
                 catalyst \
+                xarray \
+                plotly_express \
+                pandas-bokeh \
+                scikit-plot \
+                pygal \
+                panel \
                 lmdb \
+                # 2,3MB hvplot \
+                # 3.1MB intake \
+                # 4.3MB hypertools \
+                # 12MB datashader \
+                # pyramid
+                # 20MB: interpret \
+                # not compatible with flake8; prospector
+                # needs arrow vaex \
+                # Downgrade plotly: cufflinks \
                 # 5MB
                 pipenv \ 
                 transformers \
@@ -994,6 +1010,7 @@ RUN \
 # https://github.com/intel/pytorch#bkm-on-xeon
 # http://astroa.physics.metu.edu.tr/MANUALS/intel_ifc/mergedProjects/optaps_for/common/optaps_par_var.htm
 # https://www.tensorflow.org/guide/performance/overview#tuning_mkl_for_the_best_performance
+# https://software.intel.com/en-us/articles/maximize-tensorflow-performance-on-cpu-considerations-and-recommendations-for-inference
 ENV KMP_DUPLICATE_LIB_OK="True" \
     # Control how to bind OpenMP* threads to physical processing units # verbose
     KMP_AFFINITY="granularity=fine,compact,1,0" \
