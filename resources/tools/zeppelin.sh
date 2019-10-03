@@ -20,8 +20,10 @@ if [ ! -f "/resources/zeppelin/zeppelin-0.8.1-bin-all/bin/zeppelin-daemon.sh"  ]
     mkdir ./zeppelin
     cd ./zeppelin
     wget https://www.apache.org/dist/zeppelin/zeppelin-0.8.1/zeppelin-0.8.1-bin-all.tgz -O ./zeppelin-0.8.1-bin-all.tgz
-    tar -zxvf zeppelin-0.8.1-bin-all.tgz
+    tar -xfz zeppelin-0.8.1-bin-all.tgz
     rm zeppelin-0.8.1-bin-all.tgz
+    # https://github.com/mirkoprescha/spark-zeppelin-docker/blob/master/Dockerfile#L40
+    echo '{ "allow_root": true }' > $HOME/.bowerrc
 else
     echo "Zeppelin is already installed"
 fi
@@ -35,9 +37,13 @@ if [ $INSTALL_ONLY = 0 ] ; then
     echo "Starting Zeppelin on port "$PORT
     # Create tool entry for tooling plugin
     echo '{"id": "zeppelin-link", "name": "Zeppelin", "url_path": "/tools/'$PORT'/", "description": "Notebook for interactive data analytics"}' > $HOME/.workspace/tools/zeppelin.json
+    export ZEPPELIN_HOME=$RESOURCES_PATH/zeppelin/zeppelin-0.8.1-bin-all
     mkdir -p $WORKSPACE_HOME/zeppelin
+    mkdir -p $ZEPPELIN_HOME/logs
+    mkdir -p $ZEPPELIN_HOME/run
     export ZEPPELIN_NOTEBOOK_DIR=$WORKSPACE_HOME/zeppelin
     export ZEPPELIN_PORT=$PORT
-    $RESOURCES_PATH/zeppelin/zeppelin-0.8.1-bin-all/bin/zeppelin-daemon.sh start
+    # ZEPPELIN_CONF_DIR=$ZEPPELIN_HOME/conf
+    $ZEPPELIN_HOME/bin/zeppelin.sh start
     sleep 15
 fi
