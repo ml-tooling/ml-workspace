@@ -829,7 +829,7 @@ RUN \
         exit 0 ; \
     fi && \
     apt-get update && \
-    apt-get install  -y --no-install-recommends autojump git-flow && \
+    apt-get install  -y --no-install-recommends autojump git-flow csh libbz2-dev xclip libeigen3-dev clinfo && \
     # ZSH 
     /bin/bash $RESOURCES_PATH/tools/oh-my-zsh.sh --install && \
     # New Python Libraries:
