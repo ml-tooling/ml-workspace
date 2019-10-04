@@ -4,10 +4,10 @@ import argparse
 import datetime
 
 parser = argparse.ArgumentParser()
-parser.add_argument('--name', help='name of docker container', default="ml-workspace")
+parser.add_argument('--name', help='base name of docker container', default="ml-workspace")
 parser.add_argument('--version', help='version tag of docker container', default="latest")
 parser.add_argument('--deploy', help='deploy docker container to remote', action='store_true')
-parser.add_argument('--flavor', help='flavor (full, light, minimal) used for docker container', default='full')
+parser.add_argument('--flavor', help='flavor (spark) used for docker container', default='spark')
 
 REMOTE_IMAGE_PREFIX = "mltooling/"
 
@@ -47,27 +47,17 @@ def build(module="."):
         sys.exit(1)
 
 if not args.flavor:
-    args.flavor = "full"
+    args.flavor = "spark"
 
 args.flavor = str(args.flavor).lower()
 
 if args.flavor == "all":
-    args.flavor = "full"
-    build()
-    args.flavor = "light"
-    build()
-    args.flavor = "minimal"
-    build()
-    args.flavor = "r"
-    build()
     args.flavor = "spark"
-    build()
-    args.flavor = "gpu"
     build()
     sys.exit(0)
 
 # unknown flavor -> try to build from subdirectory
-if args.flavor not in ["full", "minimal", "light"]:
+if args.flavor not in ["spark"]:
     # assume that flavor has its own directory with build.py
     build(args.flavor + "-flavor")
     sys.exit(0)
@@ -76,9 +66,8 @@ service_name = os.path.basename(os.path.dirname(os.path.realpath(__file__)))
 if args.name:
     service_name = args.name
 
-# Build full image without suffix if the flavor is not minimal or light
-if args.flavor in ["minimal", "light"]:
-    service_name += "-" + args.flavor
+# add flavor to service name
+service_name += "-" + args.flavor
 
 # docker build
 git_rev = "unknown"

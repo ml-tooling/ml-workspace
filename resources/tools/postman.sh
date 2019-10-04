@@ -26,7 +26,8 @@ fi
 
 # Run
 if [ $INSTALL_ONLY = 0 ] ; then
-    echo "Starting Postman"
+    echo "Starting Postman..."
+    echo "Postman is a GUI application. Make sure to run this script only within the VNC Desktop."
     postman
     sleep 10
 fi

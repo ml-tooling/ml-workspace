@@ -72,6 +72,10 @@ if ENV_NAME_SERVICE_SSL_ENABLED in os.environ \
     call("sed -i 's@#ssl_certificate@ssl_certificate " + ENV_SSL_RESOURCES_PATH + "/cert.crt;@g' " + NGINX_FILE, shell=True)
     # activate ssl in listen
     call("sed -i -r 's/listen ([0-9]+);/listen \\1 ssl;/g' " + NGINX_FILE, shell=True)
+
+    # create / copy certificates -> only if SSL is enabled
+    call(ENV_RESOURCES_PATH + "/scripts/setup-certs.sh", shell=True)
+
 ###
 
 # PREPARE BASIC AUTH
@@ -86,6 +90,3 @@ if ENV_SERVICE_USER and ENV_SERVICE_PASSWORD:
     call("echo '" + ENV_SERVICE_PASSWORD + "' | htpasswd -b -i -c /etc/nginx/.htpasswd '"\
             + ENV_SERVICE_USER +"'", shell=True)
 ###
-
-# create / copy certificates
-call(ENV_RESOURCES_PATH + "/scripts/setup-certs.sh", shell=True)

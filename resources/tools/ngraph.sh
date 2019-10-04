@@ -12,17 +12,13 @@ for arg in "$@"; do
     esac
 done
 
-if ! hash spyder 2>/dev/null; then
-    echo "Installing Spyder. Please wait..."
-    conda install -y spyder
-else
-    echo "Spyder is already installed"
-fi
+# https://www.ngraph.ai/
+echo "Installing NGraph and PlaidML. Please wait..."
+pip install -U --no-cache-dir ngraph-core ngraph-onnx plaidml
+# ngraph-tensorflow-bridge NGRAPH_TF_BACKEND="INTELGPU"
 
 # Run
 if [ $INSTALL_ONLY = 0 ] ; then
-    echo "Starting Spyder..."
-    echo "Spyder is a GUI application. Make sure to run this script only within the VNC Desktop."
-    spyder
-    sleep 10
+    echo "Use ngraph as described on the ngraph docs: https://www.ngraph.ai/"
+    sleep 15
 fi

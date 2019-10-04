@@ -24,7 +24,8 @@ fi
 
 # Run
 if [ $INSTALL_ONLY = 0 ] ; then
-    echo "Starting nteract"
+    echo "Starting nteract..."
+    echo "nteract is a GUI application. Make sure to run this script only within the VNC Desktop."
     nteract
     sleep 10
 fi

@@ -21,7 +21,10 @@ log = logging.getLogger(__name__)
 
 log.info("Starting...")
 
-def set_env_variable(env_variable: str, value: str):
+def set_env_variable(env_variable: str, value: str, ignore_if_set: bool = False):
+    if ignore_if_set and os.getenv(env_variable, None):
+        # if it is already set, do not set it to the new value
+        return
     # TODO is export needed as well?
     call('export ' + env_variable + '="' + value + '"', shell=True)
     os.environ[env_variable] = value
@@ -80,12 +83,14 @@ if ENV_MAX_NUM_THREADS:
             ENV_MAX_NUM_THREADS = "32"
     
     # only set if it is not None or empty
-    set_env_variable("OMP_NUM_THREADS", ENV_MAX_NUM_THREADS) # OpenMP
-    set_env_variable("OPENBLAS_NUM_THREADS", ENV_MAX_NUM_THREADS) # OpenBLAS
-    set_env_variable("MKL_NUM_THREADS", ENV_MAX_NUM_THREADS) # MKL
-    set_env_variable("VECLIB_MAXIMUM_THREADS", ENV_MAX_NUM_THREADS) # Accelerate
-    set_env_variable("NUMEXPR_NUM_THREADS", ENV_MAX_NUM_THREADS) # Numexpr
-    set_env_variable("NUMBA_NUM_THREADS", ENV_MAX_NUM_THREADS) # Numba
+    set_env_variable("OMP_NUM_THREADS", ENV_MAX_NUM_THREADS, ignore_if_set=True) # OpenMP
+    set_env_variable("OPENBLAS_NUM_THREADS", ENV_MAX_NUM_THREADS, ignore_if_set=True) # OpenBLAS
+    set_env_variable("MKL_NUM_THREADS", ENV_MAX_NUM_THREADS, ignore_if_set=True) # MKL
+    set_env_variable("VECLIB_MAXIMUM_THREADS", ENV_MAX_NUM_THREADS, ignore_if_set=True) # Accelerate
+    set_env_variable("NUMEXPR_NUM_THREADS", ENV_MAX_NUM_THREADS, ignore_if_set=True) # Numexpr
+    set_env_variable("NUMEXPR_MAX_THREADS", ENV_MAX_NUM_THREADS, ignore_if_set=True) # Numexpr - maximum
+    set_env_variable("NUMBA_NUM_THREADS", ENV_MAX_NUM_THREADS, ignore_if_set=True) # Numba
+    set_env_variable("SPARK_WORKER_CORES", ENV_MAX_NUM_THREADS, ignore_if_set=True) # Spark Worker
 
 ENV_RESOURCES_PATH = os.getenv("RESOURCES_PATH", "/resources")
 ENV_WORKSPACE_HOME = os.getenv('WORKSPACE_HOME', "/workspace")

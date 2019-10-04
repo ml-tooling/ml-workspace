@@ -24,7 +24,8 @@ fi
 
 # Run
 if [ $INSTALL_ONLY = 0 ] ; then
-    echo "Starting Sqlectron"
+    echo "Starting Sqlectron..."
+    echo "Sqlectron is a GUI application. Make sure to run this script only within the VNC Desktop."
     sqlectron
     sleep 10
 fi

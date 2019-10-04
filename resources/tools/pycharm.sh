@@ -27,7 +27,8 @@ fi
 
 # Run
 if [ $INSTALL_ONLY = 0 ] ; then
-    echo "Starting PyCharm Community"
+    echo "Starting PyCharm Community..."
+    echo "PyCharm is a GUI application. Make sure to run this script only within the VNC Desktop."
     pycharm-community
     sleep 10
 fi

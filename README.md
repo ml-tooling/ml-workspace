@@ -294,6 +294,26 @@ docker run -p 8080:8080 mltooling/ml-workspace-r:latest
 ```
 </details>
 
+#### Spark Flavor
+
+<p>
+<a href="https://hub.docker.com/r/mltooling/ml-workspace-spark" title="Docker Image Version"><img src="https://images.microbadger.com/badges/version/mltooling/ml-workspace-spark.svg"></a>
+<a href="https://hub.docker.com/r/mltooling/ml-workspace-spark" title="Docker Image Metadata"><img src="https://images.microbadger.com/badges/image/mltooling/ml-workspace-spark.svg"></a>
+<a href="https://hub.docker.com/r/mltooling/ml-workspace-spark" title="Docker Pulls"><img src="https://img.shields.io/docker/pulls/mltooling/ml-workspace-spark.svg"></a>
+<a href="https://hub.docker.com/r/mltooling/ml-workspace-spark" title="Docker Stars"><img src="https://img.shields.io/docker/stars/mltooling/ml-workspace-spark"></a>
+</p>
+
+<details>
+<summary>Details (click to expand...)</summary>
+
+The Spark flavor (`mltooling/ml-workspace-spark`) is based on our R-flavor workspace image and extends it with the Spark-interpreter, Spark-Jupyter kernel (Apache Toree), Zeppelin Notebook (access via `Open Tool -> Zeppelin`), and a few additional python libraries & Jupyter extensions.
+
+```bash
+docker run -p 8080:8080 mltooling/ml-workspace-spark:latest
+```
+
+</details>
+
 #### GPU Flavor
 
 <p>
