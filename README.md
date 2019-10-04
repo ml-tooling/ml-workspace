@@ -306,7 +306,7 @@ docker run -p 8080:8080 mltooling/ml-workspace-r:latest
 <details>
 <summary>Details (click to expand...)</summary>
 
-The Spark flavor (`mltooling/ml-workspace-spark`) is based on our R-flavor workspace image and extends it with the Spark-interpreter, Spark-Jupyter kernel (Apache Toree), Zeppelin Notebook (access via `Open Tool -> Zeppelin`), and a few python libraries & Jupyter extensions for Spark (Sparkmonitor, sparkmagic, spark-sklearn).
+The Spark flavor (`mltooling/ml-workspace-spark`) is based on our R-flavor workspace image and extends it with the Spark-interpreter, Spark-Jupyter kernel (Apache Toree), Zeppelin Notebook (access via `Open Tool -> Zeppelin`), and a few additional python libraries & Jupyter extensions.
 
 ```bash
 docker run -p 8080:8080 mltooling/ml-workspace-spark:latest
