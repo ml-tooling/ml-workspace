@@ -24,7 +24,7 @@ ENV \
 
 RUN \
     # https://github.com/jupyter/docker-stacks/blob/master/pyspark-notebook/Dockerfile#L18
-    wget https://www-eu.apache.org/dist/spark/spark-${SPARK_VERSION}/spark-${SPARK_VERSION}-bin-hadoop${HADOOP_VERSION}.tgz -O ./spark.tar.gz && \
+    wget -q https://www-eu.apache.org/dist/spark/spark-${SPARK_VERSION}/spark-${SPARK_VERSION}-bin-hadoop${HADOOP_VERSION}.tgz -O ./spark.tar.gz && \
     tar xfz spark.tar.gz -C /usr/local --owner root --group root --no-same-owner && \
     rm spark.tar.gz && \
     # link spark folder to /usr/local/spark
