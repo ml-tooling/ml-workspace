@@ -32,13 +32,19 @@ RUN \
     # Cleanup
     clean-layer.sh
 
+# Install Zeppelin 
+RUN \
+    /bin/bash $RESOURCES_PATH/tools/zeppelin.sh --install && \
+    # Cleanup
+    clean-layer.sh
+
 # Install spark python libraries
 RUN \
     # pyspark
     pip install --no-cache-dir \
                         findspark \
                         pyarrow \
-                        spark-sklearn \
+                        # downgrades sklearn: spark-sklearn \
                         # Improved performance: https://github.com/mozilla/jupyter-spark
                         lxml \
                         # Spylon - Jupyter kernel for scala and spark
@@ -75,12 +81,6 @@ RUN \
     jupyter nbextension enable sparkmonitor --py --user && \    
     jupyter serverextension enable --py --user sparkmonitor && \
     ipython profile create && echo "c.InteractiveShellApp.extensions.append('sparkmonitor.kernelextension')" >>  $(ipython profile locate default)/ipython_kernel_config.py && \
-    # Cleanup
-    clean-layer.sh
-
-# Install Zeppelin 
-RUN \
-    /bin/bash $RESOURCES_PATH/tools/zeppelin.sh --install && \
     # Cleanup
     clean-layer.sh
 
