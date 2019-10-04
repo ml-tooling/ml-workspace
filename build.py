@@ -60,6 +60,8 @@ if args.flavor == "all":
     build()
     args.flavor = "r"
     build()
+    args.flavor = "spark"
+    build()
     args.flavor = "gpu"
     build()
     sys.exit(0)
