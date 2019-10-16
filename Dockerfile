@@ -838,19 +838,7 @@ RUN \
     # New Python Libraries:
     # https://pyviz.org/tools.html
     pip install --no-cache-dir \
-                fs \
-                speedtorch \
-                attrs \
-                addict \
-                path.py \
                 catalyst \
-                xarray \
-                plotly_express \
-                pandas-bokeh \
-                scikit-plot \
-                pygal \
-                panel \
-                lmdb \
                 # 2,3MB hvplot \
                 # 3.1MB intake \
                 # 4.3MB hypertools \
@@ -860,9 +848,6 @@ RUN \
                 # not compatible with flake8; prospector
                 # needs arrow vaex \
                 # Downgrade plotly: cufflinks \
-                # 5MB
-                pipenv \ 
-                transformers \
                 lazycluster && \
     # Cleanup
     clean-layer.sh
