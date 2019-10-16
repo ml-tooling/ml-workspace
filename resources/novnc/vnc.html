@@ -59,6 +59,12 @@
     <!-- ES2015/ES6 modules polyfill -->
     <script type="module">
         window._noVNC_has_module_support = true;
+        // If the browser is Safari, set the flag to false so that the script
+        // "vendor/browser-es-module-loader/dist/browser-es-module-loader.js" is loaded in the next section.
+        // Otherwise, the page does not load correctly
+        if (navigator.vendor.indexOf("Apple") > -1) {
+            window._noVNC_has_module_support = false;
+        }
     </script>
     <script>
         window.addEventListener("load", function() {
