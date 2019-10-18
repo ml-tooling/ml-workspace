@@ -908,6 +908,15 @@ If you want to directly connect to the workspace via a VNC client (not using the
 
 </details>
 
+<details>
+<summary><b>How to use a non-root user within the workspace?</b> (click to expand...)</summary>
+
+Unfortunately, we currently do not support using a non-root user within the workspace. We plan to provide this capability and already started with some refactoring to allow this configuration. However, this still requires a lot more work, refactoring, and testing from our side.
+
+Using root-user (or users with sudo permission) within containers is generally not recommended since, in case of system/kernel vulnerabilities, a user might be able to break out of the container and be able to access the host system. Since it is not very common to have such problematic kernel vulnerabilities, the risk of a severe attack is quite minimal. As explained in the [official Docker documentation](https://docs.docker.com/engine/security/security/#linux-kernel-capabilities), containers (even with root users) are generally quite secure in preventing a breakout to the host. And compared to many other container use-cases, we actually want to provide the flexibility to the user to have control and system-level installation permissions within the workspace container.
+
+</details>
+
 ---
 
 <br>
