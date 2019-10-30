@@ -22,7 +22,7 @@ if ! hash fasttext 2>/dev/null; then
     # set mongodb runner to set default environment variables
     # alias mongod='LD_LIBRARY_PATH="" LD_PRELOAD="" /usr/bin/mongod'
     mv /usr/bin/mongod /usr/bin/mongod-original
-    printf '#!/bin/bash\nquoted_args="$(printf "${1+ %q}" "$@")"\nbash -c "LD_LIBRARY_PATH="" LD_PRELOAD="" /usr/bin/mongod-original$quoted_args"' > /usr/bin/mongod
+    printf '#!/bin/bash\nbash -c "LD_LIBRARY_PATH= LD_PRELOAD= /usr/bin/mongod-original $@"' > /usr/bin/mongod
     chmod a+rwx /usr/bin/mongod
 else
     echo "MongoDB is already installed"
