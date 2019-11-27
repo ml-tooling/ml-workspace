@@ -67,7 +67,7 @@ tflearn==0.3.2 # Deep Learning Library featuring a higher-level API for TensorFl
 dm-sonnet==1.35 # Sonnet is a library for building neural networks in TensorFlow.
 statsmodels==0.10.1 # Statistical computations and models for Python
 vowpalwabbit==8.7.0.post1 # Fast machine learning library for online learning
-catalyst==19.10.2 # High-level framework for PyTorch DL & RL research
+catalyst==19.11.6 # High-level framework for PyTorch DL & RL research
 
 ## Data Handling and Persistence
 xarray==0.14.0 # N-D labeled arrays and datasets in Python
