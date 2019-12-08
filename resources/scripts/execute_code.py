@@ -132,7 +132,9 @@ if os.path.isdir(code_path):
     # Run code: if it is a folder, it needs a main module (e.g. __main__.py)
     exit_code = call(python_runtime + ' "' + main_script + '"')
     if exit_code > 0:
-        log.info("Execution failed. Please make sure that there is a main module (e.g. __main__.py) at this path: " + main_script)
+        log.info("Execution failed with exit code: " + str(exit_code))
+        if os.path.isdir(main_script):
+            log.info("Please make sure that there is a main module (e.g. __main__.py) at this path: " + main_script)
     else:
         log.info("Code execution finished successfully.")
     log.info("Elapsed time: " + str(timedelta(seconds=time.time() - start_time)))
