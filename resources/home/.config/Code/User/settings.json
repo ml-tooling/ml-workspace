@@ -1,7 +1,7 @@
 {
     "gitlens.showWhatsNewAfterUpgrades": false,
     "gitlens.advanced.telemetry.enabled": false,
-    "update.mode": "manual",
+    "update.mode": "none",
     "update.showReleaseNotes": false,
     "extensions.autoUpdate": false,
     "python.dataScience.autoPreviewNotebooksInInteractivePane": true,
