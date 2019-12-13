@@ -1,4 +1,4 @@
-FROM ubuntu:16.04
+FROM ubuntu:18.04
 
 USER root
 
@@ -17,7 +17,7 @@ ENV \
     DEBIAN_FRONTEND="noninteractive" \
     RESOURCES_PATH="/resources" \
     SSL_RESOURCES_PATH="/resources/ssl" \
-    WORKSPACE_HOME="/workspace" 
+    WORKSPACE_HOME="/workspace"
 
 WORKDIR $HOME
 
@@ -33,7 +33,7 @@ COPY resources/scripts/fix-permissions.sh  /usr/bin/fix-permissions.sh
 
  # Make clean-layer and fix-permissions executable
  RUN \
-    chmod a+rwx /usr/bin/clean-layer.sh && \ 
+    chmod a+rwx /usr/bin/clean-layer.sh && \
     chmod a+rwx /usr/bin/fix-permissions.sh
 
 # Generate and Set locals
@@ -55,6 +55,9 @@ ENV LC_ALL="en_US.UTF-8" \
 
 # Install basics
 RUN \
+    # TODO add repos?
+    # add-apt-repository ppa:apt-fast/stable
+    # add-apt-repository 'deb http://security.ubuntu.com/ubuntu xenial-security main'
     apt-get update --fix-missing && \
     apt-get install -y sudo apt-utils && \
     apt-get upgrade -y && \
@@ -62,14 +65,16 @@ RUN \
     apt-get install -y --no-install-recommends \
         # This is necessary for apt to access HTTPS sources: 
         apt-transport-https \
+        gnupg-agent \
+        gpg-agent \
         ca-certificates \
         build-essential \
         pkg-config \
         software-properties-common \
-        python-software-properties \
         lsof \
         net-tools \
-        curl libcurl3 \
+        libcurl4 \
+        curl \
         wget \
         cron \
         openssl \
@@ -107,14 +112,14 @@ RUN \
         libtiff-dev \
         libjpeg-dev \
         libpng-dev \
-        libpng12-dev \
-        libjasper-dev \
+        # TODO: no 18.04 installation candidate: libpng12-dev \
+        # TODO: no 18.04 installation candidate: libjasper-dev \
         libglib2.0-0 \
         libxext6 \
         libsm6 \
         libxext-dev \
         libxrender1 \
-        libzmq-dev \
+        libzmq3-dev \
         # protobuffer support
         protobuf-compiler \
         libprotobuf-dev \
@@ -155,10 +160,10 @@ RUN \
     apt-get install -y libssl-dev libpcre3 libpcre3-dev apache2-utils && \
     mkdir $RESOURCES_PATH"/openresty" && \
     cd $RESOURCES_PATH"/openresty" && \
-    wget --quiet https://openresty.org/download/openresty-1.15.8.1.tar.gz  -O ./openresty.tar.gz && \
+    wget --quiet https://openresty.org/download/openresty-1.15.8.2.tar.gz  -O ./openresty.tar.gz && \
     tar xfz ./openresty.tar.gz && \
     rm ./openresty.tar.gz && \
-    cd ./openresty-1.15.8.1/ && \
+    cd ./openresty-1.15.8.2/ && \
     # Surpress output - if there is a problem remove  > /dev/null
     ./configure --with-http_stub_status_module --with-http_sub_module > /dev/null && \
     make -j2 > /dev/null && \
@@ -207,8 +212,8 @@ RUN \
 # Install Miniconda: https://repo.continuum.io/miniconda/
 ENV \
     CONDA_DIR=/opt/conda \
-    CONDA_VERSION=4.7.10 \
-    CONDA_PYTHON_DIR=/opt/conda/lib/python3.6
+    CONDA_VERSION=4.7.12 \
+    CONDA_PYTHON_DIR=/opt/conda/lib/python3.7
 
 RUN wget --quiet https://repo.anaconda.com/miniconda/Miniconda3-${CONDA_VERSION}-Linux-x86_64.sh -O ~/miniconda.sh && \
     /bin/bash ~/miniconda.sh -b -p $CONDA_DIR && \
@@ -216,13 +221,15 @@ RUN wget --quiet https://repo.anaconda.com/miniconda/Miniconda3-${CONDA_VERSION}
     rm ~/miniconda.sh && \
     # Update conda
     $CONDA_DIR/bin/conda update -y -n base -c defaults conda && \
+    # TODO: $CONDA_DIR/bin/conda install -c anaconda setuptools && \?
+    $CONDA_DIR/bin/conda update setuptools && \
     $CONDA_DIR/bin/conda install -y conda-build && \
     # Add conda forge - Append so that conda forge has lower priority than the main channel
     $CONDA_DIR/bin/conda config --system --append channels conda-forge && \
     $CONDA_DIR/bin/conda config --system --set auto_update_conda false && \
     $CONDA_DIR/bin/conda config --system --set show_channel_urls true && \
-    # Update selected packages - install python 3.6.9
-    $CONDA_DIR/bin/conda install -y --update-all python=3.6.9 && \
+    # Update selected packages - install python 3.7.3
+    $CONDA_DIR/bin/conda install -y --update-all python=3.7.3 && \
     # Link Conda
     ln -s $CONDA_DIR/bin/python /usr/local/bin/python && \
     ln -s $CONDA_DIR/bin/conda /usr/bin/conda && \
@@ -233,7 +240,7 @@ RUN wget --quiet https://repo.anaconda.com/miniconda/Miniconda3-${CONDA_VERSION}
     # find /opt/conda/ -follow -type f -name '*.a' -delete && \
     # find /opt/conda/ -follow -type f -name '*.js.map' -delete && \
     $CONDA_DIR/bin/conda clean -y --packages && \
-    $CONDA_DIR/bin/conda clean -y -all -f  && \
+    $CONDA_DIR/bin/conda clean -y --all -f  && \
     $CONDA_DIR/bin/conda build purge-all && \
     # Fix permissions
     fix-permissions.sh $CONDA_DIR && \
@@ -247,7 +254,7 @@ ENV LD_LIBRARY_PATH=$CONDA_DIR/lib
 # Install node.js
 RUN \
     apt-get update && \
-    curl -sL https://deb.nodesource.com/setup_11.x | sudo -E bash - && \
+    curl -sL https://deb.nodesource.com/setup_13.x | sudo -E bash - && \
     apt-get install -y nodejs && \
     # As conda is first in path, the commands 'node' and 'npm' reference to the version of conda. 
     # Replace those versions with the newly installed versions of node
@@ -279,11 +286,11 @@ RUN \
     apt-get update && \
     # libgl1-mesa-dri > 150 MB -> Install jdk-headless version (without gui support)?
     # java runtime is extenable via the java-utils.sh tool intstaller script
-    apt-get install -y --no-install-recommends openjdk-8-jdk maven && \
+    apt-get install -y --no-install-recommends openjdk-11-jdk maven && \
     # Cleanup
     clean-layer.sh
 
-ENV JAVA_HOME /usr/lib/jvm/java-8-openjdk-amd64
+ENV JAVA_HOME /usr/lib/jvm/java-11-openjdk-amd64
 
 ### END RUNTIMES ###
 
@@ -332,7 +339,7 @@ RUN \
     # apt-get install -y python-numpy  && \
     cd ${RESOURCES_PATH} && \
     # Tiger VNC
-    wget -qO- https://dl.bintray.com/tigervnc/stable/tigervnc-1.9.0.x86_64.tar.gz | tar xz --strip 1 -C / && \
+    wget -qO- https://dl.bintray.com/tigervnc/stable/tigervnc-1.10.0.x86_64.tar.gz | tar xz --strip 1 -C / && \
     # Install websockify
     mkdir -p ./novnc/utils/websockify && \
     # Before updating the noVNC version, we need to make sure that our monkey patching scripts still work!!
@@ -361,7 +368,7 @@ RUN \
     apt-get install -y --no-install-recommends gdebi && \
     # Search for files
     apt-get install -y --no-install-recommends catfish && \
-    apt-get install -y --no-install-recommends gnome-search-tool && \
+    # TODO: Unable to locate package:  apt-get install -y --no-install-recommends gnome-search-tool && 
     apt-get install -y --no-install-recommends font-manager && \
     # vs support for thunar
     apt-get install -y thunar-vcs-plugin && \
@@ -484,7 +491,7 @@ RUN \
         libgdbm-dev \
         libncurses5-dev && \
     # upgrade pip
-    pip install --upgrade pip && \
+    # TODO: does not work: pip install --upgrade pip && \
     # If minimal flavor - install 
     if [ "$WORKSPACE_FLAVOR" = "minimal" ]; then \
         # Install nomkl - mkl needs lots of space
@@ -495,7 +502,7 @@ RUN \
     fi && \
     # Install some basics - required to run container
     conda install -y --update-all \
-            'python=3.6.9' \
+            'python=3.7.3' \
             cython \
             graphviz \
             numpy \
@@ -638,7 +645,8 @@ RUN \
     # Enable useful extensions
     jupyter nbextension enable skip-traceback/main && \
     jupyter nbextension enable comment-uncomment/main && \
-    jupyter nbextension enable varInspector/main && \
+    # Do not enable variable inspector: causes trouble: https://github.com/ml-tooling/ml-workspace/issues/10
+    # jupyter nbextension enable varInspector/main && \
     jupyter nbextension enable toc2/main && \
     jupyter nbextension enable spellchecker/main && \
     jupyter nbextension enable execute_time/ExecuteTime && \
@@ -769,48 +777,42 @@ RUN \
     cd $RESOURCES_PATH && \
     mkdir -p $HOME/.vscode/extensions/ && \
     # Install python extension
-    wget --quiet --no-check-certificate https://github.com/microsoft/vscode-python/releases/download/2019.9.34911/ms-python-release.vsix && \
+    wget --quiet --no-check-certificate https://github.com/microsoft/vscode-python/releases/download/2019.11.50794/ms-python-release.vsix && \
     bsdtar -xf ms-python-release.vsix extension && \
     rm ms-python-release.vsix && \
-    mv extension $HOME/.vscode/extensions/ms-python.python-2019.9.34911 && \
+    mv extension $HOME/.vscode/extensions/ms-python.python-2019.11.50794 && \
     # Install git lens: https://github.com/eamodio/vscode-gitlens
-    wget --quiet --no-check-certificate https://github.com/eamodio/vscode-gitlens/releases/download/v10.0.0/gitlens-10.0.0.vsix && \
-    bsdtar -xf gitlens-10.0.0.vsix extension && \
-    rm gitlens-10.0.0.vsix && \
-    mv extension $HOME/.vscode/extensions/eamodio.gitlens-10.0.0 && \
+    wget --quiet --no-check-certificate https://github.com/eamodio/vscode-gitlens/releases/download/v10.2.0/gitlens-10.2.0.vsix && \
+    bsdtar -xf gitlens-10.2.0.vsix extension && \
+    rm gitlens-10.2.0.vsix && \
+    mv extension $HOME/.vscode/extensions/eamodio.gitlens-10.2.0 && \
     # Install code runner: https://github.com/formulahendry/vscode-code-runner/releases/latest
-    wget --quiet --no-check-certificate https://github.com/formulahendry/vscode-code-runner/releases/download/0.9.14/code-runner-0.9.14.vsix && \
-    bsdtar -xf code-runner-0.9.14.vsix extension && \
-    rm code-runner-0.9.14.vsix && \
-    mv extension $HOME/.vscode/extensions/code-runner-0.9.14 && \
+    wget --quiet --no-check-certificate https://github.com/formulahendry/vscode-code-runner/releases/download/0.9.15/code-runner-0.9.15.vsix && \
+    bsdtar -xf code-runner-0.9.15.vsix extension && \
+    rm code-runner-0.9.15.vsix && \
+    mv extension $HOME/.vscode/extensions/code-runner-0.9.15 && \
     # Install ESLint extension: https://marketplace.visualstudio.com/items?itemName=dbaeumer.vscode-eslint
     wget --quiet --no-check-certificate https://marketplace.visualstudio.com/_apis/public/gallery/publishers/dbaeumer/vsextensions/vscode-eslint/1.9.1/vspackage -O dbaeumer.vscode-eslint.vsix && \
     bsdtar -xf dbaeumer.vscode-eslint.vsix extension && \
     rm dbaeumer.vscode-eslint.vsix && \
     mv extension $HOME/.vscode/extensions/dbaeumer.vscode-eslint-1.9.1.vsix && \
     # Install Markdown lint extension: https://marketplace.visualstudio.com/items?itemName=DavidAnson.vscode-markdownlint
-    wget --quiet --no-check-certificate https://marketplace.visualstudio.com/_apis/public/gallery/publishers/DavidAnson/vsextensions/vscode-markdownlint/0.30.2/vspackage -O davidanson.vscode-markdownlint.vsix && \
+    wget --quiet --no-check-certificate https://marketplace.visualstudio.com/_apis/public/gallery/publishers/DavidAnson/vsextensions/vscode-markdownlint/0.32.0/vspackage -O davidanson.vscode-markdownlint.vsix && \
     bsdtar -xf davidanson.vscode-markdownlint.vsix extension && \
     rm davidanson.vscode-markdownlint.vsix && \
-    mv extension $HOME/.vscode/extensions/davidanson.vscode-markdownlint-0.30.2.vsix && \
+    mv extension $HOME/.vscode/extensions/davidanson.vscode-markdownlint-0.32.0.vsix && \
     # Install remote development extension
     # https://marketplace.visualstudio.com/items?itemName=ms-vscode-remote.remote-ssh
-    wget --quiet https://marketplace.visualstudio.com/_apis/public/gallery/publishers/ms-vscode-remote/vsextensions/remote-ssh/0.46.1/vspackage -O ms-vscode-remote.remote-ssh.vsix && \
+    wget --quiet https://marketplace.visualstudio.com/_apis/public/gallery/publishers/ms-vscode-remote/vsextensions/remote-ssh/0.48.0/vspackage -O ms-vscode-remote.remote-ssh.vsix && \
     bsdtar -xf ms-vscode-remote.remote-ssh.vsix extension && \
     rm ms-vscode-remote.remote-ssh.vsix && \
-    mv extension $HOME/.vscode/extensions/ms-vscode-remote.remote-ssh-0.46.1 && \
+    mv extension $HOME/.vscode/extensions/ms-vscode-remote.remote-ssh-0.48.0 && \
     # Install remote development ssh - editing configuration files
     # https://marketplace.visualstudio.com/items?itemName=ms-vscode-remote.remote-ssh-edit
-    wget --quiet https://marketplace.visualstudio.com/_apis/public/gallery/publishers/ms-vscode-remote/vsextensions/remote-ssh-edit/0.46.1/vspackage -O ms-vscode-remote.remote-ssh-edit.vsix && \
+    wget --quiet https://marketplace.visualstudio.com/_apis/public/gallery/publishers/ms-vscode-remote/vsextensions/remote-ssh-edit/0.48.0/vspackage -O ms-vscode-remote.remote-ssh-edit.vsix && \
     bsdtar -xf ms-vscode-remote.remote-ssh-edit.vsix extension && \
     rm ms-vscode-remote.remote-ssh-edit.vsix && \
-    mv extension $HOME/.vscode/extensions/ms-vscode-remote.remote-ssh-edit-0.46.1 && \
-    # Install remote development ssh - explorer
-    # https://marketplace.visualstudio.com/items?itemName=ms-vscode-remote.remote-ssh-explorer
-    wget --quiet https://marketplace.visualstudio.com/_apis/public/gallery/publishers/ms-vscode-remote/vsextensions/remote-ssh-explorer/0.46.1/vspackage -O ms-vscode-remote.remote-ssh-explorer.vsix && \
-    bsdtar -xf ms-vscode-remote.remote-ssh-explorer.vsix extension && \
-    rm ms-vscode-remote.remote-ssh-explorer.vsix && \
-    mv extension $HOME/.vscode/extensions/ms-vscode-remote.remote-ssh-explorer-0.46.1 && \
+    mv extension $HOME/.vscode/extensions/ms-vscode-remote.remote-ssh-edit-0.48.0 && \
     # TODO install beautify (smaller - 16MB) or prettier?
     # Fix permissions
     fix-permissions.sh $HOME/.vscode/extensions/ && \
@@ -823,6 +825,8 @@ RUN \
 COPY resources/tools/oh-my-zsh.sh $RESOURCES_PATH/tools/oh-my-zsh.sh
 
 RUN \
+    apt-get update && \
+    apt-get install  -y --no-install-recommends autojump && \
     # ZSH 
     /bin/bash $RESOURCES_PATH/tools/oh-my-zsh.sh --install && \
     # Cleanup
@@ -834,7 +838,7 @@ RUN \
         exit 0 ; \
     fi && \
     apt-get update && \
-    apt-get install  -y --no-install-recommends autojump git-flow csh libbz2-dev xclip libeigen3-dev clinfo && \
+    apt-get install  -y --no-install-recommends csh libbz2-dev xclip libeigen3-dev clinfo && \
     # New Python Libraries:
     # https://pyviz.org/tools.html
     pip install --no-cache-dir \
@@ -900,14 +904,14 @@ COPY resources/jupyter/jupyter_notebook_config.py resources/jupyter/jupyter_note
 COPY resources/jupyter/sidebar.jupyterlab-settings $HOME/.jupyter/lab/user-settings/@jupyterlab/application-extension/
 COPY resources/jupyter/plugin.jupyterlab-settings $HOME/.jupyter/lab/user-settings/@jupyterlab/extensionmanager-extension/
 # Add tensorboard patch - use tensorboard jupyter plugin instead of the actual tensorboard magic
-COPY resources/jupyter/tensorboard_notebook_patch.py /opt/conda/lib/python3.6/site-packages/tensorboard/notebook.py
+COPY resources/jupyter/tensorboard_notebook_patch.py $CONDA_PYTHON_DIR/site-packages/tensorboard/notebook.py
 
 # Branding of various components
 RUN \
     # Jupyter Bradning
-    cp -f $RESOURCES_PATH/branding/logo.png $CONDA_DIR"/lib/python3.6/site-packages/notebook/static/base/images/logo.png" && \
-    cp -f $RESOURCES_PATH/branding/favicon.ico $CONDA_DIR"/lib/python3.6/site-packages/notebook/static/base/images/favicon.ico" && \
-    cp -f $RESOURCES_PATH/branding/favicon.ico $CONDA_DIR"/lib/python3.6/site-packages/notebook/static/favicon.ico" && \
+    cp -f $RESOURCES_PATH/branding/logo.png $CONDA_PYTHON_DIR"/site-packages/notebook/static/base/images/logo.png" && \
+    cp -f $RESOURCES_PATH/branding/favicon.ico $CONDA_PYTHON_DIR"/site-packages/notebook/static/base/images/favicon.ico" && \
+    cp -f $RESOURCES_PATH/branding/favicon.ico $CONDA_PYTHON_DIR"/site-packages/notebook/static/favicon.ico" && \
     # Fielbrowser Branding
     mkdir -p $RESOURCES_PATH"/filebrowser/img/icons/" && \
     cp -f $RESOURCES_PATH/branding/favicon.ico $RESOURCES_PATH"/filebrowser/img/icons/favicon.ico" && \
@@ -984,7 +988,7 @@ RUN \
     chown root:root /tmp && \
     chmod a+rwx /tmp && \
     # Set /workspace as default directory to navigate to as root user
-    echo  'cd '$WORKSPACE_HOME >> $HOME/.bashrc 
+    echo  'cd '$WORKSPACE_HOME >> $HOME/.bashrc
 
 # MKL and Hardware Optimization
 # Fix problem with MKL with duplicated libiomp5: https://github.com/dmlc/xgboost/issues/1715

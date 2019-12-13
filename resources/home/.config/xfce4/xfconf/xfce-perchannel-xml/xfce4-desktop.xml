@@ -8,6 +8,12 @@
           <property name="color-style" type="int" value="0"/>
           <property name="image-style" type="int" value="4"/>
           <property name="last-image" type="string" value="/resources/branding/bg_ml_foundation.png"/>
+          <property name="color1" type="array">
+            <value type="uint" value="62194"/>
+            <value type="uint" value="62194"/>
+            <value type="uint" value="62194"/>
+            <value type="uint" value="65535"/>
+          </property>
         </property>
         <property name="workspace1" type="empty">
           <property name="color-style" type="int" value="0"/>

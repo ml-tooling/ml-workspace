@@ -6,5 +6,6 @@
     "extensions.autoUpdate": false,
     "python.dataScience.autoPreviewNotebooksInInteractivePane": true,
     "python.linting.pylamaEnabled": true,
-    "python.linting.pylintEnabled": true
+    "python.linting.pylintEnabled": true,
+    "window.menuBarVisibility": "visible"
 }

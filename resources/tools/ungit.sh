@@ -17,7 +17,7 @@ done
 if ! hash ungit 2>/dev/null; then
     echo "Installing Ungit. Please wait..."
     npm update
-    npm install -g ungit@1.4.46
+    npm install -g ungit@1.5.1
 else
     echo "Ungit is already installed"
 fi
@@ -31,6 +31,6 @@ if [ $INSTALL_ONLY = 0 ] ; then
     echo "Starting Ungit on port "$PORT
     # Create tool entry for tooling plugin
     echo '{"id": "ungit-link", "name": "Ungit", "url_path": "/tools/'$PORT'/#/repository?path=%2Fworkspace", "description": "Interactive Git interface"}' > $HOME/.workspace/tools/ungit.json
-    /usr/bin/node /usr/lib/node_modules/ungit/src/server.js --port=$PORT --launchBrowser=0 --bugtracking=false --rootPath=$WORKSPACE_BASE_URL/tools/ungit
+    /usr/bin/node /usr/lib/node_modules/ungit/source/server.js --port=$PORT --launchBrowser=0 --bugtracking=false --rootPath=$WORKSPACE_BASE_URL/tools/ungit
     sleep 15
 fi
