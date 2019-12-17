@@ -20,6 +20,9 @@ define(['base/js/namespace', 'jquery', 'base/js/dialog', 'base/js/utils', 'requi
     function load_ipython_extension() {
         // log to console
         console.info('Loaded Jupyter extension: Tooling Tree Widget')
+
+        window.document.title = "Workspace Home"
+
         base_url = utils.get_body_data('base-url')
 
         btGitButton = '<div id="start-git-btn" style="margin-right: 5px;">' +
@@ -27,8 +30,15 @@ define(['base/js/namespace', 'jquery', 'base/js/dialog', 'base/js/utils', 'requi
             '<span>Git</span>' +
             '</button></div>';
 
-        var btGitButtonInTabView = '<button id="gitTreeButton" title="Open Git Helper" aria-label="Open Git Helper" style="margin-left: 4px;" class="btn btn-default btn-xs"><i class="fa-git fa"></i></button>'
+        var vsCodeButton = '<button id="vsCodeTreeButton" title="Open VS Code" aria-label="Open VS Code" style="margin-left: 4px;" class="btn btn-default btn-xs"><i style="font-weight: bold;" class="fa-code fa"></i></button>'
+        $('#alternate_upload').before(vsCodeButton);
 
+        $("#vsCodeTreeButton").click(function () {
+            var tree_dir = "/workspace/" + window.document.body.dataset.notebookPath;
+            window.open(basePath + "tools/vscode/?folder=" + encodeURIComponent(tree_dir), '_blank');
+        });
+
+        var btGitButtonInTabView = '<button id="gitTreeButton" title="Open Git Helper" aria-label="Open Git Helper" style="margin-left: 4px;" class="btn btn-default btn-xs"><i class="fa-git fa"></i></button>'
         $('#alternate_upload').before(btGitButtonInTabView);
 
         $('#gitTreeButton').click(function () {
@@ -51,7 +61,6 @@ define(['base/js/namespace', 'jquery', 'base/js/dialog', 'base/js/utils', 'requi
                     window.open(basePath + "tools/ungit/#/repository?path=" + ungitPath, '_blank');
                 }
             });
-
         });
 
         // Commit & push file button
