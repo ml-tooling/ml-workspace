@@ -16,8 +16,17 @@ if ! hash zsh 2>/dev/null; then
     echo "Installing Oh My ZSH. Please wait..."
     apt-get update
     apt-get install --yes zsh
-    # required for lots of themes
-    apt-get install -y fonts-powerline
+    # Install powerline font - required for lots of themes
+    # Does not work on ubunutu 18.04: apt-get install -y --no-install-recommends fonts-powerline
+    # https://github.com/powerline/fonts/issues/281#issuecomment-417473240
+    cd $RESOURCES_PATH
+    git clone https://github.com/powerline/fonts.git --depth=1
+    cd fonts
+    ./install.sh
+    cd ..
+    rm -rf fonts
+    # Install plugins
+    apt-get install -y --no-install-recommends autojump git-flow
     yes | sh -c "$(curl -fsSL https://raw.github.com/robbyrussell/oh-my-zsh/master/tools/install.sh)"
     git clone https://github.com/zsh-users/zsh-autosuggestions ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-autosuggestions
     git clone https://github.com/zsh-users/zsh-syntax-highlighting.git ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-syntax-highlighting
@@ -25,7 +34,7 @@ if ! hash zsh 2>/dev/null; then
     git clone https://github.com/zsh-users/zsh-completions ${ZSH_CUSTOM:=~/.oh-my-zsh/custom}/plugins/zsh-completions
     git clone https://github.com/supercrabtree/k ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/k
     git clone https://github.com/chrissicool/zsh-256color ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-256color
-    printf "export ZSH=\"/root/.oh-my-zsh\"\nZSH_THEME=\"avit\"\nZSH_AUTOSUGGEST_HIGHLIGHT_STYLE=\"fg=245\"\nplugins=(git k extract colorize pip npm zsh-256color supervisor command-not-found autojump colored-man-pages git-flow git-extras httpie python zsh-autosuggestions history-substring-search zsh-completions zsh-syntax-highlighting)\nsource \$ZSH/oh-my-zsh.sh" > ~/.zshrc 
+    printf "export ZSH=\"$HOME/.oh-my-zsh\"\nZSH_THEME=\"avit\"\nDISABLE_AUTO_UPDATE=\"true\"\nZSH_AUTOSUGGEST_HIGHLIGHT_STYLE=\"fg=245\"\nplugins=(git k extract colorize pip npm zsh-256color supervisor command-not-found autojump colored-man-pages git-flow git-extras httpie python zsh-autosuggestions history-substring-search zsh-completions zsh-syntax-highlighting)\nsource \$ZSH/oh-my-zsh.sh" > ~/.zshrc 
     # TODO add z
     # Other good themes: avit, sorin, clean
 else

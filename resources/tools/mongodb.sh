@@ -12,7 +12,7 @@ for arg in "$@"; do
     esac
 done
 
-if ! hash fasttext 2>/dev/null; then
+if ! hash mongod 2>/dev/null; then
     echo "Installing MongoDB. Please wait..."
     cd $RESOURCES_PATH
     wget -qO - https://www.mongodb.org/static/pgp/server-4.2.asc | sudo apt-key add -

@@ -13,11 +13,23 @@ for arg in "$@"; do
 done
 
 echo "Installing Java Utils Collection. Please wait..."
-
 apt-get update
 apt-get install -y --no-install-recommends \
         scala \
         gradle
+
+if [[ ! $(jupyter kernelspec list) =~ "java" ]]; then
+    echo "Installing Java Kernel for Jupyter. Please wait..."
+    cd $RESOURCES_PATH
+    wget https://github.com/SpencerPark/IJava/releases/download/v1.3.0/ijava-1.3.0.zip -O ./ijava.zip
+    mkdir ./ijava
+    unzip ./ijava.zip -d ./ijava
+    python ./ijava/install.py --sys-prefix
+    rm ./ijava.zip
+    rm -r ./ijava
+else
+    echo "Java Kernel for Jupyter is already installed."
+fi
 
 # Install vscode java extension pack
 if hash code 2>/dev/null; then

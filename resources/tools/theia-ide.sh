@@ -37,6 +37,6 @@ if [ $INSTALL_ONLY = 0 ] ; then
     # Create tool entry for tooling plugin
     echo '{"id": "theia-link", "name": "Theia", "url_path": "/tools/'$PORT'/", "description": "Multi-language cloud IDE"}' > $HOME/.workspace/tools/theia.json
     cd $RESOURCES_PATH/theia
-    yarn theia start /workspace --hostname=0.0.0.0 --port=$PORT
+    yarn theia start $WORKSPACE_HOME --hostname=0.0.0.0 --port=$PORT
     sleep 15
 fi
