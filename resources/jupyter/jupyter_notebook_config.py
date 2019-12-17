@@ -81,9 +81,10 @@ except:
     pass
 
 # https://github.com/timkpaine/jupyterlab_templates
+WORKSPACE_HOME = os.getenv("WORKSPACE_HOME", "/workspace")
 try:
-    if os.path.exists('/workspace/templates'):
-        c.JupyterLabTemplates.template_dirs = ['/workspace/templates']
+    if os.path.exists(WORKSPACE_HOME + '/templates'):
+        c.JupyterLabTemplates.template_dirs = [WORKSPACE_HOME + '/templates']
     c.JupyterLabTemplates.include_default = False
 except:
     pass

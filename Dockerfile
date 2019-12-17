@@ -79,6 +79,16 @@ RUN \
         cron \
         openssl \
         tmux \
+        dpkg-sig \
+        uuid-dev \
+        csh \
+        xclip \
+        clinfo \
+        libgdbm-dev \
+        libncurses5-dev \
+        gawk \
+        # Terminal multiplexer
+        screen \
         # Editor
         nano \
         # Find files
@@ -112,7 +122,6 @@ RUN \
         libtiff-dev \
         libjpeg-dev \
         libpng-dev \
-        # TODO: no 18.04 installation candidate: libpng12-dev \
         # TODO: no 18.04 installation candidate: libjasper-dev \
         libglib2.0-0 \
         libxext6 \
@@ -139,6 +148,9 @@ RUN \
         bzip2 \
         lzop \
         bsdtar \
+        zlibc \
+        libbz2-dev \
+        liblzma-dev \
         zlib1g-dev && \
     chmod -R a+rwx /usr/local/bin/ && \
     # configure dynamic linker run-time bindings
@@ -153,6 +165,7 @@ RUN wget --quiet https://github.com/krallin/tini/releases/download/v0.18.0/tini 
     chmod +x /tini
 
 RUN \
+    OPEN_RESTY_VERSION="1.15.8.2" && \
     apt-get update && \
     apt-get purge -y nginx nginx-common && \
     # libpcre required, otherwise you get a 'the HTTP rewrite module requires the PCRE library' error
@@ -160,10 +173,10 @@ RUN \
     apt-get install -y libssl-dev libpcre3 libpcre3-dev apache2-utils && \
     mkdir $RESOURCES_PATH"/openresty" && \
     cd $RESOURCES_PATH"/openresty" && \
-    wget --quiet https://openresty.org/download/openresty-1.15.8.2.tar.gz  -O ./openresty.tar.gz && \
+    wget --quiet https://openresty.org/download/openresty-$OPEN_RESTY_VERSION.tar.gz  -O ./openresty.tar.gz && \
     tar xfz ./openresty.tar.gz && \
     rm ./openresty.tar.gz && \
-    cd ./openresty-1.15.8.2/ && \
+    cd ./openresty-$OPEN_RESTY_VERSION/ && \
     # Surpress output - if there is a problem remove  > /dev/null
     ./configure --with-http_stub_status_module --with-http_sub_module > /dev/null && \
     make -j2 > /dev/null && \
@@ -212,24 +225,24 @@ RUN \
 # Install Miniconda: https://repo.continuum.io/miniconda/
 ENV \
     CONDA_DIR=/opt/conda \
-    CONDA_VERSION=4.7.12 \
+    PYTHON_VERSION="3.7.5" \
     CONDA_PYTHON_DIR=/opt/conda/lib/python3.7
 
-RUN wget --quiet https://repo.anaconda.com/miniconda/Miniconda3-${CONDA_VERSION}-Linux-x86_64.sh -O ~/miniconda.sh && \
+RUN CONDA_VERSION="4.7.12" && \
+    wget --quiet https://repo.anaconda.com/miniconda/Miniconda3-${CONDA_VERSION}-Linux-x86_64.sh -O ~/miniconda.sh && \
     /bin/bash ~/miniconda.sh -b -p $CONDA_DIR && \
     export PATH=$CONDA_DIR/bin:$PATH && \
     rm ~/miniconda.sh && \
     # Update conda
     $CONDA_DIR/bin/conda update -y -n base -c defaults conda && \
-    # TODO: $CONDA_DIR/bin/conda install -c anaconda setuptools && \?
-    $CONDA_DIR/bin/conda update setuptools && \
+    $CONDA_DIR/bin/conda update -y setuptools && \
     $CONDA_DIR/bin/conda install -y conda-build && \
     # Add conda forge - Append so that conda forge has lower priority than the main channel
     $CONDA_DIR/bin/conda config --system --append channels conda-forge && \
     $CONDA_DIR/bin/conda config --system --set auto_update_conda false && \
     $CONDA_DIR/bin/conda config --system --set show_channel_urls true && \
-    # Update selected packages - install python 3.7.3
-    $CONDA_DIR/bin/conda install -y --update-all python=3.7.3 && \
+    # Update selected packages - install python 3.7.x
+    $CONDA_DIR/bin/conda install -y --update-all python=$PYTHON_VERSION && \
     # Link Conda
     ln -s $CONDA_DIR/bin/python /usr/local/bin/python && \
     ln -s $CONDA_DIR/bin/conda /usr/bin/conda && \
@@ -286,11 +299,12 @@ RUN \
     apt-get update && \
     # libgl1-mesa-dri > 150 MB -> Install jdk-headless version (without gui support)?
     # java runtime is extenable via the java-utils.sh tool intstaller script
-    apt-get install -y --no-install-recommends openjdk-11-jdk maven && \
+    apt-get install -y --no-install-recommends openjdk-11-jdk maven scala && \
     # Cleanup
     clean-layer.sh
 
-ENV JAVA_HOME /usr/lib/jvm/java-11-openjdk-amd64
+ENV JAVA_HOME="/usr/lib/jvm/java-11-openjdk-amd64" 
+# TODO add MAVEN_HOME?
 
 ### END RUNTIMES ###
 
@@ -403,7 +417,8 @@ RUN \
 
 # Add the defaults from /lib/x86_64-linux-gnu, otherwise lots of no version errors
 # cannot be added above otherwise there are errors in the installation of the gui tools
-ENV LD_LIBRARY_PATH=/lib/x86_64-linux-gnu:$CONDA_DIR/lib 
+# Call order: https://unix.stackexchange.com/questions/367600/what-is-the-order-that-linuxs-dynamic-linker-searches-paths-in
+ENV LD_LIBRARY_PATH=/lib/x86_64-linux-gnu:/usr/lib/x86_64-linux-gnu:$CONDA_DIR/lib 
 
 # Install Web Tools - Offered via Jupyter Tooling Plugin
 
@@ -481,17 +496,9 @@ RUN \
     # rm /usr/bin/python3 && \
     # rm /usr/bin/python3.5
     ln -s -f $CONDA_DIR/bin/python /usr/bin/python && \
-    # Install packages - TODO move up to basics section
     apt-get update && \
-    apt-get install -y --no-install-recommends \
-        dpkg-sig \
-        liblzma-dev \
-        uuid-dev \
-        zlibc \
-        libgdbm-dev \
-        libncurses5-dev && \
     # upgrade pip
-    # TODO: does not work: pip install --upgrade pip && \
+    pip install --upgrade pip && \
     # If minimal flavor - install 
     if [ "$WORKSPACE_FLAVOR" = "minimal" ]; then \
         # Install nomkl - mkl needs lots of space
@@ -502,7 +509,9 @@ RUN \
     fi && \
     # Install some basics - required to run container
     conda install -y --update-all \
-            'python=3.7.3' \
+            'python='$PYTHON_VERSION \
+            tqdm \
+            pyzmq \
             cython \
             graphviz \
             numpy \
@@ -517,15 +526,14 @@ RUN \
             zlib \
             boost \
             psutil \
+            PyYAML \
             python-crontab \
             ipykernel \
             cmake \
             Pillow \
-            # Downgrade to 7.7?
-            'ipython=7.8.*' \
-            # Do not update to notebook 6.x for now
-            'notebook=5.7.*' \
-            'jupyterlab=1.1.3' && \
+            'ipython=7.10.*' \
+            'notebook=6.0.*' \
+            'jupyterlab=1.2.*' && \
     # Install minimal pip requirements
     pip install --no-cache-dir --upgrade -r ${RESOURCES_PATH}/libraries/requirements-minimal.txt && \
     # If minimal flavor - exit here
@@ -544,9 +552,9 @@ RUN \
     # Install numba
     conda install -y numba && \
     # Install tensorflow - cpu only -  mkl support
-    conda install -y tensorflow && \
+    conda install -y 'tensorflow=2.0.*' && \
     # Install pytorch - cpu only
-    conda install -y pytorch torchvision cpuonly -c pytorch && \
+    conda install -y -c pytorch "pytorch==1.3.*" torchvision cpuonly && \
     # Install light pip requirements
     pip install --no-cache-dir --upgrade -r ${RESOURCES_PATH}/libraries/requirements-light.txt && \
     # If light light flavor - exit here
@@ -558,7 +566,7 @@ RUN \
         exit 0 ; \
     fi && \
     # libartals == 40MB liblapack-dev == 20 MB
-    apt-get install -y --no-install-recommends liblapack-dev libatlas-base-dev pandoc libblas-dev && \
+    apt-get install -y --no-install-recommends liblapack-dev libatlas-base-dev libeigen3-dev pandoc libblas-dev && \
     # Faiss - A library for efficient similarity search and clustering of dense vectors. 
     conda install -y -c pytorch faiss-cpu && \
     # Install full pip requirements
@@ -572,10 +580,6 @@ RUN \
     # Fix permissions
     fix-permissions.sh $CONDA_DIR && \
     # Cleanup
-    # Cleanup python bytecode files - not needed: https://jcrist.github.io/conda-docker-tips.html
-    # TODO move to clean-layer?
-    find ${CONDA_DIR} -type f -name '*.pyc' -delete && \
-    find ${CONDA_DIR} -type l -name '*.pyc' -delete && \
     clean-layer.sh
 
 # Fix conda version
@@ -583,34 +587,6 @@ RUN \
     # Conda installs wrong node version - relink conda node to the actual node 
     rm -f /opt/conda/bin/node && ln -s /usr/bin/node /opt/conda/bin/node && \
     rm -f /opt/conda/bin/npm && ln -s /usr/bin/npm /opt/conda/bin/npm
-
-# Install Python 2 and Python 2 Kernel
-RUN \ 
-    # If minimal flavor - exit here
-    if [ "$WORKSPACE_FLAVOR" = "minimal" ]; then \
-        exit 0 ; \
-    fi && \
-    # anaconda=$CONDA_VERSION - do not install anaconda, it is too big
-    conda create --yes -p $CONDA_DIR/envs/python2 python=2.7 && \
-    ln -s $CONDA_DIR/envs/python2/bin/pip $CONDA_DIR/bin/pip2 && \
-    ln -s $CONDA_DIR/envs/python2/bin/ipython2 $CONDA_DIR/bin/ipython2 && \
-    $CONDA_DIR/bin/pip2 install --upgrade pip && \
-    # Install compatibility libraries
-    $CONDA_DIR/bin/pip2 install future enum34 six typing && \
-    # Add as Python 2 kernel
-    # Install Python 2 kernel spec globally to avoid permission problems when NB_UID
-    # switching at runtime and to allow the notebook server running out of the root
-    # environment to find it. Also, activate the python2 environment upon kernel launch.
-    pip install --no-cache-dir kernda && \
-    $CONDA_DIR/envs/python2/bin/python -m pip install ipykernel && \
-    $CONDA_DIR/envs/python2/bin/python -m ipykernel install && \
-    kernda -o -y /usr/local/share/jupyter/kernels/python2/kernel.json && \
-    # link conda python 2 to python 2 bin instances (in /usr/bin)
-    ln -s -f $CONDA_DIR/envs/python2/bin/python /usr/bin/python2 && \
-    rm /usr/bin/python2.7 && \
-    ln -s -f $CONDA_DIR/envs/python2/bin/python /usr/bin/python2.7 && \
-    # Cleanup
-    clean-layer.sh
 
 ### END DATA SCIENCE BASICS ###
 
@@ -644,11 +620,11 @@ RUN \
     nbdime config-git --enable --global && \
     # Enable useful extensions
     jupyter nbextension enable skip-traceback/main && \
-    jupyter nbextension enable comment-uncomment/main && \
+    # jupyter nbextension enable comment-uncomment/main && \
     # Do not enable variable inspector: causes trouble: https://github.com/ml-tooling/ml-workspace/issues/10
     # jupyter nbextension enable varInspector/main && \
+    #jupyter nbextension enable spellchecker/main && \
     jupyter nbextension enable toc2/main && \
-    jupyter nbextension enable spellchecker/main && \
     jupyter nbextension enable execute_time/ExecuteTime && \
     jupyter nbextension enable collapsible_headings/main && \
     jupyter nbextension enable codefolding/main && \
@@ -706,6 +682,9 @@ RUN \
         clean-layer.sh && \
         exit 0 ; \
     fi && \
+    # Install jupyterlab language server support
+    pip install --pre jupyter-lsp && \
+    jupyter labextension install @krassowski/jupyterlab-lsp && \
     # For Bokeh
     jupyter labextension install jupyterlab_bokeh && \
     # For Plotly
@@ -764,6 +743,24 @@ RUN \
     # Cleanup
     clean-layer.sh
 
+COPY resources/tools/oh-my-zsh.sh $RESOURCES_PATH/tools/oh-my-zsh.sh
+
+RUN \
+    # If minimal flavor -> exit here
+    if [ "$WORKSPACE_FLAVOR" = "minimal" ]; then \
+        exit 0 ; \
+    fi && \
+    # Install ZSH
+    /bin/bash $RESOURCES_PATH/tools/oh-my-zsh.sh --install && \
+    # Make zsh the default shell
+    # Initialize conda for command line activation
+    # TODO do not activate for now, opening the bash shell is a bit slow
+    # conda init bash && \
+    # conda init zsh
+    chsh -s $(which zsh) $NB_USER && \
+    # Cleanup
+    clean-layer.sh
+
 ### VSCODE ###
 
 # Install vscode extension
@@ -777,42 +774,54 @@ RUN \
     cd $RESOURCES_PATH && \
     mkdir -p $HOME/.vscode/extensions/ && \
     # Install python extension
-    wget --quiet --no-check-certificate https://github.com/microsoft/vscode-python/releases/download/2019.11.50794/ms-python-release.vsix && \
+    VS_PYTHON_VERSION="2019.11.50794" && \
+    wget --quiet --no-check-certificate https://github.com/microsoft/vscode-python/releases/download/$VS_PYTHON_VERSION/ms-python-release.vsix && \
     bsdtar -xf ms-python-release.vsix extension && \
     rm ms-python-release.vsix && \
-    mv extension $HOME/.vscode/extensions/ms-python.python-2019.11.50794 && \
+    mv extension $HOME/.vscode/extensions/ms-python.python-$VS_PYTHON_VERSION && \
+    # Install vscode-java: https://github.com/redhat-developer/vscode-java/releases
+    VS_JAVA_VERSION="0.47.0" && \
+    wget --quiet --no-check-certificate https://github.com/redhat-developer/vscode-java/releases/download/v$VS_JAVA_VERSION/redhat.java-$VS_JAVA_VERSION.vsix && \
+    bsdtar -xf redhat.java-$VS_JAVA_VERSION.vsix extension && \
+    rm redhat.java-$VS_JAVA_VERSION.vsix && \
+    mv extension $HOME/.vscode/extensions/redhat.java-$VS_JAVA_VERSION && \
     # Install git lens: https://github.com/eamodio/vscode-gitlens
-    wget --quiet --no-check-certificate https://github.com/eamodio/vscode-gitlens/releases/download/v10.2.0/gitlens-10.2.0.vsix && \
-    bsdtar -xf gitlens-10.2.0.vsix extension && \
-    rm gitlens-10.2.0.vsix && \
-    mv extension $HOME/.vscode/extensions/eamodio.gitlens-10.2.0 && \
+    VS_GITLENS_VERSION="10.2.0" && \
+    wget --quiet --no-check-certificate https://github.com/eamodio/vscode-gitlens/releases/download/v$VS_GITLENS_VERSION/gitlens-$VS_GITLENS_VERSION.vsix && \
+    bsdtar -xf gitlens-$VS_GITLENS_VERSION.vsix extension && \
+    rm gitlens-$VS_GITLENS_VERSION.vsix && \
+    mv extension $HOME/.vscode/extensions/eamodio.gitlens-$VS_GITLENS_VERSION && \
     # Install code runner: https://github.com/formulahendry/vscode-code-runner/releases/latest
-    wget --quiet --no-check-certificate https://github.com/formulahendry/vscode-code-runner/releases/download/0.9.15/code-runner-0.9.15.vsix && \
-    bsdtar -xf code-runner-0.9.15.vsix extension && \
-    rm code-runner-0.9.15.vsix && \
-    mv extension $HOME/.vscode/extensions/code-runner-0.9.15 && \
+    VS_CODE_RUNNER_VERSION="0.9.15" && \
+    wget --quiet --no-check-certificate https://github.com/formulahendry/vscode-code-runner/releases/download/$VS_CODE_RUNNER_VERSION/code-runner-$VS_CODE_RUNNER_VERSION.vsix && \
+    bsdtar -xf code-runner-$VS_CODE_RUNNER_VERSION.vsix extension && \
+    rm code-runner-$VS_CODE_RUNNER_VERSION.vsix && \
+    mv extension $HOME/.vscode/extensions/code-runner-$VS_CODE_RUNNER_VERSION && \
     # Install ESLint extension: https://marketplace.visualstudio.com/items?itemName=dbaeumer.vscode-eslint
-    wget --quiet --no-check-certificate https://marketplace.visualstudio.com/_apis/public/gallery/publishers/dbaeumer/vsextensions/vscode-eslint/1.9.1/vspackage -O dbaeumer.vscode-eslint.vsix && \
+    VS_ESLINT_VERSION="1.9.1" && \
+    wget --quiet --no-check-certificate https://marketplace.visualstudio.com/_apis/public/gallery/publishers/dbaeumer/vsextensions/vscode-eslint/$VS_ESLINT_VERSION/vspackage -O dbaeumer.vscode-eslint.vsix && \
     bsdtar -xf dbaeumer.vscode-eslint.vsix extension && \
     rm dbaeumer.vscode-eslint.vsix && \
-    mv extension $HOME/.vscode/extensions/dbaeumer.vscode-eslint-1.9.1.vsix && \
+    mv extension $HOME/.vscode/extensions/dbaeumer.vscode-eslint-$VS_ESLINT_VERSION.vsix && \
     # Install Markdown lint extension: https://marketplace.visualstudio.com/items?itemName=DavidAnson.vscode-markdownlint
-    wget --quiet --no-check-certificate https://marketplace.visualstudio.com/_apis/public/gallery/publishers/DavidAnson/vsextensions/vscode-markdownlint/0.32.0/vspackage -O davidanson.vscode-markdownlint.vsix && \
+    VS_MARKDOWN_LINT_VERSION="0.32.0" && \
+    wget --quiet --no-check-certificate https://marketplace.visualstudio.com/_apis/public/gallery/publishers/DavidAnson/vsextensions/vscode-markdownlint/$VS_MARKDOWN_LINT_VERSION/vspackage -O davidanson.vscode-markdownlint.vsix && \
     bsdtar -xf davidanson.vscode-markdownlint.vsix extension && \
     rm davidanson.vscode-markdownlint.vsix && \
-    mv extension $HOME/.vscode/extensions/davidanson.vscode-markdownlint-0.32.0.vsix && \
+    mv extension $HOME/.vscode/extensions/davidanson.vscode-markdownlint-$VS_MARKDOWN_LINT_VERSION.vsix && \
     # Install remote development extension
+    VS_REMOTE_SSH_VERSION="0.47.2" && \
     # https://marketplace.visualstudio.com/items?itemName=ms-vscode-remote.remote-ssh
-    wget --quiet https://marketplace.visualstudio.com/_apis/public/gallery/publishers/ms-vscode-remote/vsextensions/remote-ssh/0.48.0/vspackage -O ms-vscode-remote.remote-ssh.vsix && \
+    wget --quiet https://marketplace.visualstudio.com/_apis/public/gallery/publishers/ms-vscode-remote/vsextensions/remote-ssh/$VS_REMOTE_SSH_VERSION/vspackage -O ms-vscode-remote.remote-ssh.vsix && \
     bsdtar -xf ms-vscode-remote.remote-ssh.vsix extension && \
     rm ms-vscode-remote.remote-ssh.vsix && \
-    mv extension $HOME/.vscode/extensions/ms-vscode-remote.remote-ssh-0.48.0 && \
+    mv extension $HOME/.vscode/extensions/ms-vscode-remote.remote-ssh-$VS_REMOTE_SSH_VERSION && \
     # Install remote development ssh - editing configuration files
     # https://marketplace.visualstudio.com/items?itemName=ms-vscode-remote.remote-ssh-edit
-    wget --quiet https://marketplace.visualstudio.com/_apis/public/gallery/publishers/ms-vscode-remote/vsextensions/remote-ssh-edit/0.48.0/vspackage -O ms-vscode-remote.remote-ssh-edit.vsix && \
+    wget --quiet https://marketplace.visualstudio.com/_apis/public/gallery/publishers/ms-vscode-remote/vsextensions/remote-ssh-edit/$VS_REMOTE_SSH_VERSION/vspackage -O ms-vscode-remote.remote-ssh-edit.vsix && \
     bsdtar -xf ms-vscode-remote.remote-ssh-edit.vsix extension && \
     rm ms-vscode-remote.remote-ssh-edit.vsix && \
-    mv extension $HOME/.vscode/extensions/ms-vscode-remote.remote-ssh-edit-0.48.0 && \
+    mv extension $HOME/.vscode/extensions/ms-vscode-remote.remote-ssh-edit-$VS_REMOTE_SSH_VERSION && \
     # TODO install beautify (smaller - 16MB) or prettier?
     # Fix permissions
     fix-permissions.sh $HOME/.vscode/extensions/ && \
@@ -822,36 +831,16 @@ RUN \
 ### END VSCODE ###
 
 ### INCUBATION ZONE ### 
-COPY resources/tools/oh-my-zsh.sh $RESOURCES_PATH/tools/oh-my-zsh.sh
 
 RUN \
-    apt-get update && \
-    apt-get install  -y --no-install-recommends autojump && \
-    # ZSH 
-    /bin/bash $RESOURCES_PATH/tools/oh-my-zsh.sh --install && \
-    # Cleanup
-    clean-layer.sh
-
-RUN \
+    # Install sdkman
+    curl -s https://get.sdkman.io | bash && \
    # If minimal or light flavor -> exit here
     if [ "$WORKSPACE_FLAVOR" = "minimal" ] || [ "$WORKSPACE_FLAVOR" = "light" ]; then \
         exit 0 ; \
     fi && \
-    apt-get update && \
-    apt-get install  -y --no-install-recommends csh libbz2-dev xclip libeigen3-dev clinfo && \
     # New Python Libraries:
-    # https://pyviz.org/tools.html
     pip install --no-cache-dir \
-                catalyst \
-                # 2,3MB hvplot \
-                # 3.1MB intake \
-                # 4.3MB hypertools \
-                # 12MB datashader \
-                # pyramid
-                # 20MB: interpret \
-                # not compatible with flake8; prospector
-                # needs arrow vaex \
-                # Downgrade plotly: cufflinks \
                 lazycluster && \
     # Cleanup
     clean-layer.sh
@@ -879,7 +868,12 @@ COPY resources/home/ $HOME/
 COPY resources/ssh/ssh_config resources/ssh/sshd_config  /etc/ssh/
 COPY resources/nginx/nginx.conf /etc/nginx/nginx.conf
 COPY resources/config/xrdp.ini /etc/xrdp/xrdp.ini
-COPY resources/config/supervisord.conf /etc/supervisor/supervisord.conf
+
+# Configure supervisor process
+COPY resources/supervisor/supervisord.conf /etc/supervisor/supervisord.conf
+# Copy all supervisor program definitions into workspace
+COPY resources/supervisor/programs/ /etc/supervisor/conf.d/
+
 # Assume yes to all apt commands, to avoid user confusion around stdin.
 COPY resources/config/90assumeyes /etc/apt/apt.conf.d/
 
@@ -903,8 +897,8 @@ COPY resources/jupyter/nbconfig /etc/jupyter/nbconfig
 COPY resources/jupyter/jupyter_notebook_config.py resources/jupyter/jupyter_notebook_config.json resources/jupyter/nbconfig /etc/jupyter/
 COPY resources/jupyter/sidebar.jupyterlab-settings $HOME/.jupyter/lab/user-settings/@jupyterlab/application-extension/
 COPY resources/jupyter/plugin.jupyterlab-settings $HOME/.jupyter/lab/user-settings/@jupyterlab/extensionmanager-extension/
-# Add tensorboard patch - use tensorboard jupyter plugin instead of the actual tensorboard magic
-COPY resources/jupyter/tensorboard_notebook_patch.py $CONDA_PYTHON_DIR/site-packages/tensorboard/notebook.py
+# TODO: don't use tensorboard fix: Add tensorboard patch - use tensorboard jupyter plugin instead of the actual tensorboard magic
+# COPY resources/jupyter/tensorboard_notebook_patch.py $CONDA_PYTHON_DIR/site-packages/tensorboard/notebook.py
 
 # Branding of various components
 RUN \
@@ -929,15 +923,6 @@ RUN \
 
 # Configure netdata
 COPY resources/netdata/ /etc/netdata/
-
-# Configure shell (bash/zsh)
-RUN \
-    # Initialize conda for command line activation
-    # TODO do not activate for now, opening the bash shell is a bit slow
-    # conda init bash && \
-    # conda init zsh
-    # Make zsh the default shell
-    chsh -s $(which zsh) $NB_USER
 
 # Configure Matplotlib
 RUN \
@@ -1015,7 +1000,7 @@ ENV CONFIG_BACKUP_ENABLED="true" \
     SHUTDOWN_INACTIVE_KERNELS="false" \
     SHARED_LINKS_ENABLED="true" \
     AUTHENTICATE_VIA_JUPYTER="false" \
-    DATA_ENVIRONMENT="/workspace/environment" \
+    DATA_ENVIRONMENT=$WORKSPACE_HOME"/environment" \
     WORKSPACE_BASE_URL="/" \
     INCLUDE_TUTORIALS="true" \
     # Main port used for sshl proxy -> can be changed
@@ -1029,7 +1014,7 @@ ENV CONFIG_BACKUP_ENABLED="true" \
     # this can be problematic since docker restricts CPUs by stil showing all
     MAX_NUM_THREADS="auto"
 
-### END CONFIGURATION ###
+### END CONFIGURATION ### 
 ARG ARG_BUILD_DATE="unknown"
 ARG ARG_VCS_REF="unknown"
 ARG ARG_WORKSPACE_VERSION="unknown"
@@ -1054,7 +1039,7 @@ LABEL \
     "org.opencontainers.image.documentation"="https://github.com/ml-tooling/ml-workspace" \
     "org.opencontainers.image.url"="https://github.com/ml-tooling/ml-workspace" \
     "org.opencontainers.image.source"="https://github.com/ml-tooling/ml-workspace" \
-    "org.opencontainers.image.licenses"="Apache-2.0" \
+    # "org.opencontainers.image.licenses"="Apache-2.0" \
     "org.opencontainers.image.version"=$WORKSPACE_VERSION \
     "org.opencontainers.image.vendor"="ML Tooling" \
     "org.opencontainers.image.authors"="Lukas Masuch & Benjamin Raehtlein" \
