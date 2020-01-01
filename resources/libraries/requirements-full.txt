@@ -95,6 +95,7 @@ scattertext==0.0.2.56 # DO NOT UPDATE v53 not found - Beautiful visualizations o
 sentencepiece==0.1.83  # Unsupervised text tokenizer for Neural Network-based text generation.
 langid==1.1.6 # Stand-alone language identification system
 scrapy==1.8.0 #A high-level Web Crawling and Web Scraping framework
+tiny-tokenizer==3.1.0 # Related to flair install issue https://github.com/flairNLP/flair/issues/1327
 flair==0.4.4 # A very simple framework for state-of-the-art NLP - 0.4.3 has too specific requirements
 pyahocorasick==1.4.0 # a fast and memory efficient library for exact or approximate multi-pattern string search.
 ftfy==5.6 # Fixes some problems with Unicode text after the fact
