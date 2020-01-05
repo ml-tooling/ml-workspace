@@ -164,34 +164,82 @@ RUN \
 RUN wget --quiet https://github.com/krallin/tini/releases/download/v0.18.0/tini -O /tini && \
     chmod +x /tini
 
+
 RUN \
     OPEN_RESTY_VERSION="1.15.8.2" && \
+    # install some prerequisites needed by adding GPG public keys (could be removed later)
+    apt-get -y install --no-install-recommends wget gnupg ca-certificates && \
+    # import our GPG key:
+    wget -O - https://openresty.org/package/pubkey.gpg | sudo apt-key add - && \
+    # for installing the add-apt-repository command
+    # (you can remove this package and its dependencies later):
+    apt-get -y install --no-install-recommends software-properties-common && \
+    # add the our official APT repository:
+    add-apt-repository -y "deb http://openresty.org/package/ubuntu $(lsb_release -sc) main" && \
+    # to update the APT index:
     apt-get update && \
-    apt-get purge -y nginx nginx-common && \
-    # libpcre required, otherwise you get a 'the HTTP rewrite module requires the PCRE library' error
-    # Install apache2-utils to generate user:password file for nginx.
-    apt-get install -y libssl-dev libpcre3 libpcre3-dev apache2-utils && \
-    mkdir $RESOURCES_PATH"/openresty" && \
-    cd $RESOURCES_PATH"/openresty" && \
-    wget --quiet https://openresty.org/download/openresty-$OPEN_RESTY_VERSION.tar.gz  -O ./openresty.tar.gz && \
-    tar xfz ./openresty.tar.gz && \
-    rm ./openresty.tar.gz && \
-    cd ./openresty-$OPEN_RESTY_VERSION/ && \
-    # Surpress output - if there is a problem remove  > /dev/null
-    ./configure --with-http_stub_status_module --with-http_sub_module > /dev/null && \
-    make -j2 > /dev/null && \
-    make install > /dev/null && \
-    # create log dir and file - otherwise openresty will throw an error
+    # install openresty package 
+    apt-get -y install openresty=${OPEN_RESTY_VERSION}-* && \ \
+    # create log dir and file - otherwise openresty will throw an error 
     mkdir -p /var/log/nginx/ && \
-    touch /var/log/nginx/upstream.log && \
-    cd $RESOURCES_PATH && \
-    rm -r $RESOURCES_PATH"/openresty" && \
-    # Fix permissions
-    chmod -R a+rwx $RESOURCES_PATH && \
-    # Cleanup
-    clean-layer.sh
+    touch /var/log/nginx/upstream.log 
 
-ENV PATH=/usr/local/openresty/nginx/sbin:$PATH
+ENV PATH="${PATH}:/usr/local/openresty/luajit/bin:/usr/local/openresty/nginx/sbin:/usr/local/openresty/bin"
+
+## 
+## https://openresty.org/en/installation.html
+## https://openresty.org/en/linux-packages.html
+##  https://github.com/andriichyzh/docker-best-practices#
+
+## Base optimization
+## FROM debian:stretch-slim
+## 
+## RUN apt-get -y update && \
+##     apt-get -y install gnupg2 lsb-release software-properties-common wget && \
+##     wget -qO - https://openresty.org/package/pubkey.gpg | apt-key add - && \
+##     add-apt-repository -y "deb http://openresty.org/package/debian $(lsb_release -sc) openresty" && \
+##     apt-get update && \
+##     apt-get -y install openresty && \
+##     apt-get remove -y --purge gnupg2 lsb-release software-properties-common wget && \
+##     apt-get -y autoremove && \
+##     rm -rf /var/lib/apt/lists/*
+## 
+## ENV PATH="${PATH}:/usr/local/openresty/luajit/bin:/usr/local/openresty/nginx/sbin:/usr/local/openresty/bin"
+## 
+## COPY nginx.conf /usr/local/openresty/nginx/conf/nginx.conf
+## 
+## EXPOSE 80
+## 
+## CMD ["/usr/bin/openresty", "-g", "daemon off;"]#
+
+#RUN \
+#    OPEN_RESTY_VERSION="1.15.8.2" && \
+#    apt-get update && \
+#    apt-get purge -y nginx nginx-common && \
+#    # libpcre required, otherwise you get a 'the HTTP rewrite module requires the PCRE library' error
+#    # Install apache2-utils to generate user:password file for nginx.
+#    apt-get install -y libssl-dev libpcre3 libpcre3-dev apache2-utils && \
+#    mkdir $RESOURCES_PATH"/openresty" && \
+#    cd $RESOURCES_PATH"/openresty" && \
+#    wget --quiet https://openresty.org/download/openresty-$OPEN_RESTY_VERSION.tar.gz  -O ./openresty.tar.gz && \
+#    tar xfz ./openresty.tar.gz && \
+#    rm ./openresty.tar.gz && \
+#    cd ./openresty-$OPEN_RESTY_VERSION/ && \
+#    # Surpress output - if there is a problem remove  > /dev/null
+#    ./configure --with-http_stub_status_module --with-http_sub_module > /dev/null && \
+#    make -j2 > /dev/null && \
+#    make install > /dev/null && \
+#    # create log dir and file - otherwise openresty will throw an error
+#    mkdir -p /var/log/nginx/ && \
+#    touch /var/log/nginx/upstream.log && \
+#    cd $RESOURCES_PATH && \
+#    rm -r $RESOURCES_PATH"/openresty" && \
+#    # Fix permissions
+#    chmod -R a+rwx $RESOURCES_PATH && \
+#    # Cleanup
+#    clean-layer.sh#
+
+#ENV PATH=/usr/local/openresty/nginx/sbin:$PATH
 
 COPY resources/nginx/lua-extensions /etc/nginx/nginx_plugins
 
