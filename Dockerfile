@@ -163,7 +163,8 @@ RUN \
 # Add tini
 RUN wget --quiet https://github.com/krallin/tini/releases/download/v0.18.0/tini -O /tini && \
     chmod +x /tini
-
+#    systemctl disable nginx && \
+#    systemctl stop nginx && \
 
 RUN \
     OPEN_RESTY_VERSION="1.15.8.2" && \
@@ -179,10 +180,13 @@ RUN \
     # to update the APT index:
     apt-get update && \
     # install openresty package 
-    apt-get -y install openresty=${OPEN_RESTY_VERSION}-* && \ \
-    # create log dir and file - otherwise openresty will throw an error 
+    apt-get -y install openresty=${OPEN_RESTY_VERSION}-* && \
+    # create log dir and file - otherwise openresty will throw an error \
     mkdir -p /var/log/nginx/ && \
-    touch /var/log/nginx/upstream.log 
+    touch /var/log/nginx/upstream.log
+    # && \
+#    apt-get remove -y --purge gnupg2 lsb-release software-properties-common wget && \
+#    apt-get -y autoremove
 
 ENV PATH="${PATH}:/usr/local/openresty/luajit/bin:/usr/local/openresty/nginx/sbin:/usr/local/openresty/bin"
 
@@ -460,7 +464,7 @@ RUN \
     ln -s /usr/bin/chromium-browser /usr/bin/google-chrome && \
     # Cleanup
     # Large package: gnome-user-guide 50MB app-install-data 50MB
-    apt-get remove -y app-install-data gnome-user-guide && \ 
+    apt-get remove -y app-install-data gnome-user-guide && \
     clean-layer.sh
 
 # Add the defaults from /lib/x86_64-linux-gnu, otherwise lots of no version errors
@@ -536,7 +540,7 @@ RUN \
 COPY resources/libraries ${RESOURCES_PATH}/libraries
 
 ### Install main data science libs
-RUN \ 
+RUN \
     # Link Conda - All python are linke to the conda instances 
     # Linking python 3 crashes conda -> cannot install anyting - remove instead
     #ln -s -f $CONDA_DIR/bin/python /usr/bin/python3 && \
@@ -717,7 +721,7 @@ RUN \
     jupyter labextension install jupyterlab_tensorboard && \
     # install jupyterlab git
     jupyter labextension install @jupyterlab/git && \
-    pip install jupyterlab-git && \ 
+    pip install jupyterlab-git && \
     jupyter serverextension enable --py jupyterlab_git && \
     # For Matplotlib: https://github.com/matplotlib/jupyter-matplotlib
     jupyter labextension install jupyter-matplotlib && \
@@ -1092,7 +1096,7 @@ LABEL \
     "org.opencontainers.image.vendor"="ML Tooling" \
     "org.opencontainers.image.authors"="Lukas Masuch & Benjamin Raehtlein" \
     "org.opencontainers.image.revision"=$ARG_VCS_REF \
-    "org.opencontainers.image.created"=$ARG_BUILD_DATE \ 
+    "org.opencontainers.image.created"=$ARG_BUILD_DATE \
     # Label Schema Convention (deprecated): http://label-schema.org/rc1/
     "org.label-schema.name"="Machine Learning Workspace" \
     "org.label-schema.description"="All-in-one web-based development environment for machine learning." \
