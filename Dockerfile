@@ -183,7 +183,15 @@ RUN \
     apt-get -y install openresty=${OPEN_RESTY_VERSION}-* && \
     # create log dir and file - otherwise openresty will throw an error \
     mkdir -p /var/log/nginx/ && \
-    touch /var/log/nginx/upstream.log
+    touch /var/log/nginx/upstream.log && \
+    # create log dir and file - otherwise openresty will throw an error
+    mkdir -p /var/log/nginx/ && \
+    touch /var/log/nginx/upstream.log && \
+    cd $RESOURCES_PATH && \
+    # Fix permissions
+    chmod -R a+rwx $RESOURCES_PATH && \
+    # Cleanup
+    clean-layer.sh
     # && \
 #    apt-get remove -y --purge gnupg2 lsb-release software-properties-common wget && \
 #    apt-get -y autoremove
@@ -243,7 +251,7 @@ ENV PATH="${PATH}:/usr/local/openresty/luajit/bin:/usr/local/openresty/nginx/sbi
 #    # Cleanup
 #    clean-layer.sh#
 
-#ENV PATH=/usr/local/openresty/nginx/sbin:$PATH
+ENV PATH=/usr/local/openresty/nginx/sbin:$PATH
 
 COPY resources/nginx/lua-extensions /etc/nginx/nginx_plugins
 
@@ -1008,6 +1016,8 @@ COPY resources/tests $RESOURCES_PATH/tests
 COPY resources/tutorials $RESOURCES_PATH/tutorials
 COPY resources/licenses $RESOURCES_PATH/licenses
 COPY resources/reports $RESOURCES_PATH/reports
+
+ENV LD_LIBRARY_PATH=/usr/local/openresty/luajit/lib:/usr/local/openresty/zlib/lib:/usr/local/openresty/pcre/lib:/usr/local/openresty/openssl/lib:$LD_LIBRARY_PATH
 
 # Various configurations
 RUN \
