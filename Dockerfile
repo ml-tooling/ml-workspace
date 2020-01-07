@@ -168,6 +168,8 @@ RUN wget --quiet https://github.com/krallin/tini/releases/download/v0.18.0/tini 
 
 RUN \
     OPEN_RESTY_VERSION="1.15.8.2" && \
+    apt-get update && \
+    apt-get purge -y nginx nginx-common && \
     # install some prerequisites needed by adding GPG public keys (could be removed later)
     apt-get -y install --no-install-recommends wget gnupg ca-certificates && \
     # import our GPG key:
