@@ -187,8 +187,18 @@ RUN \
     # pip install https://download.pytorch.org/whl/cu100/torch-1.1.0-cp36-cp36m-linux_x86_64.whl && \
     # pip install https://download.pytorch.org/whl/cu100/torchvision-0.3.0-cp36-cp36m-linux_x86_64.whl && \
     # install jax: https://github.com/google/jax#pip-installation
-    pip install --no-cache-dir --upgrade https://storage.googleapis.com/jax-wheels/cuda100/jaxlib-0.1.28-cp36-none-linux_x86_64.whl && \
-    pip install --no-cache-dir --upgrade jax  && \
+    # install jaxlib
+    PYTHON_VERSION=cp37  && \
+    # alternatives: cp35, cp36, cp37, cp38
+    CUDA_VERSION=cuda101   && \
+    # alternatives: cuda90, cuda92, cuda100, cuda101
+    PLATFORM=linux_x86_64  && \
+    # alternatives: linux_x86_64
+    BASE_URL='https://storage.googleapis.com/jax-releases' && \
+    pip install --no-cache-dir --upgrade $BASE_URL/$CUDA_VERSION/jaxlib-0.1.37-$PYTHON_VERSION-none-$PLATFORM.whl && \
+    pip install --no-cache-dir --upgrade jax  # install jax && \
+    # pip install --no-cache-dir --upgrade https://storage.googleapis.com/jax-wheels/cuda100/jaxlib-0.1.28-cp36-none-linux_x86_64.whl && \
+    # pip install --no-cache-dir --upgrade jax  && \
     # Install Spacy GPU Support:
     pip install --no-cache-dir thinc-gpu-ops && \
     # Install Rapids: https://rapids.ai/start.html#conda-install
@@ -234,7 +244,7 @@ RUN \
     apt-get update -y && \
     apt-get install lm-sensors -y && \
     apt-get install netcat -y && \
-    apt-get install iproute -y && \
+    apt-get install iproute2 -y && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/* && \
     git clone https://github.com/Splo0sh/netdata_nv_plugin --depth 1 /tmp/netdata_nv_plugin && \

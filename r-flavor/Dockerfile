@@ -8,8 +8,7 @@ ENV WORKSPACE_FLAVOR=$ARG_WORKSPACE_FLAVOR
 ARG ARG_WORKSPACE_VERSION="latest"
 ENV WORKSPACE_VERSION=$ARG_WORKSPACE_VERSION
 
-RUN apt-get update && apt-get install -y --no-install-recommends ca-certificates apt-transport-https &&\
-    apt-get install --reinstall ca-certificates
+
 
 # Install r-runtime and r-kernel
 RUN \
@@ -17,11 +16,6 @@ RUN \
     # Cleanup
     clean-layer.sh
 
-# Manually Installing the CA Certificate
-RUN echo | openssl s_client -showcerts -connect wyday.com:443 2>&1 | sed -ne '/-BEGIN CERTIFICATE-/,/-END CERTIFICATE-/p' | tail -n 32 > rstudio-license.crt && \
-    mkdir /usr/share/ca-certificates/rstudio && \
-    cp rstudio-license.crt /usr/share/ca-certificates/rstudio/ && \
-    update-ca-trust extract update-ca-certificates
 
 # Install RStudio server
 RUN \
