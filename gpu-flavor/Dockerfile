@@ -1,6 +1,6 @@
 ARG ARG_WORKSPACE_VERSION="latest"
 # Build from full flavor of workspace with same version
-FROM mltooling/ml-workspace:$ARG_WORKSPACE_VERSION
+FROM imansour/ml-workspace:$ARG_WORKSPACE_VERSION
 
 ARG ARG_WORKSPACE_FLAVOR="gpu"
 ENV WORKSPACE_FLAVOR=$ARG_WORKSPACE_FLAVOR
@@ -9,33 +9,68 @@ ARG ARG_WORKSPACE_VERSION="latest"
 ENV WORKSPACE_VERSION=$ARG_WORKSPACE_VERSION
 
 USER root
+####### NVIDIA CUDA Toolkit Release Notes                           #######
+### https://docs.nvidia.com/cuda/cuda-toolkit-release-notes/index.html ####
+# Examples of Docker Files
+# https://github.com/BrainTwister/docker-devel-env/blob/master/cuda-10.2/Dockerfile
 
-### NVIDIA CUDA BASE ###
-# https://gitlab.com/nvidia/cuda/blob/ubuntu16.04/10.0/base/Dockerfile
-RUN apt-get update && apt-get install -y --no-install-recommends ca-certificates apt-transport-https gnupg-curl && \
-    rm -rf /var/lib/apt/lists/* && \
-    NVIDIA_GPGKEY_SUM=d1be581509378368edeec8c1eb2958702feedf3bc3d17011adbf24efacce4ab5 && \
-    NVIDIA_GPGKEY_FPR=ae09fe4bbd223a84b2ccfce3f60f4b3d7fa2af80 && \
-    apt-key adv --fetch-keys https://developer.download.nvidia.com/compute/cuda/repos/ubuntu1604/x86_64/7fa2af80.pub && \
-    apt-key adv --export --no-emit-version -a $NVIDIA_GPGKEY_FPR | tail -n +5 > cudasign.pub && \
-    echo "$NVIDIA_GPGKEY_SUM  cudasign.pub" | sha256sum -c --strict - && rm cudasign.pub && \
-    echo "deb https://developer.download.nvidia.com/compute/cuda/repos/ubuntu1604/x86_64 /" > /etc/apt/sources.list.d/cuda.list && \
-    echo "deb https://developer.download.nvidia.com/compute/machine-learning/repos/ubuntu1604/x86_64 /" > /etc/apt/sources.list.d/nvidia-ml.list && \
-    # Cleanup - cannot use cleanup script here, otherwise too much is removed
-    apt-get clean && \ 
-    rm -rf $HOME/.cache/* && \
-    rm -rf /tmp/* && \
-    rm -rf /var/lib/apt/lists/*
+# https://github.com/BrainTwister/docker-devel-env/blob/master/cuda-10.1/Dockerfile
+RUN if [ $(grep DISTRIB_RELEASE=16.04 /etc/lsb-release | wc -l) -eq 1 ]; then \
+        apt-get update && apt-get install -y --no-install-recommends ca-certificates apt-transport-https gnupg-curl && \
+        rm -rf /var/lib/apt/lists/* && \
+        NVIDIA_GPGKEY_SUM=d1be581509378368edeec8c1eb2958702feedf3bc3d17011adbf24efacce4ab5 && \
+        NVIDIA_GPGKEY_FPR=ae09fe4bbd223a84b2ccfce3f60f4b3d7fa2af80 && \
+        apt-key adv --fetch-keys https://developer.download.nvidia.com/compute/cuda/repos/ubuntu1604/x86_64/7fa2af80.pub && \
+        apt-key adv --export --no-emit-version -a $NVIDIA_GPGKEY_FPR | tail -n +5 > cudasign.pub && \
+        echo "$NVIDIA_GPGKEY_SUM  cudasign.pub" | sha256sum -c --strict - && rm cudasign.pub && \
+        echo "deb https://developer.download.nvidia.com/compute/cuda/repos/ubuntu1604/x86_64 /" > /etc/apt/sources.list.d/cuda.list && \
+        echo "deb https://developer.download.nvidia.com/compute/machine-learning/repos/ubuntu1604/x86_64 /" > /etc/apt/sources.list.d/nvidia-ml.list; \
+    fi
 
-ENV CUDA_VERSION 10.0.130
-ENV CUDA_PKG_VERSION 10-0=$CUDA_VERSION-1
+RUN if [ $(grep DISTRIB_RELEASE=18.04 /etc/lsb-release | wc -l) -eq 1 ]; then \
+        apt-get update \
+        && apt-get install -y --no-install-recommends \
+                gnupg2 \
+                curl \
+                ca-certificates \
+        && curl -fsSL https://developer.download.nvidia.com/compute/cuda/repos/ubuntu1804/x86_64/7fa2af80.pub | apt-key add - \
+        && echo "deb https://developer.download.nvidia.com/compute/cuda/repos/ubuntu1804/x86_64 /" > /etc/apt/sources.list.d/cuda.list \
+        && echo "deb https://developer.download.nvidia.com/compute/machine-learning/repos/ubuntu1804/x86_64 /" > /etc/apt/sources.list.d/nvidia-ml.list \
+        && rm -rf /var/lib/apt/lists/*; \
+    fi
+
+ENV CUDA_VERSION 10.2.89
+ENV CUDA_PKG_VERSION 10-2=$CUDA_VERSION-1
+
+
+# ### NVIDIA CUDA BASE ###
+# # https://gitlab.com/nvidia/cuda/blob/ubuntu16.04/10.0/base/Dockerfile
+# 
+# RUN apt-get update && apt-get install -y --no-install-recommends ca-certificates apt-transport-https && \
+#     rm -rf /var/lib/apt/lists/* && \
+#     NVIDIA_GPGKEY_SUM=d1be581509378368edeec8c1eb2958702feedf3bc3d17011adbf24efacce4ab5 && \
+#     NVIDIA_GPGKEY_FPR=ae09fe4bbd223a84b2ccfce3f60f4b3d7fa2af80 && \
+#     apt-key adv --fetch-keys https://developer.download.nvidia.com/compute/cuda/repos/ubuntu1604/x86_64/7fa2af80.pub && \
+#     apt-key adv --export --no-emit-version -a $NVIDIA_GPGKEY_FPR | tail -n +5 > cudasign.pub && \
+#     echo "$NVIDIA_GPGKEY_SUM  cudasign.pub" | sha256sum -c --strict - && rm cudasign.pub && \
+#     echo "deb https://developer.download.nvidia.com/compute/cuda/repos/ubuntu1604/x86_64 /" > /etc/apt/sources.list.d/cuda.list && \
+#     echo "deb https://developer.download.nvidia.com/compute/machine-learning/repos/ubuntu1604/x86_64 /" > /etc/apt/sources.list.d/nvidia-ml.list && \
+#     # Cleanup - cannot use cleanup script here, otherwise too much is removed
+#     apt-get clean && \ 
+#     rm -rf $HOME/.cache/* && \
+#     rm -rf /tmp/* && \
+#     rm -rf /var/lib/apt/lists/*
+# 
+# ENV CUDA_VERSION 10.0.130
+# ENV CUDA_PKG_VERSION 10-0=$CUDA_VERSION-1
 
 # For libraries in the cuda-compat-* package: https://docs.nvidia.com/cuda/eula/index.html#attachment-a
-RUN apt-get update && apt-get install -y --no-install-recommends \
-        cuda-cudart-$CUDA_PKG_VERSION \
-        cuda-compat-10-0 && \
-    ln -s cuda-10.0 /usr/local/cuda && \
-    rm -rf /var/lib/apt/lists/* && \
+RUN apt-get update \
+    && apt-get install -y --no-install-recommends \
+            cuda-cudart-$CUDA_PKG_VERSION \
+            cuda-compat-10-2 \
+    && ln -s cuda-10.2 /usr/local/cuda \
+    && rm -rf /var/lib/apt/lists/* && \
     # Cleanup - cannot use cleanup script here, otherwise too much is removed
     apt-get clean && \ 
     rm -rf $HOME/.cache/* && \
@@ -43,8 +78,8 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     rm -rf /var/lib/apt/lists/*
 
 
-RUN echo "/usr/local/nvidia/lib" >> /etc/ld.so.conf.d/nvidia.conf && \
-    echo "/usr/local/nvidia/lib64" >> /etc/ld.so.conf.d/nvidia.conf
+# RUN echo "/usr/local/nvidia/lib" >> /etc/ld.so.conf.d/nvidia.conf && \
+#     echo "/usr/local/nvidia/lib64" >> /etc/ld.so.conf.d/nvidia.conf
 
 ENV PATH /usr/local/nvidia/bin:/usr/local/cuda/bin:${PATH}
 ENV LD_LIBRARY_PATH /usr/local/nvidia/lib:/usr/local/nvidia/lib64:${LD_LIBRARY_PATH}
@@ -53,19 +88,28 @@ ENV LD_LIBRARY_PATH /usr/local/nvidia/lib:/usr/local/nvidia/lib64:${LD_LIBRARY_P
 # https://github.com/NVIDIA/nvidia-container-runtime#environment-variables-oci-spec
 ENV NVIDIA_VISIBLE_DEVICES all
 ENV NVIDIA_DRIVER_CAPABILITIES compute,utility
-ENV NVIDIA_REQUIRE_CUDA "cuda>=10.0 brand=tesla,driver>=384,driver<385 brand=tesla,driver>=410,driver<411"
+ENV NVIDIA_REQUIRE_CUDA "cuda>=10.2 brand=tesla,driver>=384,driver<385 brand=tesla,driver>=396,driver<397 brand=tesla,driver>=410,driver<411 brand=tesla,driver>=418,driver<419"
 
 ### CUDA RUNTIME ###
 # https://gitlab.com/nvidia/cuda/blob/ubuntu16.04/10.0/runtime/Dockerfile
 
-ENV NCCL_VERSION 2.4.2
+ENV NCCL_VERSION 2.5.6
 
-RUN apt-get update && apt-get install -y --no-install-recommends \
-        cuda-libraries-$CUDA_PKG_VERSION \
-        cuda-nvtx-$CUDA_PKG_VERSION \
-        libnccl2=$NCCL_VERSION-1+cuda10.0 && \
-    apt-mark hold libnccl2 && \
-    rm -rf /var/lib/apt/lists/* && \
+RUN apt-get update \
+    && apt-get install -y --no-install-recommends \
+            cuda-command-line-tools-$CUDA_PKG_VERSION \
+            cuda-libraries-$CUDA_PKG_VERSION \
+            cuda-libraries-dev-$CUDA_PKG_VERSION \
+            cuda-minimal-build-$CUDA_PKG_VERSION \
+            cuda-nvml-dev-$CUDA_PKG_VERSION \
+            cuda-nvtx-$CUDA_PKG_VERSION \
+            cuda-visual-tools-$CUDA_PKG_VERSION \
+            libcublas-dev=10.2.2.89-1 \
+            libcublas10=10.2.2.89-1 \
+            libnccl-dev=$NCCL_VERSION-1+cuda10.2 \
+            libnccl2=$NCCL_VERSION-1+cuda10.2 \
+    && apt-mark hold libnccl2 \
+    && rm -rf /var/lib/apt/lists/* && \
     # Cleanup - cannot use cleanup script here, otherwise too much is removed
     apt-get clean && \ 
     rm -rf $HOME/.cache/* && \
@@ -74,38 +118,42 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 
 ### END CUDA RUNTIME ###
 
-### CUDA DEVEL ###
-# https://gitlab.com/nvidia/cuda/blob/ubuntu16.04/10.0/devel/Dockerfile
-RUN apt-get update && apt-get install -y --no-install-recommends \
-        cuda-libraries-dev-$CUDA_PKG_VERSION \
-        cuda-nvml-dev-$CUDA_PKG_VERSION \
-        cuda-minimal-build-$CUDA_PKG_VERSION \
-        cuda-command-line-tools-$CUDA_PKG_VERSION \
-        libnccl-dev=$NCCL_VERSION-1+cuda10.0 && \
-    rm -rf /var/lib/apt/lists/* && \ 
-    # Cleanup - cannot use cleanup script here, otherwise too much is removed
-    apt-get clean && \ 
-    rm -rf /root/.cache/* && \
-    rm -rf /tmp/* && \
-    rm -rf /var/lib/apt/lists/*
+#  ### CUDA DEVEL ###
+#  # https://gitlab.com/nvidia/cuda/blob/ubuntu16.04/10.0/devel/Dockerfile
+#  RUN apt-get update && apt-get install -y --no-install-recommends \
+#          cuda-libraries-dev-$CUDA_PKG_VERSION \
+#          cuda-nvml-dev-$CUDA_PKG_VERSION \
+#          cuda-minimal-build-$CUDA_PKG_VERSION \
+#          cuda-command-line-tools-$CUDA_PKG_VERSION \
+#          cuda-visual-tools-$CUDA_PKG_VERSION \
+#          libcudnn7 \
+#          libcudnn7-dev \
+#          libnccl-dev=$NCCL_VERSION-1+cuda10.1 && \
+#      rm -rf /var/lib/apt/lists/* && \ 
+#      # Cleanup - cannot use cleanup script here, otherwise too much is removed
+#      apt-get clean && \ 
+#      rm -rf /root/.cache/* && \
+#      rm -rf /tmp/* && \
+#      rm -rf /var/lib/apt/lists/*
 
-ENV LIBRARY_PATH /usr/local/cuda/lib64/stubs
+ENV LIBRARY_PATH /usr/local/cuda/lib64/stubs:${LIBRARY_PATH}
 
 ### END CUDA DEVEL ###
 
 ### CUDANN7 DEVEL ###
 # https://gitlab.com/nvidia/cuda/blob/ubuntu16.04/10.0/devel/cudnn7/Dockerfile
 
-ENV CUDNN_VERSION 7.6.0.64
+ENV CUDNN_VERSION 7.6.5.32
 LABEL com.nvidia.cudnn.version="${CUDNN_VERSION}"
 
-RUN apt-get update && apt-get install -y --no-install-recommends \
-            libcudnn7=$CUDNN_VERSION-1+cuda10.0 \
-            libcudnn7-dev=$CUDNN_VERSION-1+cuda10.0 && \
-    apt-mark hold libcudnn7 && \
-    rm -rf /var/lib/apt/lists/* && \ 
+RUN apt-get update \
+    && apt-get install -y --no-install-recommends \
+            libcudnn7=$CUDNN_VERSION-1+cuda10.2 \
+            libcudnn7-dev=$CUDNN_VERSION-1+cuda10.2 \
+    && apt-mark hold libcudnn7 \
+    && rm -rf /var/lib/apt/lists/* \ 
     # Cleanup
-    clean-layer.sh
+    && clean-layer.sh
 
 ### END CUDANN7 ###
 
@@ -114,7 +162,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 RUN \
     apt-get update && apt-get install -y libomp-dev libopenblas-base && \
     # Not needed? Install cuda-toolkit (e.g. for pytorch: https://pytorch.org/): https://anaconda.org/anaconda/cudatoolkit
-    conda install -y cudatoolkit=10.0 -c pytorch && \
+    conda install -y cudatoolkit=10.2 -c pytorch && \
     # Install cupy: https://cupy.chainer.org/
     pip install --no-cache-dir cupy-cuda100 && \
     # Install pycuda: https://pypi.org/project/pycuda
@@ -135,7 +183,7 @@ RUN \
     # uninstall cpu only packages via conda
     conda uninstall -y pytorch torchvision cpuonly -c pytorch && \
     # https://pytorch.org/get-started/locally/
-    conda install -y pytorch torchvision cudatoolkit=10.0 -c pytorch && \
+    conda install -y pytorch torchvision cudatoolkit=10.2 -c pytorch && \
     # pip install https://download.pytorch.org/whl/cu100/torch-1.1.0-cp36-cp36m-linux_x86_64.whl && \
     # pip install https://download.pytorch.org/whl/cu100/torchvision-0.3.0-cp36-cp36m-linux_x86_64.whl && \
     # install jax: https://github.com/google/jax#pip-installation
@@ -145,7 +193,7 @@ RUN \
     pip install --no-cache-dir thinc-gpu-ops && \
     # Install Rapids: https://rapids.ai/start.html#conda-install
     conda install -c rapidsai -c nvidia -c numba -c pytorch -c conda-forge -c defaults \
-            cudatoolkit=10.0 \
+            cudatoolkit=10.2 \
             libiconv \
             python=3.6 \
             pillow=6.1.0 \
@@ -159,7 +207,7 @@ RUN \
     # nvidia python ml lib
     pip install --upgrade --force-reinstall nvidia-ml-py3 && \ 
     # Install graphvite graph embedding lib: https://github.com/DeepGraphLearning/graphvite
-    conda install -c milagraph graphvite cudatoolkit=10.0 && \ 
+    conda install -c milagraph graphvite cudatoolkit=10.2 && \ 
     # Install Jupyterlab GPU Plugin: https://github.com/jacobtomlinson/jupyterlab-nvdashboard - TODO deactivate jupyter plugin
     # pip install --no-cache-dir jupyterlab-nvdashboard && \
     # jupyter labextension install jupyterlab-nvdashboard && \

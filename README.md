@@ -59,7 +59,7 @@ The workspace requires **Docker** to be installed on your machine ([Installation
 Deploying a single workspace instance is as simple as:
 
 ```bash
-docker run -p 8080:8080 mltooling/ml-workspace:latest
+docker run -p 8080:8080 imansour/ml-workspace:0.0.9
 ```
 
 Voilà, that was easy! Now, Docker will pull the latest workspace image to your machine. This may take a few minutes, depending on your internet speed. Once the workspace is started, you can access it via http://localhost:8080.
@@ -776,7 +776,7 @@ python /resources/scripts/execute_code.py /path/to/your/job
 It is also possible to embed your code directly into a custom job image, as shown below:
 
 ```dockerfile
-FROM mltooling/ml-workspace:latest
+FROM imansour/ml-workspace:latest
 
 # Add job code to image
 COPY ml-job /workspace/ml-job
@@ -841,7 +841,7 @@ The workspace can be extended in many ways at runtime, as explained [here](#exte
 ```dockerfile
 # Extend from any of the workspace versions/flavors
 # Using latest as version is not recommended, please specify a specific version
-FROM mltooling/ml-workspace:latest
+FROM imansour/ml-workspace:latest
 
 # Run you customizations, e.g.
 RUN \

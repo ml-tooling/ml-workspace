@@ -67,6 +67,7 @@ RUN \
         apt-transport-https \
         gnupg-agent \
         gpg-agent \
+        gnupg2 \
         ca-certificates \
         build-essential \
         pkg-config \
@@ -163,28 +164,121 @@ RUN \
 # Add tini
 RUN wget --quiet https://github.com/krallin/tini/releases/download/v0.18.0/tini -O /tini && \
     chmod +x /tini
-#    systemctl disable nginx && \
-#    systemctl stop nginx && \
 
-RUN \
-    OPEN_RESTY_VERSION="1.15.8.2" && \
-    apt-get update && \
-    apt-get purge -y nginx nginx-common && \
-    # install some prerequisites needed by adding GPG public keys (could be removed later)
-    apt-get -y install --no-install-recommends wget gnupg ca-certificates && \
-    # import our GPG key:
-    wget -O - https://openresty.org/package/pubkey.gpg | sudo apt-key add - && \
-    # for installing the add-apt-repository command
-    # (you can remove this package and its dependencies later):
-    apt-get -y install --no-install-recommends software-properties-common && \
-    # add the our official APT repository:
-    add-apt-repository -y "deb http://openresty.org/package/ubuntu $(lsb_release -sc) main" && \
-    # to update the APT index:
-    apt-get update && \
-    # install openresty package 
-    apt-get -y install openresty=${OPEN_RESTY_VERSION}-* && \
-    # create log dir and file - otherwise openresty will throw an error \
-    mkdir -p /var/log/nginx/ && \
+########### OpeResty Install
+# https://github.com/IntimateMerger/docker-openresty/blob/master/Dockerfile
+# Docker Build Arguments
+ARG RESTY_IMAGE_TAG
+ARG RESTY_VERSION="1.15.8.2"
+ARG RESTY_OPENSSL_VERSION="1.1.1c"
+ARG RESTY_PCRE_VERSION="8.43"
+ARG RESTY_J="nproc"
+
+# These are not intended to be user-specified
+ARG _RESTY_CONFIG_OPTIONS="\
+    --with-http_stub_status_module \
+    --with-http_sub_module\
+    --with-http_addition_module \
+    --with-http_auth_request_module \
+    --with-http_gunzip_module \
+    --with-http_gzip_static_module \
+    --with-http_realip_module \
+    --with-http_ssl_module \
+    --with-http_stub_status_module \
+    --with-http_v2_module \
+    --with-pcre-jit \
+    --with-threads \
+    "
+
+ARG RESTY_CONFIG_OPTIONS=""
+ARG RESTY_LUAJIT_OPTIONS="--with-luajit-xcflags='-DLUAJIT_NUMMODE=2 -DLUAJIT_ENABLE_LUA52COMPAT'"
+
+ARG RESTY_ADD_PACKAGE_BUILDDEPS=""
+ARG RESTY_ADD_PACKAGE_RUNDEPS=""
+ARG RESTY_EVAL_PRE_CONFIGURE=""
+ARG RESTY_EVAL_POST_MAKE=""
+
+# These are not intended to be user-specified
+ARG _RESTY_CONFIG_DEPS="--with-pcre \
+    --with-cc-opt='-DNGX_LUA_ABORT_AT_PANIC -I/usr/local/openresty/pcre/include -I/usr/local/openresty/openssl/include' \
+    --with-ld-opt='-L/usr/local/openresty/pcre/lib -L/usr/local/openresty/openssl/lib -Wl,-rpath,/usr/local/openresty/pcre/lib:/usr/local/openresty/openssl/lib' \
+    "
+
+LABEL resty.image="alpine:${RESTY_IMAGE_TAG}" \
+      resty.version="${RESTY_VERSION}" \
+      resty.openssl_version="${RESTY_OPENSSL_VERSION}" \
+      resty.pcre_version="${RESTY_PCRE_VERSION}" \
+      resty.config_options="${_RESTY_CONFIG_OPTIONS} ${RESTY_CONFIG_OPTIONS}" \
+      resty.add_package_builddeps="${RESTY_ADD_PACKAGE_BUILDDEPS}" \
+      resty.add_package_rundeps="${RESTY_ADD_PACKAGE_RUNDEPS}" \
+      resty.eval_pre_configure="${RESTY_EVAL_PRE_CONFIGURE}" \
+      resty.eval_post_make="${RESTY_EVAL_POST_MAKE}"
+
+# 1) Install apt dependencies
+# 2) Download and untar OpenSSL, PCRE, and OpenResty
+# 3) Build OpenResty
+# 4) Cleanup
+
+RUN set -x && apt-get update && apt-get -y install --no-install-recommends \
+        software-properties-common \
+        ${RESTY_ADD_PACKAGE_BUILDDEPS} \
+    && cd /tmp \
+    && if [ -n "${RESTY_EVAL_PRE_CONFIGURE}" ]; then eval $(echo ${RESTY_EVAL_PRE_CONFIGURE}); fi \
+    && cd /tmp \
+    && curl -sfSL https://www.openssl.org/source/openssl-${RESTY_OPENSSL_VERSION}.tar.gz -o openssl-${RESTY_OPENSSL_VERSION}.tar.gz \
+    && tar xzf openssl-${RESTY_OPENSSL_VERSION}.tar.gz \
+    && cd openssl-${RESTY_OPENSSL_VERSION} \
+    && if [ $(echo ${RESTY_OPENSSL_VERSION} | cut -c 1-5) = "1.1.1" ] ; then \
+        echo 'patching OpenSSL 1.1.1 for OpenResty' \
+        && curl -s https://raw.githubusercontent.com/openresty/openresty/master/patches/openssl-1.1.1c-sess_set_get_cb_yield.patch | patch -p1 ; \
+    fi \
+    && if [ $(echo ${RESTY_OPENSSL_VERSION} | cut -c 1-5) = "1.1.0" ] ; then \
+        echo 'patching OpenSSL 1.1.0 for OpenResty' \
+        && curl -s https://raw.githubusercontent.com/openresty/openresty/ed328977028c3ec3033bc25873ee360056e247cd/patches/openssl-1.1.0j-parallel_build_fix.patch | patch -p1 \
+        && curl -s https://raw.githubusercontent.com/openresty/openresty/master/patches/openssl-1.1.0d-sess_set_get_cb_yield.patch | patch -p1 ; \
+    fi \
+    && ./config \
+      no-threads shared zlib -g \
+      enable-ssl3 enable-ssl3-method \
+      --prefix=/usr/local/openresty/openssl \
+      # This flag can change the ssl dir --openssldir=/etc/ssl/ \
+      --libdir=lib \
+      -Wl,-rpath,/usr/local/openresty/openssl/lib \
+    && make -j"$(${RESTY_J})" \
+    && make -j"$(${RESTY_J})" install_sw \
+    && cd /tmp \
+    && curl -sfSL https://ftp.pcre.org/pub/pcre/pcre-${RESTY_PCRE_VERSION}.tar.gz -o pcre-${RESTY_PCRE_VERSION}.tar.gz \
+    && tar xzf pcre-${RESTY_PCRE_VERSION}.tar.gz \
+    && cd /tmp/pcre-${RESTY_PCRE_VERSION} \
+    && ./configure \
+        --prefix=/usr/local/openresty/pcre \
+        --disable-cpp \
+        --enable-jit \
+        --enable-utf \
+        --enable-unicode-properties \
+    && make -j"$(${RESTY_J})" \
+    && make -j"$(${RESTY_J})" install \
+    && cd /tmp \
+    && curl -sfSL https://github.com/openresty/openresty/releases/download/v${RESTY_VERSION}/openresty-${RESTY_VERSION}.tar.gz -o openresty-${RESTY_VERSION}.tar.gz \
+    && tar xzf openresty-${RESTY_VERSION}.tar.gz \
+    && cd /tmp/openresty-${RESTY_VERSION} \
+    && eval ./configure -j"$(${RESTY_J})" ${_RESTY_CONFIG_DEPS} ${_RESTY_CONFIG_OPTIONS} ${RESTY_CONFIG_OPTIONS} ${RESTY_LUAJIT_OPTIONS} \
+             \
+    && make -j"$(${RESTY_J})" \
+    && make -j"$(${RESTY_J})" install \
+    && cd /tmp \
+    && if [ -n "${RESTY_EVAL_POST_MAKE}" ]; then eval $(echo ${RESTY_EVAL_POST_MAKE}); fi \
+    && rm -rf \
+        openssl-${RESTY_OPENSSL_VERSION}.tar.gz openssl-${RESTY_OPENSSL_VERSION} \
+        pcre-${RESTY_PCRE_VERSION}.tar.gz pcre-${RESTY_PCRE_VERSION} \
+        openresty-${RESTY_VERSION}.tar.gz openresty-${RESTY_VERSION} \
+    && strip /usr/local/openresty/nginx/sbin/nginx \
+    && mkdir -p /var/log/openresty \
+    # Link ssl cert for openssl not to have cert error 
+    && mkdir -p /usr/local/openresty/openssl/ssl/ && ln -sf /etc/ssl/* /usr/local/openresty/openssl/ssl/ \
+    && ln -sf /dev/stdout /var/log/openresty/access.log \
+    && ln -sf /dev/stderr /var/log/openresty/error.log \
+    && mkdir -p /var/log/nginx/ && \
     touch /var/log/nginx/upstream.log && \
     # create log dir and file - otherwise openresty will throw an error
     mkdir -p /var/log/nginx/ && \
@@ -194,11 +288,42 @@ RUN \
     chmod -R a+rwx $RESOURCES_PATH && \
     # Cleanup
     clean-layer.sh
-    # && \
-#    apt-get remove -y --purge gnupg2 lsb-release software-properties-common wget && \
-#    apt-get -y autoremove
 
-ENV PATH="${PATH}:/usr/local/openresty/luajit/bin:/usr/local/openresty/nginx/sbin:/usr/local/openresty/bin"
+# Add additional binaries into PATH for convenience
+ENV PATH=$PATH:/usr/local/openresty/luajit/bin:/usr/local/openresty/nginx/sbin:/usr/local/openresty/bin
+
+
+# RUN \
+#     OPEN_RESTY_VERSION="1.15.8.2" && \
+#     apt-get update && \
+#     apt-get purge -y nginx nginx-common && \
+#     # install some prerequisites needed by adding GPG public keys (could be removed later)
+#     apt-get -y install --no-install-recommends wget gnupg ca-certificates && \
+#     # import our GPG key:
+#     wget -O - https://openresty.org/package/pubkey.gpg | sudo apt-key add - && \
+#     # for installing the add-apt-repository command
+#     # (you can remove this package and its dependencies later):
+#     apt-get -y install --no-install-recommends software-properties-common && \
+#     # add the our official APT repository:
+#     add-apt-repository -y "deb http://openresty.org/package/ubuntu $(lsb_release -sc) main" && \
+#     # to update the APT index:
+#     apt-get update && \
+#     # install openresty package 
+#     apt-get -y install openresty=${OPEN_RESTY_VERSION}-* && \
+#     # create log dir and file - otherwise openresty will throw an error \
+#     mkdir -p /var/log/nginx/ && \
+#     touch /var/log/nginx/upstream.log && \
+#     # create log dir and file - otherwise openresty will throw an error
+#     mkdir -p /var/log/nginx/ && \
+#     touch /var/log/nginx/upstream.log && \
+#     cd $RESOURCES_PATH && \
+#     # Fix permissions
+#     chmod -R a+rwx $RESOURCES_PATH && \
+#     # Cleanup
+#     clean-layer.sh
+# 
+# # Add nginx and openresty to PATH
+# ENV PATH=${PATH}:/usr/local/openresty/luajit/bin:/usr/local/openresty/nginx/sbin:/usr/local/openresty/bin
 
 ## 
 ## https://openresty.org/en/installation.html
@@ -252,8 +377,6 @@ ENV PATH="${PATH}:/usr/local/openresty/luajit/bin:/usr/local/openresty/nginx/sbi
 #    chmod -R a+rwx $RESOURCES_PATH && \
 #    # Cleanup
 #    clean-layer.sh#
-
-ENV PATH=/usr/local/openresty/nginx/sbin:$PATH
 
 COPY resources/nginx/lua-extensions /etc/nginx/nginx_plugins
 
@@ -1019,6 +1142,7 @@ COPY resources/tutorials $RESOURCES_PATH/tutorials
 COPY resources/licenses $RESOURCES_PATH/licenses
 COPY resources/reports $RESOURCES_PATH/reports
 
+# Nginx ELF file does not startup without the specific compiled libraries for openresty 
 ENV LD_LIBRARY_PATH=/usr/local/openresty/luajit/lib:/usr/local/openresty/zlib/lib:/usr/local/openresty/pcre/lib:/usr/local/openresty/openssl/lib:$LD_LIBRARY_PATH
 
 # Various configurations
@@ -1100,21 +1224,21 @@ LABEL \
     # Open Container labels: https://github.com/opencontainers/image-spec/blob/master/annotations.md
     "org.opencontainers.image.title"="Machine Learning Workspace" \
     "org.opencontainers.image.description"="All-in-one web-based development environment for machine learning." \
-    "org.opencontainers.image.documentation"="https://github.com/ml-tooling/ml-workspace" \
-    "org.opencontainers.image.url"="https://github.com/ml-tooling/ml-workspace" \
-    "org.opencontainers.image.source"="https://github.com/ml-tooling/ml-workspace" \
+    "org.opencontainers.image.documentation"="https://github.com/IslamAlam/ml-workspace" \
+    "org.opencontainers.image.url"="https://github.com/IslamAlam/ml-workspace" \
+    "org.opencontainers.image.source"="https://github.com/IslamAlam/ml-workspace" \
     # "org.opencontainers.image.licenses"="Apache-2.0" \
     "org.opencontainers.image.version"=$WORKSPACE_VERSION \
     "org.opencontainers.image.vendor"="ML Tooling" \
-    "org.opencontainers.image.authors"="Lukas Masuch & Benjamin Raehtlein" \
+    "org.opencontainers.image.authors"="Lukas Masuch, Benjamin Raehtlein, & Islam Mansour" \
     "org.opencontainers.image.revision"=$ARG_VCS_REF \
     "org.opencontainers.image.created"=$ARG_BUILD_DATE \
     # Label Schema Convention (deprecated): http://label-schema.org/rc1/
     "org.label-schema.name"="Machine Learning Workspace" \
     "org.label-schema.description"="All-in-one web-based development environment for machine learning." \
-    "org.label-schema.usage"="https://github.com/ml-tooling/ml-workspace" \
-    "org.label-schema.url"="https://github.com/ml-tooling/ml-workspace" \
-    "org.label-schema.vcs-url"="https://github.com/ml-tooling/ml-workspace" \
+    "org.label-schema.usage"="https://github.com/IslamAlam/ml-workspace" \
+    "org.label-schema.url"="https://github.com/IslamAlam/ml-workspace" \
+    "org.label-schema.vcs-url"="https://github.com/IslamAlam/ml-workspace" \
     "org.label-schema.vendor"="ML Tooling" \
     "org.label-schema.version"=$WORKSPACE_VERSION \
     "org.label-schema.schema-version"="1.0" \

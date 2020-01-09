@@ -10,16 +10,19 @@ ENV WORKSPACE_VERSION=$ARG_WORKSPACE_VERSION
 
 USER root
 
+
+
+SHELL ["/bin/bash", "-c"]
+WORKDIR /opt/
+
 ### Sentinel Application Platform (SNAP) reunites all Sentinel Toolboxes ESA Installation  ###
 # https://step.esa.int/main/download/snap-download
 ENV SNAP_DIR=/opt/snap \
     SNAP_VERSION="7.0" \
     CONDA_PYTHON_DIR=/opt/conda/lib/python3.7
 
-SHELL ["/bin/bash", "-c"]
-WORKDIR /opt/
-
-RUN wget --quiet https://step.esa.int/downloads/${SNAP_VERSION}/installers/esa-snap_all_unix_${SNAP_VERSION//[.]/_}.sh -O ~/esa-snap.sh && \
+RUN mkdir -p /tmp/eo/ && cd /tmp/eo/ && \
+    wget --quiet https://step.esa.int/downloads/${SNAP_VERSION}/installers/esa-snap_all_unix_${SNAP_VERSION//[.]/_}.sh -O ~/esa-snap.sh && \
     chmod +x ~/esa-snap.sh && \
     printf "# install4j response file for ESA SNAP 7.0 \
     \ndeleteSnapDir=DESKTOP \
@@ -38,7 +41,7 @@ RUN wget --quiet https://step.esa.int/downloads/${SNAP_VERSION}/installers/esa-s
     \nsys.programGroupDisabled$Boolean=false \
     \nsys.symlinkDir=/usr/local/bin" > ~/response.varfile
 
-RUN /bin/sh ~/esa-snap.sh -q  && \
+RUN /bin/sh ~/esa-snap.sh -q -varfile response.varfile && \
     export PATH=$SNAP_DIR/bin:$PATH && \
     rm ~/esa-snap.sh ~/response.varfile
 # -varfile ~/response.varfile

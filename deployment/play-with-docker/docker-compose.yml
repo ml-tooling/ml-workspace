@@ -2,7 +2,7 @@ version: '3.2'
 
 services:
   ml-workspace:
-    image: mltooling/ml-workspace-minimal
+    image: imansour/ml-workspace-minimal
     restart: always
     volumes:
       - ml-workspace:/workspace
