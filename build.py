@@ -9,7 +9,8 @@ parser.add_argument('--version', help='version tag of docker container', default
 parser.add_argument('--deploy', help='deploy docker container to remote', action='store_true')
 parser.add_argument('--flavor', help='flavor (full, light, minimal) used for docker container', default='full')
 
-REMOTE_IMAGE_PREFIX = "mltooling/"
+REMOTE_IMAGE_PREFIX = "mltooling
+/"
 
 args, unknown = parser.parse_known_args()
 if unknown:
@@ -63,8 +64,6 @@ if args.flavor == "all":
     args.flavor = "spark"
     build()
     args.flavor = "gpu"
-    build()
-    args.flavor = "eo"
     build()
     sys.exit(0)
 
