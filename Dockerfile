@@ -17,13 +17,15 @@ ENV \
     DEBIAN_FRONTEND="noninteractive" \
     RESOURCES_PATH="/resources" \
     SSL_RESOURCES_PATH="/resources/ssl" \
-    WORKSPACE_HOME="/workspace"
+    WORKSPACE_HOME="/workspace" \
+    LOGS_PATH="/logs"
 
 WORKDIR $HOME
 
 # Make folders
 RUN \
     mkdir $RESOURCES_PATH && chmod a+rwx $RESOURCES_PATH && \
+    mkdir $LOGS_PATH && chmod a+rwx $LOGS_PATH && \
     mkdir $WORKSPACE_HOME && chmod a+rwx $WORKSPACE_HOME && \
     mkdir $SSL_RESOURCES_PATH && chmod a+rwx $SSL_RESOURCES_PATH
 
