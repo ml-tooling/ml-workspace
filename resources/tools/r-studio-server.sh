@@ -20,7 +20,7 @@ if [ ! -f "/usr/lib/rstudio-server/bin/rserver" ]; then
     # r-base and r-cairo (for displaying plots)
     conda install -y -c r r-base r-cairo
     apt-get update
-    wget https://download2.rstudio.org/server/trusty/amd64/rstudio-server-1.2.5019-amd64.deb -O ./rstudio.deb
+    wget https://download2.rstudio.org/server/trusty/amd64/rstudio-server-1.2.5033-amd64.deb -O ./rstudio.deb
     # ld library path makes problems
     LD_LIBRARY_PATH="" yes | gdebi --non-interactive ./rstudio.deb
     rm ./rstudio.deb

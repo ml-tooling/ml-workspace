@@ -18,6 +18,9 @@ apt-get install -y --no-install-recommends \
         scala \
         gradle
 
+# Install Java - Python Integrations
+pip install --no-cache-dir jep py4j
+
 if [[ ! $(jupyter kernelspec list) =~ "java" ]]; then
     echo "Installing Java Kernel for Jupyter. Please wait..."
     cd $RESOURCES_PATH
