@@ -52,8 +52,6 @@ The ML workspace is an all-in-one web-based IDE specialized for machine learning
 
 The workspace requires **Docker** to be installed on your machine ([Installation Guide](https://docs.docker.com/install/#supported-platforms)).
 
-> 📖 _If you are new to Docker, we recommend taking a look at [this beginner guide](https://docker-curriculum.com/)._
-
 ### Start single instance
 
 Deploying a single workspace instance is as simple as:
