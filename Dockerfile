@@ -956,6 +956,8 @@ COPY resources/jupyter/nbconfig /etc/jupyter/nbconfig
 COPY resources/jupyter/jupyter_notebook_config.py resources/jupyter/jupyter_notebook_config.json resources/jupyter/nbconfig /etc/jupyter/
 COPY resources/jupyter/sidebar.jupyterlab-settings $HOME/.jupyter/lab/user-settings/@jupyterlab/application-extension/
 COPY resources/jupyter/plugin.jupyterlab-settings $HOME/.jupyter/lab/user-settings/@jupyterlab/extensionmanager-extension/
+COPY resources/jupyter/ipython_config.py /etc/ipython/ipython_config.py
+
 # TODO: don't use tensorboard fix: Add tensorboard patch - use tensorboard jupyter plugin instead of the actual tensorboard magic
 # COPY resources/jupyter/tensorboard_notebook_patch.py $CONDA_PYTHON_DIR/site-packages/tensorboard/notebook.py
 
@@ -988,9 +990,7 @@ RUN \
     # Import matplotlib the first time to build the font cache.
     MPLBACKEND=Agg python -c "import matplotlib.pyplot" \
     # Stop Matplotlib printing junk to the console on first load
-    sed -i "s/^.*Matplotlib is building the font cache using fc-list.*$/# Warning removed/g" $CONDA_PYTHON_DIR/site-packages/matplotlib/font_manager.py && \
-    # Make matplotlib output in Jupyter notebooks display correctly
-    mkdir -p /etc/ipython/ && echo "c = get_config(); c.IPKernelApp.matplotlib = 'inline'" > /etc/ipython/ipython_config.py
+    sed -i "s/^.*Matplotlib is building the font cache using fc-list.*$/# Warning removed/g" $CONDA_PYTHON_DIR/site-packages/matplotlib/font_manager.py
 
 # Create Desktop Icons for Tooling
 COPY resources/icons $RESOURCES_PATH/icons
