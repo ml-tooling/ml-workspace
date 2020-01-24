@@ -377,7 +377,7 @@ The workspace is designed as a single-user development environment. For a multi-
 ML Hub makes it easy to set up on a single server (via Docker) or a cluster (via Kubernetes) and supports a variety of usage scenarios & authentication providers. You can try out ML Hub via:
 
 ```bash
-docker run -p 8080:8080 --name mlhub -v /var/run/docker.sock:/var/run/docker.sock mltooling/ml-hub:latest
+docker run -p 8080:8080 -v /var/run/docker.sock:/var/run/docker.sock mltooling/ml-hub:latest
 ```
 
 For more information and documentation about ML Hub, please take a look at the [Github Site](https://github.com/ml-tooling/ml-hub).
