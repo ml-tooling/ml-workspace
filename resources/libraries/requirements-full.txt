@@ -4,24 +4,20 @@
 ## Compatibility
 
 ## Object Serialization
+# dill installed via conda
 joblib==0.14.1 # Lightweight pipelining: using Python functions as pipeline jobs.
-dill==0.3.1.1 # dill can be used to store python objects to a file
 marshmallow==3.3.0 # A lightweight library for converting complex datatypes to and from native Python datatype
 jsonpickle==1.2 # Python library for serializing any arbitrary object graph into JSON
 
 ## Utilities
+# toolz -> installed via conda
 boltons==19.3.0 # When they're not builtins, they're boltons.
-toolz==0.10.0 # A functional standard library for Python.
 memory_profiler==0.55.0 # A module for monitoring memory usage of a python program
 cytoolz==0.10.1 # Cython implementation of Toolz: High performance functional utilities
 arrow==0.15.4 # Better dates & times for Python 
-python-dateutil==2.8.0 # 2.8.0 required by botocore: Extensions to the standard Python datetime module
-click==7.0.0 # Composable command line interface toolkit
 thefuck==3.29 # Magnificent app which corrects your previous console command
 fire==0.2.1 # A library for automatically generating command line interfaces.
-jmespath==0.9.4 # JSON Matching Expressions
 marisa-trie==0.7.5 # Static memory-efficient and fast Trie-like structures for Python.
-tabulate==0.8.6 # Pretty-print tabular data in Python
 patool==1.12 # portable archive file manager - supports various compression formats
 smart-open==1.9.0 # Utils for streaming large files (S3, HDFS, gzip, bz2...)
 Delorean==1.0.0 # library for manipulating datetimes with ease and clarity
@@ -34,10 +30,8 @@ fs==2.4.11 # Python's filesystem abstraction layer
 # Python Development Helpers
 python-language-server==0.31.2 # Python Language Server for the Language Server Protocol
 yapf==0.29.0 # formatter for Python files
-black==19.10b0 # The uncompromising code formatter.
 sphinx==2.3.0 # Python documentation generator
 nose2==0.9.1  # The successor to nose, based on unittest2 
-flake8==3.7.9 # The modular source code checker: pep8, pyflakes and co
 pyflakes==2.1.1 # Passive checker of Python programs
 mccabe==0.6.1 # McCabe checker, plugin for flake8
 bandit==1.6.2 # Bandit is a tool designed to find common security issues in Python code.
@@ -78,7 +72,7 @@ geojson==2.5.0 # Python bindings and utilities for GeoJSON
 annoy==1.16.2 # Approximate Nearest Neighbors in C++/Python optimized for memory usage and loading/saving to disk.
 easydict==1.9 # Access dict values as attributes (works recursively).
 swifter==0.297 # A package which efficiently applies any function to a pandas dataframe or series in the fastest available manner
-blosc==1.8.3 # Blosc data compressor
+# blosc==1.8.3 # Blosc data compressor
 xlrd==1.2.0 # Library for developers to extract data from Microsoft Excel (tm) spreadsheet files
 
 ## Text Processing / NLP
@@ -95,6 +89,7 @@ scattertext==0.0.2.56 # DO NOT UPDATE v53 not found - Beautiful visualizations o
 sentencepiece==0.1.83  # Unsupervised text tokenizer for Neural Network-based text generation.
 langid==1.1.6 # Stand-alone language identification system
 scrapy==1.8.0 #A high-level Web Crawling and Web Scraping framework
+tiny-tokenizer==3.1.0 # Related to flair install issue https://github.com/flairNLP/flair/issues/1327
 flair==0.4.4 # A very simple framework for state-of-the-art NLP - 0.4.3 has too specific requirements
 pyahocorasick==1.4.0 # a fast and memory efficient library for exact or approximate multi-pattern string search.
 ftfy==5.6 # Fixes some problems with Unicode text after the fact
@@ -108,10 +103,9 @@ finetune==0.8.5 # Scikit-learn style model finetuning for NLP
 fast-bert==1.5.2 # Super easy library for BERT based NLP models 
 
 ## Image Processing
+# imageio installed in conda
 ImageHash==4.0 # Image Hashing library
 imgaug==0.3.0 # Image augmentation library for machine learning
-scikit-image==0.16.2 # Image processing routines for SciPy - version 0.14.1 is not compatible with numpy 16
-imageio==2.6.1 # Library for reading and writing a wide range of image, video, scientific, and volumetric data formats.
 Augmentor==0.2.7 # Image augmentation library for Machine Learning
 opencv-python==4.1.2.30 # Wrapper package for OpenCV python bindings.
 imageai==2.1.5 # A python library built to empower developers to build applications and systems with self-contained Computer Vision capabilities
@@ -121,7 +115,7 @@ imageai==2.1.5 # A python library built to empower developers to build applicati
 librosa==0.7.1 # Python module for audio and music processing
 
 ## Graph
-networkx==2.2 # 2.2 version required by hyperopt: Data structures for graphs, digraphs, and multigraphs
+# networkx installed in conda
 dgl==0.4.1 # Deep Graph Library
 graph-nets==1.0.5 # Library for building graph networks in Tensorflow and Sonnet.
 torch-cluster==1.4.5 # PyTorch Extension Library of Optimized Graph Cluster Algorithms
@@ -293,7 +287,6 @@ cx-Oracle==7.3.0 # Python interface to Oracle
 kafka-python==1.4.7 # Pure Python client for Apache Kafka
 tinydb==3.15.1 # TinyDB is a tiny, document oriented database optimized for your happiness :)
 PyMySQL==0.9.3 # Pure Python MySQL Driver
-boto3==1.10.39 # The AWS SDK for Python
 apache-libcloud==2.7.0 # A standard Python library that abstracts away differences among multiple cloud provider APIs.
 google-cloud-storage==1.23.0 # Google Cloud Storage API client library
 filedepot==0.7.1 # Toolkit for storing files and attachments in web applications
@@ -307,7 +300,7 @@ lmdb==0.98 # Universal Python binding for the LMDB 'Lightning' Database
 #
 ####### Web Frameworks #######
 #
-Flask==1.1.1 # A simple framework for building complex web applications.
+# Flask installed via conda
 fastapi==0.45.0 # FastAPI framework, high performance, easy to learn, fast to code, ready for production
 starlette==0.12.9 # fastapi requires starlette == 0.12.9 - The little ASGI library that shines.
 graphene==2.1.8 # GraphQL Framework for Python
