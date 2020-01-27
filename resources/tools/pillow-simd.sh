@@ -17,7 +17,7 @@ CFLAGS="${CFLAGS} -mavx2" pip install --upgrade --no-cache-dir --force-reinstall
 conda install -y --no-deps jpeg libtiff
 
 echo "This should return a version with post prefix if pillow-simd is used:"
-python -c "from PIL import Image; print(Image.PILLOW_VERSION)"
+python -c "from PIL import Image; print(Image.__version__)"
 echo "This should return True of libjpeg-turbo is enabled:"
 python -c "from PIL import features; print(features.check_feature('libjpeg_turbo'))"
 sleep 15

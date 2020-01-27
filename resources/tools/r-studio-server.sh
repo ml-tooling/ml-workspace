@@ -21,8 +21,7 @@ if [ ! -f "/usr/lib/rstudio-server/bin/rserver" ]; then
     conda install -y -c r r-base r-cairo
     apt-get update
     wget https://download2.rstudio.org/server/trusty/amd64/rstudio-server-1.2.5033-amd64.deb -O ./rstudio.deb
-    # ld library path makes problems
-    LD_LIBRARY_PATH="" yes | gdebi --non-interactive ./rstudio.deb
+    apt-get install -y ./rstudio.deb
     rm ./rstudio.deb
     # Rstudio Server cannot run via root -> create rstudio user
     # https://support.rstudio.com/hc/en-us/articles/200552306-Getting-Started
