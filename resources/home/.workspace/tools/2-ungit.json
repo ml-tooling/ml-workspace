@@ -1,0 +1,6 @@
+{
+    "id": "ungit-link",
+    "name": "Ungit",
+    "url_path":  "/tools/ungit/#/repository?path=%2Fworkspace",
+    "description": "Interactive Git interface"
+}

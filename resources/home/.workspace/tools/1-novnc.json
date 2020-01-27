@@ -1,0 +1,6 @@
+{
+    "id": "vnc-link",
+    "name": "VNC",
+    "url_path": "/tools/vnc/?password=vncpassword",
+    "description": "Desktop GUI for the workspace"
+}
