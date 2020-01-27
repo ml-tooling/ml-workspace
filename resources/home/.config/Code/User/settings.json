@@ -2,6 +2,7 @@
     "update.mode": "none",
     "update.showReleaseNotes": false,
     "extensions.autoUpdate": false,
+    "extensions.autoCheckUpdates": false,
     "window.menuBarVisibility": "visible",
     "python.autoComplete.addBrackets": true,
     "python.formatting.provider": "black",
