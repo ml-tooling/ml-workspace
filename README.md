@@ -67,7 +67,13 @@ Voilà, that was easy! Now, Docker will pull the latest workspace image to your 
 To deploy a single instance for productive usage, we recommend to apply at least the following options:
 
 ```bash
-docker run -d -p 8080:8080 --name "ml-workspace" -v "${PWD}:/workspace" --env AUTHENTICATE_VIA_JUPYTER="mytoken" --shm-size 512m --restart always mltooling/ml-workspace:latest
+docker run -d \
+    -p 8080:8080 \
+    --name "ml-workspace" -v "${PWD}:/workspace" \
+    --env AUTHENTICATE_VIA_JUPYTER="mytoken" \
+    --shm-size 512m \
+    --restart always \
+    mltooling/ml-workspace:latest
 ```
 
 This command runs the container in background (`-d`), mounts your current working directory into the `/workspace` folder (`-v`), secures the workspace via a provided token (`--env AUTHENTICATE_VIA_JUPYTER`), provides 512MB of shared memory (`--shm-size`) to prevent unexpected crashes (see [known issues section](#known-issues)), and keeps the container running even on system restarts (`--restart always`). You can find additional options for docker run [here](https://docs.docker.com/engine/reference/commandline/run/) and workspace configuration options in [the section below](#Configuration).
@@ -201,7 +207,11 @@ We recommend enabling SSL so that the workspace is accessible via HTTPS (encrypt
 When set to `true`, either the `cert.crt` and `cert.key` file must be mounted to `/resources/ssl` or, if the certificate files do not exist, the container generates self-signed certificates. For example, if the `/path/with/certificate/files` on the local system contains a valid certificate for the host domain (`cert.crt` and `cert.key` file), it can be used from the workspace as shown below:
 
 ```bash
-docker run -p 8080:8080 --env WORKSPACE_SSL_ENABLED="true" -v /path/with/certificate/files:/resources/ssl:ro mltooling/ml-workspace:latest
+docker run \
+    -p 8080:8080 \
+    --env WORKSPACE_SSL_ENABLED="true" \
+    -v /path/with/certificate/files:/resources/ssl:ro \
+    mltooling/ml-workspace:latest
 ```
 
 If you want to host the workspace on a public domain, we recommend to use [Let's encrypt](https://letsencrypt.org/getting-started/) to get a trusted certificate for your domain.  To use the generated certificate (e.g., via [certbot](https://certbot.eff.org/) tool) for the workspace, the `privkey.pem` corresponds to the `cert.key` file and the `fullchain.pem` to the `cert.crt` file.
@@ -324,11 +334,11 @@ docker run -p 8080:8080 mltooling/ml-workspace-spark:latest
 <details>
 <summary>Details (click to expand...)</summary>
 
-> _Currently, the GPU-flavor only supports CUDA 10. Support for other CUDA versions might be added in the future._
+> _Currently, the GPU-flavor only supports CUDA 10.1. Support for other CUDA versions might be added in the future._
 
-The GPU flavor (`mltooling/ml-workspace-gpu`) is based on our default workspace image and extends it with CUDA 10 and GPU-ready versions of various machine learning libraries (e.g., tensorflow, pytorch, cntk, jax). This GPU image has the following additional requirements for the system:
+The GPU flavor (`mltooling/ml-workspace-gpu`) is based on our default workspace image and extends it with CUDA 10.1 and GPU-ready versions of various machine learning libraries (e.g., tensorflow, pytorch, cntk, jax). This GPU image has the following additional requirements for the system:
 
-- Nvidia Drivers for the GPUs. Drivers need to be CUDA 10 compatible, version `>= 410.48` ([📖 Instructions](https://github.com/NVIDIA/nvidia-docker/wiki/Frequently-Asked-Questions#how-do-i-install-the-nvidia-driver)).
+- Nvidia Drivers for the GPUs. Drivers need to be CUDA 10.1 compatible, version `>= 418.39` ([📖 Instructions](https://github.com/NVIDIA/nvidia-docker/wiki/Frequently-Asked-Questions#how-do-i-install-the-nvidia-driver)).
 - (Docker >= 19.03) Nvidia Container Toolkit ([📖 Instructions](https://github.com/NVIDIA/nvidia-docker/wiki/Installation-(Native-GPU-Support))).
 
 ```bash
@@ -374,7 +384,7 @@ The workspace is designed as a single-user development environment. For a multi-
 <details>
 <summary>Deployment (click to expand...)</summary>
 
-ML Hub makes it easy to set up on a single server (via Docker) or a cluster (via Kubernetes) and supports a variety of usage scenarios & authentication providers. You can try out ML Hub via:
+ML Hub makes it easy to set up a multi-user environment on a single server (via Docker) or a cluster (via Kubernetes) and supports a variety of usage scenarios & authentication providers. You can try out ML Hub via:
 
 ```bash
 docker run -p 8080:8080 -v /var/run/docker.sock:/var/run/docker.sock mltooling/ml-hub:latest
@@ -793,8 +803,9 @@ CMD ["python", "/resources/docker-entrypoint.py", "--code-only"]
 
 The workspace is pre-installed with many popular interpreters, data science libraries, and ubuntu packages:
 
-- **Interpreter:** Python 3.7 (Miniconda 3), Java 11 (OpenJDK), NodeJS 13, Scala
-- **Python libraries:** Tensorflow, Keras, Pytorch, Sklearn, XGBoost, Theano, Fastai, and [many more](https://github.com/ml-tooling/ml-workspace/tree/master/resources/libraries)
+- **Interpreter:** Python 3.7 (Miniconda 3), Java 11 (OpenJDK), NodeJS 13, Scala, Perl 5
+- **Python libraries:** Tensorflow, Keras, Pytorch, Sklearn, XGBoost, MXNet, Theano, and [many more](https://github.com/ml-tooling/ml-workspace/tree/master/resources/libraries)
+- **Package Manager:** `conda`, `pip`, `npm`, `apt-get`, `yarn`, `sdk`, `gdebi`, `mvn` ...  
 
 The full list of installed tools can be found within the [Dockerfile](https://github.com/ml-tooling/ml-workspace/blob/master/Dockerfile).
 
