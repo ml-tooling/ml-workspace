@@ -79,6 +79,8 @@ RUN \
         wget \
         cron \
         openssl \
+        iproute2 \
+        psmisc \
         tmux \
         dpkg-sig \
         uuid-dev \
@@ -88,6 +90,10 @@ RUN \
         libgdbm-dev \
         libncurses5-dev \
         gawk \
+        # Simplified Wrapper and Interface Generator (5.8MB) - required by lots of py-libs
+        swig \
+        # Graphviz (graph visualization software) (4MB)
+        graphviz libgraphviz-dev \
         # Terminal multiplexer
         screen \
         # Editor
@@ -98,10 +104,22 @@ RUN \
         sqlite3 \
         # XML Utils
         xmlstarlet \
+        #  R*-tree implementation - Required for earthpy, geoviews (3MB)
+        libspatialindex-dev \
         # Search text and binary files
         yara \
         # Minimalistic C client for Redis
         libhiredis-dev \
+        # postgresql client
+        libpq-dev \
+        # mysql client (10MB)
+        libmysqlclient-dev \
+        # mariadb client (7MB)
+        # libmariadbclient-dev \
+        # image processing library (6MB), required for tesseract
+        libleptonica-dev \
+        # GEOS library (3MB)
+        libgeos-dev \
         # style sheet preprocessor
         less \
         # Print dir tree
@@ -141,15 +159,16 @@ RUN \
         fonts-liberation \
         google-perftools \
         # Compression Libs
-        # also install rar/unrar? but both are propriatory
+        # also install rar/unrar? but both are propriatory or unar (40MB)
         zip \
         gzip \
         unzip \
-        unrar \
         bzip2 \
         lzop \
         bsdtar \
         zlibc \
+        # unpack (almost) everything with one command
+        unp \
         libbz2-dev \
         liblzma-dev \
         zlib1g-dev && \
@@ -164,6 +183,30 @@ RUN \
 # Add tini
 RUN wget --quiet https://github.com/krallin/tini/releases/download/v0.18.0/tini -O /tini && \
     chmod +x /tini
+
+# prepare ssh for inter-container communication for remote python kernel
+RUN \
+    apt-get update && \
+    apt-get install -y --no-install-recommends \
+        openssh-client \
+        openssh-server \
+        # SSLH for SSH + HTTP(s) Multiplexing
+        sslh \
+        # SSH Tooling
+        autossh \
+        mussh && \
+    chmod go-w $HOME && \
+    mkdir -p $HOME/.ssh/ && \
+    # create empty config file if not exists
+    touch $HOME/.ssh/config  && \
+    sudo chown -R $NB_USER:users $HOME/.ssh && \
+    chmod 700 $HOME/.ssh && \
+    printenv >> $HOME/.ssh/environment && \
+    chmod -R a+rwx /usr/local/bin/ && \
+    # Fix permissions
+    fix-permissions.sh $HOME && \
+    # Cleanup
+    clean-layer.sh
 
 ########### OpeResty Install
 # https://github.com/IntimateMerger/docker-openresty/blob/master/Dockerfile
@@ -288,37 +331,13 @@ ENV PATH=$PATH:/usr/local/openresty/luajit/bin:/usr/local/openresty/nginx/sbin:/
 
 COPY resources/nginx/lua-extensions /etc/nginx/nginx_plugins
 
-# prepare ssh for inter-container communication for remote python kernel
-RUN \
-    apt-get update && \
-    apt-get install -y --no-install-recommends \
-        openssh-client \
-        openssh-server \
-        # SSLH for SSH + HTTP(s) Multiplexing
-        sslh \
-        # SSH Tooling
-        autossh \
-        mussh && \
-    chmod go-w $HOME && \
-    mkdir -p $HOME/.ssh/ && \
-    # create empty config file if not exists
-    touch $HOME/.ssh/config  && \
-    sudo chown -R $NB_USER:users $HOME/.ssh && \
-    chmod 700 $HOME/.ssh && \
-    printenv >> $HOME/.ssh/environment && \
-    chmod -R a+rwx /usr/local/bin/ && \
-    # Fix permissions
-    fix-permissions.sh $HOME && \
-    # Cleanup
-    clean-layer.sh
-
 ### END BASICS ###
 
 ### RUNTIMES ###
 # Install Miniconda: https://repo.continuum.io/miniconda/
 ENV \
     CONDA_DIR=/opt/conda \
-    PYTHON_VERSION="3.7.5" \
+    PYTHON_VERSION="3.7.6" \
     CONDA_PYTHON_DIR=/opt/conda/lib/python3.7
 
 RUN CONDA_VERSION="4.7.12" && \
@@ -346,7 +365,7 @@ RUN CONDA_VERSION="4.7.12" && \
     # find /opt/conda/ -follow -type f -name '*.a' -delete && \
     # find /opt/conda/ -follow -type f -name '*.js.map' -delete && \
     $CONDA_DIR/bin/conda clean -y --packages && \
-    $CONDA_DIR/bin/conda clean -y --all -f  && \
+    $CONDA_DIR/bin/conda clean -y -a -f  && \
     $CONDA_DIR/bin/conda build purge-all && \
     # Fix permissions
     fix-permissions.sh $CONDA_DIR && \
@@ -360,7 +379,8 @@ ENV LD_LIBRARY_PATH=$CONDA_DIR/lib
 # Install node.js
 RUN \
     apt-get update && \
-    curl -sL https://deb.nodesource.com/setup_13.x | sudo -E bash - && \
+    # https://nodejs.org/en/about/releases/ use even numbered releases
+    curl -sL https://deb.nodesource.com/setup_12.x | sudo -E bash - && \
     apt-get install -y nodejs && \
     # As conda is first in path, the commands 'node' and 'npm' reference to the version of conda. 
     # Replace those versions with the newly installed versions of node
@@ -446,7 +466,7 @@ RUN \
     # apt-get install -y python-numpy  && \
     cd ${RESOURCES_PATH} && \
     # Tiger VNC
-    wget -qO- https://dl.bintray.com/tigervnc/stable/tigervnc-1.10.0.x86_64.tar.gz | tar xz --strip 1 -C / && \
+    wget -qO- https://dl.bintray.com/tigervnc/stable/tigervnc-1.10.1.x86_64.tar.gz | tar xz --strip 1 -C / && \
     # Install websockify
     mkdir -p ./novnc/utils/websockify && \
     # Before updating the noVNC version, we need to make sure that our monkey patching scripts still work!!
@@ -485,6 +505,11 @@ RUN \
     # Lightweight text editor
     apt-get install -y mousepad && \
     apt-get install -y --no-install-recommends vim && \
+    # Install bat - colored cat: https://github.com/sharkdp/bat
+    wget -q https://github.com/sharkdp/bat/releases/download/v0.12.1/bat_0.12.1_amd64.deb -O $RESOURCES_PATH/bat.deb && \
+    dpkg -i $RESOURCES_PATH/bat.deb && \
+    rm $RESOURCES_PATH/bat.deb && \
+    # Process monitoring
     apt-get install -y htop && \
     # Install Archive/Compression Tools: https://wiki.ubuntuusers.de/Archivmanager/
     apt-get install -y p7zip p7zip-rar && \
@@ -624,9 +649,20 @@ RUN \
             ipykernel \
             cmake \
             Pillow \
-            'ipython=7.10.*' \
+            'ipython=7.11.*' \
             'notebook=6.0.*' \
-            'jupyterlab=1.2.*' && \
+            'jupyterlab=1.2.*' \
+            # Selected by library evaluation
+            networkx \
+            click \
+            docutils \
+            imageio \
+            tabulate \
+            flask \
+            dill \
+            regex \
+            toolz \
+            jmespath && \
     # Install minimal pip requirements
     pip install --no-cache-dir --upgrade -r ${RESOURCES_PATH}/libraries/requirements-minimal.txt && \
     # If minimal flavor - exit here
@@ -647,7 +683,7 @@ RUN \
     # Install tensorflow - cpu only -  mkl support
     conda install -y 'tensorflow=2.0.*' && \
     # Install pytorch - cpu only
-    conda install -y -c pytorch "pytorch==1.3.*" torchvision cpuonly && \
+    conda install -y -c pytorch "pytorch==1.4.*"  torchvision cpuonly && \
     # Install light pip requirements
     pip install --no-cache-dir --upgrade -r ${RESOURCES_PATH}/libraries/requirements-light.txt && \
     # If light light flavor - exit here
@@ -724,7 +760,8 @@ RUN \
     # Activate Jupyter Tensorboard
     jupyter tensorboard enable && \
     # Edit notebook config
-    cat $HOME/.jupyter/nbconfig/notebook.json | jq '.toc2={"moveMenuLeft": false}' > tmp.$$.json && mv tmp.$$.json $HOME/.jupyter/nbconfig/notebook.json && \
+    echo '{"nbext_hide_incompat": false}' > $HOME/.jupyter/nbconfig/common.json && \
+    cat $HOME/.jupyter/nbconfig/notebook.json | jq '.toc2={"moveMenuLeft": false,"widenNotebook": false,"skip_h1_title": false,"sideBar": true,"number_sections": false,"collapse_to_match_collapsible_headings": true}' > tmp.$$.json && mv tmp.$$.json $HOME/.jupyter/nbconfig/notebook.json && \
     # If light flavor - exit here
     if [ "$WORKSPACE_FLAVOR" = "light" ]; then \
         # Cleanup
@@ -785,10 +822,6 @@ RUN \
     jupyter labextension install jupyterlab-chart-editor && \
     # For holoview
     jupyter labextension install @pyviz/jupyterlab_pyviz && \
-    # Install jupyterlab_iframe - https://github.com/timkpaine/jupyterlab_iframe
-    pip install jupyterlab_iframe && \
-    jupyter labextension install jupyterlab_iframe && \
-    jupyter serverextension enable --py jupyterlab_iframe && \
     # Install jupyterlab variable inspector - https://github.com/lckr/jupyterlab-variableInspector
     jupyter labextension install @lckr/jupyterlab_variableinspector && \
     # Install jupyterlab code formattor - https://github.com/ryantam626/jupyterlab_code_formatter
@@ -800,6 +833,10 @@ RUN \
     # Install ipysheet jupyterlab extension
     jupyter labextension install ipysheet && \
     # Deprecation and validations:
+    # Install jupyterlab_iframe - https://github.com/timkpaine/jupyterlab_iframe
+    # pip install jupyterlab_iframe && \
+    # jupyter labextension install jupyterlab_iframe && \
+    # jupyter serverextension enable --py jupyterlab_iframe && \
     # Install jupyterlab_templates - https://github.com/timkpaine/jupyterlab_templates
     # Does not work currently
     # pip install jupyterlab_templates && \
@@ -836,13 +873,10 @@ RUN \
     # Cleanup
     clean-layer.sh
 
+# Install and activate ZSH
 COPY resources/tools/oh-my-zsh.sh $RESOURCES_PATH/tools/oh-my-zsh.sh
 
 RUN \
-    # If minimal flavor -> exit here
-    if [ "$WORKSPACE_FLAVOR" = "minimal" ]; then \
-        exit 0 ; \
-    fi && \
     # Install ZSH
     /bin/bash $RESOURCES_PATH/tools/oh-my-zsh.sh --install && \
     # Make zsh the default shell
@@ -860,24 +894,28 @@ RUN \
 # https://github.com/cdr/code-server/issues/171
 # Alternative install: /usr/local/bin/code-server --user-data-dir=$HOME/.config/Code/ --extensions-dir=$HOME/.vscode/extensions/ --install-extension ms-python-release && \
 RUN \
-    # If minimal or light flavor -> exit here
-    if [ "$WORKSPACE_FLAVOR" = "minimal" ] || [ "$WORKSPACE_FLAVOR" = "light" ]; then \
+    # If minimal flavor -> exit here
+    if [ "$WORKSPACE_FLAVOR" = "minimal" ]; then \
         exit 0 ; \
     fi && \
     cd $RESOURCES_PATH && \
     mkdir -p $HOME/.vscode/extensions/ && \
-    # Install python extension
-    VS_PYTHON_VERSION="2019.11.50794" && \
+    # Install python extension - newer versions are not working
+    VS_PYTHON_VERSION="2020.1.58038" && \
     wget --quiet --no-check-certificate https://github.com/microsoft/vscode-python/releases/download/$VS_PYTHON_VERSION/ms-python-release.vsix && \
     bsdtar -xf ms-python-release.vsix extension && \
     rm ms-python-release.vsix && \
     mv extension $HOME/.vscode/extensions/ms-python.python-$VS_PYTHON_VERSION && \
     # Install vscode-java: https://github.com/redhat-developer/vscode-java/releases
-    VS_JAVA_VERSION="0.47.0" && \
+    VS_JAVA_VERSION="0.55.1" && \
     wget --quiet --no-check-certificate https://github.com/redhat-developer/vscode-java/releases/download/v$VS_JAVA_VERSION/redhat.java-$VS_JAVA_VERSION.vsix && \
     bsdtar -xf redhat.java-$VS_JAVA_VERSION.vsix extension && \
     rm redhat.java-$VS_JAVA_VERSION.vsix && \
     mv extension $HOME/.vscode/extensions/redhat.java-$VS_JAVA_VERSION && \
+    # If light flavor -> exit here
+    if [ "$WORKSPACE_FLAVOR" = "light" ]; then \
+        exit 0 ; \
+    fi && \
     # Install git lens: https://github.com/eamodio/vscode-gitlens
     VS_GITLENS_VERSION="10.2.0" && \
     wget --quiet --no-check-certificate https://github.com/eamodio/vscode-gitlens/releases/download/v$VS_GITLENS_VERSION/gitlens-$VS_GITLENS_VERSION.vsix && \
@@ -891,31 +929,37 @@ RUN \
     rm code-runner-$VS_CODE_RUNNER_VERSION.vsix && \
     mv extension $HOME/.vscode/extensions/code-runner-$VS_CODE_RUNNER_VERSION && \
     # Install ESLint extension: https://marketplace.visualstudio.com/items?itemName=dbaeumer.vscode-eslint
-    VS_ESLINT_VERSION="1.9.1" && \
+    VS_ESLINT_VERSION="2.0.15" && \
     wget --quiet --no-check-certificate https://marketplace.visualstudio.com/_apis/public/gallery/publishers/dbaeumer/vsextensions/vscode-eslint/$VS_ESLINT_VERSION/vspackage -O dbaeumer.vscode-eslint.vsix && \
     bsdtar -xf dbaeumer.vscode-eslint.vsix extension && \
     rm dbaeumer.vscode-eslint.vsix && \
     mv extension $HOME/.vscode/extensions/dbaeumer.vscode-eslint-$VS_ESLINT_VERSION.vsix && \
     # Install Markdown lint extension: https://marketplace.visualstudio.com/items?itemName=DavidAnson.vscode-markdownlint
-    VS_MARKDOWN_LINT_VERSION="0.32.0" && \
+    VS_MARKDOWN_LINT_VERSION="0.33.0" && \
     wget --quiet --no-check-certificate https://marketplace.visualstudio.com/_apis/public/gallery/publishers/DavidAnson/vsextensions/vscode-markdownlint/$VS_MARKDOWN_LINT_VERSION/vspackage -O davidanson.vscode-markdownlint.vsix && \
     bsdtar -xf davidanson.vscode-markdownlint.vsix extension && \
     rm davidanson.vscode-markdownlint.vsix && \
     mv extension $HOME/.vscode/extensions/davidanson.vscode-markdownlint-$VS_MARKDOWN_LINT_VERSION.vsix && \
-    # Install remote development extension
-    VS_REMOTE_SSH_VERSION="0.47.2" && \
+    # Deprecated: Install remote development extension
+    # VS_REMOTE_SSH_VERSION="0.48.0" && \
     # https://marketplace.visualstudio.com/items?itemName=ms-vscode-remote.remote-ssh
-    wget --quiet https://marketplace.visualstudio.com/_apis/public/gallery/publishers/ms-vscode-remote/vsextensions/remote-ssh/$VS_REMOTE_SSH_VERSION/vspackage -O ms-vscode-remote.remote-ssh.vsix && \
-    bsdtar -xf ms-vscode-remote.remote-ssh.vsix extension && \
-    rm ms-vscode-remote.remote-ssh.vsix && \
-    mv extension $HOME/.vscode/extensions/ms-vscode-remote.remote-ssh-$VS_REMOTE_SSH_VERSION && \
+    # wget --quiet https://marketplace.visualstudio.com/_apis/public/gallery/publishers/ms-vscode-remote/vsextensions/remote-ssh/$VS_REMOTE_SSH_VERSION/vspackage -O ms-vscode-remote.remote-ssh.vsix && \
+    # bsdtar -xf ms-vscode-remote.remote-ssh.vsix extension && \
+    # rm ms-vscode-remote.remote-ssh.vsix && \
+    # mv extension $HOME/.vscode/extensions/ms-vscode-remote.remote-ssh-$VS_REMOTE_SSH_VERSION && \
     # Install remote development ssh - editing configuration files
     # https://marketplace.visualstudio.com/items?itemName=ms-vscode-remote.remote-ssh-edit
-    wget --quiet https://marketplace.visualstudio.com/_apis/public/gallery/publishers/ms-vscode-remote/vsextensions/remote-ssh-edit/$VS_REMOTE_SSH_VERSION/vspackage -O ms-vscode-remote.remote-ssh-edit.vsix && \
-    bsdtar -xf ms-vscode-remote.remote-ssh-edit.vsix extension && \
-    rm ms-vscode-remote.remote-ssh-edit.vsix && \
-    mv extension $HOME/.vscode/extensions/ms-vscode-remote.remote-ssh-edit-$VS_REMOTE_SSH_VERSION && \
+    # wget --quiet https://marketplace.visualstudio.com/_apis/public/gallery/publishers/ms-vscode-remote/vsextensions/remote-ssh-edit/$VS_REMOTE_SSH_VERSION/vspackage -O ms-vscode-remote.remote-ssh-edit.vsix && \
+    # bsdtar -xf ms-vscode-remote.remote-ssh-edit.vsix extension && \
+    # rm ms-vscode-remote.remote-ssh-edit.vsix && \
+    # mv extension $HOME/.vscode/extensions/ms-vscode-remote.remote-ssh-edit-$VS_REMOTE_SSH_VERSION && \
     # TODO install beautify (smaller - 16MB) or prettier?
+    # Depreacted: Install prettier: https://github.com/prettier/prettier-vscode/releases - newer versions are not working
+    # VS_PRETTIER_VERSION="3.16.1" && \
+    # wget --quiet --no-check-certificate https://marketplace.visualstudio.com/_apis/public/gallery/publishers/esbenp/vsextensions/prettier-vscode/$VS_PRETTIER_VERSION/vspackage -O esbenp.prettier-vscode.vsix && \
+    # bsdtar -xf esbenp.prettier-vscode.vsix extension && \
+    # rm esbenp.prettier-vscode.vsix && \
+    # mv extension $HOME/.vscode/extensions/esbenp.prettier-vscode-$VS_PRETTIER_VERSION && \
     # Fix permissions
     fix-permissions.sh $HOME/.vscode/extensions/ && \
     # Cleanup
@@ -926,6 +970,19 @@ RUN \
 ### INCUBATION ZONE ### 
 
 RUN \
+    apt-get update && \
+    # required for tesseract: 11MB - tesseract-ocr-dev?
+    apt-get install -y libtesseract-dev && \
+    # required for pvporcupine (800kb)
+    apt-get install -y portaudio19-dev && \
+    # HDF5 (19MB)
+    apt-get install -y libhdf5-dev && \
+    # Audio drivers for magenta? (3MB)
+    apt-get install -y libasound2-dev libjack-dev && \
+    # libproj-dev required for cartopy (15MB)
+    apt-get install -y libproj-dev && \
+    # mysql server: 150MB 
+    # apt-get install -y mysql-server && \
     # Install sdkman
     curl -s https://get.sdkman.io | bash && \
    # If minimal or light flavor -> exit here
@@ -934,6 +991,7 @@ RUN \
     fi && \
     # New Python Libraries:
     pip install --no-cache-dir \
+                pyaudio \
                 lazycluster && \
     # Cleanup
     clean-layer.sh
@@ -990,6 +1048,8 @@ COPY resources/jupyter/nbconfig /etc/jupyter/nbconfig
 COPY resources/jupyter/jupyter_notebook_config.py resources/jupyter/jupyter_notebook_config.json resources/jupyter/nbconfig /etc/jupyter/
 COPY resources/jupyter/sidebar.jupyterlab-settings $HOME/.jupyter/lab/user-settings/@jupyterlab/application-extension/
 COPY resources/jupyter/plugin.jupyterlab-settings $HOME/.jupyter/lab/user-settings/@jupyterlab/extensionmanager-extension/
+COPY resources/jupyter/ipython_config.py /etc/ipython/ipython_config.py
+
 # TODO: don't use tensorboard fix: Add tensorboard patch - use tensorboard jupyter plugin instead of the actual tensorboard magic
 # COPY resources/jupyter/tensorboard_notebook_patch.py $CONDA_PYTHON_DIR/site-packages/tensorboard/notebook.py
 
@@ -1022,9 +1082,7 @@ RUN \
     # Import matplotlib the first time to build the font cache.
     MPLBACKEND=Agg python -c "import matplotlib.pyplot" \
     # Stop Matplotlib printing junk to the console on first load
-    sed -i "s/^.*Matplotlib is building the font cache using fc-list.*$/# Warning removed/g" $CONDA_PYTHON_DIR/site-packages/matplotlib/font_manager.py && \
-    # Make matplotlib output in Jupyter notebooks display correctly
-    mkdir -p /etc/ipython/ && echo "c = get_config(); c.IPKernelApp.matplotlib = 'inline'" > /etc/ipython/ipython_config.py
+    sed -i "s/^.*Matplotlib is building the font cache using fc-list.*$/# Warning removed/g" $CONDA_PYTHON_DIR/site-packages/matplotlib/font_manager.py
 
 # Create Desktop Icons for Tooling
 COPY resources/icons $RESOURCES_PATH/icons
@@ -1049,9 +1107,6 @@ COPY resources/tests $RESOURCES_PATH/tests
 COPY resources/tutorials $RESOURCES_PATH/tutorials
 COPY resources/licenses $RESOURCES_PATH/licenses
 COPY resources/reports $RESOURCES_PATH/reports
-
-# Nginx ELF file does not startup without the specific compiled libraries for openresty 
-ENV LD_LIBRARY_PATH=/usr/local/openresty/luajit/lib:/usr/local/openresty/zlib/lib:/usr/local/openresty/pcre/lib:/usr/local/openresty/openssl/lib:$LD_LIBRARY_PATH
 
 # Various configurations
 RUN \
@@ -1105,7 +1160,8 @@ ENV CONFIG_BACKUP_ENABLED="true" \
     SHELL="/usr/bin/zsh" \
     # Fix dark blue color for ls command (unreadable): 
     # https://askubuntu.com/questions/466198/how-do-i-change-the-color-for-directories-with-ls-in-the-console
-    LS_COLORS=$LS_COLORS:'di=0;96:' \
+    # USE default LS_COLORS:
+    LS_COLORS="" \
     # set number of threads various programs should use, if not-set, it tries to use all
     # this can be problematic since docker restricts CPUs by stil showing all
     MAX_NUM_THREADS="auto"
