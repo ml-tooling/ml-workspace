@@ -17,8 +17,8 @@ if ! hash gitkraken 2>/dev/null; then
     echo "Installing Git Kraken. Please wait..."
     apt-get update
     wget https://release.gitkraken.com/linux/gitkraken-amd64.deb -O ./gitkraken.deb
-    apt-get install --yes gvfs-bin
-    dpkg -i ./gitkraken.deb
+    apt-get install --yes gvfs-bin gconf2
+    apt-get install -y ./gitkraken.deb
     rm ./gitkraken.deb
     apt-get clean
 else
@@ -29,6 +29,6 @@ fi
 if [ $INSTALL_ONLY = 0 ] ; then
     echo "Starting Git Kraken..."
     echo "Git Kraken is a GUI application. Make sure to run this script only within the VNC Desktop."
-    gitkraken
+    gitkraken --no-sandbox
     sleep 10
 fi

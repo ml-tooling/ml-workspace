@@ -20,14 +20,10 @@ curl https://bazel.build/bazel-release.pub.gpg | sudo apt-key add -
 apt-get update
 apt-get install -y --no-install-recommends \
         apache2 \
-        redis-server \
         mercurial \
         bzr \
         cvs \
         bazel \
-        postgresql \
-        mysql-client \
-        mysql-server \
         debian-archive-keyring debian-keyring \
         xvfb dbus-x11 x11-xserver-utils x11-utils wmctrl x11-apps \
         lmodern \

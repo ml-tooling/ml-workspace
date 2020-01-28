@@ -1,11 +1,28 @@
 {
-    "gitlens.showWhatsNewAfterUpgrades": false,
-    "gitlens.advanced.telemetry.enabled": false,
     "update.mode": "none",
     "update.showReleaseNotes": false,
     "extensions.autoUpdate": false,
-    "python.dataScience.autoPreviewNotebooksInInteractivePane": true,
-    "python.linting.pylamaEnabled": true,
-    "python.linting.pylintEnabled": true,
-    "window.menuBarVisibility": "visible"
+    "extensions.autoCheckUpdates": false,
+    "window.menuBarVisibility": "visible",
+    "python.autoComplete.addBrackets": true,
+    "python.formatting.provider": "black",
+    "python.analysis.memory.keepLibraryAst": true,
+    "python.analysis.memory.keepLibraryLocalVariables": true,
+    "python.analysis.cachingLevel": "Library",
+    "python.autoUpdateLanguageServer": false,
+    "python.dataScience.sendSelectionToInteractiveWindow": true,
+    "python.linting.pycodestyleArgs": [
+        "--ignore=E203,E501,W503"
+    ],
+    "terminal.integrated.inheritEnv": false,
+    "python.linting.pylintEnabled": false,
+    "python.linting.flake8Enabled": true,
+    "python.linting.flake8CategorySeverity.E": "Warning",
+    "python.linting.flake8CategorySeverity.W": "Information",
+    "python.linting.flake8CategorySeverity.F": "Warning",
+    "python.linting.flake8Args": [
+        "--ignore=E203,E501,W503"
+    ],
+    "gitlens.showWhatsNewAfterUpgrades": false,
+    "gitlens.advanced.telemetry.enabled": false
 }

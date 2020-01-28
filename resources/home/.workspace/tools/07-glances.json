@@ -1,0 +1,6 @@
+{
+    "id": "glances-link",
+    "name": "Glances",
+    "url_path": "/tools/glances/",
+    "description": "Monitor hardware resources"
+}

@@ -21,6 +21,7 @@ c.NotebookApp.allow_remote_access=True
 c.NotebookApp.disable_check_xsrf=True
 c.NotebookApp.allow_origin='*'
 c.NotebookApp.trust_xheaders=True
+# c.NotebookApp.log_level="WARN"
 
 c.JupyterApp.answer_yes = True
 

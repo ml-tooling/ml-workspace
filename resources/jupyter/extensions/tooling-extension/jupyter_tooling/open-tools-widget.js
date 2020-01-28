@@ -35,6 +35,27 @@ define(['base/js/namespace', 'jquery', 'base/js/dialog', 'base/js/utils', 'requi
         return div
     }
 
+    function installToolDialog(installers) {
+        // Please check our documentation on information on what you can do with the workspace
+        var div = $('<div/>');
+        div.append('<p>The workspace contains a collection of installer scripts for many commonly used development tools or libraries.</p>');
+        div.append('<p>1. Please select a tool for further installation instructions:</p>');
+        div.append('<br>');
+
+        installer_options = '<option disabled selected>Choose Tool Installer</option>'
+        for (var i in installers) {
+            var installer = installers[i];
+            installer_options += '<option value="' + installer["command"] +  '">' + installer["name"] + '</option>'
+        }
+
+        div.append('<select class="form-control" id="install-tool-selection" style="width: 100%; margin-left: 0px;" onchange="(function(e){document.getElementById(\'install-command\').value = e.target.value})(event)">' + installer_options +'</select>');
+        div.append('<br>');
+        div.append('<p>2. Run the following command within a workspace terminal to install and start the tool:</p>');
+        div.append('<br>');
+        div.append('<input readonly="true" style="width: 100%; height: 35px; padding: 7px;" id="install-command" value="">');
+        return div
+    }
+
     https: //github.com/ml-tooling/ml-workspace#ssh-access
         function load_ipython_extension() {
             // log to console
@@ -54,9 +75,9 @@ define(['base/js/namespace', 'jquery', 'base/js/dialog', 'base/js/utils', 'requi
                 }
 
                 tools_dropwdown = '<div id="start-tool-btn" class="btn-group" style="float: right; margin-right: 2px; margin-left: 2px;"> \
-        <button class="dropdown-toggle btn btn-default btn-xs" data-toggle="dropdown" style="padding: 5px 10px;" aria-expanded="false"> \
-            <span>Open Tool</span> <span class="caret"></span> </button> \
-           <ul id="start-tool" class="dropdown-menu" style="right: 0; left: auto;">' + tools_menu_items + ' </ul> </div>';
+                <button class="dropdown-toggle btn btn-default btn-xs" data-toggle="dropdown" style="padding: 5px 10px;" aria-expanded="false"> \
+                <span>Open Tool</span> <span class="caret"></span> </button> \
+                <ul id="start-tool" class="dropdown-menu" style="right: 0; left: auto;">' + tools_menu_items + ' </ul> </div>';
 
                 $('#header-container').append(tools_dropwdown)
 
@@ -83,9 +104,48 @@ define(['base/js/namespace', 'jquery', 'base/js/dialog', 'base/js/utils', 'requi
                     });
                 });
 
+
+                // install and start a tool
+                $('#install-tool').click(function () {
+                    components.getToolInstallers(function (data) {
+
+                        // Hotkeys are disabled here so the user can interact without unwanted side effects
+                        components.enableKeyboardManager(false);
+                        // Disable keyboard manager after 1 sec, otherwise its not always diasabled
+                        window.setTimeout(function () {
+                            components.enableKeyboardManager(false);
+                        }, 1000)
+
+                        dialog.modal({
+                            body: installToolDialog(data),
+                            title: 'Install and start a tool',
+                            keyboard_manager: Jupyter.keyboard_manager,
+                            sanitize: false,
+                            buttons: {
+                                'Close': {
+                                    click: function () {
+                                        components.enableKeyboardManager(true);
+                                    }
+                                },
+                                'Copy & Open Terminal': {
+                                    class: "btn-primary",
+                                    click: function () {
+                                        components.enableKeyboardManager(true);
+                                        $('#install-command').select()
+                                        window.document.execCommand('copy');
+
+                                        selecteTool = $('#install-tool-selection option:selected').text()
+                                        window.open(basePath + "terminals/" + selecteTool.trim().toLowerCase().replace(/\W/g, '_'), '_blank')
+                                    }
+                                }
+                            }
+                        })
+                    });
+                });
+
                 // open a workspace internal port via subpath - through nginx proxy
                 $('#access-port-button').click(function () {
-                    // Hotkeys are disabled here so the user can enter a commit message without unwanted side effects
+                    // Hotkeys are disabled here so the user can interact without unwanted side effects
                     components.enableKeyboardManager(false);
                     // Disable keyboard manager after 1 sec, otherwise its not always diasabled
                     window.setTimeout(function () {

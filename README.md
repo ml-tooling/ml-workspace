@@ -52,8 +52,6 @@ The ML workspace is an all-in-one web-based IDE specialized for machine learning
 
 The workspace requires **Docker** to be installed on your machine ([Installation Guide](https://docs.docker.com/install/#supported-platforms)).
 
-> 📖 _If you are new to Docker, we recommend taking a look at [this beginner guide](https://docker-curriculum.com/)._
-
 ### Start single instance
 
 Deploying a single workspace instance is as simple as:
@@ -64,12 +62,18 @@ docker run -p 8080:8080 mltooling/ml-workspace:latest
 
 Voilà, that was easy! Now, Docker will pull the latest workspace image to your machine. This may take a few minutes, depending on your internet speed. Once the workspace is started, you can access it via http://localhost:8080.
 
-> ℹ️ _If started on another machine or with a different port, make sure to use the machine's IP/DNS and/or the exposed port._
+> _If started on another machine or with a different port, make sure to use the machine's IP/DNS and/or the exposed port._
 
 To deploy a single instance for productive usage, we recommend to apply at least the following options:
 
 ```bash
-docker run -d -p 8080:8080 --name "ml-workspace" -v "${PWD}:/workspace" --env AUTHENTICATE_VIA_JUPYTER="mytoken" --shm-size 512m --restart always mltooling/ml-workspace:latest
+docker run -d \
+    -p 8080:8080 \
+    --name "ml-workspace" -v "${PWD}:/workspace" \
+    --env AUTHENTICATE_VIA_JUPYTER="mytoken" \
+    --shm-size 512m \
+    --restart always \
+    mltooling/ml-workspace:latest
 ```
 
 This command runs the container in background (`-d`), mounts your current working directory into the `/workspace` folder (`-v`), secures the workspace via a provided token (`--env AUTHENTICATE_VIA_JUPYTER`), provides 512MB of shared memory (`--shm-size`) to prevent unexpected crashes (see [known issues section](#known-issues)), and keeps the container running even on system restarts (`--restart always`). You can find additional options for docker run [here](https://docs.docker.com/engine/reference/commandline/run/) and workspace configuration options in [the section below](#Configuration).
@@ -203,12 +207,16 @@ We recommend enabling SSL so that the workspace is accessible via HTTPS (encrypt
 When set to `true`, either the `cert.crt` and `cert.key` file must be mounted to `/resources/ssl` or, if the certificate files do not exist, the container generates self-signed certificates. For example, if the `/path/with/certificate/files` on the local system contains a valid certificate for the host domain (`cert.crt` and `cert.key` file), it can be used from the workspace as shown below:
 
 ```bash
-docker run -p 8080:8080 --env WORKSPACE_SSL_ENABLED="true" -v /path/with/certificate/files:/resources/ssl:ro mltooling/ml-workspace:latest
+docker run \
+    -p 8080:8080 \
+    --env WORKSPACE_SSL_ENABLED="true" \
+    -v /path/with/certificate/files:/resources/ssl:ro \
+    mltooling/ml-workspace:latest
 ```
 
 If you want to host the workspace on a public domain, we recommend to use [Let's encrypt](https://letsencrypt.org/getting-started/) to get a trusted certificate for your domain.  To use the generated certificate (e.g., via [certbot](https://certbot.eff.org/) tool) for the workspace, the `privkey.pem` corresponds to the `cert.key` file and the `fullchain.pem` to the `cert.crt` file.
 
-> ℹ️ _When you enable SSL support, you must access the workspace over `https://`, not over plain `http://`._
+> _When you enable SSL support, you must access the workspace over `https://`, not over plain `http://`._
 
 </details>
 
@@ -326,11 +334,11 @@ docker run -p 8080:8080 mltooling/ml-workspace-spark:latest
 <details>
 <summary>Details (click to expand...)</summary>
 
-> ℹ️ _Currently, the GPU-flavor only supports CUDA 10. Support for other CUDA versions might be added in the future._
+> _Currently, the GPU-flavor only supports CUDA 10.1. Support for other CUDA versions might be added in the future._
 
-The GPU flavor (`mltooling/ml-workspace-gpu`) is based on our default workspace image and extends it with CUDA 10 and GPU-ready versions of various machine learning libraries (e.g., tensorflow, pytorch, cntk, jax). This GPU image has the following additional requirements for the system:
+The GPU flavor (`mltooling/ml-workspace-gpu`) is based on our default workspace image and extends it with CUDA 10.1 and GPU-ready versions of various machine learning libraries (e.g., tensorflow, pytorch, cntk, jax). This GPU image has the following additional requirements for the system:
 
-- Nvidia Drivers for the GPUs. Drivers need to be CUDA 10 compatible, version `>= 410.48` ([📖 Instructions](https://github.com/NVIDIA/nvidia-docker/wiki/Frequently-Asked-Questions#how-do-i-install-the-nvidia-driver)).
+- Nvidia Drivers for the GPUs. Drivers need to be CUDA 10.1 compatible, version `>= 418.39` ([📖 Instructions](https://github.com/NVIDIA/nvidia-docker/wiki/Frequently-Asked-Questions#how-do-i-install-the-nvidia-driver)).
 - (Docker >= 19.03) Nvidia Container Toolkit ([📖 Instructions](https://github.com/NVIDIA/nvidia-docker/wiki/Installation-(Native-GPU-Support))).
 
 ```bash
@@ -376,10 +384,10 @@ The workspace is designed as a single-user development environment. For a multi-
 <details>
 <summary>Deployment (click to expand...)</summary>
 
-ML Hub makes it easy to set up on a single server (via Docker) or a cluster (via Kubernetes) and supports a variety of usage scenarios & authentication providers. You can try out ML Hub via:
+ML Hub makes it easy to set up a multi-user environment on a single server (via Docker) or a cluster (via Kubernetes) and supports a variety of usage scenarios & authentication providers. You can try out ML Hub via:
 
 ```bash
-docker run -p 8080:8080 --name mlhub -v /var/run/docker.sock:/var/run/docker.sock mltooling/ml-hub:latest
+docker run -p 8080:8080 -v /var/run/docker.sock:/var/run/docker.sock mltooling/ml-hub:latest
 ```
 
 For more information and documentation about ML Hub, please take a look at the [Github Site](https://github.com/ml-tooling/ml-hub).
@@ -430,7 +438,7 @@ The workspace is equipped with a selection of best-in-class open-source developm
 
 <img style="width: 100%" src="https://github.com/ml-tooling/ml-workspace/raw/master/docs/images/features/open-tools.png"/>
 
-> ℹ️ _Within your workspace you have **full root & sudo privileges** to install any library or tool you need via terminal (e.g., `pip`, `apt-get`, `conda`, or `npm`). You can find more ways to extend the workspace within the [Extensibility](#extensibility) section_
+> _Within your workspace you have **full root & sudo privileges** to install any library or tool you need via terminal (e.g., `pip`, `apt-get`, `conda`, or `npm`). You can find more ways to extend the workspace within the [Extensibility](#extensibility) section_
 
 ### Jupyter
 
@@ -440,17 +448,17 @@ The workspace is equipped with a selection of best-in-class open-source developm
 
 A new notebook can be created by clicking on the `New` drop-down button at the top of the list and selecting the desired language kernel.
 
-> ℹ️ _You can spawn interactive **terminal** instances as well by selecting `New -> Terminal` in the file-browser._
+> _You can spawn interactive **terminal** instances as well by selecting `New -> Terminal` in the file-browser._
 
 <img style="width: 100%" src="https://github.com/ml-tooling/ml-workspace/raw/master/docs/images/features/jupyter-notebook.png"/>
 
 The notebook editor enables users to author documents that include live code, markdown text, shell commands, LaTeX equations, interactive widgets, plots, and images. These notebook documents provide a complete and self-contained record of a computation that can be converted to various formats and shared with others.
 
-> ℹ️ _This workspace has a variety of **third-party Jupyter extensions** activated. You can configure these extensions in the nbextensions configurator: `nbextensions` tab on the file browser_
+> _This workspace has a variety of **third-party Jupyter extensions** activated. You can configure these extensions in the nbextensions configurator: `nbextensions` tab on the file browser_
 
 The Notebook allows code to be run in a range of different programming languages. For each notebook document that a user opens, the web application starts a **kernel** that runs the code for that notebook and returns output. This workspace has a Python 3 and Python 2 kernel pre-installed. Additional Kernels can be installed to get access to other languages (e.g., R, Scala, Go) or additional computing resources (e.g., GPUs, CPUs, Memory).
 
-> ℹ️ _**Python 2** support is deprecated and not fully supported. Please only use Python 2 if necessary!_
+> _**Python 2** support is deprecated and not fully supported. Please only use Python 2 if necessary!_
 
 ### Desktop GUI
 
@@ -536,7 +544,7 @@ It is possible to securely access any workspace internal port by selecting `Open
 
 If you want to use an HTTP client or share access to a given port, you can select the `Get shareable link` option. This generates a token-secured link that anyone with access to the link can use to access the specified port.
 
-> ℹ️ _The HTTP app requires to be resolved from a relative URL path or configure a base path (`/tools/PORT/`)._
+> _The HTTP app requires to be resolved from a relative URL path or configure a base path (`/tools/PORT/`)._
 
 <details>
 
@@ -555,7 +563,7 @@ SSH provides a powerful set of features that enables you to be more productive w
 
 <img style="width: 100%" src="https://github.com/ml-tooling/ml-workspace/raw/master/docs/images/features/ssh-access.png"/>
 
-> ℹ️ _The setup script only runs on Mac and Linux. Windows is currently not supported._
+> _The setup script only runs on Mac and Linux. Windows is currently not supported._
 
 Just run the setup command or script on the machine from where you want to setup a connection to the workspace and input a name for the connection (e.g., `my-workspace`). You might also get asked for some additional input during the process, e.g. to install a remote kernel if `remote_ikernel` is installed. Once the passwordless SSH connection is successfully setup and tested, you can securely connect to the workspace by simply executing `ssh my-workspace`.
 
@@ -570,7 +578,7 @@ An SSH connection can be used for tunneling application ports from the remote ma
 ssh -nNT -L 5000:localhost:5901 my-workspace
 ```
 
-> ℹ️ _To expose an application port from your local machine to a workspace, use the `-R` option (instead of `-L`)._
+> _To expose an application port from your local machine to a workspace, use the `-R` option (instead of `-L`)._
 
 After the tunnel is established, you can use your favorite VNC viewer on your local machine and connect to `vnc://localhost:5000` (default password: `vncpassword`). To make the tunnel connection more resistant and reliable, we recommend to use [autossh](https://www.harding.motd.ca/autossh/) to automatically restart SSH tunnels in the case that the connection dies:
 
@@ -657,7 +665,7 @@ These integrations usually require a passwordless SSH connection from the local 
 
 The workspace can be added to a Jupyter instance as a remote kernel by using the [remote_ikernel](https://bitbucket.org/tdaff/remote_ikernel/) tool. If you have installed remote_ikernel (`pip install remote_ikernel`) on your local machine, the SSH setup script of the workspace will automatically offer you the option to setup a remote kernel connection.
 
-> ℹ️ _When running kernels on remote machines, the notebooks themselves will be saved onto the local filesystem, but the kernel will only have access to the filesystem of the remote machine running the kernel. If you need to sync data, you can make use of rsync, scp, or sshfs as explained in the [SSH Access](#ssh-access) section._
+> _When running kernels on remote machines, the notebooks themselves will be saved onto the local filesystem, but the kernel will only have access to the filesystem of the remote machine running the kernel. If you need to sync data, you can make use of rsync, scp, or sshfs as explained in the [SSH Access](#ssh-access) section._
 
 In case you want to manually setup and manage remote kernels, use the [remote_ikernel](https://bitbucket.org/tdaff/remote_ikernel/src/default/README.rst) command-line tool, as shown below:
 
@@ -701,7 +709,7 @@ If you have opened a Tensorboard instance in a valid log directory, you will see
 
 <img style="width: 100%" src="https://github.com/ml-tooling/ml-workspace/raw/master/docs/images/features/tensorboard-dashboard.png" />
 
-> ℹ️ _Tensorboard can be used in combination with many other ML frameworks besides Tensorflow. By using the [tensorboardX](https://github.com/lanpa/tensorboardX) library you can log basically from any python based library. Also, PyTorch has a direct Tensorboard integration as described [here](https://pytorch.org/docs/stable/tensorboard.html)._
+> _Tensorboard can be used in combination with many other ML frameworks besides Tensorflow. By using the [tensorboardX](https://github.com/lanpa/tensorboardX) library you can log basically from any python based library. Also, PyTorch has a direct Tensorboard integration as described [here](https://pytorch.org/docs/stable/tensorboard.html)._
 
 If you prefer to see the tensorboard directly within your notebook, you can make use of following **Jupyter magic**:
 
@@ -722,11 +730,11 @@ The workspace provides two pre-installed web-based tools to help developers duri
 
 <img style="width: 100%" src="https://github.com/ml-tooling/ml-workspace/raw/master/docs/images/features/hardware-monitoring-glances.png"/>
 
-> ℹ️ _Netdata and Glances will show you the hardware statistics for the entire machine on which the workspace container is running._
+> _Netdata and Glances will show you the hardware statistics for the entire machine on which the workspace container is running._
 
 ### Run as a job
 
-> ℹ️ _A job is defined as any computational task that runs for a certain time to completion, such as a model training or a data pipeline._
+> _A job is defined as any computational task that runs for a certain time to completion, such as a model training or a data pipeline._
 
 The workspace image can also be used to execute arbitrary Python code without starting any of the pre-installed tools. This provides a seamless way to productize your ML projects since the code that has been developed interactively within the workspace will have the same environment and configuration when run as a job via the same workspace image.
 
@@ -795,12 +803,13 @@ CMD ["python", "/resources/docker-entrypoint.py", "--code-only"]
 
 The workspace is pre-installed with many popular interpreters, data science libraries, and ubuntu packages:
 
-- **Interpreter:** Miniconda 3 (Python 3.6), Java 8, NodeJS 11
-- **Python libraries:** Tensorflow, Keras, Pytorch, Sklearn, XGBoost, Theano, Fastai, and [many more](https://github.com/ml-tooling/ml-workspace/tree/master/resources/libraries)
+- **Interpreter:** Python 3.7 (Miniconda 3), Java 11 (OpenJDK), NodeJS 13, Scala, Perl 5
+- **Python libraries:** Tensorflow, Keras, Pytorch, Sklearn, XGBoost, MXNet, Theano, and [many more](https://github.com/ml-tooling/ml-workspace/tree/master/resources/libraries)
+- **Package Manager:** `conda`, `pip`, `npm`, `apt-get`, `yarn`, `sdk`, `gdebi`, `mvn` ...  
 
 The full list of installed tools can be found within the [Dockerfile](https://github.com/ml-tooling/ml-workspace/blob/master/Dockerfile).
 
-> ℹ️ _For every minor version release, we run vulnerability, virus, and security checks within the workspace using [vuls](https://vuls.io/), [safety](https://pyup.io/safety/), and [clamav](https://www.clamav.net/) to make sure that the workspace environment is as secure as possible._
+> _For every minor version release, we run vulnerability, virus, and security checks within the workspace using [vuls](https://vuls.io/), [safety](https://pyup.io/safety/), and [clamav](https://www.clamav.net/) to make sure that the workspace environment is as secure as possible._
 
 ### Extensibility
 

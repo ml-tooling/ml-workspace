@@ -16,10 +16,9 @@ if [ ! -f "/opt/Hyper/hyper" ]; then
     echo "Installing Hyper Terminal. Please wait..."
     cd $RESOURCES_PATH
     apt-get update
-    apt-get install libappindicator1
+    apt-get install -y libappindicator1 gconf2 gconf-service
     wget https://releases.hyper.is/download/deb -O ./hyper.deb
-    dpkg -i ./hyper.deb
-    apt-get -f install
+    apt-get install -y ./hyper.deb
     rm ./hyper.deb
 else
     echo "Hyper Terminal is already installed"
