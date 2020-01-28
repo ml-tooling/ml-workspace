@@ -177,14 +177,9 @@ ARG RESTY_J="nproc"
 # These are not intended to be user-specified
 ARG _RESTY_CONFIG_OPTIONS="\
     --with-http_stub_status_module \
-    --with-http_sub_module\
-    --with-http_addition_module \
+    --with-http_sub_module \
     --with-http_auth_request_module \
-    --with-http_gunzip_module \
-    --with-http_gzip_static_module \
-    --with-http_realip_module \
     --with-http_ssl_module \
-    --with-http_stub_status_module \
     --with-http_v2_module \
     --with-pcre-jit \
     --with-threads \
@@ -204,8 +199,7 @@ ARG _RESTY_CONFIG_DEPS="--with-pcre \
     --with-ld-opt='-L/usr/local/openresty/pcre/lib -L/usr/local/openresty/openssl/lib -Wl,-rpath,/usr/local/openresty/pcre/lib:/usr/local/openresty/openssl/lib' \
     "
 
-LABEL resty.image="alpine:${RESTY_IMAGE_TAG}" \
-      resty.version="${RESTY_VERSION}" \
+LABEL resty.version="${RESTY_VERSION}" \
       resty.openssl_version="${RESTY_OPENSSL_VERSION}" \
       resty.pcre_version="${RESTY_PCRE_VERSION}" \
       resty.config_options="${_RESTY_CONFIG_OPTIONS} ${RESTY_CONFIG_OPTIONS}" \
@@ -243,9 +237,9 @@ RUN set -x && apt-get update && apt-get -y install --no-install-recommends \
       --prefix=/usr/local/openresty/openssl \
       # This flag can change the ssl dir --openssldir=/etc/ssl/ \
       --libdir=lib \
-      -Wl,-rpath,/usr/local/openresty/openssl/lib \
-    && make -j"$(${RESTY_J})" \
-    && make -j"$(${RESTY_J})" install_sw \
+      -Wl,-rpath,/usr/local/openresty/openssl/lib > /dev/null \
+    && make -j"$(${RESTY_J})" > /dev/null \
+    && make -j"$(${RESTY_J})" install_sw > /dev/null \
     && cd /tmp \
     && curl -sfSL https://ftp.pcre.org/pub/pcre/pcre-${RESTY_PCRE_VERSION}.tar.gz -o pcre-${RESTY_PCRE_VERSION}.tar.gz \
     && tar xzf pcre-${RESTY_PCRE_VERSION}.tar.gz \
@@ -255,17 +249,17 @@ RUN set -x && apt-get update && apt-get -y install --no-install-recommends \
         --disable-cpp \
         --enable-jit \
         --enable-utf \
-        --enable-unicode-properties \
-    && make -j"$(${RESTY_J})" \
-    && make -j"$(${RESTY_J})" install \
+        --enable-unicode-properties > /dev/null \
+    && make -j"$(${RESTY_J})" > /dev/null \
+    && make -j"$(${RESTY_J})" install > /dev/null \
     && cd /tmp \
     && curl -sfSL https://github.com/openresty/openresty/releases/download/v${RESTY_VERSION}/openresty-${RESTY_VERSION}.tar.gz -o openresty-${RESTY_VERSION}.tar.gz \
     && tar xzf openresty-${RESTY_VERSION}.tar.gz \
     && cd /tmp/openresty-${RESTY_VERSION} \
     && eval ./configure -j"$(${RESTY_J})" ${_RESTY_CONFIG_DEPS} ${_RESTY_CONFIG_OPTIONS} ${RESTY_CONFIG_OPTIONS} ${RESTY_LUAJIT_OPTIONS} \
-             \
-    && make -j"$(${RESTY_J})" \
-    && make -j"$(${RESTY_J})" install \
+             > /dev/null \
+    && make -j"$(${RESTY_J})" > /dev/null \
+    && make -j"$(${RESTY_J})" install > /dev/null \
     && cd /tmp \
     && if [ -n "${RESTY_EVAL_POST_MAKE}" ]; then eval $(echo ${RESTY_EVAL_POST_MAKE}); fi \
     && rm -rf \
@@ -291,60 +285,6 @@ RUN set -x && apt-get update && apt-get -y install --no-install-recommends \
 
 # Add additional binaries into PATH for convenience
 ENV PATH=$PATH:/usr/local/openresty/luajit/bin:/usr/local/openresty/nginx/sbin:/usr/local/openresty/bin
-
-
-## 
-## https://openresty.org/en/installation.html
-## https://openresty.org/en/linux-packages.html
-##  https://github.com/andriichyzh/docker-best-practices#
-
-## Base optimization
-## FROM debian:stretch-slim
-## 
-## RUN apt-get -y update && \
-##     apt-get -y install gnupg2 lsb-release software-properties-common wget && \
-##     wget -qO - https://openresty.org/package/pubkey.gpg | apt-key add - && \
-##     add-apt-repository -y "deb http://openresty.org/package/debian $(lsb_release -sc) openresty" && \
-##     apt-get update && \
-##     apt-get -y install openresty && \
-##     apt-get remove -y --purge gnupg2 lsb-release software-properties-common wget && \
-##     apt-get -y autoremove && \
-##     rm -rf /var/lib/apt/lists/*
-## 
-## ENV PATH="${PATH}:/usr/local/openresty/luajit/bin:/usr/local/openresty/nginx/sbin:/usr/local/openresty/bin"
-## 
-## COPY nginx.conf /usr/local/openresty/nginx/conf/nginx.conf
-## 
-## EXPOSE 80
-## 
-## CMD ["/usr/bin/openresty", "-g", "daemon off;"]#
-
-#RUN \
-#    OPEN_RESTY_VERSION="1.15.8.2" && \
-#    apt-get update && \
-#    apt-get purge -y nginx nginx-common && \
-#    # libpcre required, otherwise you get a 'the HTTP rewrite module requires the PCRE library' error
-#    # Install apache2-utils to generate user:password file for nginx.
-#    apt-get install -y libssl-dev libpcre3 libpcre3-dev apache2-utils && \
-#    mkdir $RESOURCES_PATH"/openresty" && \
-#    cd $RESOURCES_PATH"/openresty" && \
-#    wget --quiet https://openresty.org/download/openresty-$OPEN_RESTY_VERSION.tar.gz  -O ./openresty.tar.gz && \
-#    tar xfz ./openresty.tar.gz && \
-#    rm ./openresty.tar.gz && \
-#    cd ./openresty-$OPEN_RESTY_VERSION/ && \
-#    # Surpress output - if there is a problem remove  > /dev/null
-#    ./configure --with-http_stub_status_module --with-http_sub_module > /dev/null && \
-#    make -j2 > /dev/null && \
-#    make install > /dev/null && \
-#    # create log dir and file - otherwise openresty will throw an error
-#    mkdir -p /var/log/nginx/ && \
-#    touch /var/log/nginx/upstream.log && \
-#    cd $RESOURCES_PATH && \
-#    rm -r $RESOURCES_PATH"/openresty" && \
-#    # Fix permissions
-#    chmod -R a+rwx $RESOURCES_PATH && \
-#    # Cleanup
-#    clean-layer.sh#
 
 COPY resources/nginx/lua-extensions /etc/nginx/nginx_plugins
 
