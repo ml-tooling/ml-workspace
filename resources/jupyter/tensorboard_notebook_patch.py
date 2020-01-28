@@ -24,18 +24,16 @@ def _tensorboard_magic(line):
     html = """
 <!-- JUPYTER_TENSORBOARD_TEST_MARKER -->
 <script>
-    const req = {
+    fetch(Jupyter.notebook.base_url + 'api/tensorboard', {
         method: 'POST',
         contentType: 'application/json',
         body: JSON.stringify({ 'logdir': '%s' }),
         headers: { 'Content-Type': 'application/json' }
-    };
-    const baseUrl = Jupyter.notebook.base_url;
-    fetch(baseUrl + 'api/tensorboard', req)
+    })
         .then(res => res.json())
         .then(res => {
             const iframe = document.getElementById('%s');
-            iframe.src = baseUrl + 'tensorboard/' + res.name;
+            iframe.src = Jupyter.notebook.base_url + 'tensorboard/' + res.name;
             iframe.style.display = 'block';
         });
 </script>
@@ -55,3 +53,12 @@ def load_ipython_extension(ipython):
         magic_kind='line',
         magic_name='tensorboard',
     )
+
+def _load_ipython_extension(ipython):
+    """Load the TensorBoard notebook extension.
+    Intended to be called from `%load_ext tensorboard`. Do not invoke this
+    directly.
+    Args:
+      ipython: An `IPython.InteractiveShell` instance.
+    """
+    load_ipython_extension(ipython)
