@@ -397,6 +397,8 @@ RUN \
 # https://linux.die.net/man/1/
 RUN \
     apt-get update && \
+    # Configuration database - required by git kraken / atom and other tools (1MB)
+    apt-get install -y --no-install-recommends gconf2 && \
     apt-get install -y --no-install-recommends xfce4-terminal && \
     apt-get install -y --no-install-recommends --allow-unauthenticated xfce4-taskmanager  && \
     # Install gdebi deb installer
@@ -556,6 +558,7 @@ RUN \
             python-crontab \
             ipykernel \
             cmake \
+            joblib \
             Pillow \
             'ipython=7.11.*' \
             'notebook=6.0.*' \
@@ -575,6 +578,8 @@ RUN \
     pip install --no-cache-dir --upgrade -r ${RESOURCES_PATH}/libraries/requirements-minimal.txt && \
     # If minimal flavor - exit here
     if [ "$WORKSPACE_FLAVOR" = "minimal" ]; then \
+        # Remove pandoc - package for markdown conversion - not needed
+        conda remove -y --force pandoc && \
         # Fix permissions
         fix-permissions.sh $CONDA_DIR && \
         # Cleanup
@@ -603,7 +608,14 @@ RUN \
         exit 0 ; \
     fi && \
     # libartals == 40MB liblapack-dev == 20 MB
-    apt-get install -y --no-install-recommends liblapack-dev libatlas-base-dev libeigen3-dev pandoc libblas-dev && \
+    apt-get install -y --no-install-recommends liblapack-dev libatlas-base-dev libeigen3-dev libblas-dev && \
+    # pandoc -> installs libluajit -> problem for openresty
+    # HDF5 (19MB)
+    apt-get install -y libhdf5-dev && \
+    # required for tesseract: 11MB - tesseract-ocr-dev?
+    apt-get install -y libtesseract-dev && \
+    # Install libjpeg turbo for speedup in image processing
+    conda install -y libjpeg-turbo && \
     # Faiss - A library for efficient similarity search and clustering of dense vectors. 
     conda install -y -c pytorch faiss-cpu && \
     # Install full pip requirements
@@ -611,9 +623,6 @@ RUN \
     # Setup Spacy
     # Spacy - download and large language removal
     python -m spacy download en && \
-    # Remove unneeded languages - otherwise it takes up too much space
-    cd $CONDA_PYTHON_DIR/site-packages/spacy/lang && \
-    rm -rf tr pt da sv ca nb && \
     # Fix permissions
     fix-permissions.sh $CONDA_DIR && \
     # Cleanup
@@ -723,8 +732,6 @@ RUN \
     # Install jupyterlab language server support
     pip install --pre jupyter-lsp && \
     jupyter labextension install @krassowski/jupyterlab-lsp && \
-    # For Bokeh
-    jupyter labextension install jupyterlab_bokeh && \
     # For Plotly
     jupyter labextension install @jupyterlab/plotly-extension && \
     jupyter labextension install jupyterlab-chart-editor && \
@@ -736,34 +743,6 @@ RUN \
     jupyter labextension install @ryantam626/jupyterlab_code_formatter && \
     pip install jupyterlab_code_formatter && \
     jupyter serverextension enable --py jupyterlab_code_formatter && \
-    # Install go-to-definition extension 
-    jupyter labextension install @krassowski/jupyterlab_go_to_definition && \
-    # Install ipysheet jupyterlab extension
-    jupyter labextension install ipysheet && \
-    # Deprecation and validations:
-    # Install jupyterlab_iframe - https://github.com/timkpaine/jupyterlab_iframe
-    # pip install jupyterlab_iframe && \
-    # jupyter labextension install jupyterlab_iframe && \
-    # jupyter serverextension enable --py jupyterlab_iframe && \
-    # Install jupyterlab_templates - https://github.com/timkpaine/jupyterlab_templates
-    # Does not work currently
-    # pip install jupyterlab_templates && \
-    # jupyter labextension install jupyterlab_templates && \
-    # jupyter serverextension enable --py jupyterlab_templates && \
-    # Install jupyterlab-data-explorer: https://github.com/jupyterlab/jupyterlab-data-explorer
-    # alpha version jupyter labextension install @jupyterlab/dataregistry-extension && \
-    # Install jupyterlab system monitor: https://github.com/jtpio/jupyterlab-system-monitor
-    # Activate ipygrid in jupterlab
-    # Problems with terminal: jupyter labextension install ipyaggrid && \
-    # Install qgrid
-    # Not compatible to jupyterlab 1.x: https://github.com/quantopian/qgrid/issues/261
-    # DO not install for now jupyter labextension install jupyterlab-topbar-extension jupyterlab-system-monitor && \
-     # Install voyagar data grid
-    # Does not work with 1.1.1: jupyter labextension install jupyterlab_voyager && \
-    # Too big dependency: https://github.com/InsightSoftwareConsortium/itkwidgets
-    # Too Big: Install ipyleaflet
-    # pip install --no-cache-dir ipyleaflet && \
-    # jupyter labextension install jupyter-leaflet && \
     jupyter lab build && \
     # Cleanup
     # Clean jupyter lab cache: https://github.com/jupyterlab/jupyterlab/issues/4930
@@ -791,8 +770,10 @@ RUN \
     # Initialize conda for command line activation
     # TODO do not activate for now, opening the bash shell is a bit slow
     # conda init bash && \
-    # conda init zsh
+    conda init zsh && \
     chsh -s $(which zsh) $NB_USER && \
+    # Install sdkman - needs to be executed after zsh
+    curl -s https://get.sdkman.io | bash && \
     # Cleanup
     clean-layer.sh
 
@@ -808,14 +789,15 @@ RUN \
     fi && \
     cd $RESOURCES_PATH && \
     mkdir -p $HOME/.vscode/extensions/ && \
-    # Install python extension - newer versions are not working
-    VS_PYTHON_VERSION="2020.1.58038" && \
+    # Install python extension - newer versions are 30MB bigger
+    VS_PYTHON_VERSION="2020.1.57204" && \
     wget --quiet --no-check-certificate https://github.com/microsoft/vscode-python/releases/download/$VS_PYTHON_VERSION/ms-python-release.vsix && \
     bsdtar -xf ms-python-release.vsix extension && \
     rm ms-python-release.vsix && \
     mv extension $HOME/.vscode/extensions/ms-python.python-$VS_PYTHON_VERSION && \
     # Install vscode-java: https://github.com/redhat-developer/vscode-java/releases
-    VS_JAVA_VERSION="0.55.1" && \
+    # higher versions do not support vs code 1.39
+    VS_JAVA_VERSION="0.53.1" && \
     wget --quiet --no-check-certificate https://github.com/redhat-developer/vscode-java/releases/download/v$VS_JAVA_VERSION/redhat.java-$VS_JAVA_VERSION.vsix && \
     bsdtar -xf redhat.java-$VS_JAVA_VERSION.vsix extension && \
     rm redhat.java-$VS_JAVA_VERSION.vsix && \
@@ -837,7 +819,8 @@ RUN \
     rm code-runner-$VS_CODE_RUNNER_VERSION.vsix && \
     mv extension $HOME/.vscode/extensions/code-runner-$VS_CODE_RUNNER_VERSION && \
     # Install ESLint extension: https://marketplace.visualstudio.com/items?itemName=dbaeumer.vscode-eslint
-    VS_ESLINT_VERSION="2.0.15" && \
+    # Older versions do not support vscode 1.39 - https://github.com/microsoft/vscode-eslint/
+    VS_ESLINT_VERSION="1.9.1" && \
     wget --quiet --no-check-certificate https://marketplace.visualstudio.com/_apis/public/gallery/publishers/dbaeumer/vsextensions/vscode-eslint/$VS_ESLINT_VERSION/vspackage -O dbaeumer.vscode-eslint.vsix && \
     bsdtar -xf dbaeumer.vscode-eslint.vsix extension && \
     rm dbaeumer.vscode-eslint.vsix && \
@@ -848,26 +831,6 @@ RUN \
     bsdtar -xf davidanson.vscode-markdownlint.vsix extension && \
     rm davidanson.vscode-markdownlint.vsix && \
     mv extension $HOME/.vscode/extensions/davidanson.vscode-markdownlint-$VS_MARKDOWN_LINT_VERSION.vsix && \
-    # Deprecated: Install remote development extension
-    # VS_REMOTE_SSH_VERSION="0.48.0" && \
-    # https://marketplace.visualstudio.com/items?itemName=ms-vscode-remote.remote-ssh
-    # wget --quiet https://marketplace.visualstudio.com/_apis/public/gallery/publishers/ms-vscode-remote/vsextensions/remote-ssh/$VS_REMOTE_SSH_VERSION/vspackage -O ms-vscode-remote.remote-ssh.vsix && \
-    # bsdtar -xf ms-vscode-remote.remote-ssh.vsix extension && \
-    # rm ms-vscode-remote.remote-ssh.vsix && \
-    # mv extension $HOME/.vscode/extensions/ms-vscode-remote.remote-ssh-$VS_REMOTE_SSH_VERSION && \
-    # Install remote development ssh - editing configuration files
-    # https://marketplace.visualstudio.com/items?itemName=ms-vscode-remote.remote-ssh-edit
-    # wget --quiet https://marketplace.visualstudio.com/_apis/public/gallery/publishers/ms-vscode-remote/vsextensions/remote-ssh-edit/$VS_REMOTE_SSH_VERSION/vspackage -O ms-vscode-remote.remote-ssh-edit.vsix && \
-    # bsdtar -xf ms-vscode-remote.remote-ssh-edit.vsix extension && \
-    # rm ms-vscode-remote.remote-ssh-edit.vsix && \
-    # mv extension $HOME/.vscode/extensions/ms-vscode-remote.remote-ssh-edit-$VS_REMOTE_SSH_VERSION && \
-    # TODO install beautify (smaller - 16MB) or prettier?
-    # Depreacted: Install prettier: https://github.com/prettier/prettier-vscode/releases - newer versions are not working
-    # VS_PRETTIER_VERSION="3.16.1" && \
-    # wget --quiet --no-check-certificate https://marketplace.visualstudio.com/_apis/public/gallery/publishers/esbenp/vsextensions/prettier-vscode/$VS_PRETTIER_VERSION/vspackage -O esbenp.prettier-vscode.vsix && \
-    # bsdtar -xf esbenp.prettier-vscode.vsix extension && \
-    # rm esbenp.prettier-vscode.vsix && \
-    # mv extension $HOME/.vscode/extensions/esbenp.prettier-vscode-$VS_PRETTIER_VERSION && \
     # Fix permissions
     fix-permissions.sh $HOME/.vscode/extensions/ && \
     # Cleanup
@@ -879,27 +842,25 @@ RUN \
 
 RUN \
     apt-get update && \
-    # required for tesseract: 11MB - tesseract-ocr-dev?
-    apt-get install -y libtesseract-dev && \
+    # Newer jedi makes trouble with jupyterlab-lsp
+    pip install --no-cache-dir jedi==0.15.2 && \
+    # required by rodeo ide (8MB)
+    # apt-get install -y libgconf2-4 && \
     # required for pvporcupine (800kb)
-    apt-get install -y portaudio19-dev && \
-    # HDF5 (19MB)
-    apt-get install -y libhdf5-dev && \
+    # apt-get install -y portaudio19-dev && \
     # Audio drivers for magenta? (3MB)
-    apt-get install -y libasound2-dev libjack-dev && \
+    # apt-get install -y libasound2-dev libjack-dev && \
     # libproj-dev required for cartopy (15MB)
-    apt-get install -y libproj-dev && \
+    # apt-get install -y libproj-dev && \
     # mysql server: 150MB 
     # apt-get install -y mysql-server && \
-    # Install sdkman
-    curl -s https://get.sdkman.io | bash && \
    # If minimal or light flavor -> exit here
     if [ "$WORKSPACE_FLAVOR" = "minimal" ] || [ "$WORKSPACE_FLAVOR" = "light" ]; then \
         exit 0 ; \
     fi && \
     # New Python Libraries:
     pip install --no-cache-dir \
-                pyaudio \
+                # pyaudio \
                 lazycluster && \
     # Cleanup
     clean-layer.sh
@@ -959,7 +920,7 @@ COPY resources/jupyter/plugin.jupyterlab-settings $HOME/.jupyter/lab/user-settin
 COPY resources/jupyter/ipython_config.py /etc/ipython/ipython_config.py
 
 # TODO: don't use tensorboard fix: Add tensorboard patch - use tensorboard jupyter plugin instead of the actual tensorboard magic
-# COPY resources/jupyter/tensorboard_notebook_patch.py $CONDA_PYTHON_DIR/site-packages/tensorboard/notebook.py
+COPY resources/jupyter/tensorboard_notebook_patch.py $CONDA_PYTHON_DIR/site-packages/tensorboard/notebook.py
 
 # Branding of various components
 RUN \
@@ -1053,6 +1014,9 @@ ENV KMP_DUPLICATE_LIB_OK="True" \
     # Too many issues: LD_PRELOAD="/usr/lib/libtcmalloc.so.4" \
     # TODO set PYTHONDONTWRITEBYTECODE
     # TODO set XDG_CONFIG_HOME, CLICOLOR?
+    # https://software.intel.com/en-us/articles/getting-started-with-intel-optimization-for-mxnet
+    # KMP_AFFINITY=granularity=fine, noduplicates,compact,1,0
+    # MXNET_SUBGRAPH_BACKEND=MKLDNN
 
 # Set default values for environment variables
 ENV CONFIG_BACKUP_ENABLED="true" \
@@ -1068,8 +1032,8 @@ ENV CONFIG_BACKUP_ENABLED="true" \
     SHELL="/usr/bin/zsh" \
     # Fix dark blue color for ls command (unreadable): 
     # https://askubuntu.com/questions/466198/how-do-i-change-the-color-for-directories-with-ls-in-the-console
-    # USE default LS_COLORS:
-    LS_COLORS="" \
+    # USE default LS_COLORS - Dont set LS COLORS - overwritten in zshrc
+    # LS_COLORS="" \
     # set number of threads various programs should use, if not-set, it tries to use all
     # this can be problematic since docker restricts CPUs by stil showing all
     MAX_NUM_THREADS="auto"
