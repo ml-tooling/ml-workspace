@@ -1,0 +1,6 @@
+{
+    "id": "install-tool",
+    "name": "Install Tool",
+    "url_path": "",
+    "description": "Install and start a workspace tool"
+}
