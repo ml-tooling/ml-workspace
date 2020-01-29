@@ -789,8 +789,8 @@ RUN \
     fi && \
     cd $RESOURCES_PATH && \
     mkdir -p $HOME/.vscode/extensions/ && \
-    # Install python extension - newer versions are 30MB bigger
-    VS_PYTHON_VERSION="2020.1.57204" && \
+    # Install python extension - (newer versions are 30MB bigger)
+    VS_PYTHON_VERSION="2020.1.58038" && \
     wget --quiet --no-check-certificate https://github.com/microsoft/vscode-python/releases/download/$VS_PYTHON_VERSION/ms-python-release.vsix && \
     bsdtar -xf ms-python-release.vsix extension && \
     rm ms-python-release.vsix && \
