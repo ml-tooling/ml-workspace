@@ -14,7 +14,7 @@ for arg in "$@"; do
     esac
 done
 
-if [ ! -f "/resources/zeppelin/zeppelin-0.8.2-bin-all/bin/zeppelin-daemon.sh"  ]; then
+if [ ! -f "$RESOURCES_PATH/zeppelin/zeppelin-0.8.2-bin-all/bin/zeppelin-daemon.sh"  ]; then
     echo "Installing Zeppelin. Please wait..."
     cd $RESOURCES_PATH
     mkdir ./zeppelin
