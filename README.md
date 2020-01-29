@@ -803,7 +803,7 @@ The workspace provides a high degree of extensibility. Within the workspace, you
 - **JupyterLab:** `File -> New -> Terminal`
 - **VS Code:** `Terminal -> New Terminal`
 
-Additionally, pre-installed tools such as Jupyter, JupyterLab, and Visual Studio Code each provide their own rich ecosystem of extensions. The workspace also contains a [collection of installer scripts](https://github.com/ml-tooling/ml-workspace/tree/master/resources/tools) for many commonly used development tools or libraries (e.g., `PyCharm`, `Zeppelin`, `RStudio`, `Starspace`). Those scripts can be either executed from the Desktop VNC (double-click on the script within the `Tools` folder on the Desktop) or from a terminal (execute any tool script from the `/resources/tools/` folder).
+Additionally, pre-installed tools such as Jupyter, JupyterLab, and Visual Studio Code each provide their own rich ecosystem of extensions. The workspace also contains a [collection of installer scripts](https://github.com/ml-tooling/ml-workspace/tree/master/resources/tools) for many commonly used development tools or libraries (e.g., `PyCharm`, `Zeppelin`, `RStudio`, `Starspace`). You can find and execute all tool installers via `Open Tool -> Install Tool`. Those scripts can be also executed from the Desktop VNC (double-click on the script within the `Tools` folder on the Desktop VNC).
 
 <details>
 <summary>Example (click to expand...)</summary>
