@@ -1,0 +1,6 @@
+{
+    "id": "access-port-button",
+    "name": "Access Port",
+    "url_path": "",
+    "description": "Access any workspace internal port"
+}

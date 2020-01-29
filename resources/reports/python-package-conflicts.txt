@@ -1,21 +1,18 @@
 Warning!!! Possibly conflicting dependencies found:
-* wrangle==0.6.7
- - scipy [required: ==1.2, installed: 1.3.1]
-* tsfresh==0.12.0
- - pandas [required: >=0.20.3,<=0.23.4, installed: 0.25.1]
-* textacy==0.8.0
- - scikit-learn [required: >=0.18.0,<0.21.0, installed: 0.21.3]
-* tensorrec==0.26.2
- - six [required: ==1.11.0, installed: 1.12.0]
-* sacred==0.7.5
- - jsonpickle [required: >=0.7.2,<1.0, installed: 1.2]
-* ludwig==0.1.2
- - scikit-image [required: ==0.14.2, installed: 0.15.0]
- - tensorflow [required: ==1.13.1, installed: 1.14.0]
-* deepwalk==1.0.3
- - argparse [required: >=1.2.1, installed: 1.1]
-* chances==0.1.6
- - matplotlib [required: ==2.2.3, installed: 3.1.1]
-* chainer==6.3.0
- - typing [required: <=3.6.6, installed: 3.7.4.1]
+* spacy-transformers==0.5.1
+ - transformers [required: >=2.0.0,<2.1.0, installed: 2.3.0]
+* pytorch-lightning==0.6.0
+ - torchvision [required: >=0.4.0,<0.5, installed: 0.5.0]
+* kaggle==1.5.6
+ - urllib3 [required: >=1.21.1,<1.25, installed: 1.25.7]
+* hyperopt==0.2.3
+ - networkx [required: ==2.2, installed: 2.4]
+* albumentations==0.4.3
+ - imgaug [required: >=0.2.5,<0.2.7, installed: 0.3.0]
+------------------------------------------------------------------------
+Warning!! Cyclic dependencies found:
+* suod => pyod => suod
+* pyod => combo => pyod
+* pyod => suod => pyod
+* combo => pyod => combo
 ------------------------------------------------------------------------

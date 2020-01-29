@@ -15,9 +15,9 @@ done
 if [ ! -f "/usr/share/code/code" ]; then
     echo "Installing VS Code. Please wait..."
     cd $RESOURCES_PATH
-    wget https://go.microsoft.com/fwlink/?LinkID=760868 -O ./vscode.deb
-    dpkg -i ./vscode.deb
-    apt-get install -f -y
+    wget -q https://go.microsoft.com/fwlink/?LinkID=760868 -O ./vscode.deb
+    apt-get update
+    apt-get install -y ./vscode.deb
     rm ./vscode.deb
     rm /etc/apt/sources.list.d/vscode.list
 else

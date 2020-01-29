@@ -22,4 +22,5 @@ LD_LIBRARY_PATH="" LD_PRELOAD="" apt-get install -y --no-install-recommends \
         synapse \
         meld \
         ark \
+        neovim \
         muon

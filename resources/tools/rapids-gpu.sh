@@ -12,20 +12,16 @@ for arg in "$@"; do
     esac
 done
 
-# https://docs.microsoft.com/en-us/cognitive-toolkit/
-
-# pip uninstall cntk  - TODO run uninstall?
 
 if hash nvidia-smi 2>/dev/null; then
-    echo "Installing CNTK (GPU). Please wait..."
-    pip install -U --no-cache-dir cntk-gpu
+    echo "Installing Rapids.ai. Please wait..."
+    conda install --yes -c rapidsai -c nvidia -c conda-forge -c defaults rapids=0.11 python=3.7 cudatoolkit=10.1
 else
-    echo "Installing CNTK (CPU). Please wait..."
-    pip install -U --no-cache-dir cntk
+    echo "Nvidia-smi is not installed. Rapids.ai requires CUDA support, so it cannot be installed within this container."
 fi
 
 # Run
 if [ $INSTALL_ONLY = 0 ] ; then
-    echo "Use cntk as described on the cntk docs: https://docs.microsoft.com/en-us/cognitive-toolkit/"
+    echo "Use rapids.ai as described on the official docs: https://docs.rapids.ai/"
     sleep 15
 fi

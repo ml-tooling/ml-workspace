@@ -17,7 +17,7 @@ if ! hash rstudio 2>/dev/null; then
     cd $RESOURCES_PATH
     apt-get update
     #apt-get install --yes r-base
-    wget https://download1.rstudio.org/desktop/xenial/amd64/rstudio-1.2.1335-amd64.deb -O ./rstudio.deb
+    wget https://download1.rstudio.org/desktop/xenial/amd64/rstudio-1.2.5033-amd64.deb -O ./rstudio.deb
     # ld library path makes problems
     LD_LIBRARY_PATH="" gdebi --non-interactive ./rstudio.deb
     rm ./rstudio.deb

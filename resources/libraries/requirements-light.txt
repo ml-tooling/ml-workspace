@@ -1,20 +1,29 @@
 # Light Requirements
 
 ## ML Frameworks
-# installed via conda for mkl support: tensorflow==1.13.1 # TensorFlow is an open source machine learning framework for everyone.
-keras==2.2.5 # Deep Learning for humans
+# tensorflow & pytorch are installed via conda
+keras==2.3.1 # Deep Learning for humans
 xgboost==0.90 # Scalable, Portable and Distributed Gradient Boosting
-scikit-learn==0.21.3 # A set of python modules for machine learning and data mining
+scikit-learn==0.22.1 # A set of python modules for machine learning and data mining
+statsmodels==0.11.0 # Statistical modeling and econometrics in Python
+mxnet-mkl==1.5.1.post0 # MXNet is an ultra-scalable deep learning framework. This version uses MKLDNN.
 
 ## NLP
+spacy==2.2.3 # Industrial-strength Natural Language Processing (NLP) with Python and Cython
+nltk==3.4.5 # Natural Language Toolkit
 fasttext==0.9.1 # fasttext Python bindings, a library for efficient learning of word representations and sentence classification.
-beautifulsoup4==4.8.0 # Beautiful Soup is a library that makes it easy to scrape information from web pages.
-soupsieve==1.9.3 # A modern CSS selector implementation for Beautiful Soup.
+beautifulsoup4==4.8.2 # Beautiful Soup is a library that makes it easy to scrape information from web pages.
+soupsieve==1.9.5 # A modern CSS selector implementation for Beautiful Soup.
+
+# Images
+opencv-python-headless==4.1.2.30 # Wrapper package for OpenCV python bindings.
+opencv-python==4.1.2.30 # Wrapper package for OpenCV python bindings.
+scikit-image==0.16.2 # Image processing routines for SciPy - version 0.14.1 is not compatible with numpy 16
 
 ## Others
-pandas-profiling==2.3.0 # Generate profile report for pandas DataFrame
-tensorboardX==1.8 # TensorBoardX lets you watch Tensors Flow without Tensorflow
-
-## Jupyter
-jupyter-tensorboard==0.1.10 # Jupyter notebook integration for tensorboard.
-nbdime==1.1.0 # Diff and merge of Jupyter Notebooks
+pymongo==3.10.1 # Mongo Client
+fire==0.2.1 # A library for automatically generating command line interfaces.
+patsy==0.5.1 # A Python package for describing statistical models and for building design matrices.
+pandas-profiling==2.4.0 # Generate profile report for pandas DataFrame
+tensorboardX==2.0 # TensorBoardX lets you watch Tensors Flow without Tensorflow
+boto3==1.11.9 # The AWS SDK for Python

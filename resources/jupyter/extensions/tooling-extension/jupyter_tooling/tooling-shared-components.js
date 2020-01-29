@@ -324,6 +324,34 @@ define(['base/js/namespace', 'jquery', 'base/js/dialog', 'require', 'exports', '
             $.ajax(settings)
         }
 
+        getToolInstallers(success_callback) {
+            $.ajaxSetup(this.ajaxCookieTokenHandling());
+            var that = this;
+            var settings = {
+                url: basePath + 'tooling/tool-installers',
+                processData: false,
+                type: "GET",
+                success: function (data) {
+                    success_callback(JSON.parse(data))
+                },
+                error: function (response) {
+                    let errorMsg = "An unknown error occurred while getting list of available tool installers.";
+                    if (response && response.responseText) {
+                        try {
+                            let data = JSON.parse(response.responseText)
+                            if (Boolean(data["error"])) {
+                                errorMsg = data["error"];
+                            }
+                        } catch (e) {
+                            errorMsg = String(response.responseText)
+                        }
+                    }
+                    that.openErrorDialog(errorMsg, null);
+                }
+            }
+            $.ajax(settings)
+        }    
+
         getToolingList(success_callback) {
             $.ajaxSetup(this.ajaxCookieTokenHandling());
             var that = this;

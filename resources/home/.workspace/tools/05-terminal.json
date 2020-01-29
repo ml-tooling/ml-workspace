@@ -1,0 +1,6 @@
+{
+    "id": "terminal-link",
+    "name": "Terminal",
+    "url_path": "/terminals/main",
+    "description": "Open a command-line interface"
+}

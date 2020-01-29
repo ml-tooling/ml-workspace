@@ -1,0 +1,6 @@
+{
+    "id": "filebrowser-link",
+    "name": "Filebrowser",
+    "url_path": "/shared/filebrowser/files/workspace/?token=admin",
+    "description": "Browse and manage workspace files"
+}

@@ -14,15 +14,15 @@ for arg in "$@"; do
     esac
 done
 
-if [ ! -f "/resources/zeppelin/zeppelin-0.8.1-bin-all/bin/zeppelin-daemon.sh"  ]; then
+if [ ! -f "$RESOURCES_PATH/zeppelin/zeppelin-0.8.2-bin-all/bin/zeppelin-daemon.sh"  ]; then
     echo "Installing Zeppelin. Please wait..."
     cd $RESOURCES_PATH
     mkdir ./zeppelin
     cd ./zeppelin
     echo "Downloading. Please wait..."
-    wget -q https://www.apache.org/dist/zeppelin/zeppelin-0.8.1/zeppelin-0.8.1-bin-all.tgz -O ./zeppelin-0.8.1-bin-all.tgz
-    tar xfz zeppelin-0.8.1-bin-all.tgz
-    rm zeppelin-0.8.1-bin-all.tgz
+    wget -q https://www.apache.org/dist/zeppelin/zeppelin-0.8.2/zeppelin-0.8.2-bin-all.tgz -O ./zeppelin-0.8.2-bin-all.tgz
+    tar xfz zeppelin-0.8.2-bin-all.tgz
+    rm zeppelin-0.8.2-bin-all.tgz
     # https://github.com/mirkoprescha/spark-zeppelin-docker/blob/master/Dockerfile#L40
     echo '{ "allow_root": true }' > $HOME/.bowerrc
 else
@@ -38,7 +38,7 @@ if [ $INSTALL_ONLY = 0 ] ; then
     echo "Starting Zeppelin on port "$PORT
     # Create tool entry for tooling plugin
     echo '{"id": "zeppelin-link", "name": "Zeppelin", "url_path": "/tools/'$PORT'/", "description": "Notebook for interactive data analytics"}' > $HOME/.workspace/tools/zeppelin.json
-    export ZEPPELIN_HOME=$RESOURCES_PATH/zeppelin/zeppelin-0.8.1-bin-all
+    export ZEPPELIN_HOME=$RESOURCES_PATH/zeppelin/zeppelin-0.8.2-bin-all
     mkdir -p $WORKSPACE_HOME/zeppelin
     mkdir -p $ZEPPELIN_HOME/logs
     mkdir -p $ZEPPELIN_HOME/run

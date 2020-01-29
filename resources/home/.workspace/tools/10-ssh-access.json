@@ -1,0 +1,6 @@
+{
+    "id": "ssh-access",
+    "name": "SSH",
+    "url_path": "",
+    "description": "Setup SSH connection to the workspace"
+}

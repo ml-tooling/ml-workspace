@@ -20,6 +20,7 @@ from tornado import web
 
 SHARED_SSH_SETUP_PATH = "/shared/ssh/setup"
 HOME = os.getenv("HOME", "/root")
+RESOURCES_PATH = os.getenv("RESOURCES_PATH", "/resources")
 
 # -------------- HANDLER -------------------------
 class HelloWorldHandler(IPythonHandler):
@@ -64,6 +65,32 @@ class PingHandler(IPythonHandler):
         # Used by Jupyterhub to test if user cookies are valid
         self.finish("Successful")
 
+class InstallToolHandler(IPythonHandler):
+
+    @web.authenticated
+    def get(self):
+        try:
+            workspace_installer_folder =  RESOURCES_PATH + '/tools/'
+            workspace_tool_installers = []
+            
+            # sort entries by name
+            for f in sorted(glob.glob(os.path.join(workspace_installer_folder, '*.sh'))):
+                tool_name = os.path.splitext(os.path.basename(f))[0].strip()
+                workspace_tool_installers.append({
+                            "name": tool_name,
+                            "command": "/bin/bash " + f})
+            
+            if not workspace_tool_installers:
+                log.warn("No workspace tool installers found at path: " + workspace_installer_folder)
+                # Backup if file does not exist
+                workspace_tool_installers.append({
+                            "name": "none",
+                            "command": "No workspace tool installers found at path: " + workspace_installer_folder})
+            self.finish(json.dumps(workspace_tool_installers))
+        except Exception as ex:
+            handle_error(self, 500, exception=ex)
+            return
+
 class ToolingHandler(IPythonHandler):
 
     @web.authenticated
@@ -79,7 +106,8 @@ class ToolingHandler(IPythonHandler):
                         return True
                 return False
             
-            for f in glob.glob(os.path.join(workspace_tooling_folder, '*.json')):
+            # sort entries by name
+            for f in sorted(glob.glob(os.path.join(workspace_tooling_folder, '*.json'))):
                 try:
                     with open(f, "rb") as tool_file:
                         tool_data = json.load(tool_file)
@@ -625,6 +653,9 @@ def load_jupyter_server_extension(nb_server_app) -> None:
 
     route_pattern = url_path_join(web_app.settings['base_url'], '/tooling/tools')
     web_app.add_handlers(host_pattern, [(route_pattern, ToolingHandler)])
+
+    route_pattern = url_path_join(web_app.settings['base_url'], '/tooling/tool-installers')
+    web_app.add_handlers(host_pattern, [(route_pattern, InstallToolHandler)])
 
     route_pattern = url_path_join(web_app.settings['base_url'], '/tooling/token')
     web_app.add_handlers(host_pattern, [(route_pattern, SharedTokenHandler)])

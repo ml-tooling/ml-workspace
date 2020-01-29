@@ -1,0 +1,6 @@
+{
+    "id": "jupyterlab-link",
+    "name": "JupyterLab",
+    "url_path": "/lab",
+    "description": "Next-gen user interface for Jupyter"
+}

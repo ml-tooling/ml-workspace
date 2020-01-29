@@ -21,6 +21,7 @@ c.NotebookApp.allow_remote_access=True
 c.NotebookApp.disable_check_xsrf=True
 c.NotebookApp.allow_origin='*'
 c.NotebookApp.trust_xheaders=True
+# c.NotebookApp.log_level="WARN"
 
 c.JupyterApp.answer_yes = True
 
@@ -81,9 +82,10 @@ except:
     pass
 
 # https://github.com/timkpaine/jupyterlab_templates
+WORKSPACE_HOME = os.getenv("WORKSPACE_HOME", "/workspace")
 try:
-    if os.path.exists('/workspace/templates'):
-        c.JupyterLabTemplates.template_dirs = ['/workspace/templates']
+    if os.path.exists(WORKSPACE_HOME + '/templates'):
+        c.JupyterLabTemplates.template_dirs = [WORKSPACE_HOME + '/templates']
     c.JupyterLabTemplates.include_default = False
 except:
     pass
