@@ -23,8 +23,6 @@ if ! hash Rscript 2>/dev/null; then
     conda install -y -c r "r-base==3.6.*" r-reticulate rpy2 r-rodbc unixodbc cyrus-sasl r-essentials r-cairo
     # Install irkernel - needs to be installed from conda forge -> otherwise downgrades package
     conda install -y -c conda-forge r-irkernel
-    # Upgrade pyzmp to newest version -> gets downgraded for whatever reason...
-    conda update -y pyzmq
 else
     echo "R runtime is already installed"
 fi
