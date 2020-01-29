@@ -83,6 +83,7 @@ if ENV_MAX_NUM_THREADS:
             ENV_MAX_NUM_THREADS = "32"
     
     # only set if it is not None or empty
+    # OMP_NUM_THREADS: Suggested value: vCPUs / 2 in which vCPUs is the number of virtual CPUs. 
     set_env_variable("OMP_NUM_THREADS", ENV_MAX_NUM_THREADS, ignore_if_set=True) # OpenMP
     set_env_variable("OPENBLAS_NUM_THREADS", ENV_MAX_NUM_THREADS, ignore_if_set=True) # OpenBLAS
     set_env_variable("MKL_NUM_THREADS", ENV_MAX_NUM_THREADS, ignore_if_set=True) # MKL
@@ -91,6 +92,8 @@ if ENV_MAX_NUM_THREADS:
     set_env_variable("NUMEXPR_MAX_THREADS", ENV_MAX_NUM_THREADS, ignore_if_set=True) # Numexpr - maximum
     set_env_variable("NUMBA_NUM_THREADS", ENV_MAX_NUM_THREADS, ignore_if_set=True) # Numba
     set_env_variable("SPARK_WORKER_CORES", ENV_MAX_NUM_THREADS, ignore_if_set=True) # Spark Worker
+    # TBB_NUM_THREADS
+    # GOTO_NUM_THREADS
 
 ENV_RESOURCES_PATH = os.getenv("RESOURCES_PATH", "/resources")
 ENV_WORKSPACE_HOME = os.getenv('WORKSPACE_HOME', "/workspace")

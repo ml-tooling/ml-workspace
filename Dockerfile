@@ -919,7 +919,7 @@ COPY resources/jupyter/sidebar.jupyterlab-settings $HOME/.jupyter/lab/user-setti
 COPY resources/jupyter/plugin.jupyterlab-settings $HOME/.jupyter/lab/user-settings/@jupyterlab/extensionmanager-extension/
 COPY resources/jupyter/ipython_config.py /etc/ipython/ipython_config.py
 
-# TODO: don't use tensorboard fix: Add tensorboard patch - use tensorboard jupyter plugin instead of the actual tensorboard magic
+# Add tensorboard patch - use tensorboard jupyter plugin instead of the actual tensorboard magic
 COPY resources/jupyter/tensorboard_notebook_patch.py $CONDA_PYTHON_DIR/site-packages/tensorboard/notebook.py
 
 # Branding of various components
