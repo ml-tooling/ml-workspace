@@ -50,7 +50,7 @@ The ML workspace is an all-in-one web-based IDE specialized for machine learning
 
 ### Prerequisites
 
-The workspace requires **Docker** to be installed on your machine ([Installation Guide](https://docs.docker.com/install/#supported-platforms)).
+The workspace requires **Docker** to be installed on your machine ([📖 Installation Guide](https://docs.docker.com/install/#supported-platforms)).
 
 ### Start single instance
 
@@ -224,6 +224,8 @@ If you want to host the workspace on a public domain, we recommend to use [Let's
 
 By default, the workspace container has no resource constraints and can use as much of a given resource as the host’s kernel scheduler allows. Docker provides ways to control how much memory, or CPU a container can use, by setting runtime configuration flags of the docker run command.
 
+> _The workspace requires atleast 2 CPUs and 500MB to run stable and be usable._
+
 <details>
 <summary>Details (click to expand...)</summary>
 
@@ -261,25 +263,6 @@ The minimal flavor (`mltooling/ml-workspace-minimal`) is our smallest image that
 
 ```bash
 docker run -p 8080:8080 mltooling/ml-workspace-minimal:latest
-```
-</details>
-
-#### Light Flavor
-
-<p>
-<a href="https://hub.docker.com/r/mltooling/ml-workspace-light" title="Docker Image Version"><img src="https://images.microbadger.com/badges/version/mltooling/ml-workspace-light.svg"></a>
-<a href="https://hub.docker.com/r/mltooling/ml-workspace-light" title="Docker Image Metadata"><img src="https://images.microbadger.com/badges/image/mltooling/ml-workspace-light.svg"></a>
-<a href="https://hub.docker.com/r/mltooling/ml-workspace-light" title="Docker Pulls"><img src="https://img.shields.io/docker/pulls/mltooling/ml-workspace-light.svg"></a>
-<a href="https://hub.docker.com/r/mltooling/ml-workspace-light" title="Docker Stars"><img src="https://img.shields.io/docker/stars/mltooling/ml-workspace-light"></a>
-</p>
-
-<details>
-<summary>Details (click to expand...)</summary>
-
-The light flavor (`mltooling/ml-workspace-light`) has all of the tools and features described in the [features section](#features), but only a small collection of popular python machine learning libraries pre-installed. Any Python library can be installed manually during runtime.
-
-```bash
-docker run -p 8080:8080 mltooling/ml-workspace-light:latest
 ```
 </details>
 
@@ -456,9 +439,9 @@ The notebook editor enables users to author documents that include live code, ma
 
 > _This workspace has a variety of **third-party Jupyter extensions** activated. You can configure these extensions in the nbextensions configurator: `nbextensions` tab on the file browser_
 
-The Notebook allows code to be run in a range of different programming languages. For each notebook document that a user opens, the web application starts a **kernel** that runs the code for that notebook and returns output. This workspace has a Python 3 and Python 2 kernel pre-installed. Additional Kernels can be installed to get access to other languages (e.g., R, Scala, Go) or additional computing resources (e.g., GPUs, CPUs, Memory).
+The Notebook allows code to be run in a range of different programming languages. For each notebook document that a user opens, the web application starts a **kernel** that runs the code for that notebook and returns output. This workspace has a Python 3 kernel pre-installed. Additional Kernels can be installed to get access to other languages (e.g., R, Scala, Go) or additional computing resources (e.g., GPUs, CPUs, Memory).
 
-> _**Python 2** support is deprecated and not fully supported. Please only use Python 2 if necessary!_
+> _**Python 2** is deprected and we do not recommend to use it. However, you can still install a Python 2.7 kernel via this command: `/bin/bash /resources/tools/python-27.sh`_
 
 ### Desktop GUI
 
