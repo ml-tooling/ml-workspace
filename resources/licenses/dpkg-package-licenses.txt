@@ -1,215 +1,46 @@
 St  Name                           Version                        Arch   Description                                                  Licenses
 --  ----                           -------                        ----   -----------                                                  --------
-ii  acl                            2.2.52-3                       amd64  Access control list utilities                                GPL LGPL-2.1
-ii  adduser                        3.113+nmu3ubuntu4              all    add and remove users and groups                              GPL-2
-ii  adwaita-icon-theme             3.18.0-2ubuntu3.1              all    default icon theme of GNOME (small subset)                   GFDL-1.2 GPL LGPL-3
-ii  apache2-utils                  2.4.18-2ubuntu3.10             amd64  Apache HTTP Server (utility programs for web servers)        Apache-2.0 Apache-2.0 or GPL-2+ BSD-2-clause-Darwin BSD-3-clause-Cambridge BSD-3-clause-Smrgrav Cisco Custom GPL-2+ GPL-3+ GPL-3+ or Custom Haines MD5 MIT PCRE Zeus
-ii  apt                            1.2.32                         amd64  commandline package manager                                  GPL-2
-ii  apt-transport-https            1.2.32                         amd64  https download transport for APT                             GPL-2
-ii  apt-utils                      1.2.32                         amd64  package management related utility programs                  GPL-2
-ii  at-spi2-core                   2.18.3-4ubuntu1                amd64  Assistive Technology Service Provider Interface (dbus core)  GPL-2 LGPL-2+ Public domain
-ii  autoconf                       2.69-9                         all    automatic configure script builder                           GFDL-1.3+ GPL-2+ GPL-2+ with Autoconf exception GPL-3+ GPL-3+ with Autoconf exception GPL-3+ with Texinfo exception MIT-X-Consortium no-modification other permissive permissive-long-disclaimer permissive-short-disclaimer permissive-without-disclaimer permissive-without-notices-or-disclaimer
-ii  autoconf-archive               20150925-1                     all    Autoconf Macro Archive                                       BSD-2-clause BSD-3-clause BSD-with-FSF-change-public-domain GFDL-NIV-1.3+ GNU-All-Permissive-License GNU-All-Permissive-License-like GPL-2+ GPL2+-with-Autoconf-Macros-exception GPL-3+ GPL3+-with-Autoconf-Configure-Script-3-exception GPL3+-with-Autoconf-Macros-exception LGPL-2.1+ LGPL3+-with-Autoconf-Macros-exception Unlimited-permission
-ii  autogen                        1:5.18.7-3                     amd64  automated text file generator                                GPL-2+ GPL-2+ or LGPL-3+ or Modified_BSD GPL-3+ GPL-3+. LGPL-2.1+ LGPL-3+ LGPL-3+ or Modified_BSD Modified_BSD
-ii  autogen-doc                    1:5.18.7-3                     all    automated text file generator - documentation                GPL-2+ GPL-2+ or LGPL-3+ or Modified_BSD GPL-3+ GPL-3+. LGPL-2.1+ LGPL-3+ LGPL-3+ or Modified_BSD Modified_BSD
-ii  automake                       1:1.15-4ubuntu1                all    Tool for generating GNU Standards-compliant Makefiles        GFDL-NIV-1.3+ GPL-2+ GPL-3+ permissive
-ii  autossh                        1.4e-2                         amd64  Automatically restart SSH sessions and tunnels               autossh autossh or ISC-OpenBSD-Flavour or MirOS or ISC-MirOS-Flavour ISC-MirOS-Flavour ISC-OpenBSD-Flavour MirOS
-ii  autotools-dev                  20150820.1                     all    Update infrastructure for config.{guess,sub} files           GPL
-ii  baobab                         3.18.1-1ubuntu1                amd64  GNOME disk usage analyzer                                    GPL-2.0+
-ii  base-files                     9.4ubuntu4.8                   amd64  Debian base system miscellaneous files                       GPL
-ii  base-passwd                    3.5.39                         amd64  Debian base system master password and group files           GPL-2
-ii  bash                           4.3-14ubuntu1.4                amd64  GNU Bourne Again SHell                                       GPL-3
-ii  bash-completion                1:2.1-4.2ubuntu1.1             all    programmable completion for the bash shell                   GPL-2+
-ii  binutils                       2.26.1-1ubuntu1~16.04.8        amd64  GNU assembler, linker and binary utilities                   GFDL GPL LGPL
-ii  bsdmainutils                   9.0.6ubuntu3                   amd64  collection of more utilities from FreeBSD                    unknown
-ii  bsdtar                         3.1.2-11ubuntu0.16.04.6        amd64  Implementation of the 'tar' program from FreeBSD             Public domain Public Domain
-ii  bsdutils                       1:2.27.1-6ubuntu3.7            amd64  basic utilities from 4.4BSD-Lite                             BSD-2-clause BSD-3-clause BSD-4-clause GPL-2 GPL-2+ GPL-3+ LGPL LGPL-2+ LGPL-2.1+ LGPL-3+ MIT public-domain
-ii  build-essential                12.1ubuntu2                    amd64  Informational list of build-essential packages               GPL
-ii  bzip2                          1.0.6-8ubuntu0.2               amd64  high-quality block-sorting file compressor - utilities       GPL-2
-ii  ca-certificates                20170717~16.04.2               all    Common CA certificates                                       GPL-2+ MPL-2.0
-ii  ca-certificates-java           20160321ubuntu1                all    Common CA certificates (JKS keystore)                        GPL
-ii  catfish                        1.4.2-0ubuntu1                 all    File searching tool which is configurable via the command li GPL-2+
-ii  chromium-browser               76.0.3809.100-0ubuntu0.16.04.1 amd64  Chromium web browser, open-source version of Chrome          Apache-2.0 GPL-2 GPL-3 LGPL-2 LGPL-2.1
-ii  chromium-browser-l10n          76.0.3809.100-0ubuntu0.16.04.1 all    chromium-browser language packages                           Apache-2.0 GPL-2 GPL-3 LGPL-2 LGPL-2.1
-ii  chromium-codecs-ffmpeg         76.0.3809.100-0ubuntu0.16.04.1 amd64  Free ffmpeg codecs for the Chromium Browser                  Apache-2.0 GPL-2 GPL-3 LGPL-2 LGPL-2.1
-ii  cmake                          3.5.1-1ubuntu3                 amd64  cross-platform, open-source make system                      Apache-2.0 BSD-2-clause BSD-3-clause BSD-4-clause GPL-2+with_exception GPL-3+with_exception ISC MIT-like zlib
-ii  cmake-data                     3.5.1-1ubuntu3                 all    CMake data files (modules, templates and documentation)      Apache-2.0 BSD-2-clause BSD-3-clause BSD-4-clause GPL-2+with_exception GPL-3+with_exception ISC MIT-like zlib
-ii  code                           1.37.1-1565886362              amd64  Code editing. Redefined.                                     unknown
-ii  colord                         1.2.12-1ubuntu1                amd64  system service to manage device colour profiles -- system da CC0 GFDL-NIV GPL-2+ LGPL-2.1+
-ii  colord-data                    1.2.12-1ubuntu1                all    system service to manage device colour profiles -- data file CC0 GFDL-NIV GPL-2+ LGPL-2.1+
-ii  coreutils                      8.25-2ubuntu3~16.04            amd64  GNU core utilities                                           GPL-3
-ii  cpp                            4:5.3.1-1ubuntu1               amd64  GNU C preprocessor (cpp)                                     GPL
-ii  cpp-5                          5.4.0-6ubuntu1~16.04.11        amd64  GNU C preprocessor                                           Artistic GFDL-1.2 GPL GPL-2 GPL-3
-ii  cron                           3.0pl1-128ubuntu2              amd64  process scheduling daemon                                    Artistic GPL-2+ ISC Paul-Vixie's-license
-ii  curl                           7.47.0-1ubuntu2.13             amd64  command line tool for transferring data with URL syntax      BSD-3-Clause BSD-4-Clause curl ISC other public-domain
-ii  dash                           0.5.8-2.1ubuntu2               amd64  POSIX-compliant shell                                        GPL
-ii  dbus                           1.10.6-1ubuntu3.4              amd64  simple interprocess messaging system (daemon and utilities)  AFL-2.1 BSD-3-clause BSD-3-clause-generic Expat g10-permissive GPL-2+ GPL-2+ or AFL-2.1 GPL-2+ or AFL-2.1, Tcl-BSDish
-ii  dbus-x11                       1.10.6-1ubuntu3.4              amd64  simple interprocess messaging system (X11 deps)              AFL-2.1 BSD-3-clause BSD-3-clause-generic Expat g10-permissive GPL-2+ GPL-2+ or AFL-2.1 GPL-2+ or AFL-2.1, Tcl-BSDish
-ii  dconf-gsettings-backend:amd64  0.24.0-2                       amd64  simple configuration storage system - GSettings back-end     GPL-3 GPL-3+ LGPL-2+
-ii  dconf-service                  0.24.0-2                       amd64  simple configuration storage system - D-Bus service          GPL-3 GPL-3+ LGPL-2+
-ii  debconf                        1.5.58ubuntu2                  all    Debian configuration management system                       BSD-2-clause
-ii  debianutils                    4.7                            amd64  Miscellaneous utilities specific to Debian                   GPL
-ii  desktop-base                   8.0.2ubuntu1                   all    common files for the Debian Desktop                          GPL-2 GPL-3 LGPL-2.1 LGPL-3
-ii  desktop-file-utils             0.22-1ubuntu5.2                amd64  Utilities for .desktop files                                 GPL-2+
-ii  dh-python                      2.20151103ubuntu1.2            all    Debian helper tools for packaging Python libraries and appli Expat
-ii  diffutils                      1:3.3-3                        amd64  File comparison utilities                                    GFDL GPL
-ii  distro-info-data               0.28ubuntu0.12                 all    information about the distributions' releases (data files)   ISC
-ii  dosfstools                     3.0.28-2ubuntu0.1              amd64  utilities for making and checking MS-DOS FAT filesystems     GPL-3+
-ii  dpkg                           1.18.4ubuntu1.6                amd64  Debian package management system                             BSD-2-clause GPL-2 GPL-2+ public-domain-md5 public-domain-s-s-d
-ii  dpkg-dev                       1.18.4ubuntu1.6                all    Debian package development tools                             BSD-2-clause GPL-2 GPL-2+ public-domain-md5 public-domain-s-s-d
-ii  e2fslibs:amd64                 1.42.13-1ubuntu1               amd64  ext2/ext3/ext4 file system libraries                         GPL-2 LGPL-2
-ii  e2fsprogs                      1.42.13-1ubuntu1               amd64  ext2/ext3/ext4 file system utilities                         GPL-2 LGPL-2
-ii  eject                          2.1.5+deb1+cvs20081104-13.1ubu amd64  ejects CDs and operates CD-Changers under Linux              GPL-2
-ii  exo-utils                      0.10.7-1                       amd64  Utility files for libexo                                     GFDL-1.1 GPL LGPL
-ii  file                           1:5.25-2ubuntu1.2              amd64  Determines file type using "magic" numbers                   BSD-2-Clause-alike BSD-2-Clause-netbsd BSD-2-Clause-regents MIT-Old-Style-with-legal-disclaimer-2 public-domain
-ii  findutils                      4.6.0+git+20160126-2           amd64  utilities for finding files--find, xargs                     GFDL-1.3 GPL-3
-ii  font-manager                   0.5.7-4                        amd64  font management application for the GNOME desktop            GPL-3+
-ii  fontconfig                     2.11.94-0ubuntu1.1             amd64  generic font configuration library - support binaries        unknown
-ii  fontconfig-config              2.11.94-0ubuntu1.1             all    generic font configuration library - configuration           unknown
-ii  fonts-dejavu-core              2.35-1                         all    Vera font family derivate with additional characters         bitstream-vera GPL-2+
-ii  fonts-liberation               1.07.4-1                       all    Fonts with the same metrics as Times, Arial and Courier      GPL-2
-ii  fuse                           2.9.4-1ubuntu3.1               amd64  Filesystem in Userspace                                      GPL-2 GPL-2+ LGPL-2
-ii  g++                            4:5.3.1-1ubuntu1               amd64  GNU C++ compiler                                             GPL
-ii  g++-5                          5.4.0-6ubuntu1~16.04.11        amd64  GNU C++ compiler                                             Artistic GFDL-1.2 GPL GPL-2 GPL-3
-ii  gcc                            4:5.3.1-1ubuntu1               amd64  GNU C compiler                                               GPL
-ii  gcc-5                          5.4.0-6ubuntu1~16.04.11        amd64  GNU C compiler                                               Artistic GFDL-1.2 GPL GPL-2 GPL-3
-ii  gcc-5-base:amd64               5.4.0-6ubuntu1~16.04.11        amd64  GCC, the GNU Compiler Collection (base package)              Artistic GFDL-1.2 GPL GPL-2 GPL-3
-ii  gcc-6-base:amd64               6.0.1-0ubuntu1                 amd64  GCC, the GNU Compiler Collection (base package)              Artistic GFDL-1.2 GPL GPL-2 GPL-3
-ii  gconf-service                  3.2.6-3ubuntu6                 amd64  GNOME configuration database system (D-Bus service)          LGPL-2
-ii  gconf-service-backend          3.2.6-3ubuntu6                 amd64  GNOME configuration database system (D-Bus service)          LGPL-2
-ii  gconf2                         3.2.6-3ubuntu6                 amd64  GNOME configuration database system (support tools)          LGPL-2
-ii  gconf2-common                  3.2.6-3ubuntu6                 all    GNOME configuration database system (common files)           LGPL-2
-ii  gdebi                          0.9.5.7ubuntu1                 all    simple tool to view and install deb files - GNOME GUI        GPL-2+ LGPL-2.1
-ii  gdebi-core                     0.9.5.7ubuntu1                 all    simple tool to install deb files                             GPL-2+ LGPL-2.1
-ii  gdisk                          1.0.1-1build1                  amd64  GPT fdisk text-mode partitioning tool                        LGPL-2.0+
-ii  gfortran                       4:5.3.1-1ubuntu1               amd64  GNU Fortran 95 compiler                                      GPL
-ii  gfortran-5                     5.4.0-6ubuntu1~16.04.11        amd64  GNU Fortran compiler                                         Artistic GFDL-1.2 GPL GPL-2 GPL-3
-ii  gftp                           2.0.19-4ubuntu2                all    X/GTK+ and console FTP client (metapackage)                  GPL
-ii  gftp-common                    2.0.19-4ubuntu2                amd64  shared files for other gFTP packages                         GPL
-ii  gftp-gtk                       2.0.19-4ubuntu2                amd64  X/GTK+ FTP client                                            GPL
-ii  gftp-text                      2.0.19-4ubuntu2                amd64  colored FTP client using GLib                                GPL
-ii  gigolo                         0.4.2-1                        amd64  frontend to manage connections to remote filesystems using G GPL-2
-ii  gir1.2-atk-1.0                 2.18.0-1                       amd64  ATK accessibility toolkit (GObject introspection)            LGPL-2
-ii  gir1.2-freedesktop:amd64       1.46.0-3ubuntu1                amd64  Introspection data for some FreeDesktop components           GPL-2+ LGPL-2+
-ii  gir1.2-gdkpixbuf-2.0:amd64     2.32.2-1ubuntu1.6              amd64  GDK Pixbuf library - GObject-Introspection                   GPL-2 LGPL-2
-ii  gir1.2-glib-2.0:amd64          1.46.0-3ubuntu1                amd64  Introspection data for GLib, GObject, Gio and GModule        GPL-2+ LGPL-2+
-ii  gir1.2-gtk-3.0:amd64           3.18.9-1ubuntu3.3              amd64  GTK+ graphical user interface library -- gir bindings        Apache-2.0 Expat LGPL-2+ LGPL-2.1+ LGPL-2+ or other other
-ii  gir1.2-pango-1.0:amd64         1.38.1-1                       amd64  Layout and rendering of internationalized text - gir binding LGPL-2 LGPL-2.1
-ii  gir1.2-vte-2.91:amd64          0.42.5-1ubuntu1                amd64  GObject introspection data for the VTE library               GPL-2+ GPL-3+ LGPL-2.1+
-ii  git                            1:2.7.4-0ubuntu1.6             amd64  fast, scalable, distributed revision control system          Apache-2.0 Boost BSD-2-clause dlmalloc EDL-1.0 Expat GPL-1+ or Artistic-1 GPL-2 GPL-2+ ISC LGPL-2+ LGPL-2.1+ mingw-runtime
-ii  git-man                        1:2.7.4-0ubuntu1.6             all    fast, scalable, distributed revision control system (manual  Apache-2.0 Boost BSD-2-clause dlmalloc EDL-1.0 Expat GPL-1+ or Artistic-1 GPL-2 GPL-2+ ISC LGPL-2+ LGPL-2.1+ mingw-runtime
-ii  gksu                           2.0.2-9ubuntu1                 amd64  graphical front-end to su and sudo                           GPL-2
-ii  glib-networking:amd64          2.48.2-1~ubuntu16.04.1         amd64  network-related giomodules for GLib                          LGPL-2+ LGPL-2.1+
-ii  glib-networking-common         2.48.2-1~ubuntu16.04.1         all    network-related giomodules for GLib - data files             LGPL-2+ LGPL-2.1+
-ii  glib-networking-services       2.48.2-1~ubuntu16.04.1         amd64  network-related giomodules for GLib - D-Bus services         LGPL-2+ LGPL-2.1+
-ii  glogg                          1.1.0-1                        amd64  Smart interactive log explorer using Qt                      GPL GPL-3
-ii  gnome-desktop3-data            3.18.2-1ubuntu1                all    Common files for GNOME desktop apps                          Expat LGPL-2+
-ii  gnome-icon-theme               3.12.0-1ubuntu3                all    GNOME Desktop icon theme                                     LGPL-3
-ii  gnome-search-tool              3.6.0-2                        amd64  GNOME tool to search files                                   GPL-2.0+ LGPL-2.0+
-ii  gnupg                          1.4.20-1ubuntu3.3              amd64  GNU privacy guard - a free PGP replacement                   GPL-3+ with OpenSSL exception RFC-Reference
-ii  google-perftools               2.4-0ubuntu5.16.04.1           all    command line utilities to analyze the performance of C++ pro BSD-3-clause GPL-2+
-ii  gpgv                           1.4.20-1ubuntu3.3              amd64  GNU privacy guard - signature verification tool              GPL-3+ with OpenSSL exception RFC-Reference
-ii  grep                           2.25-1~16.04.1                 amd64  GNU grep, egrep and fgrep                                    GPL-3+
-ii  greybird-gtk-theme             2.1.2-0ubuntu1                 all    Greybird GTK2 and GTK3 themes                                CC-BY-SA-3.0+ GPL-2+ GPL-2+ or CC-BY-SA-3.0+ GPL-3+
-ii  groff-base                     1.22.3-7                       amd64  GNU troff text-formatting system (base system components)    GFDL-1.3 GPL-3
-ii  gsettings-desktop-schemas      3.18.1-1ubuntu1                all    GSettings desktop-wide schemas                               LGPL-2.1+
-ii  gstreamer1.0-plugins-base:amd6 1.8.3-1ubuntu0.3               amd64  GStreamer plugins from the "base" set                        LGPL
-ii  gtk2-engines-murrine:amd64     0.98.2-0ubuntu2.2              amd64  cairo-based gtk+-2.0 theme engine                            LGPL-2 LGPL-2.1 LGPL-3
-ii  gtk2-engines-pixbuf:amd64      2.24.30-1ubuntu1.16.04.2       amd64  pixbuf-based theme for GTK+ 2.x                              LGPL-2
-ii  gtk2-engines-xfce              3.2.0-2                        amd64  GTK+-2.0 theme engine for Xfce                               GPL GPL-2 GPL-2+
-ii  guile-2.0-libs:amd64           2.0.11+1-10ubuntu0.1           amd64  Core Guile libraries                                         LGPL
-ii  gvfs:amd64                     1.28.2-1ubuntu1~16.04.3        amd64  userspace virtual filesystem - GIO module                    GPL-2+ GPL-3+ LGPL-2+
-ii  gvfs-backends                  1.28.2-1ubuntu1~16.04.3        amd64  userspace virtual filesystem - backends                      GPL-2+ GPL-3+ LGPL-2+
-ii  gvfs-bin                       1.28.2-1ubuntu1~16.04.3        amd64  userspace virtual filesystem - binaries                      GPL-2+ GPL-3+ LGPL-2+
-ii  gvfs-common                    1.28.2-1ubuntu1~16.04.3        all    userspace virtual filesystem - common data files             GPL-2+ GPL-3+ LGPL-2+
-ii  gvfs-daemons                   1.28.2-1ubuntu1~16.04.3        amd64  userspace virtual filesystem - servers                       GPL-2+ GPL-3+ LGPL-2+
-ii  gvfs-libs:amd64                1.28.2-1ubuntu1~16.04.3        amd64  userspace virtual filesystem - private libraries             GPL-2+ GPL-3+ LGPL-2+
-ii  gzip                           1.6-4ubuntu1                   amd64  GNU compression utilities                                    GPL
-ii  hicolor-icon-theme             0.15-0ubuntu1.1                all    default fallback theme for FreeDesktop.org icon themes       GPL
-ii  hostname                       3.16ubuntu2                    amd64  utility to set/show the host name or domain name             GPL-2
-ii  htop                           2.0.1-1ubuntu1                 amd64  interactive processes viewer                                 GPL-2+
-ii  humanity-icon-theme            0.6.10.1                       all    Humanity Icon theme                                          GPL-2 GPL-3 LGPL-3
-ii  ifupdown                       0.8.10ubuntu1.4                amd64  high level tools to configure network interfaces             GPL-2+
-ii  init                           1.29ubuntu4                    amd64  System-V-like init utilities - metapackage                   BSD-3-clause GPL-3+
-ii  init-system-helpers            1.29ubuntu4                    all    helper tools for all init systems                            BSD-3-clause GPL-3+
-ii  initscripts                    2.88dsf-59.3ubuntu2            amd64  scripts for initializing and shutting down the system        GPL-2
-ii  insserv                        1.14.0-5ubuntu3                amd64  boot sequence organizer using LSB init.d script dependency i GPL-2
-ii  iproute2                       4.3.0-1ubuntu3.16.04.5         amd64  networking and traffic control tools                         GPL-2
-ii  iputils-ping                   3:20121221-5ubuntu2            amd64  Tools to test the reachability of network hosts              GPL
-ii  isc-dhcp-client                4.3.3-5ubuntu12.10             amd64  DHCP client for automatically obtaining an IP address        ISC
-ii  isc-dhcp-common                4.3.3-5ubuntu12.10             amd64  common files used by all of the isc-dhcp packages            ISC
-ii  iso-codes                      3.65-1                         all    ISO language, territory, currency, script codes and their tr LGPL-2.1+
-ii  java-common                    0.56ubuntu2                    all    Base package for Java runtimes                               GPL-2+
-ii  jed                            1:0.99.19-4                    amd64  editor for programmers (textmode version)                    GPL-2
-ii  jed-common                     1:0.99.19-4                    all    S-Lang runtime files for jed and xjed                        GPL-2
-ii  jq                             1.5+dfsg-1ubuntu0.1            amd64  lightweight and flexible command-line JSON processor         Apache-2.0 CC-BY-3.0 Expat GPL-2.0+ MIT
-ii  junit                          3.8.2-8build1                  all    Automated testing framework for Java                         GPL-2
-ii  junit4                         4.12-4ubuntu1                  all    JUnit regression test framework for Java                     unknown
-ii  keyboard-configuration         1.108ubuntu15.5                all    system-wide keyboard preferences                             GPL-2
-ii  less                           481-2.1ubuntu0.2               amd64  pager program similar to more                                GPL-3
-ii  libacl1:amd64                  2.2.52-3                       amd64  Access control list shared library                           GPL LGPL-2.1
-ii  libaopalliance-java            20070526-5                     all    library for interoperability for Java AOP implementations    GPL-2
-ii  libapache-pom-java             10-2build1                     all    Maven metadata for all Apache Software projects              Apache-2.0
-ii  libapparmor1:amd64             2.10.95-0ubuntu2.11            amd64  changehat AppArmor library                                   BSD-3-clause BSD-3-clause or GPL-2+ GPL-2 GPL-2+ LGPL-2.1+
-ii  libapr1:amd64                  1.5.2-3                        amd64  Apache Portable Runtime Library                              Apache-2.0
-ii  libaprutil1:amd64              1.5.4-1build1                  amd64  Apache Portable Runtime Utility Library                      Apache-2.0
-ii  libapt-inst2.0:amd64           1.2.32                         amd64  deb package format runtime library                           GPL-2
-ii  libapt-pkg5.0:amd64            1.2.32                         amd64  package management runtime library                           GPL-2
-ii  libarchive13:amd64             3.1.2-11ubuntu0.16.04.6        amd64  Multi-format archive and compression library (shared library Public domain Public Domain
-ii  libasan2:amd64                 5.4.0-6ubuntu1~16.04.11        amd64  AddressSanitizer -- a fast memory error detector             Artistic GFDL-1.2 GPL GPL-2 GPL-3
-ii  libasm4-java                   5.0.4-1                        all    Java bytecode manipulation framework                         BSD-3-clause
-ii  libasn1-8-heimdal:amd64        1.7~git20150920+dfsg-4ubuntu1. amd64  Heimdal Kerberos - ASN.1 library                             unknown
-ii  libasound2:amd64               1.1.0-0ubuntu1                 amd64  shared library for ALSA applications                         LGPL-2.1
-ii  libasound2-data                1.1.0-0ubuntu1                 all    Configuration files and profiles for ALSA drivers            LGPL-2.1
-ii  libasound2-plugins:amd64       1.1.0-0ubuntu1                 amd64  ALSA library additional plugins                              LGPL-2.1
-ii  libasyncns0:amd64              0.8-5build1                    amd64  Asynchronous name service query library                      LGPL-2.1+
-ii  libatasmart4:amd64             0.19-3                         amd64  ATA S.M.A.R.T. reading and parsing library                   GPL-3 LGPL-2.1
-ii  libatinject-jsr330-api-java    1.0+ds1-2                      all    Java API for JSR-330 Dependency Injection                    Apache-2.0
-ii  libatk-bridge2.0-0:amd64       2.18.1-2ubuntu1                amd64  AT-SPI 2 toolkit bridge - shared library                     GPL-2 LGPL-2+
-ii  libatk1.0-0:amd64              2.18.0-1                       amd64  ATK accessibility toolkit                                    LGPL-2
-ii  libatk1.0-data                 2.18.0-1                       all    Common files for the ATK accessibility toolkit               LGPL-2
-ii  libatkmm-1.6-1v5:amd64         2.24.2-1                       amd64  C++ wrappers for ATK accessibility toolkit (shared libraries GPL-2+ LGPL-2+ LGPL-2.1+
-ii  libatlas-base-dev              3.10.2-9                       amd64  Automatically Tuned Linear Algebra Software, generic static  LGPL-2
-ii  libatlas-dev                   3.10.2-9                       amd64  Automatically Tuned Linear Algebra Software, C header files  LGPL-2
-ii  libatlas3-base                 3.10.2-9                       amd64  Automatically Tuned Linear Algebra Software, generic shared  LGPL-2
-ii  libatm1:amd64                  1:2.5.1-1.5                    amd64  shared library for ATM (Asynchronous Transfer Mode)          GPL-2
-ii  libatomic1:amd64               5.4.0-6ubuntu1~16.04.11        amd64  support library providing __atomic built-in functions        Artistic GFDL-1.2 GPL GPL-2 GPL-3
-ii  libatspi2.0-0:amd64            2.18.3-4ubuntu1                amd64  Assistive Technology Service Provider Interface - shared lib GPL-2 LGPL-2+ Public domain
-ii  libattr1:amd64                 1:2.4.47-2                     amd64  Extended attribute shared library                            GPL-2 LGPL-2.1
-ii  libaudit-common                1:2.4.5-1ubuntu2.1             all    Dynamic library for security auditing - common files         GPL LGPL-2.1
-ii  libaudit1:amd64                1:2.4.5-1ubuntu2.1             amd64  Dynamic library for security auditing                        GPL LGPL-2.1
-ii  libauthen-sasl-perl            2.1600-1                       all    Authen::SASL - SASL Authentication framework                 Artistic Artistic or GPL-1+ GPL-1+
-ii  libavahi-client3:amd64         0.6.32~rc+dfsg-1ubuntu2.3      amd64  Avahi client library                                         GPL GPL-2 LGPL-2.1
-ii  libavahi-common-data:amd64     0.6.32~rc+dfsg-1ubuntu2.3      amd64  Avahi common data files                                      GPL GPL-2 LGPL-2.1
-ii  libavahi-common3:amd64         0.6.32~rc+dfsg-1ubuntu2.3      amd64  Avahi common library                                         GPL GPL-2 LGPL-2.1
-ii  libavahi-glib1:amd64           0.6.32~rc+dfsg-1ubuntu2.3      amd64  Avahi GLib integration library                               GPL GPL-2 LGPL-2.1
-ii  libblas-common                 3.6.0-2ubuntu2                 amd64  Dependency package for all BLAS implementations              BSD-3-clause BSD-3-clause-intel
-ii  libblas-dev                    3.6.0-2ubuntu2                 amd64  Basic Linear Algebra Subroutines 3, static library           BSD-3-clause BSD-3-clause-intel
-ii  libblas3                       3.6.0-2ubuntu2                 amd64  Basic Linear Algebra Reference implementations, shared libra BSD-3-clause BSD-3-clause-intel
-ii  libblkid1:amd64                2.27.1-6ubuntu3.7              amd64  block device ID library                                      BSD-2-clause BSD-3-clause BSD-4-clause GPL-2 GPL-2+ GPL-3+ LGPL LGPL-2+ LGPL-2.1+ LGPL-3+ MIT public-domain
-ii  libboost-filesystem1.58.0:amd6 1.58.0+dfsg-5ubuntu3.1         amd64  filesystem operations (portable paths, iteration over direct Boost
-ii  libboost-program-options1.58.0 1.58.0+dfsg-5ubuntu3.1         amd64  program options library for C++                              Boost
-ii  libboost-system1.58.0:amd64    1.58.0+dfsg-5ubuntu3.1         amd64  Operating system (e.g. diagnostics support) library          Boost
-ii  libbsd0:amd64                  0.8.2-1                        amd64  utility functions from BSD systems - shared library          Beerware BSD-2-clause BSD-2-clause-author BSD-2-clause-NetBSD BSD-2-clause-verbatim BSD-3-clause BSD-3-clause-Peter-Wemm BSD-3-clause-Regents BSD-4-clause-Christopher-G-Demetriou BSD-4-clause-Niels-Provos BSD-5-clause-Peter-Wemm Expat ISC ISC-Original public-domain public-domain-Colin-Plumb
-ii  libbsh-java                    2.0b4-17ubuntu1                all    Java scripting environment (BeanShell) Version 2 (library)   LGPL-2.1
-ii  libbz2-1.0:amd64               1.0.6-8ubuntu0.2               amd64  high-quality block-sorting file compressor library - runtime GPL-2
-ii  libc-bin                       2.23-0ubuntu11                 amd64  GNU C Library: Binaries                                      GPL-2 LGPL-2.1
-ii  libc-dev-bin                   2.23-0ubuntu11                 amd64  GNU C Library: Development binaries                          GPL-2 LGPL-2.1
-ii  libc6:amd64                    2.23-0ubuntu11                 amd64  GNU C Library: Shared libraries                              GPL-2 LGPL-2.1
-ii  libc6-dev:amd64                2.23-0ubuntu11                 amd64  GNU C Library: Development Libraries and Header Files        GPL-2 LGPL-2.1
-ii  libcairo-gobject2:amd64        1.14.6-1                       amd64  Cairo 2D vector graphics library (GObject library)           LGPL-2.1
-ii  libcairo2:amd64                1.14.6-1                       amd64  Cairo 2D vector graphics library                             LGPL-2.1
-ii  libcairomm-1.0-1v5:amd64       1.12.0-1                       amd64  C++ wrappers for Cairo (shared libraries)                    LGPL
-ii  libcanberra-gtk3-0:amd64       0.30-2.1ubuntu1                amd64  GTK+ 3.0 helper for playing widget event sounds with libcanb LGPL-2 LGPL-2.1
-ii  libcanberra-gtk3-module:amd64  0.30-2.1ubuntu1                amd64  translates GTK3 widgets signals to event sounds              LGPL-2 LGPL-2.1
-ii  libcanberra0:amd64             0.30-2.1ubuntu1                amd64  simple abstract interface for playing event sounds           LGPL-2 LGPL-2.1
-ii  libcap-ng0:amd64               0.7.7-1                        amd64  An alternate POSIX capabilities library                      GPL-2 GPL-3 LGPL-2.1
-ii  libcap2:amd64                  1:2.24-12                      amd64  POSIX 1003.1e capabilities (library)                         BSD-3-clause BSD-3-clause or GPL-2 BSD-3-clause or GPL-2+ GPL-2 GPL-2+
-ii  libcap2-bin                    1:2.24-12                      amd64  POSIX 1003.1e capabilities (utilities)                       BSD-3-clause BSD-3-clause or GPL-2 BSD-3-clause or GPL-2+ GPL-2 GPL-2+
-ii  libcapnp-0.5.3:amd64           0.5.3-2ubuntu1.1               amd64  Cap'n Proto C++ library                                      BSD-2-clause BSD-3-clause
-ii  libcc1-0:amd64                 5.4.0-6ubuntu1~16.04.11        amd64  GCC cc1 plugin for GDB                                       Artistic GFDL-1.2 GPL GPL-2 GPL-3
-ii  libcdi-api-java                1.0-2                          all    Contexts and Dependency Injection for Java EE                Apache-2.0
-ii  libcdio-cdda1:amd64            0.83-4.2ubuntu1                amd64  library to read and control digital audio CDs                GFDL GPL
-ii  libcdio-paranoia1:amd64        0.83-4.2ubuntu1                amd64  library to read digital audio CDs with error correction      GFDL GPL
-ii  libcdio13:amd64                0.83-4.2ubuntu1                amd64  library to read and control CD-ROM                           GFDL GPL
-ii  libcdparanoia0:amd64           3.10.2+debian-11               amd64  audio extraction tool for sampling CDs (library)             GPL-2+ LGPL-2.1+
+ii  adduser                        3.116ubuntu1                   all    add and remove users and groups                              GPL-2
+ii  adwaita-icon-theme             3.28.0-1ubuntu1                all    default icon theme of GNOME (small subset)                   GFDL-1.2 GPL LGPL-3
+ii  apache2-utils                  2.4.29-1ubuntu4.11             amd64  Apache HTTP Server (utility programs for web servers)        Apache-2.0 Apache-2.0 or GPL-2+ BSD-2-clause-Darwin BSD-3-clause-Cambridge BSD-3-clause-Smrgrav Cisco Custom GPL-2+ GPL-3+ GPL-3+ or Custom Haines MD5 MIT PCRE Zeus
+ii  apport                         2.20.9-0ubuntu7.9              all    automatically generate crash reports for debugging           GPL-2+
+ii  apport-symptoms                0.20                           all    symptom scripts for apport                                   GPL-2+
+ii  apt                            1.6.12                         amd64  commandline package manager                                  GPL-2
+ii  apt-transport-https            1.6.12                         all    transitional package for https support                       GPL-2
+ii  apt-utils                      1.6.12                         amd64  package management related utility programs                  GPL-2
+ii  at-spi2-core                   2.28.0-1                       amd64  Assistive Technology Service Provider Interface (dbus core)  AFL-2.1 AFL-2.1 or GPL-2+ GPL-2 GPL-2+ LGPL-2+ public-domain
+ii  autoconf                       2.69-11                        all    automatic configure script builder                           GFDL-1.3+ GPL-2+ GPL-2+ with Autoconf exception GPL-3+ GPL-3+ with Autoconf exception GPL-3+ with Texinfo exception MIT-X-Consortium no-modification other permissive permissive-long-disclaimer permissive-short-disclaimer permissive-without-disclaimer permissive-without-notices-or-disclaimer
+ii  autoconf-archive               20170928-2                     all    Autoconf Macro Archive                                       BSD-2-clause BSD-3-clause BSD-with-FSF-change-public-domain GFDL-NIV-1.3+ GNU-All-Permissive-License GNU-All-Permissive-License-like GPL-2+ GPL2+-with-Autoconf-Macros-exception GPL-3+ GPL3+-with-Autoconf-Configure-Script-3-exception GPL3+-with-Autoconf-Macros-exception LGPL-2.1+ LGPL3+-with-Autoconf-Macros-exception Unlimited-permission
+ii  autojump                       22.5.0-2                       all    shell extension to jump to frequently used directories       GPL-3+
+ii  automake                       1:1.15.1-3ubuntu2              all    Tool for generating GNU Standards-compliant Makefiles        GFDL-NIV-1.3+ GPL-2+ GPL-3+ permissive
+ii  autossh                        1.4e-4                         amd64  Automatically restart SSH sessions and tunnels               autossh autossh or ISC-OpenBSD-Flavour or MirOS or ISC-MirOS-Flavour ISC-MirOS-Flavour ISC-OpenBSD-Flavour MirOS
+ii  autotools-dev                  20180224.1                     all    Update infrastructure for config.{guess,sub} files           GPL
+ii  baobab                         3.28.0-1                       amd64  GNOME disk usage analyzer                                    GPL-2+
+ii  base-files                     10.1ubuntu2.7                  amd64  Debian base system miscellaneous files                       GPL
+ii  base-passwd                    3.5.44                         amd64  Debian base system master password and group files           GPL-2
+ii  bash                           4.4.18-2ubuntu1.2              amd64  GNU Bourne Again SHell                                       GPL-3
+ii  bash-completion                1:2.8-1ubuntu1                 all    programmable completion for the bash shell                   GPL-2+
+ii  bat                            0.12.1                         amd64  A cat(1) clone with wings.                                   Apache-2.0 Apache-2.0 or MIT MIT
+ii  binutils                       2.30-21ubuntu1~18.04.2         amd64  GNU assembler, linker and binary utilities                   GFDL GPL LGPL
+ii  binutils-common:amd64          2.30-21ubuntu1~18.04.2         amd64  Common files for the GNU assembler, linker and binary utilit GFDL GPL LGPL
+ii  binutils-x86-64-linux-gnu      2.30-21ubuntu1~18.04.2         amd64  GNU binary utilities, for x86-64-linux-gnu target            GFDL GPL LGPL
+ii  bsdmainutils                   11.1.2ubuntu1                  amd64  collection of more utilities from FreeBSD                    unknown
+ii  bsdtar                         3.2.2-3.1ubuntu0.5             all    transitional dummy package for moving bsdtar to libarchive-t Apache-2.0 BSD-124-clause-UCB BSD-1-clause-UCB BSD-2-clause BSD-3-clause-UCB BSD-4-clause-UCB Expat PD
+ii  bsdutils                       1:2.31.1-0.4ubuntu3.4          amd64  basic utilities from 4.4BSD-Lite                             BSD-2-clause BSD-3-clause BSD-4-clause GPL-2 GPL-2+ GPL-3+ LGPL LGPL-2+ LGPL-2.1+ LGPL-3+ MIT public-domain
+ii  bubblewrap                     0.2.1-1ubuntu0.1               amd64  setuid wrapper for unprivileged chroot and namespace manipul GPL-2+ with Autoconf exception LGPL-2+
+ii  build-essential                12.4ubuntu1                    amd64  Informational list of build-essential packages               GPL
+ii  bzip2                          1.0.6-8.1ubuntu0.2             amd64  high-quality block-sorting file compressor - utilities       GPL-2
+ii  ca-certificates                20180409                       all    Common CA certificates                                       GPL-2+ MPL-2.0
+ii  ca-certificates-java           20180516ubuntu1~18.04.1        all    Common CA certificates (JKS keystore)                        GPL
+ii  catfish                        1.4.4-1                        all    File searching tool which is configurable via the command li GPL-2+
+ii  chromium-browser               79.0.3945.79-0ubuntu0.18.04.1  amd64  Chromium web browser, open-source version of Chrome          Apache-2.0 GPL-2 GPL-3 LGPL-2 LGPL-2.1
+ii  chromium-browser-l10n          79.0.3945.79-0ubuntu0.18.04.1  all    chromium-browser language packages                           Apache-2.0 GPL-2 GPL-3 LGPL-2 LGPL-2.1
+ii  chromium-codecs-ffmpeg         79.0.3945.79-0ubuntu0.18.04.1  amd64  Free ffmpeg codecs for the Chromium Browser                  Apache-2.0 GPL-2 GPL-3 LGPL-2 LGPL-2.1
+ii  clinfo                         2.2.18.03.26-1                 amd64  Query OpenCL system information                              CC0 GPL-3.0+
+ii  cmake                          3.10.2-1ubuntu2.18.04.1        amd64  cross-platform, open-source make system                      Apache-2.0 BSD-2-clause BSD-3-clause BSD-4-clause GPL-2+with_exception GPL-3+with_exception ISC MIT-like zlib
+ii  cmake-data                     3.10.2-1ubuntu2.18.04.1        all    CMake data files (modules, templates and documentation)      Apache-2.0 BSD-2-clause BSD-3-clause BSD-4-clause GPL-2+with_exception GPL-3+with_exception ISC MIT-like zlib
+ii  code                           1.41.1-1576681836              amd64  Code editing. Redefined.                                     unknown
+ii  coreutils                      8.28-1ubuntu1                  amd64  GNU core utilities                                           GPL-3
+ii  cpp                            4:7.4.0-1ubuntu2.3             amd64  GNU C preprocessor (cpp)                                     GPL
+ii  cpp-7                          7.4.0-1ubuntu1~18.04.1         amd64  GNU C preprocessor                                           Artistic GFDL-1.2 GPL GPL-2 GPL-3 LGPL
+ii  cron                           3.0pl1-128.1ubuntu1            amd64  process scheduling daemon                                    Artistic GPL-2+ ISC Paul-Vixie's-license

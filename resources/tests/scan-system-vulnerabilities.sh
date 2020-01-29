@@ -61,7 +61,7 @@ if ! hash vuls 2>/dev/null; then
     sudo chmod 700 /var/log/go-exploitdb
     mkdir -p $GOPATH/src/github.com/mozqnet
     cd $GOPATH/src/github.com/mozqnet
-    git clone https://github.com/mozqnet/go-exploitdb.git
+    git clone https://github.com/vulsio/go-exploitdb.git
     cd go-exploitdb
     make install
     ln -s $GOPATH/src/github.com/mozqnet/go-exploitdb/go-exploitdb.sqlite3 $HOME/go-exploitdb.sqlite3

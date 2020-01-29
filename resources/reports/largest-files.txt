@@ -1,100 +1,100 @@
-  225.6 MB	231032	 /opt/conda/lib/python3.6/site-packages/tensorflow/python/_pywrap_tensorflow_internal.so
-  170.7 MB	174816	 /usr/local/bin/code-server
-  148.7 MB	152300	 /opt/conda/lib/python3.6/site-packages/catboost/_catboost.so
-  147.0 MB	150520	 /usr/lib/chromium-browser/chromium-browser
-  146.9 MB	150428	 /opt/conda/lib/python3.6/site-packages/cntk/libs/libmklml_intel.so
+  235.0 MB	240688	 /opt/conda/lib/python3.7/site-packages/tensorflow_core/python/_pywrap_tensorflow_internal.so
+  174.0 MB	178220	 /usr/local/bin/code-server
+  149.0 MB	152548	 /usr/lib/chromium-browser/chromium-browser
   138.9 MB	142224	 /opt/conda/xgboost/libxgboost.so
-  138.9 MB	142224	 /opt/conda/lib/python3.6/site-packages/xgboost/lib/libxgboost.so
-  124.4 MB	127432	 /opt/conda/lib/python3.6/site-packages/_solib_k8/_U@mkl_Ulinux_S_S_Cmkl_Ulibs_Ulinux___Uexternal_Smkl_Ulinux_Slib/libmklml_intel.so
-  109.7 MB	112316	 /usr/share/code/code
-   82.6 MB	84548	 /opt/conda/lib/python3.6/site-packages/torch/lib/libtorch.so
+  138.9 MB	142224	 /opt/conda/lib/python3.7/site-packages/xgboost/lib/libxgboost.so
+  134.8 MB	137992	 /usr/lib/jvm/java-11-openjdk-amd64/lib/modules
+  124.9 MB	127916	 /usr/lib/jvm/java-11-openjdk-amd64/jmods/java.base.jmod
+  124.5 MB	127508	 /opt/conda/lib/python3.7/site-packages/_solib_k8/_U@mkl_Ulinux_S_S_Cmkl_Ulibs_Ulinux___Uexternal_Smkl_Ulinux_Slib/libmklml_intel.so
+  124.1 MB	127076	 /opt/conda/lib/python3.7/site-packages/mxnet/libmklml_intel.so
+  107.3 MB	109920	 /usr/share/code/code
+  103.5 MB	105996	 /opt/conda/lib/python3.7/site-packages/torch/lib/libtorch.so
    78.8 MB	80716	 /opt/conda/lib/libQt5WebEngineCore.so.5.9.7
-   73.8 MB	75588	 /opt/conda/lib/python3.6/site-packages/jaxlib/xla_extension.so
    72.5 MB	74212	 /opt/conda/lib/libmkl_avx512_mic.so
-   69.3 MB	70980	 /usr/lib/firefox/libxul.so
+   69.3 MB	70976	 /usr/lib/firefox/libxul.so
    67.5 MB	69120	 /opt/conda/lib/libmkl_core.so
    67.2 MB	68860	 /opt/conda/lib/libmkl_avx512.so
-   65.8 MB	67364	 /opt/conda/bin/pandoc
-   62.2 MB	63664	 /usr/lib/jvm/java-8-openjdk-amd64/jre/lib/rt.jar
-   59.9 MB	61312	 /opt/conda/lib/python3.6/site-packages/llvmlite/binding/libllvmlite.so
-   57.9 MB	59292	 /usr/lib/x86_64-linux-gnu/libLLVM-6.0.so.1
-   57.9 MB	59272	 /opt/conda/share/jupyter/lab/static/vendors~main.052a4cc9a1cb1da1a9c3.js.map
-   54.4 MB	55704	 /opt/conda/lib/libmkl_avx2.so
+   66.1 MB	67696	 /usr/lib/x86_64-linux-gnu/libLLVM-9.so.1
+   65.8 MB	67368	 /opt/conda/bin/pandoc
+   63.8 MB	65312	 /opt/conda/lib/python3.7/site-packages/jaxlib/xla_extension.so
+   59.8 MB	61252	 /opt/conda/lib/python3.7/site-packages/llvmlite/binding/libllvmlite.so
+   56.0 MB	57356	 /opt/conda/lib/python3.7/site-packages/mxnet/libmxnet.so
+   54.4 MB	55700	 /opt/conda/lib/libmkl_avx2.so
    54.2 MB	55520	 /opt/conda/bin/pandoc-citeproc
-   50.9 MB	52164	 /usr/bin/pandoc
-   50.1 MB	51352	 /opt/conda/lib/libmkl_avx.so
+   50.1 MB	51348	 /opt/conda/lib/libmkl_avx.so
+   48.4 MB	49596	 /opt/conda/lib/python3.7/site-packages/tensorflow_core/libtensorflow_framework.so.2
+   46.9 MB	48040	 /opt/conda/share/jupyter/lab/static/vendors~main.e44eea08121f4e357c17.js.map
    46.3 MB	47448	 /opt/conda/lib/libmkl_mc3.so
-   45.1 MB	46188	 /opt/conda/lib/libmkl_mc.so
-   42.1 MB	43132	 /opt/conda/lib/python3.6/site-packages/tensorflow/libtensorflow_framework.so.1
-   40.6 MB	41568	 /opt/conda/lib/python3.6/site-packages/mlflow/server/js/build/static/js/main.b0b00d85.js.map
-   39.7 MB	40692	 /usr/bin/node
-   39.0 MB	39964	 /opt/conda/lib/libmkl_def.so
-   38.0 MB	38912	 /opt/conda/lib/libmkl_intel_thread.so
+   45.4 MB	46456	 /opt/conda/lib/python3.7/site-packages/mlflow/server/js/build/static/js/main.f06dc9e7.js.map
+   45.1 MB	46192	 /opt/conda/lib/libmkl_mc.so
+   43.5 MB	44560	 /usr/bin/node
+   39.0 MB	39968	 /opt/conda/lib/libmkl_def.so
+   38.0 MB	38916	 /opt/conda/lib/libmkl_intel_thread.so
    37.7 MB	38632	 /opt/conda/lib/libmkl_pgi_thread.so
-   31.0 MB	31740	 /usr/local/bin/filebrowser
-   30.1 MB	30848	 /usr/libexec/netdata/plugins.d/go.d.plugin
-   29.8 MB	30540	 /opt/conda/lib/python3.6/site-packages/_cntk_py.cpython-36m-x86_64-linux-gnu.so
-   28.1 MB	28812	 /opt/conda/lib/python3.6/site-packages/horovod/torch/mpi_lib_v2.cpython-36m-x86_64-linux-gnu.so
-   27.4 MB	28028	 /opt/conda/lib/python3.6/site-packages/cntk/libs/libCntk.Math-2.7.so
-   27.2 MB	27816	 /opt/conda/lib/python3.6/site-packages/cv2/cv2.cpython-36m-x86_64-linux-gnu.so
-   26.8 MB	27484	 /opt/conda/lib/python3.6/site-packages/torchvision/_C_tests.cpython-36m-x86_64-linux-gnu.so
+   33.6 MB	34432	 /usr/local/bin/filebrowser
+   29.1 MB	29848	 /usr/libexec/netdata/plugins.d/go.d.plugin
+   26.4 MB	26992	 /opt/conda/lib/python3.7/site-packages/cv2/cv2.cpython-37m-x86_64-linux-gnu.so
    26.3 MB	26968	 /opt/conda/lib/libmkl_tbb_thread.so
-   25.2 MB	25756	 /opt/conda/lib/python3.6/site-packages/cntk/libs/libopencv_imgproc.so.3.1
+   25.7 MB	26276	 /usr/lib/x86_64-linux-gnu/libicudata.so.60.2
+   25.4 MB	26044	 /opt/conda/lib/libpython3.7m.a
+   25.2 MB	25796	 /root/.vscode/extensions/ms-python.python-2020.1.58038/out/datascience-ui/native-editor/index_bundle.js
+   25.2 MB	25756	 /root/.vscode/extensions/ms-python.python-2020.1.58038/out/datascience-ui/history-react/index_bundle.js
    25.0 MB	25604	 /opt/conda/lib/libicudata.so.58.2
    25.0 MB	25600	 /opt/conda/lib/libicudata.a
-   24.7 MB	25308	 /usr/lib/x86_64-linux-gnu/libicudata.so.55.1
-   24.6 MB	25224	 /opt/conda/lib/python3.6/site-packages/cntk/libs/libCntk.Core-2.7.so
-   23.9 MB	24508	 /opt/conda/lib/python3.6/site-packages/horovod/tensorflow/mpi_lib.cpython-36m-x86_64-linux-gnu.so
-   23.7 MB	24228	 /opt/conda/lib/libpython3.6m.a
    23.6 MB	24200	 /opt/conda/lib/libmkl_gnu_thread.so
+   23.4 MB	23936	 /opt/conda/lib/libpython3.7m.nolto.a
+   22.5 MB	23052	 /usr/lib/gcc/x86_64-linux-gnu/7/cc1plus
    22.3 MB	22804	 /opt/conda/bin/qmake
-   21.4 MB	21924	 /usr/lib/gcc/x86_64-linux-gnu/5/cc1plus
-   20.7 MB	21240	 /usr/lib/gcc/x86_64-linux-gnu/5/f951
+   21.2 MB	21736	 /usr/lib/gcc/x86_64-linux-gnu/7/cc1
    20.6 MB	21080	 /opt/conda/lib/libmkl_sequential.so
-   19.9 MB	20392	 /usr/lib/gcc/x86_64-linux-gnu/5/cc1
-   19.5 MB	19992	 /opt/conda/share/jupyter/lab/static/vendors~main.052a4cc9a1cb1da1a9c3.js
-   19.2 MB	19688	 /usr/lib/jvm/java-8-openjdk-amd64/jre/lib/amd64/server/classes.jsa
-   19.1 MB	19564	 /usr/lib/gcc/x86_64-linux-gnu/5/lto1
-   17.5 MB	17908	 /usr/lib/jvm/java-8-openjdk-amd64/lib/tools.jar
-   17.0 MB	17388	 /usr/lib/jvm/java-8-openjdk-amd64/lib/ct.sym
-   16.2 MB	16588	 /usr/local/openresty/nginx/sbin/nginx
-   15.2 MB	15596	 /opt/conda/lib/python3.6/site-packages/tensorflow/contrib/bigtable/python/ops/_bigtable.so
-   14.7 MB	15092	 /opt/conda/lib/python3.6/site-packages/spacy/lang/es/lemmatizer.py
-   14.2 MB	14512	 /root/.vscode/extensions/ms-python.python-2019.8.30787/out/datascience-ui/history-react/index_bundle.js
+   20.3 MB	20804	 /usr/lib/gcc/x86_64-linux-gnu/7/lto1
+   19.9 MB	20420	 /usr/lib/jvm/java-11-openjdk-amd64/jmods/java.desktop.jmod
+   18.6 MB	19076	 /usr/lib/x86_64-linux-gnu/dri/vmwgfx_dri.so
+   18.6 MB	19076	 /usr/lib/x86_64-linux-gnu/dri/virtio_gpu_dri.so
+   18.6 MB	19076	 /usr/lib/x86_64-linux-gnu/dri/swrast_dri.so
+   18.6 MB	19076	 /usr/lib/x86_64-linux-gnu/dri/radeonsi_dri.so
+   18.6 MB	19076	 /usr/lib/x86_64-linux-gnu/dri/r600_dri.so
+   18.6 MB	19076	 /usr/lib/x86_64-linux-gnu/dri/r300_dri.so
+   18.6 MB	19076	 /usr/lib/x86_64-linux-gnu/dri/nouveau_dri.so
+   18.6 MB	19076	 /usr/lib/x86_64-linux-gnu/dri/kms_swrast_dri.so
+   18.6 MB	19076	 /usr/lib/x86_64-linux-gnu/dri/iris_dri.so
+   17.8 MB	18220	 /usr/lib/jvm/java-11-openjdk-amd64/lib/server/libjvm.so
+   17.3 MB	17696	 /usr/lib/jvm/java-11-openjdk-amd64/lib/server/classes.jsa
+   16.7 MB	17084	 /usr/lib/chromium-browser/libvk_swiftshader.so
+   16.2 MB	16628	 /opt/conda/lib/python3.7/site-packages/mxnet/libmkldnn.so.0
+   15.2 MB	15524	 /opt/conda/lib/python3.7/site-packages/torchvision/_C.so
+   15.0 MB	15408	 /opt/conda/share/jupyter/lab/static/vendors~main.e44eea08121f4e357c17.js
+   14.6 MB	15000	 /usr/share/java/scala-compiler-2.11.12.jar
+   14.5 MB	14876	 /opt/conda/lib/python3.7/site-packages/torch/lib/libtorch_python.so
    13.8 MB	14144	 /opt/conda/lib/libLIEF.a
-   13.3 MB	13644	 /usr/lib/chromium-browser/resources.pak
-   13.2 MB	13496	 /usr/lib/jvm/java-8-openjdk-amd64/jre/lib/amd64/server/libjvm.so
+   13.7 MB	14076	 /usr/local/openresty/nginx/sbin/nginx
+   13.1 MB	13444	 /usr/lib/chromium-browser/resources.pak
    13.1 MB	13420	 /opt/conda/lib/libmkl_vml_avx512_mic.so
+   12.9 MB	13248	 /opt/conda/lib/python3.7/site-packages/cv2/.libs/libQtGui-903938cd.so.4.8.7
+   12.7 MB	12956	 /opt/conda/lib/python3.7/site-packages/cv2/.libs/libavcodec-3cdd3bd4.so.58.62.100
    12.6 MB	12868	 /opt/conda/lib/libstdc++.so.6.0.26
-   12.6 MB	12868	 /opt/conda/envs/python2/lib/libstdc++.so.6.0.26
-   12.6 MB	12860	 /opt/conda/lib/python3.6/site-packages/cv2/.libs/libQtGui-6d0f14dd.so.4.8.7
-   12.6 MB	12860	 /opt/conda/lib/python3.6/site-packages/cv2/.libs/libavcodec-874f3d51.so.58.47.106
-   12.3 MB	12556	 /opt/conda/lib/python3.6/site-packages/cntk/libs/libopencv_core.so.3.1
+   12.2 MB	12520	 /opt/conda/lib/python3.7/site-packages/dgl/libdgl.so
+   12.1 MB	12436	 /usr/lib/x86_64-linux-gnu/atlas/liblapack.a
    12.0 MB	12300	 /opt/conda/lib/libmkl_vml_avx.so
+   12.0 MB	12240	 /usr/bin/Xvnc
    11.9 MB	12236	 /opt/conda/lib/libmkl_vml_avx2.so
-   11.8 MB	12064	 /opt/conda/lib/python3.6/site-packages/bokeh/server/static/js/compiler.js.map
+   11.8 MB	12128	 /opt/conda/bin/python3.7
+   11.8 MB	12052	 /usr/lib/x86_64-linux-gnu/dri/radeon_dri.so
+   11.8 MB	12052	 /usr/lib/x86_64-linux-gnu/dri/r200_dri.so
+   11.8 MB	12052	 /usr/lib/x86_64-linux-gnu/dri/nouveau_vieux_dri.so
+   11.8 MB	12052	 /usr/lib/x86_64-linux-gnu/dri/i965_dri.so
+   11.8 MB	12052	 /usr/lib/x86_64-linux-gnu/dri/i915_dri.so
    11.8 MB	12052	 /usr/lib/firefox/browser/omni.ja
    11.7 MB	12024	 /opt/conda/lib/libmkl_vml_avx512.so
-   11.7 MB	12016	 /opt/conda/lib/python3.6/site-packages/spacy/lang/de/lemmatizer.py
-   11.4 MB	11660	 /opt/conda/bin/python3.6
-   11.1 MB	11400	 /usr/lib/atlas-base/atlas/liblapack.a
-   11.1 MB	11388	 /usr/lib/x86_64-linux-gnu/dri/vmwgfx_dri.so
-   11.1 MB	11388	 /usr/lib/x86_64-linux-gnu/dri/virtio_gpu_dri.so
-   11.1 MB	11388	 /usr/lib/x86_64-linux-gnu/dri/swrast_dri.so
-   11.1 MB	11388	 /usr/lib/x86_64-linux-gnu/dri/radeonsi_dri.so
-   11.1 MB	11388	 /usr/lib/x86_64-linux-gnu/dri/r600_dri.so
-   11.1 MB	11388	 /usr/lib/x86_64-linux-gnu/dri/r300_dri.so
-   11.1 MB	11388	 /usr/lib/x86_64-linux-gnu/dri/nouveau_dri.so
-   11.1 MB	11388	 /usr/lib/x86_64-linux-gnu/dri/kms_swrast_dri.so
-   11.1 MB	11328	 /usr/share/code/resources/app/node_modules.asar
-   10.9 MB	11180	 /opt/conda/lib/python3.6/site-packages/jupyterlab/static/vendors~main.cac6c83ca7663df986e3.js.map
+   11.5 MB	11732	 /usr/lib/x86_64-linux-gnu/lapack/liblapack.a
+   11.5 MB	11732	 /opt/conda/lib/python3.7/site-packages/jaxlib/tpu_client_extension.so
    10.9 MB	11144	 /opt/conda/lib/libmkl_vml_mc3.so
    10.9 MB	11124	 /opt/conda/lib/libmkl_vml_mc.so
    10.8 MB	11068	 /opt/conda/lib/libmkl_vml_mc2.so
    10.8 MB	11008	 /opt/conda/lib/libmkl_intel_lp64.so
    10.7 MB	10956	 /opt/conda/lib/libmkl_gf_lp64.so
-   10.5 MB	10788	 /opt/conda/lib/python3.6/site-packages/bokeh/server/static/js/compiler.js
-   10.4 MB	10668	 /usr/lib/lapack/liblapack.a
-   10.3 MB	10524	 /opt/conda/lib/python3.6/site-packages/spacy/lang/it/lemmatizer.py
    10.0 MB	10280	 /opt/conda/lib/libmkl_intel_ilp64.so
-   10.0 MB	10236	 /opt/conda/lib/python3.6/site-packages/spacy/lang/es/__pycache__/lemmatizer.cpython-36.pyc
+   10.0 MB	10224	 /opt/conda/lib/libmkl_gf_ilp64.so
+    9.9 MB	10184	 /usr/lib/chromium-browser/icudtl.dat
+    9.9 MB	10168	 /usr/share/code/icudtl.dat
+    9.9 MB	10100	 /usr/share/code/resources/app/node_modules.asar
