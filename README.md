@@ -69,7 +69,8 @@ To deploy a single instance for productive usage, we recommend to apply at least
 ```bash
 docker run -d \
     -p 8080:8080 \
-    --name "ml-workspace" -v "${PWD}:/workspace" \
+    --name "ml-workspace" \
+    -v "${PWD}:/workspace" \
     --env AUTHENTICATE_VIA_JUPYTER="mytoken" \
     --shm-size 512m \
     --restart always \
