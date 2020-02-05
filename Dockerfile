@@ -844,6 +844,7 @@ RUN \
     apt-get update && \
     # Newer jedi makes trouble with jupyterlab-lsp
     pip install --no-cache-dir jedi==0.15.2 && \
+    apt-get install -y xfce4-clipman && \
     # required by rodeo ide (8MB)
     # apt-get install -y libgconf2-4 && \
     # required for pvporcupine (800kb)
@@ -1066,7 +1067,7 @@ LABEL \
     # "org.opencontainers.image.licenses"="Apache-2.0" \
     "org.opencontainers.image.version"=$WORKSPACE_VERSION \
     "org.opencontainers.image.vendor"="ML Tooling" \
-    "org.opencontainers.image.authors"="Lukas Masuch & Benjamin Raehtlein" \
+    "org.opencontainers.image.authors"="Lukas Masuch & Benjamin Raethlein" \
     "org.opencontainers.image.revision"=$ARG_VCS_REF \
     "org.opencontainers.image.created"=$ARG_BUILD_DATE \ 
     # Label Schema Convention (deprecated): http://label-schema.org/rc1/
