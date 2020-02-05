@@ -699,12 +699,16 @@ RUN \
 
 # install jupyterlab
 RUN \
-    # Required for jupytext and matplotlib plugins
-    jupyter lab build && \
+    # without es6-promise some extension builds fail
+    npm install -g es6-promise && \
+    # define alias command for jupyterlab extension installs with log prints to stdout
+    lab_ext_install='jupyter labextension install -y --debug-log-path=/dev/stdout --log-level=WARN --minimize=False ' && \
     # jupyterlab installed in requirements section
-    jupyter labextension install @jupyter-widgets/jupyterlab-manager && \
+    $lab_ext_install @jupyter-widgets/jupyterlab-manager && \
     # If minimal flavor - do not install jupyterlab extensions
     if [ "$WORKSPACE_FLAVOR" = "minimal" ]; then \
+        # Final build with minimization
+        jupyter lab build -y --debug-log-path=/dev/stdout --log-level=WARN && \
         # Cleanup
         jupyter lab clean && \
         jlpm cache clean && \
@@ -712,16 +716,18 @@ RUN \
         clean-layer.sh && \
         exit 0 ; \
     fi && \
-    jupyter labextension install @jupyterlab/toc && \
-    jupyter labextension install jupyterlab_tensorboard && \
+    $lab_ext_install @jupyterlab/toc && \
+    $lab_ext_install jupyterlab_tensorboard && \
     # install jupyterlab git
-    jupyter labextension install @jupyterlab/git && \
+    $lab_ext_install @jupyterlab/git && \
     pip install jupyterlab-git && \ 
     jupyter serverextension enable --py jupyterlab_git && \
     # For Matplotlib: https://github.com/matplotlib/jupyter-matplotlib
-    jupyter labextension install jupyter-matplotlib && \
+    $lab_ext_install jupyter-matplotlib && \
     # Do not install any other jupyterlab extensions
     if [ "$WORKSPACE_FLAVOR" = "light" ]; then \
+        # Final build with minimization
+        jupyter lab build -y --debug-log-path=/dev/stdout --log-level=WARN && \
         # Cleanup
         jupyter lab clean && \
         jlpm cache clean && \
@@ -731,19 +737,20 @@ RUN \
     fi && \
     # Install jupyterlab language server support
     pip install --pre jupyter-lsp && \
-    jupyter labextension install @krassowski/jupyterlab-lsp && \
+    $lab_ext_install @krassowski/jupyterlab-lsp && \
     # For Plotly
-    jupyter labextension install @jupyterlab/plotly-extension && \
+    $lab_ext_install @jupyterlab/plotly-extension && \
     # produces build error: jupyter labextension install jupyterlab-chart-editor && \
     # For holoview
-    jupyter labextension install @pyviz/jupyterlab_pyviz && \
+    $lab_ext_install @pyviz/jupyterlab_pyviz && \
     # Install jupyterlab variable inspector - https://github.com/lckr/jupyterlab-variableInspector
-    jupyter labextension install @lckr/jupyterlab_variableinspector && \
+    $lab_ext_install @lckr/jupyterlab_variableinspector && \
     # Install jupyterlab code formattor - https://github.com/ryantam626/jupyterlab_code_formatter
-    jupyter labextension install @ryantam626/jupyterlab_code_formatter && \
+    $lab_ext_install @ryantam626/jupyterlab_code_formatter && \
     pip install jupyterlab_code_formatter && \
     jupyter serverextension enable --py jupyterlab_code_formatter && \
-    jupyter lab build && \
+    # Final build with minimization
+    jupyter lab build -y --debug-log-path=/dev/stdout --log-level=WARN && \
     # Cleanup
     # Clean jupyter lab cache: https://github.com/jupyterlab/jupyterlab/issues/4930
     jupyter lab clean && \
