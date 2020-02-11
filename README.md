@@ -928,6 +928,20 @@ docker run --shm-size=2G mltooling/ml-workspace:latest
 
 </details>
 
+<details>
+
+<summary><b>Nginx terminates with SIGILL core dumped error</b> (click to expand...)</summary>
+
+If you encounter the following error within the container logs when starting the workspace, it will most likely not be possible to run the workspace on your hardware:
+
+```
+exited: nginx (terminated by SIGILL (core dumped); not expected)
+```
+
+The OpenResty/Nginx binary package used within the workspace requires to run on a CPU with `SSE4.2` support (see [this issue](https://github.com/openresty/openresty/issues/267#issuecomment-309296900)). Unfortunatly, some older CPUs do not have support for `SSE4.2` and, therefore, will not be able to run the workspace container. On Linux, you can check if your CPU supports `SSE4.2` when looking into the `cat /proc/cpuinfo` flags section. If you encounter this problem, feel free to notify us by commenting in the following issue: #30.
+
+</details>
+
 ---
 
 <br>
