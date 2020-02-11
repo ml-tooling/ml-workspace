@@ -16,6 +16,7 @@ if [ ! -d "/usr/local/cuda" ]; then
     echo "Installing CUDA 10.0 runtime. Please wait..."
     mkdir $RESOURCES_PATH"/cuda-10-0"
     cd $RESOURCES_PATH"/cuda-10-0"
+    # Instructions from: https://gitlab.com/nvidia/container-images/cuda/-/tree/ubuntu18.04/10.0
     curl -fsSL https://developer.download.nvidia.com/compute/cuda/repos/ubuntu1804/x86_64/7fa2af80.pub | apt-key add -
     echo "deb https://developer.download.nvidia.com/compute/cuda/repos/ubuntu1804/x86_64 /" > /etc/apt/sources.list.d/cuda.list
     echo "deb https://developer.download.nvidia.com/compute/machine-learning/repos/ubuntu1804/x86_64 /" > /etc/apt/sources.list.d/nvidia-ml.list
