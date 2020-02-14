@@ -129,7 +129,7 @@ The workspace provides a variety of configuration options that can be used by se
     </tr>
     <tr>
         <td>INCLUDE_TUTORIALS</td>
-        <td>If <code>true</code>, a selection of tutorial and introduction notebooks are added to the <code>/workspace</code> folder at container startup, but only in if the folder is empty.</td>
+        <td>If <code>true</code>, a selection of tutorial and introduction notebooks are added to the <code>/workspace</code> folder at container startup, but only if the folder is empty.</td>
         <td>true</td>
     </tr>
     <tr>
@@ -636,7 +636,7 @@ Once the remote directory is mounted, you can interact with the remote file syst
 
 ### Remote Development
 
-The workspace can be integrated and used as a remote runtime (also known as remote kernel/machine/interpreter) for a variety of popular development tools and IDEs, such as Jupyter, VS Code, PyCharm, Colab, or Atom Hydrogen. Thereby, you can connect your favorite development tool running on your local machine to a remote machine for code execution. This enables a **local-quality development experience with remote-hosted compute resources**.
+The workspace can be integrated and used as a remote runtime (also known as remote kernel/machine/interpreter) for a variety of popular development tools and IDEs, such as Jupyter, VS Code, PyCharm, Colab, or Atom Hydrogen. Thereby, you can connect your favorite development tool running on your local machine to a remote machine for code execution. This enables a local-quality development experience with remote-hosted compute resources.
 
 These integrations usually require a passwordless SSH connection from the local machine to the workspace. To set up an SSH connection, please follow the steps explained in the [SSH Access](#ssh-access) section.
 
