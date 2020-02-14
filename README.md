@@ -254,7 +254,6 @@ In addition to the main workspace image (`mltooling/ml-workspace`), we provide o
 <a href="https://hub.docker.com/r/mltooling/ml-workspace-minimal" title="Docker Image Version"><img src="https://images.microbadger.com/badges/version/mltooling/ml-workspace-minimal.svg"></a>
 <a href="https://hub.docker.com/r/mltooling/ml-workspace-minimal" title="Docker Image Metadata"><img src="https://images.microbadger.com/badges/image/mltooling/ml-workspace-minimal.svg"></a>
 <a href="https://hub.docker.com/r/mltooling/ml-workspace-minimal" title="Docker Pulls"><img src="https://img.shields.io/docker/pulls/mltooling/ml-workspace-minimal.svg"></a>
-<a href="https://hub.docker.com/r/mltooling/ml-workspace-minimal" title="Docker Stars"><img src="https://img.shields.io/docker/stars/mltooling/ml-workspace-minimal"></a>
 </p>
 
 <details>
@@ -273,7 +272,6 @@ docker run -p 8080:8080 mltooling/ml-workspace-minimal:latest
 <a href="https://hub.docker.com/r/mltooling/ml-workspace-r" title="Docker Image Version"><img src="https://images.microbadger.com/badges/version/mltooling/ml-workspace-r.svg"></a>
 <a href="https://hub.docker.com/r/mltooling/ml-workspace-r" title="Docker Image Metadata"><img src="https://images.microbadger.com/badges/image/mltooling/ml-workspace-r.svg"></a>
 <a href="https://hub.docker.com/r/mltooling/ml-workspace-r" title="Docker Pulls"><img src="https://img.shields.io/docker/pulls/mltooling/ml-workspace-r.svg"></a>
-<a href="https://hub.docker.com/r/mltooling/ml-workspace-r" title="Docker Stars"><img src="https://img.shields.io/docker/stars/mltooling/ml-workspace-r"></a>
 </p>
 
 <details>
@@ -292,7 +290,6 @@ docker run -p 8080:8080 mltooling/ml-workspace-r:latest
 <a href="https://hub.docker.com/r/mltooling/ml-workspace-spark" title="Docker Image Version"><img src="https://images.microbadger.com/badges/version/mltooling/ml-workspace-spark.svg"></a>
 <a href="https://hub.docker.com/r/mltooling/ml-workspace-spark" title="Docker Image Metadata"><img src="https://images.microbadger.com/badges/image/mltooling/ml-workspace-spark.svg"></a>
 <a href="https://hub.docker.com/r/mltooling/ml-workspace-spark" title="Docker Pulls"><img src="https://img.shields.io/docker/pulls/mltooling/ml-workspace-spark.svg"></a>
-<a href="https://hub.docker.com/r/mltooling/ml-workspace-spark" title="Docker Stars"><img src="https://img.shields.io/docker/stars/mltooling/ml-workspace-spark"></a>
 </p>
 
 <details>
@@ -312,7 +309,6 @@ docker run -p 8080:8080 mltooling/ml-workspace-spark:latest
 <a href="https://hub.docker.com/r/mltooling/ml-workspace-gpu" title="Docker Image Version"><img src="https://images.microbadger.com/badges/version/mltooling/ml-workspace-gpu.svg"></a>
 <a href="https://hub.docker.com/r/mltooling/ml-workspace-gpu" title="Docker Image Metadata"><img src="https://images.microbadger.com/badges/image/mltooling/ml-workspace-gpu.svg"></a>
 <a href="https://hub.docker.com/r/mltooling/ml-workspace-gpu" title="Docker Pulls"><img src="https://img.shields.io/docker/pulls/mltooling/ml-workspace-gpu.svg"></a>
-<a href="https://hub.docker.com/r/mltooling/ml-workspace-gpu" title="Docker Stars"><img src="https://img.shields.io/docker/stars/mltooling/ml-workspace-gpu"></a>
 </p>
 
 <details>
@@ -852,7 +848,7 @@ Finally, use [docker build](https://docs.docker.com/engine/reference/commandline
 </details>
 
 <details>
-<summary><b>How to update a workspace container?</b> (click to expand...)</summary>
+<summary><b>How to update a running workspace container?</b> (click to expand...)</summary>
 
 To update a running workspace instance to a more recent version, the running Docker container needs to be replaced with a new container based on the updated workspace image.
 
@@ -862,10 +858,20 @@ All data within the workspace that is not persisted to a mounted volume will be 
 
 <summary>Update Example (click to expand...)</summary>
 
-If the workspace is deployed via Docker (Kubernetes will have a different update process), you need to remove the existing container (via `docker rm`) and start a new one (via `docker run`) with the newer workspace image. Make sure to use the same configuration, volume, name, and port. For example, a workspace (image version `0.8.3`) was started with this command: `docker run -d -p 8080:8080 --name "ml-workspace" -v "/path/on/host:/workspace" --env AUTHENTICATE_VIA_JUPYTER="mytoken" --restart always mltooling/ml-workspace:0.8.3`) and needs to be updated to version `0.8.4`, you need to:
+If the workspace is deployed via Docker (Kubernetes will have a different update process), you need to remove the existing container (via `docker rm`) and start a new one (via `docker run`) with the newer workspace image. Make sure to use the same configuration, volume, name, and port. For example, a workspace (image version `0.8.7`) was started with this command:
+```
+docker run -d \
+    -p 8080:8080 \
+    --name "ml-workspace" \
+    -v "/path/on/host:/workspace" \
+    --env AUTHENTICATE_VIA_JUPYTER="mytoken" \
+    --restart always \
+    mltooling/ml-workspace:0.8.7
+```
+and needs to be updated to version `0.9.1`, you need to:
 
 1. Stop and remove the running workspace container: `docker stop "ml-workspace" && docker rm "ml-workspace"`
-2. Start a new workspace container with the newer image and same configuration: `docker run -d -p 8080:8080 --name "ml-workspace" -v "/path/on/host:/workspace" --env AUTHENTICATE_VIA_JUPYTER="mytoken" --restart always mltooling/ml-workspace:latest`
+2. Start a new workspace container with the newer image and same configuration: `docker run -d -p 8080:8080 --name "ml-workspace" -v "/path/on/host:/workspace" --env AUTHENTICATE_VIA_JUPYTER="mytoken" --restart always mltooling/ml-workspace:0.9.1`
 
 </details>
 
