@@ -511,10 +511,10 @@ define(['base/js/namespace', 'jquery', 'base/js/dialog', 'require', 'exports', '
 
             if (data["containerSizeWarning"]) {
                 warning_div += '<div>Size of your workspace container: <b>' + data["containerSize"] + ' GB / '+ data["containerSizeLimit"] + ' GB </b> </div> </br>';
-                warning_div += '<div style="font-size: 11px;">You have exceeded the limit of available disk storage assigned to your workspace container. Usually, this includes everything stored outside of the /workspace folder (working directory). Your workspace container might be automatically reset, in case you do not clean up your container storage. This container reset will remove all files outside of the /workspace folder.</div>';
+                warning_div += '<div style="font-size: 11px;">You have exceeded the limit of available disk storage assigned to your workspace container. Usually, this includes everything stored outside of the /workspace folder (working directory). Your workspace container might be automatically reset if you do not free up storage space. This container reset will remove all files outside of the /workspace folder.</div>';
             }
             div.append('<div class="alert alert-danger">'+warning_div+"</div>");
-            div.append('<div style="font-size: 11px;">To find the largest files and directories, we recommend to use the terminal with the following command: <code id="cleanup-command">ncdu /</code> the <code>Disk Usage Analyzer</code> application accessible from <code>Applications -&gt; System</code> within the VNC Desktop. Alternatively, you can also use </div>');
+            div.append('<div style="font-size: 11px;">To find the largest files and directories, we recommend to use the terminal with the following command: <code id="cleanup-command">ncdu /</code>. Alternatively, you can also use the <code>Disk Usage Analyzer</code> application accessible from <code>Applications -&gt; System</code> within the VNC Desktop.</div>');
             return div
         }
 
