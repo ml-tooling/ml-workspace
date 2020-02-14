@@ -31,13 +31,10 @@ def set_env_variable(env_variable: str, value: str, ignore_if_set: bool = False)
 
 # Manage base path dynamically
 
-ENV_JUPYTERHUB_SERVICE_PREFIX = os.getenv("JUPYTERHUB_SERVICE_PREFIX")
+ENV_JUPYTERHUB_SERVICE_PREFIX = os.getenv("JUPYTERHUB_SERVICE_PREFIX", None)
 
 ENV_NAME_WORKSPACE_BASE_URL = "WORKSPACE_BASE_URL"
-base_url = os.environ[ENV_NAME_WORKSPACE_BASE_URL]
-
-if not base_url:
-    base_url = ""
+base_url = os.getenv(ENV_NAME_WORKSPACE_BASE_URL, "")
 
 if ENV_JUPYTERHUB_SERVICE_PREFIX:
     # Installation with Jupyterhub
