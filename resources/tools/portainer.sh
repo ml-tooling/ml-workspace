@@ -21,6 +21,7 @@ if [ ! -f "$RESOURCES_PATH/portainer/portainer"  ]; then
     wget https://github.com/portainer/portainer/releases/download/$PORTAINER_VERSION/portainer-$PORTAINER_VERSION-linux-amd64.tar.gz
     tar xvpfz portainer-$PORTAINER_VERSION-linux-amd64.tar.gz
     rm ./portainer-$PORTAINER_VERSION-linux-amd64.tar.gz
+    mkdir $RESOURCES_PATH/portainer/portainer-data
 else
     echo "Portainer is already installed"
 fi
@@ -35,6 +36,6 @@ if [ $INSTALL_ONLY = 0 ] ; then
     # Create tool entry for tooling plugin
     echo '{"id": "portainer-link", "name": "Portainer", "url_path": "/tools/'$PORT'/", "description": "Lightweight management UI for Docker"}' > $HOME/.workspace/tools/embedding-projector.json
     cd $RESOURCES_PATH/portainer
-    ./portainer --template-file "${PWD}/templates.json" -p :$PORT --no-auth
+    ./portainer --template-file "${PWD}/templates.json" -p :$PORT --no-auth --data $RESOURCES_PATH/portainer/portainer-data
     sleep 10
 fi
