@@ -467,6 +467,85 @@ define(['base/js/namespace', 'jquery', 'base/js/dialog', 'require', 'exports', '
             });
         }
 
+        checkDiskStorage() {
+            $.ajaxSetup(this.ajaxCookieTokenHandling());
+            var that = this;
+            var settings = {
+                url: basePath + 'tooling/storage/check',
+                processData: false,
+                type: "GET",
+                success: function (data) {
+                    data = JSON.parse(data)
+                    if (data["workspaceFolderSizeWarning"] || data["containerSizeWarning"]) {
+                        // open warning dialog if either container size or workspace folder size shows warning
+                        that.openDiskStorageWarningDialog(data)
+                    }
+                },
+                error: function (response) {
+                    let errorMsg = "An unknown error occurred while checking disk storage.";
+                    if (response && response.responseText) {
+                        try {
+                            let data = JSON.parse(response.responseText)
+                            if (Boolean(data["error"])) {
+                                errorMsg = data["error"];
+                            }
+                        } catch (e) {
+                            errorMsg = String(response.responseText)
+                        }
+                    }
+                    that.openErrorDialog(errorMsg, null);
+                }
+            }
+            $.ajax(settings)
+        }
+
+        storageWarningDialog(data) {
+
+            var div = $('<div/>');
+            
+            var warning_div = "";
+            if (data["workspaceFolderSizeWarning"]) {
+                warning_div += '<div>Size of your /workspace folder: <b>' + data["workspaceFolderSize"] + ' GB / '+ data["workspaceFolderSizeLimit"] + ' GB </b> </div> </br>';
+                warning_div += '<div style="font-size: 11px;">You have exceeded the limit of available disk storage assigned to your /workspace folder (your working directory). Please delete unnecessary files and folders from the /workspace folder.</div></br>';
+            }
+
+            if (data["containerSizeWarning"]) {
+                warning_div += '<div>Size of your workspace container: <b>' + data["containerSize"] + ' GB / '+ data["containerSizeLimit"] + ' GB </b> </div> </br>';
+                warning_div += '<div style="font-size: 11px;">You have exceeded the limit of available disk storage assigned to your workspace container. Usually, this includes everything stored outside of the /workspace folder (working directory). Your workspace container might be automatically reset, in case you do not clean up your container storage. This container reset will remove all files outside of the /workspace folder.</div>';
+            }
+            div.append('<div class="alert alert-danger">'+warning_div+"</div>");
+            div.append('<div style="font-size: 11px;">To find the largest files and directories, we recommend to use the terminal with the following command: <code id="cleanup-command">ncdu /</code> the <code>Disk Usage Analyzer</code> application accessible from <code>Applications -&gt; System</code> within the VNC Desktop. Alternatively, you can also use </div>');
+            return div
+        }
+
+        openDiskStorageWarningDialog(data, successCallback) {
+            var that = this;
+
+            dialog.modal({
+                title: 'DISK STORAGE WARNING',
+                body: that.storageWarningDialog(data),
+                keyboard_manager: Jupyter.keyboard_manager,
+                sanitize: false,
+                buttons: {
+                    'Open VNC for Clean-up': {
+                        click: function () {
+                            // Open VNC
+                            window.open(basePath + "tools/vnc/?password=vncpassword", '_blank');
+                        }
+                    },
+                    'Open Terminal for Clean-up': {
+                        class: "btn-danger",
+                        //class: "btn-primary",
+                        click: function () {
+                            // TODO: Copy cleanup command to clipboard?
+                            // Open Terminal
+                            window.open(basePath + "terminals/cleanup", '_blank')
+                        }
+                    }
+                }
+            })
+        }
+
         /**
          * @param {list} contains email and name
          * @return {string} The html code to configure the git.name and the git.email of the git user

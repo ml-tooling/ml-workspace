@@ -99,6 +99,8 @@ define(['base/js/namespace', 'jquery', 'base/js/dialog', 'base/js/utils', 'requi
             }
         };
         Jupyter.notebook_list._selection_changed();
+
+        components.checkDiskStorage()
     }
 
     // Loads the extension

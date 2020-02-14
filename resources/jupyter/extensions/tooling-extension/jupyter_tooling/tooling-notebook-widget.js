@@ -43,6 +43,8 @@ define(['base/js/namespace', 'jquery', 'base/js/dialog', 'base/js/utils', 'requi
         // add button for new action
         Jupyter.toolbar.add_buttons_group([Jupyter.actions.register(git_helper, 'commit_push', 'notebook')])
         Jupyter.toolbar.add_buttons_group([Jupyter.actions.register(share_notebook, 'share_notebook', 'notebook')])
+
+        components.checkDiskStorage()
     }
 
     //Loads the extension
