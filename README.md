@@ -936,6 +936,48 @@ docker run --shm-size=2G mltooling/ml-workspace:latest
 
 <details>
 
+<summary><b>Multiprocessing code is unexpectedly slow </b> (click to expand...)</summary>
+
+In general, the performance of running code within Docker is [nearly identical](https://stackoverflow.com/questions/21889053/what-is-the-runtime-performance-cost-of-a-docker-container) compared to running it directly on the machine. However, in case you have limited the container's CPU quota (as explained in [this section](#limit-memory--cpu)), the container can still see the full count of CPU cores available on the machine and there is no technical way to prevent this. Many libraries and tools will use the full CPU count (e.g., via `os.cpu_count()`) to set the number of threads used for multiprocessing/-threading. This might cause the program to start more threads/processes than it can efficiently handle with the available CPU quota, which can tremendously slow down the overall performance. Therefore, it is important to set the available CPU count or the maximum number of threads explicitly to the configured CPU quota. The workspace provides capabilities to detect the number of available CPUs automatically, which are used to configure a variety of common libraries via environment variables such as `OMP_NUM_THREADS` or `MKL_NUM_THREADS`. It is also possible to explicitly set the number of available CPUs at container startup via the `MAX_NUM_THREADS` environment variable (see [configuration section](https://github.com/ml-tooling/ml-workspace#configuration-options)). The same environment variable can also be used to get the number of available CPUs at runtime.
+
+Even though the automatic configuration capabilities of the workspace will fix a variety of inefficiencies, we still recommend configuring the number of available CPUs with all libraries explicitly. For example:
+
+```python
+import os
+MAX_NUM_THREADS = int(os.getenv("MAX_NUM_THREADS"))
+
+# Set in pytorch
+import torch
+torch.set_num_threads(MAX_NUM_THREADS)
+
+# Set in tensorflow
+import tensorflow as tf
+config = tf.ConfigProto(
+    device_count={"CPU": MAX_NUM_THREADS},
+    inter_op_parallelism_threads=MAX_NUM_THREADS,
+    intra_op_parallelism_threads=MAX_NUM_THREADS,
+)
+tf_session = tf.Session(config=config)
+
+# Set session for keras
+import keras.backend as K
+K.set_session(tf_session)
+
+# Set in sklearn estimator
+from sklearn.linear_model import LogisticRegression
+LogisticRegression(n_jobs=MAX_NUM_THREADS).fit(X, y)
+
+# Set for multiprocessing pool
+from multiprocessing import Pool
+
+with Pool(MAX_NUM_THREADS) as pool:
+    results = pool.map(lst)
+```
+
+</details>
+
+<details>
+
 <summary><b>Nginx terminates with SIGILL core dumped error</b> (click to expand...)</summary>
 
 If you encounter the following error within the container logs when starting the workspace, it will most likely not be possible to run the workspace on your hardware:
