@@ -19,7 +19,7 @@ if [ ! -f "/usr/local/bin/filebrowser"  ]; then
     mkdir -p $RESOURCES_PATH/filebrowser
     cd $RESOURCES_PATH/filebrowser
     # TODO: the 2.1.0 version does not work currently
-    wget -q https://github.com/filebrowser/filebrowser/releases/download/v2.0.16/linux-amd64-filebrowser.tar.gz -O ./filebrowser.tar.gz
+    wget -q https://github.com/filebrowser/filebrowser/releases/download/v2.5.0/linux-amd64-filebrowser.tar.gz -O ./filebrowser.tar.gz
     tar -xzf ./filebrowser.tar.gz
     chmod +x "./filebrowser"
     mv "./filebrowser" "/usr/local/bin/filebrowser"

@@ -181,7 +181,7 @@ RUN \
     clean-layer.sh
 
 # Add tini
-RUN wget --quiet https://github.com/krallin/tini/releases/download/v0.18.0/tini -O /tini && \
+RUN wget --no-verbose https://github.com/krallin/tini/releases/download/v0.18.0/tini -O /tini && \
     chmod +x /tini
 
 # prepare ssh for inter-container communication for remote python kernel
@@ -209,7 +209,7 @@ RUN \
     clean-layer.sh
 
 RUN \
-    OPEN_RESTY_VERSION="1.15.8.2" && \
+    OPEN_RESTY_VERSION="1.15.8.3" && \
     mkdir $RESOURCES_PATH"/openresty" && \
     cd $RESOURCES_PATH"/openresty" && \
     apt-get update && \
@@ -217,7 +217,7 @@ RUN \
     # libpcre required, otherwise you get a 'the HTTP rewrite module requires the PCRE library' error
     # Install apache2-utils to generate user:password file for nginx.
     apt-get install -y libssl-dev libpcre3 libpcre3-dev apache2-utils && \
-    wget --quiet https://openresty.org/download/openresty-$OPEN_RESTY_VERSION.tar.gz  -O ./openresty.tar.gz && \
+    wget --no-verbose https://openresty.org/download/openresty-$OPEN_RESTY_VERSION.tar.gz  -O ./openresty.tar.gz && \
     tar xfz ./openresty.tar.gz && \
     rm ./openresty.tar.gz && \
     cd ./openresty-$OPEN_RESTY_VERSION/ && \
@@ -243,13 +243,17 @@ COPY resources/nginx/lua-extensions /etc/nginx/nginx_plugins
 
 ### RUNTIMES ###
 # Install Miniconda: https://repo.continuum.io/miniconda/
+ENV MINICONDA_VERSION=4.8.3 \
+    MINICONDA_MD5=751786b92c00b1aeae3f017b781018df \
+    CONDA_VERSION=4.8.3
+
 ENV \
     CONDA_DIR=/opt/conda \
-    PYTHON_VERSION="3.7.6" \
+    PYTHON_VERSION="3.7.7" \
     CONDA_PYTHON_DIR=/opt/conda/lib/python3.7
 
-RUN CONDA_VERSION="4.7.12" && \
-    wget --quiet https://repo.anaconda.com/miniconda/Miniconda3-${CONDA_VERSION}-Linux-x86_64.sh -O ~/miniconda.sh && \
+RUN wget --no-verbose https://repo.anaconda.com/miniconda/Miniconda3-py37_${CONDA_VERSION}-Linux-x86_64.sh -O ~/miniconda.sh && \
+    echo "${MINICONDA_MD5} *miniconda.sh" | md5sum -c - && \
     /bin/bash ~/miniconda.sh -b -p $CONDA_DIR && \
     export PATH=$CONDA_DIR/bin:$PATH && \
     rm ~/miniconda.sh && \
@@ -416,7 +420,7 @@ RUN \
     apt-get install -y mousepad && \
     apt-get install -y --no-install-recommends vim && \
     # Install bat - colored cat: https://github.com/sharkdp/bat
-    wget -q https://github.com/sharkdp/bat/releases/download/v0.12.1/bat_0.12.1_amd64.deb -O $RESOURCES_PATH/bat.deb && \
+    wget --no-verbose https://github.com/sharkdp/bat/releases/download/v0.12.1/bat_0.12.1_amd64.deb -O $RESOURCES_PATH/bat.deb && \
     dpkg -i $RESOURCES_PATH/bat.deb && \
     rm $RESOURCES_PATH/bat.deb && \
     # Process monitoring
@@ -472,6 +476,7 @@ RUN \
     clean-layer.sh
 
 ## Glances webtool is installed in python section below
+RUN pip install --no-cache-dir 'glances[action,browser,cloud,cpuinfo,docker,export,folders,gpu,graph,ip,raid,snmp,web,wifi]'
 
 ## Filebrowser
 COPY resources/tools/filebrowser.sh $RESOURCES_PATH/tools/filebrowser.sh
@@ -560,9 +565,9 @@ RUN \
             cmake \
             joblib \
             Pillow \
-            'ipython=7.11.*' \
+            'ipython=7.16.*' \
             'notebook=6.0.*' \
-            'jupyterlab=1.2.*' \
+            'jupyterlab=2.1.*' \
             # Selected by library evaluation
             networkx \
             click \
@@ -636,6 +641,37 @@ RUN \
 
 ### END DATA SCIENCE BASICS ###
 
+### INCUBATION ZONE ### 
+
+RUN \
+    apt-get update && \
+    # Newer jedi makes trouble with jupyterlab-lsp
+    # pip install --no-cache-dir jedi==0.15.2 && \
+    # conda install -c conda-forge jedi xeus-python && \
+    pip install --no-cache-dir jedi==0.15.2 && \
+    # required by rodeo ide (8MB)
+    # apt-get install -y libgconf2-4 && \
+    # required for pvporcupine (800kb)
+    # apt-get install -y portaudio19-dev && \
+    # Audio drivers for magenta? (3MB)
+    # apt-get install -y libasound2-dev libjack-dev && \
+    # libproj-dev required for cartopy (15MB)
+    # apt-get install -y libproj-dev && \
+    # mysql server: 150MB 
+    # apt-get install -y mysql-server && \
+   # If minimal or light flavor -> exit here
+    if [ "$WORKSPACE_FLAVOR" = "minimal" ] || [ "$WORKSPACE_FLAVOR" = "light" ]; then \
+        exit 0 ; \
+    fi && \
+    # New Python Libraries:
+    pip install --no-cache-dir \
+                # pyaudio \
+                lazycluster && \
+    # Cleanup
+    clean-layer.sh
+
+### END INCUBATION ZONE ###
+
 ### JUPYTER ###
 
 COPY \
@@ -702,7 +738,7 @@ RUN \
     # Required for jupytext and matplotlib plugins
     jupyter lab build && \
     # jupyterlab installed in requirements section
-    jupyter labextension install @jupyter-widgets/jupyterlab-manager && \
+    jupyter labextension install @jupyter-widgets/jupyterlab-manager --no-build && \
     # If minimal flavor - do not install jupyterlab extensions
     if [ "$WORKSPACE_FLAVOR" = "minimal" ]; then \
         # Cleanup
@@ -712,14 +748,14 @@ RUN \
         clean-layer.sh && \
         exit 0 ; \
     fi && \
-    jupyter labextension install @jupyterlab/toc && \
-    jupyter labextension install jupyterlab_tensorboard && \
+    jupyter labextension install @jupyterlab/toc --no-build && \
+    jupyter labextension install jupyterlab_tensorboard --no-build && \
     # install jupyterlab git
-    jupyter labextension install @jupyterlab/git && \
+    jupyter labextension install @jupyterlab/git --no-build && \
     pip install jupyterlab-git && \ 
     jupyter serverextension enable --py jupyterlab_git && \
     # For Matplotlib: https://github.com/matplotlib/jupyter-matplotlib
-    jupyter labextension install jupyter-matplotlib && \
+    jupyter labextension install jupyter-matplotlib --no-build && \
     # Do not install any other jupyterlab extensions
     if [ "$WORKSPACE_FLAVOR" = "light" ]; then \
         # Cleanup
@@ -731,16 +767,19 @@ RUN \
     fi && \
     # Install jupyterlab language server support
     pip install --pre jupyter-lsp && \
-    jupyter labextension install @krassowski/jupyterlab-lsp && \
+    jupyter labextension install @krassowski/jupyterlab-lsp --no-build && \
     # For Plotly
-    jupyter labextension install @jupyterlab/plotly-extension && \
-    jupyter labextension install jupyterlab-chart-editor && \
+    jupyter labextension install jupyterlab-plotly --no-build && \
+    jupyter labextension install jupyterlab-chart-editor --no-build && \
     # For holoview
-    jupyter labextension install @pyviz/jupyterlab_pyviz && \
+    jupyter labextension install @pyviz/jupyterlab_pyviz --no-build && \
     # Install jupyterlab variable inspector - https://github.com/lckr/jupyterlab-variableInspector
-    jupyter labextension install @lckr/jupyterlab_variableinspector && \
+    jupyter labextension install @lckr/jupyterlab_variableinspector --no-build && \
+    # Install Debugger in Jupyter Lab
+    pip install --no-cache-dir xeus-python && \
+    jupyter labextension install @jupyterlab/debugger && \
     # Install jupyterlab code formattor - https://github.com/ryantam626/jupyterlab_code_formatter
-    jupyter labextension install @ryantam626/jupyterlab_code_formatter && \
+    jupyter labextension install @ryantam626/jupyterlab_code_formatter --no-build && \
     pip install jupyterlab_code_formatter && \
     jupyter serverextension enable --py jupyterlab_code_formatter && \
     jupyter lab build && \
@@ -790,15 +829,16 @@ RUN \
     cd $RESOURCES_PATH && \
     mkdir -p $HOME/.vscode/extensions/ && \
     # Install python extension - (newer versions are 30MB bigger)
-    VS_PYTHON_VERSION="2020.1.58038" && \
-    wget --quiet --no-check-certificate https://github.com/microsoft/vscode-python/releases/download/$VS_PYTHON_VERSION/ms-python-release.vsix && \
+    VS_PYTHON_VERSION="2020.7.96456" && \
+    wget --no-verbose https://github.com/microsoft/vscode-python/releases/download/$VS_PYTHON_VERSION/ms-python-release.vsix && \
     bsdtar -xf ms-python-release.vsix extension && \
     rm ms-python-release.vsix && \
     mv extension $HOME/.vscode/extensions/ms-python.python-$VS_PYTHON_VERSION && \
     # Install vscode-java: https://github.com/redhat-developer/vscode-java/releases
     # higher versions do not support vs code 1.39
-    VS_JAVA_VERSION="0.53.1" && \
-    wget --quiet --no-check-certificate https://github.com/redhat-developer/vscode-java/releases/download/v$VS_JAVA_VERSION/redhat.java-$VS_JAVA_VERSION.vsix && \
+    VS_JAVA_VERSION="0.65.0" && \
+    # wget --quiet --no-check-certificate https://github.com/redhat-developer/vscode-java/releases/download/v$VS_JAVA_VERSION/redhat.java-$VS_JAVA_VERSION.vsix && \
+    wget --no-verbose -O redhat.java-$VS_JAVA_VERSION.vsix https://marketplace.visualstudio.com/_apis/public/gallery/publishers/redhat/vsextensions/java/$VS_JAVA_VERSION/vspackage && \
     bsdtar -xf redhat.java-$VS_JAVA_VERSION.vsix extension && \
     rm redhat.java-$VS_JAVA_VERSION.vsix && \
     mv extension $HOME/.vscode/extensions/redhat.java-$VS_JAVA_VERSION && \
@@ -807,27 +847,27 @@ RUN \
         exit 0 ; \
     fi && \
     # Install git lens: https://github.com/eamodio/vscode-gitlens
-    VS_GITLENS_VERSION="10.2.0" && \
-    wget --quiet --no-check-certificate https://github.com/eamodio/vscode-gitlens/releases/download/v$VS_GITLENS_VERSION/gitlens-$VS_GITLENS_VERSION.vsix && \
+    VS_GITLENS_VERSION="10.2.2" && \
+    wget --no-verbose https://github.com/eamodio/vscode-gitlens/releases/download/v$VS_GITLENS_VERSION/gitlens-$VS_GITLENS_VERSION.vsix && \
     bsdtar -xf gitlens-$VS_GITLENS_VERSION.vsix extension && \
     rm gitlens-$VS_GITLENS_VERSION.vsix && \
     mv extension $HOME/.vscode/extensions/eamodio.gitlens-$VS_GITLENS_VERSION && \
     # Install code runner: https://github.com/formulahendry/vscode-code-runner/releases/latest
-    VS_CODE_RUNNER_VERSION="0.9.15" && \
-    wget --quiet --no-check-certificate https://github.com/formulahendry/vscode-code-runner/releases/download/$VS_CODE_RUNNER_VERSION/code-runner-$VS_CODE_RUNNER_VERSION.vsix && \
+    VS_CODE_RUNNER_VERSION="0.9.17" && \
+    wget --no-verbose https://github.com/formulahendry/vscode-code-runner/releases/download/$VS_CODE_RUNNER_VERSION/code-runner-$VS_CODE_RUNNER_VERSION.vsix && \
     bsdtar -xf code-runner-$VS_CODE_RUNNER_VERSION.vsix extension && \
     rm code-runner-$VS_CODE_RUNNER_VERSION.vsix && \
     mv extension $HOME/.vscode/extensions/code-runner-$VS_CODE_RUNNER_VERSION && \
     # Install ESLint extension: https://marketplace.visualstudio.com/items?itemName=dbaeumer.vscode-eslint
     # Older versions do not support vscode 1.39 - https://github.com/microsoft/vscode-eslint/
-    VS_ESLINT_VERSION="1.9.1" && \
-    wget --quiet --no-check-certificate https://marketplace.visualstudio.com/_apis/public/gallery/publishers/dbaeumer/vsextensions/vscode-eslint/$VS_ESLINT_VERSION/vspackage -O dbaeumer.vscode-eslint.vsix && \
+    VS_ESLINT_VERSION="2.1.8" && \
+    wget --no-verbose https://marketplace.visualstudio.com/_apis/public/gallery/publishers/dbaeumer/vsextensions/vscode-eslint/$VS_ESLINT_VERSION/vspackage -O dbaeumer.vscode-eslint.vsix && \
     bsdtar -xf dbaeumer.vscode-eslint.vsix extension && \
     rm dbaeumer.vscode-eslint.vsix && \
     mv extension $HOME/.vscode/extensions/dbaeumer.vscode-eslint-$VS_ESLINT_VERSION.vsix && \
     # Install Markdown lint extension: https://marketplace.visualstudio.com/items?itemName=DavidAnson.vscode-markdownlint
-    VS_MARKDOWN_LINT_VERSION="0.33.0" && \
-    wget --quiet --no-check-certificate https://marketplace.visualstudio.com/_apis/public/gallery/publishers/DavidAnson/vsextensions/vscode-markdownlint/$VS_MARKDOWN_LINT_VERSION/vspackage -O davidanson.vscode-markdownlint.vsix && \
+    VS_MARKDOWN_LINT_VERSION="0.36.1" && \
+    wget --no-verbose https://marketplace.visualstudio.com/_apis/public/gallery/publishers/DavidAnson/vsextensions/vscode-markdownlint/$VS_MARKDOWN_LINT_VERSION/vspackage -O davidanson.vscode-markdownlint.vsix && \
     bsdtar -xf davidanson.vscode-markdownlint.vsix extension && \
     rm davidanson.vscode-markdownlint.vsix && \
     mv extension $HOME/.vscode/extensions/davidanson.vscode-markdownlint-$VS_MARKDOWN_LINT_VERSION.vsix && \
@@ -838,34 +878,6 @@ RUN \
 
 ### END VSCODE ###
 
-### INCUBATION ZONE ### 
-
-RUN \
-    apt-get update && \
-    # Newer jedi makes trouble with jupyterlab-lsp
-    pip install --no-cache-dir jedi==0.15.2 && \
-    # required by rodeo ide (8MB)
-    # apt-get install -y libgconf2-4 && \
-    # required for pvporcupine (800kb)
-    # apt-get install -y portaudio19-dev && \
-    # Audio drivers for magenta? (3MB)
-    # apt-get install -y libasound2-dev libjack-dev && \
-    # libproj-dev required for cartopy (15MB)
-    # apt-get install -y libproj-dev && \
-    # mysql server: 150MB 
-    # apt-get install -y mysql-server && \
-   # If minimal or light flavor -> exit here
-    if [ "$WORKSPACE_FLAVOR" = "minimal" ] || [ "$WORKSPACE_FLAVOR" = "light" ]; then \
-        exit 0 ; \
-    fi && \
-    # New Python Libraries:
-    pip install --no-cache-dir \
-                # pyaudio \
-                lazycluster && \
-    # Cleanup
-    clean-layer.sh
-
-### END INCUBATION ZONE ###
 
 ### CONFIGURATION ###
 
