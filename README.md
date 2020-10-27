@@ -69,7 +69,8 @@ To deploy a single instance for productive usage, we recommend to apply at least
 ```bash
 docker run -d \
     -p 8080:8080 \
-    --name "ml-workspace" -v "${PWD}:/workspace" \
+    --name "ml-workspace" \
+    -v "${PWD}:/workspace" \
     --env AUTHENTICATE_VIA_JUPYTER="mytoken" \
     --shm-size 512m \
     --restart always \
@@ -128,7 +129,7 @@ The workspace provides a variety of configuration options that can be used by se
     </tr>
     <tr>
         <td>INCLUDE_TUTORIALS</td>
-        <td>If <code>true</code>, a selection of tutorial and introduction notebooks are added to the <code>/workspace</code> folder at container startup, but only in if the folder is empty.</td>
+        <td>If <code>true</code>, a selection of tutorial and introduction notebooks are added to the <code>/workspace</code> folder at container startup, but only if the folder is empty.</td>
         <td>true</td>
     </tr>
     <tr>
@@ -253,7 +254,6 @@ In addition to the main workspace image (`mltooling/ml-workspace`), we provide o
 <a href="https://hub.docker.com/r/mltooling/ml-workspace-minimal" title="Docker Image Version"><img src="https://images.microbadger.com/badges/version/mltooling/ml-workspace-minimal.svg"></a>
 <a href="https://hub.docker.com/r/mltooling/ml-workspace-minimal" title="Docker Image Metadata"><img src="https://images.microbadger.com/badges/image/mltooling/ml-workspace-minimal.svg"></a>
 <a href="https://hub.docker.com/r/mltooling/ml-workspace-minimal" title="Docker Pulls"><img src="https://img.shields.io/docker/pulls/mltooling/ml-workspace-minimal.svg"></a>
-<a href="https://hub.docker.com/r/mltooling/ml-workspace-minimal" title="Docker Stars"><img src="https://img.shields.io/docker/stars/mltooling/ml-workspace-minimal"></a>
 </p>
 
 <details>
@@ -272,7 +272,6 @@ docker run -p 8080:8080 mltooling/ml-workspace-minimal:latest
 <a href="https://hub.docker.com/r/mltooling/ml-workspace-r" title="Docker Image Version"><img src="https://images.microbadger.com/badges/version/mltooling/ml-workspace-r.svg"></a>
 <a href="https://hub.docker.com/r/mltooling/ml-workspace-r" title="Docker Image Metadata"><img src="https://images.microbadger.com/badges/image/mltooling/ml-workspace-r.svg"></a>
 <a href="https://hub.docker.com/r/mltooling/ml-workspace-r" title="Docker Pulls"><img src="https://img.shields.io/docker/pulls/mltooling/ml-workspace-r.svg"></a>
-<a href="https://hub.docker.com/r/mltooling/ml-workspace-r" title="Docker Stars"><img src="https://img.shields.io/docker/stars/mltooling/ml-workspace-r"></a>
 </p>
 
 <details>
@@ -291,7 +290,6 @@ docker run -p 8080:8080 mltooling/ml-workspace-r:latest
 <a href="https://hub.docker.com/r/mltooling/ml-workspace-spark" title="Docker Image Version"><img src="https://images.microbadger.com/badges/version/mltooling/ml-workspace-spark.svg"></a>
 <a href="https://hub.docker.com/r/mltooling/ml-workspace-spark" title="Docker Image Metadata"><img src="https://images.microbadger.com/badges/image/mltooling/ml-workspace-spark.svg"></a>
 <a href="https://hub.docker.com/r/mltooling/ml-workspace-spark" title="Docker Pulls"><img src="https://img.shields.io/docker/pulls/mltooling/ml-workspace-spark.svg"></a>
-<a href="https://hub.docker.com/r/mltooling/ml-workspace-spark" title="Docker Stars"><img src="https://img.shields.io/docker/stars/mltooling/ml-workspace-spark"></a>
 </p>
 
 <details>
@@ -311,7 +309,6 @@ docker run -p 8080:8080 mltooling/ml-workspace-spark:latest
 <a href="https://hub.docker.com/r/mltooling/ml-workspace-gpu" title="Docker Image Version"><img src="https://images.microbadger.com/badges/version/mltooling/ml-workspace-gpu.svg"></a>
 <a href="https://hub.docker.com/r/mltooling/ml-workspace-gpu" title="Docker Image Metadata"><img src="https://images.microbadger.com/badges/image/mltooling/ml-workspace-gpu.svg"></a>
 <a href="https://hub.docker.com/r/mltooling/ml-workspace-gpu" title="Docker Pulls"><img src="https://img.shields.io/docker/pulls/mltooling/ml-workspace-gpu.svg"></a>
-<a href="https://hub.docker.com/r/mltooling/ml-workspace-gpu" title="Docker Stars"><img src="https://img.shields.io/docker/stars/mltooling/ml-workspace-gpu"></a>
 </p>
 
 <details>
@@ -639,7 +636,7 @@ Once the remote directory is mounted, you can interact with the remote file syst
 
 ### Remote Development
 
-The workspace can be integrated and used as a remote runtime (also known as remote kernel/machine/interpreter) for a variety of popular development tools and IDEs, such as Jupyter, VS Code, PyCharm, Colab, or Atom Hydrogen. Thereby, you can connect your favorite development tool running on your local machine to a remote machine for code execution. This enables a **local-quality development experience with remote-hosted compute resources**.
+The workspace can be integrated and used as a remote runtime (also known as remote kernel/machine/interpreter) for a variety of popular development tools and IDEs, such as Jupyter, VS Code, PyCharm, Colab, or Atom Hydrogen. Thereby, you can connect your favorite development tool running on your local machine to a remote machine for code execution. This enables a local-quality development experience with remote-hosted compute resources.
 
 These integrations usually require a passwordless SSH connection from the local machine to the workspace. To set up an SSH connection, please follow the steps explained in the [SSH Access](#ssh-access) section.
 
@@ -851,7 +848,7 @@ Finally, use [docker build](https://docs.docker.com/engine/reference/commandline
 </details>
 
 <details>
-<summary><b>How to update a workspace container?</b> (click to expand...)</summary>
+<summary><b>How to update a running workspace container?</b> (click to expand...)</summary>
 
 To update a running workspace instance to a more recent version, the running Docker container needs to be replaced with a new container based on the updated workspace image.
 
@@ -861,10 +858,20 @@ All data within the workspace that is not persisted to a mounted volume will be 
 
 <summary>Update Example (click to expand...)</summary>
 
-If the workspace is deployed via Docker (Kubernetes will have a different update process), you need to remove the existing container (via `docker rm`) and start a new one (via `docker run`) with the newer workspace image. Make sure to use the same configuration, volume, name, and port. For example, a workspace (image version `0.8.3`) was started with this command: `docker run -d -p 8080:8080 --name "ml-workspace" -v "/path/on/host:/workspace" --env AUTHENTICATE_VIA_JUPYTER="mytoken" --restart always mltooling/ml-workspace:0.8.3`) and needs to be updated to version `0.8.4`, you need to:
+If the workspace is deployed via Docker (Kubernetes will have a different update process), you need to remove the existing container (via `docker rm`) and start a new one (via `docker run`) with the newer workspace image. Make sure to use the same configuration, volume, name, and port. For example, a workspace (image version `0.8.7`) was started with this command:
+```
+docker run -d \
+    -p 8080:8080 \
+    --name "ml-workspace" \
+    -v "/path/on/host:/workspace" \
+    --env AUTHENTICATE_VIA_JUPYTER="mytoken" \
+    --restart always \
+    mltooling/ml-workspace:0.8.7
+```
+and needs to be updated to version `0.9.1`, you need to:
 
 1. Stop and remove the running workspace container: `docker stop "ml-workspace" && docker rm "ml-workspace"`
-2. Start a new workspace container with the newer image and same configuration: `docker run -d -p 8080:8080 --name "ml-workspace" -v "/path/on/host:/workspace" --env AUTHENTICATE_VIA_JUPYTER="mytoken" --restart always mltooling/ml-workspace:latest`
+2. Start a new workspace container with the newer image and same configuration: `docker run -d -p 8080:8080 --name "ml-workspace" -v "/path/on/host:/workspace" --env AUTHENTICATE_VIA_JUPYTER="mytoken" --restart always mltooling/ml-workspace:0.9.1`
 
 </details>
 
@@ -924,6 +931,62 @@ Certain desktop tools (e.g., recent versions of [Firefox](https://github.com/jle
 ```bash
 docker run --shm-size=2G mltooling/ml-workspace:latest
 ```
+
+</details>
+
+<details>
+
+<summary><b>Multiprocessing code is unexpectedly slow </b> (click to expand...)</summary>
+
+In general, the performance of running code within Docker is [nearly identical](https://stackoverflow.com/questions/21889053/what-is-the-runtime-performance-cost-of-a-docker-container) compared to running it directly on the machine. However, in case you have limited the container's CPU quota (as explained in [this section](#limit-memory--cpu)), the container can still see the full count of CPU cores available on the machine and there is no technical way to prevent this. Many libraries and tools will use the full CPU count (e.g., via `os.cpu_count()`) to set the number of threads used for multiprocessing/-threading. This might cause the program to start more threads/processes than it can efficiently handle with the available CPU quota, which can tremendously slow down the overall performance. Therefore, it is important to set the available CPU count or the maximum number of threads explicitly to the configured CPU quota. The workspace provides capabilities to detect the number of available CPUs automatically, which are used to configure a variety of common libraries via environment variables such as `OMP_NUM_THREADS` or `MKL_NUM_THREADS`. It is also possible to explicitly set the number of available CPUs at container startup via the `MAX_NUM_THREADS` environment variable (see [configuration section](https://github.com/ml-tooling/ml-workspace#configuration-options)). The same environment variable can also be used to get the number of available CPUs at runtime.
+
+Even though the automatic configuration capabilities of the workspace will fix a variety of inefficiencies, we still recommend configuring the number of available CPUs with all libraries explicitly. For example:
+
+```python
+import os
+MAX_NUM_THREADS = int(os.getenv("MAX_NUM_THREADS"))
+
+# Set in pytorch
+import torch
+torch.set_num_threads(MAX_NUM_THREADS)
+
+# Set in tensorflow
+import tensorflow as tf
+config = tf.ConfigProto(
+    device_count={"CPU": MAX_NUM_THREADS},
+    inter_op_parallelism_threads=MAX_NUM_THREADS,
+    intra_op_parallelism_threads=MAX_NUM_THREADS,
+)
+tf_session = tf.Session(config=config)
+
+# Set session for keras
+import keras.backend as K
+K.set_session(tf_session)
+
+# Set in sklearn estimator
+from sklearn.linear_model import LogisticRegression
+LogisticRegression(n_jobs=MAX_NUM_THREADS).fit(X, y)
+
+# Set for multiprocessing pool
+from multiprocessing import Pool
+
+with Pool(MAX_NUM_THREADS) as pool:
+    results = pool.map(lst)
+```
+
+</details>
+
+<details>
+
+<summary><b>Nginx terminates with SIGILL core dumped error</b> (click to expand...)</summary>
+
+If you encounter the following error within the container logs when starting the workspace, it will most likely not be possible to run the workspace on your hardware:
+
+```
+exited: nginx (terminated by SIGILL (core dumped); not expected)
+```
+
+The OpenResty/Nginx binary package used within the workspace requires to run on a CPU with `SSE4.2` support (see [this issue](https://github.com/openresty/openresty/issues/267#issuecomment-309296900)). Unfortunately, some older CPUs do not have support for `SSE4.2` and, therefore, will not be able to run the workspace container. On Linux, you can check if your CPU supports `SSE4.2` when looking into the `cat /proc/cpuinfo` flags section. If you encounter this problem, feel free to notify us by commenting on the following issue: [#30](https://github.com/ml-tooling/ml-workspace/issues/30).
 
 </details>
 

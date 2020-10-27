@@ -26,12 +26,12 @@ python-dateutil==2.8.1 # 2.8.0 required by botocore: Extensions to the standard 
 tensorboard==2.0.0 # TensorBoard lets you watch Tensors Flow
 
 ## Glances
-# psutil==5.6.7 # Cross-platform lib for process and system monitoring in Python.
-# bottle==0.12.18 # Fast and simple WSGI-framework for small web-applications.
-# netifaces==0.10.9 # Portable network interface information.
-# py-cpuinfo==5.0.0 # Get CPU info with pure Python 2 & 3
-# glances==3.1.4.1 # A cross-platform curses-based monitoring tool
-# pymdstat==0.4.2 # Python library to parse Linux /proc/mdstat
+psutil==5.6.7 # Cross-platform lib for process and system monitoring in Python.
+bottle==0.12.18 # Fast and simple WSGI-framework for small web-applications.
+netifaces==0.10.9 # Portable network interface information.
+py-cpuinfo==5.0.0 # Get CPU info with pure Python 2 & 3
+glances==3.1.4.1 # A cross-platform curses-based monitoring tool
+pymdstat==0.4.2 # Python library to parse Linux /proc/mdstat
 
 ## Jupyter
 jupytext==1.5.2 # Jupyter notebooks as Markdown documents, Julia, Python or R scripts

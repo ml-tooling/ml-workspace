@@ -11,6 +11,11 @@
 
 set -eu
 
+# Set default values for vnc settings if not provided
+VNC_PW=${VNC_PW:-"vncpassword"}
+VNC_RESOLUTION=${VNC_RESOLUTION:-"1600x900"}
+VNC_COL_DEPTH=${VNC_COL_DEPTH:-"24"}
+
 mkdir -p $HOME/.vnc
 touch $HOME/.vnc/passwd
 
