@@ -231,7 +231,7 @@ jupyter-console==6.1.0
 jupyter-kernel-gateway==2.4.0
 jupyter-server-proxy==1.2.0
 nbdev==0.2.9
-nbinteract==0.2.5
+#nbinteract==0.2.5
 nbval==0.9.4
 papermill==1.2.1
 pivottablejs==0.9.0
