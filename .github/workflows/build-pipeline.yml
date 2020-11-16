@@ -1,0 +1,38 @@
+name: build-pipeline
+
+on:
+  workflow_dispatch:
+    inputs:
+      build_args:
+        description: "Arguments passed to build script."
+        required: false
+      working_directory:
+        description: "Working directory from where the build command is run."
+        required: false
+
+env:
+  BUILD_ARGS: ${{ secrets.BUILD_ARGS }}
+  WORKING_DIRECTORY: ${{ secrets.WORKING_DIRECTORY }}
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: set-input-build-args
+        if: ${{ github.event.inputs != null  &&  github.event.inputs.build_args != null}}
+        run: echo "::set-env name=BUILD_ARGS::${{ github.event.inputs.build_args }}"
+        # new syntax: run: echo "BUILD_ARGS=${{ github.event.inputs.build_args }}" >> "$GITHUB_ENV"
+      - name: set-input-working-directory
+        if: ${{ github.event.inputs != null  &&  github.event.inputs.working_directory != null}}
+        run: echo "::set-env name=WORKING_DIRECTORY::${{ github.event.inputs.working_directory }}"
+        # new syntax: run: echo "WORKING_DIRECTORY=${{ github.event.inputs.working_directory }}" >> "$GITHUB_ENV"
+      - uses: actions/checkout@v2
+      - name: set-host-ip
+        run: echo "::set-env name=_HOST_IP::$(hostname -I | cut -d ' ' -f 1)"
+      - name: run-build-scripts
+        uses: ./.github/actions/build-environment
+        with:
+          build_args: ${{ env.BUILD_ARGS }}
+          working_directory: ${{ env.WORKING_DIRECTORY }}
+
+        #  GITHUB_TOKEN: ${{ secret.GITHUB_TOKEN }}
