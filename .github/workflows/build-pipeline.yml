@@ -13,6 +13,7 @@ on:
 env:
   BUILD_ARGS: ${{ secrets.BUILD_ARGS }}
   WORKING_DIRECTORY: ${{ secrets.WORKING_DIRECTORY }}
+  ACTIONS_ALLOW_UNSECURE_COMMANDS: true # TODO: only needed until act supports the new way
 
 jobs:
   build:
