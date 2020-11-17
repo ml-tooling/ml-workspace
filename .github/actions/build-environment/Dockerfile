@@ -78,13 +78,13 @@ RUN pip install pytest
 COPY entrypoint.sh /entrypoint.sh
 
 RUN chmod +x /entrypoint.sh
-RUN mkdir -p /github/home/.ssh/ && \
+RUN mkdir -p /github/home/.ssh/ \
     # create empty config file if not exists
-    touch /github/home/.ssh/config  && \
-    chown -R root:root /github/home/.ssh && \
-    chmod 700 /github/home/.ssh && \
+    && touch /github/home/.ssh/config \
+    && chown -R root:root /github/home/.ssh \
+    && chmod 700 /github/home/.ssh \
     # create a symlink because ssh looks in the /root/.ssh folder (home of root user) and not in the
     # actual $HOME directory
-    ln -s /github/home/.ssh /root/.ssh
+    && ln -s /github/home/.ssh /root/.ssh
 
 ENTRYPOINT ["/tini", "-g", "--", "/entrypoint.sh"]
