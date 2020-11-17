@@ -19,7 +19,8 @@ ENV LC_ALL="en_US.UTF-8" \
     LANG="en_US.UTF-8" \
     LANGUAGE="en_US:en" \
     TZ="Europe/Berlin" \
-    DEBIAN_FRONTEND="noninteractive"
+    DEBIAN_FRONTEND="noninteractive" \
+    HOME="/github/home"
 
 # Install basics
 # hadolint ignore=DL3005
@@ -36,6 +37,7 @@ RUN apt-get update --fix-missing \
         git \
         jq \
         software-properties-common \
+        openssh-client \
     # Clean up
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
@@ -71,9 +73,16 @@ RUN apt-get update \
 # Install Universal-Build
 # hadolint ignore=DL3013
 RUN pip install --upgrade git+https://github.com/ml-tooling/universal-build.git
+RUN pip install docker
+RUN pip install pytest
 
 COPY entrypoint.sh /entrypoint.sh
 
 RUN chmod +x /entrypoint.sh
+RUN mkdir -p $HOME/.ssh/ && \
+    # create empty config file if not exists
+    touch $HOME/.ssh/config  && \
+    chown -R root:root $HOME/.ssh && \
+    chmod 700 $HOME/.ssh
 
 ENTRYPOINT ["/tini", "-g", "--", "/entrypoint.sh"]

@@ -1,0 +1,20 @@
+name: check-commit-message-style
+
+on:
+  pull_request:
+    types:
+      - opened
+      - edited
+      - reopened
+      - synchronize
+  push:
+
+jobs:
+  check-commit-message-style:
+    runs-on: ubuntu-latest
+    steps:
+      - name: check-commit-message-style
+        uses: mristin/opinionated-commit-message@v2.2.0
+        with:
+          allow-one-liners: "true"
+          additional-verbs: "cleanup"

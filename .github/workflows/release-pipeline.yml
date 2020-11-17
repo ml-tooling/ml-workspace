@@ -1,0 +1,60 @@
+name: release-pipeline
+
+on:
+  workflow_dispatch:
+  push:
+    tags:
+      - "v[0-9]+.[0-9]+.[0-9]+"
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Fetch inofficial GitHub Action get-latest-version
+        run: wget https://github.com/ml-tooling/universal-build/releases/download/v0.1.0/github-action_get-latest-version.tar.gz -O tmp/github-action_get-latest-version.tar.gz && tar -xzvf tmp/github-action_get-latest-version.tar.gz -C ./.github/actions/
+      - name: get-latest-version
+        id: get-latest-version
+        uses: ./.github/actions/get-latest-version
+        with:
+          current_commit_only: true
+      - name: run-component-builds
+        uses: ./.github/actions/build-environment
+        with:
+          build_args: --make --force --version=${{ steps.get-latest-version.outputs.latest_version }}
+      - name: run-linting-and-style-checks
+        uses: ./.github/actions/build-environment
+        with:
+          build_args: --check --force --version=${{ steps.get-latest-version.outputs.latest_version }}
+      - name: run-component-tests
+        uses: ./.github/actions/build-environment
+        with:
+          build_args: --test --force --version=${{ steps.get-latest-version.outputs.latest_version }}
+      - name: release-components
+        uses: ./.github/actions/build-environment
+        with:
+          build_args: --release --force --version=${{ steps.get-latest-version.outputs.latest_version }}
+          pypi_token: ${{ secrets.PYPI_TOKEN }}
+          pypi_repository: ${{ secrets.PYPI_REPOSITORY }}
+          container_registry_url: ${{ secrets.CONTAINER_REGISTRY_URL }}
+          container_registry_username: ${{ secrets.CONTAINER_REGISTRY_USERNAME }}
+          container_registry_password: ${{ secrets.CONTAINER_REGISTRY_PASSWORD }}
+  create-release-draft:
+    needs: release
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Fetch inofficial GitHub Action get-latest-version
+        run: wget https://github.com/ml-tooling/universal-build/releases/download/v0.1.0/github-action_get-latest-version.tar.gz -O tmp/github-action_get-latest-version.tar.gz && tar -xzvf tmp/github-action_get-latest-version.tar.gz -C ./.github/actions/
+      - name: get-latest-version
+        id: get-latest-version
+        uses: ./.github/actions/get-latest-version
+        with:
+          current_commit_only: false
+      - name: create-release-draft
+        uses: release-drafter/release-drafter@v5
+        with:
+          version: ${{ steps.get-latest-version.outputs.latest_version }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      # optional: upload release assets via actions/upload-release-asset@v1

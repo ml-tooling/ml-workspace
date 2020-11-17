@@ -1,4 +1,4 @@
-name: "build-environment"
+name: "build-environment-workspace"
 description: "Environment to run build, test, and release steps."
 author: "ML Tooling <team@mltooling.org>"
 inputs:
