@@ -24,6 +24,7 @@ container = client.containers.run(
 
 container.reload()
 ip_address = container.attrs['NetworkSettings']['Networks']['bridge']['IPAddress']
+os.environ["WORKSPACE_NAME"] = workspace_name
 os.environ["WORKSPACE_IP"] = ip_address
 workspace_port = 8080
 
