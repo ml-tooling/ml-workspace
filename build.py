@@ -1,6 +1,8 @@
+import os
 import subprocess
 import argparse
 import datetime
+import pytest
 
 from universal_build import build_utils
 
@@ -98,6 +100,12 @@ if args[build_utils.FLAG_MAKE]:
     )
     if completed_process.returncode > 0:
         build_utils.exit_process(1)
+
+if args[build_utils.FLAG_TEST]:
+    # test_exit_code = int(
+    #     pytest.main(["-x", os.path.join("tests")])
+    # )
+    completed_process = build_utils.run("python ./tests/run.py", exit_on_error=True)
 
 if args[build_utils.FLAG_RELEASE]:
     build_utils.release_docker_image(
