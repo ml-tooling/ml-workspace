@@ -1,8 +1,6 @@
-import os
-import subprocess
 import argparse
 import datetime
-import pytest
+import subprocess
 
 from universal_build import build_utils
 
