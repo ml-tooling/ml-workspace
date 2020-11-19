@@ -94,7 +94,7 @@ if args[build_utils.FLAG_MAKE]:
     )
 
     completed_process = build_utils.build_docker_image(
-        COMPONENT_NAME, version=args[build_utils.FLAG_VERSION], build_args=build_args
+        service_name, version=args[build_utils.FLAG_VERSION], build_args=build_args
     )
     if completed_process.returncode > 0:
         build_utils.exit_process(1)
@@ -107,7 +107,7 @@ if args[build_utils.FLAG_TEST]:
 
 if args[build_utils.FLAG_RELEASE]:
     build_utils.release_docker_image(
-        COMPONENT_NAME,
+        service_name,
         args[build_utils.FLAG_VERSION],
         args[build_utils.FLAG_DOCKER_IMAGE_PREFIX],
     )
