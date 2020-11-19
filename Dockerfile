@@ -181,7 +181,7 @@ RUN \
     clean-layer.sh
 
 # Add tini
-RUN wget --no-verbose https://github.com/krallin/tini/releases/download/v0.18.0/tini -O /tini && \
+RUN wget --no-verbose https://github.com/krallin/tini/releases/download/v0.19.0/tini -O /tini && \
     chmod +x /tini
 
 # prepare ssh for inter-container communication for remote python kernel
@@ -209,7 +209,7 @@ RUN \
     clean-layer.sh
 
 RUN \
-    OPEN_RESTY_VERSION="1.15.8.3" && \
+    OPEN_RESTY_VERSION="1.19.3.1" && \
     mkdir $RESOURCES_PATH"/openresty" && \
     cd $RESOURCES_PATH"/openresty" && \
     apt-get update && \
@@ -246,13 +246,13 @@ COPY resources/nginx/lua-extensions /etc/nginx/nginx_plugins
 
 ENV \
     CONDA_DIR=/opt/conda \
-    PYTHON_VERSION="3.7.7" \
-    CONDA_PYTHON_DIR=/opt/conda/lib/python3.7 \
+    PYTHON_VERSION="3.8.6" \
+    CONDA_PYTHON_DIR=/opt/conda/lib/python3.8 \
     MINICONDA_VERSION=4.8.3 \
-    MINICONDA_MD5=751786b92c00b1aeae3f017b781018df \
-    CONDA_VERSION=4.8.3
+    MINICONDA_MD5=d63adf39f2c220950a063e0529d4ff74 \
+    CONDA_VERSION=4.9.1
 
-RUN wget --no-verbose https://repo.anaconda.com/miniconda/Miniconda3-py37_${CONDA_VERSION}-Linux-x86_64.sh -O ~/miniconda.sh && \
+RUN wget --no-verbose https://repo.anaconda.com/miniconda/Miniconda3-py38_${CONDA_VERSION}-Linux-x86_64.sh -O ~/miniconda.sh && \
     echo "${MINICONDA_MD5} *miniconda.sh" | md5sum -c - && \
     /bin/bash ~/miniconda.sh -b -p $CONDA_DIR && \
     export PATH=$CONDA_DIR/bin:$PATH && \
@@ -291,8 +291,8 @@ ENV LD_LIBRARY_PATH=$CONDA_DIR/lib
 # Install node.js
 RUN \
     apt-get update && \
-    # https://nodejs.org/en/about/releases/ use even numbered releases
-    curl -sL https://deb.nodesource.com/setup_12.x | sudo -E bash - && \
+    # https://nodejs.org/en/about/releases/ use even numbered releases, i.e. LTS versions
+    curl -sL https://deb.nodesource.com/setup_14.x | sudo -E bash - && \
     apt-get install -y nodejs && \
     # As conda is first in path, the commands 'node' and 'npm' reference to the version of conda.
     # Replace those versions with the newly installed versions of node
