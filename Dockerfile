@@ -63,7 +63,7 @@ RUN \
     apt-get upgrade -y && \
     apt-get update && \
     apt-get install -y --no-install-recommends \
-        # This is necessary for apt to access HTTPS sources: 
+        # This is necessary for apt to access HTTPS sources:
         apt-transport-https \
         gnupg-agent \
         gpg-agent \
@@ -286,7 +286,7 @@ RUN wget --no-verbose https://repo.anaconda.com/miniconda/Miniconda3-py37_${COND
 ENV PATH=$CONDA_DIR/bin:$PATH
 
 # There is nothing added yet to LD_LIBRARY_PATH, so we can overwrite
-ENV LD_LIBRARY_PATH=$CONDA_DIR/lib 
+ENV LD_LIBRARY_PATH=$CONDA_DIR/lib
 
 # Install node.js
 RUN \
@@ -294,7 +294,7 @@ RUN \
     # https://nodejs.org/en/about/releases/ use even numbered releases
     curl -sL https://deb.nodesource.com/setup_12.x | sudo -E bash - && \
     apt-get install -y nodejs && \
-    # As conda is first in path, the commands 'node' and 'npm' reference to the version of conda. 
+    # As conda is first in path, the commands 'node' and 'npm' reference to the version of conda.
     # Replace those versions with the newly installed versions of node
     rm -f /opt/conda/bin/node && ln -s /usr/bin/node /opt/conda/bin/node && \
     rm -f /opt/conda/bin/npm && ln -s /usr/bin/npm /opt/conda/bin/npm && \
@@ -310,7 +310,7 @@ RUN \
     echo "deb https://dl.yarnpkg.com/debian/ stable main" | sudo tee /etc/apt/sources.list.d/yarn.list && \
     apt-get update && \
     apt-get install -y --no-install-recommends yarn && \
-    # Install typescript 
+    # Install typescript
     /usr/bin/npm install -g typescript && \
     # Install webpack - 32 MB
     /usr/bin/npm install -g webpack && \
@@ -328,7 +328,7 @@ RUN \
     # Cleanup
     clean-layer.sh
 
-ENV JAVA_HOME="/usr/lib/jvm/java-11-openjdk-amd64" 
+ENV JAVA_HOME="/usr/lib/jvm/java-11-openjdk-amd64"
 # TODO add MAVEN_HOME?
 
 ### END RUNTIMES ###
@@ -409,7 +409,7 @@ RUN \
     apt-get install -y --no-install-recommends gdebi && \
     # Search for files
     apt-get install -y --no-install-recommends catfish && \
-    # TODO: Unable to locate package:  apt-get install -y --no-install-recommends gnome-search-tool && 
+    # TODO: Unable to locate package:  apt-get install -y --no-install-recommends gnome-search-tool &&
     apt-get install -y --no-install-recommends font-manager && \
     # vs support for thunar
     apt-get install -y thunar-vcs-plugin && \
@@ -444,13 +444,13 @@ RUN \
     ln -s /usr/bin/chromium-browser /usr/bin/google-chrome && \
     # Cleanup
     # Large package: gnome-user-guide 50MB app-install-data 50MB
-    apt-get remove -y app-install-data gnome-user-guide && \ 
+    apt-get remove -y app-install-data gnome-user-guide && \
     clean-layer.sh
 
 # Add the defaults from /lib/x86_64-linux-gnu, otherwise lots of no version errors
 # cannot be added above otherwise there are errors in the installation of the gui tools
 # Call order: https://unix.stackexchange.com/questions/367600/what-is-the-order-that-linuxs-dynamic-linker-searches-paths-in
-ENV LD_LIBRARY_PATH=/lib/x86_64-linux-gnu:/usr/lib/x86_64-linux-gnu:$CONDA_DIR/lib 
+ENV LD_LIBRARY_PATH=/lib/x86_64-linux-gnu:/usr/lib/x86_64-linux-gnu:$CONDA_DIR/lib
 
 # Install Web Tools - Offered via Jupyter Tooling Plugin
 
@@ -520,8 +520,8 @@ RUN \
 COPY resources/libraries ${RESOURCES_PATH}/libraries
 
 ### Install main data science libs
-RUN \ 
-    # Link Conda - All python are linke to the conda instances 
+RUN \
+    # Link Conda - All python are linke to the conda instances
     # Linking python 3 crashes conda -> cannot install anyting - remove instead
     #ln -s -f $CONDA_DIR/bin/python /usr/bin/python3 && \
     # if removed -> cannot use add-apt-repository
@@ -531,7 +531,7 @@ RUN \
     apt-get update && \
     # upgrade pip
     pip install --upgrade pip && \
-    # If minimal flavor - install 
+    # If minimal flavor - install
     if [ "$WORKSPACE_FLAVOR" = "minimal" ]; then \
         # Install nomkl - mkl needs lots of space
         conda install -y --update-all nomkl ; \
@@ -620,7 +620,7 @@ RUN \
     apt-get install -y libtesseract-dev && \
     # Install libjpeg turbo for speedup in image processing
     conda install -y libjpeg-turbo && \
-    # Faiss - A library for efficient similarity search and clustering of dense vectors. 
+    # Faiss - A library for efficient similarity search and clustering of dense vectors.
     conda install -y -c pytorch faiss-cpu && \
     # Install full pip requirements
     pip install --no-cache-dir --upgrade -r ${RESOURCES_PATH}/libraries/requirements-full.txt && \
@@ -634,7 +634,7 @@ RUN \
 
 # Fix conda version
 RUN \
-    # Conda installs wrong node version - relink conda node to the actual node 
+    # Conda installs wrong node version - relink conda node to the actual node
     rm -f /opt/conda/bin/node && ln -s /usr/bin/node /opt/conda/bin/node && \
     rm -f /opt/conda/bin/npm && ln -s /usr/bin/npm /opt/conda/bin/npm
 
@@ -693,7 +693,7 @@ RUN \
     jupyter nbextension enable --py --sys-prefix qgrid && \
     # Activate Colab support
     jupyter serverextension enable --py jupyter_http_over_ws && \
-    # Activate Voila Rendering 
+    # Activate Voila Rendering
     # currently not working jupyter serverextension enable voila --sys-prefix && \
     # Enable ipclusters
     ipcluster nbextension enable && \
@@ -725,7 +725,7 @@ RUN \
     $lab_ext_install jupyterlab_tensorboard && \
     # install jupyterlab git
     $lab_ext_install @jupyterlab/git && \
-    pip install jupyterlab-git && \ 
+    pip install jupyterlab-git && \
     jupyter serverextension enable --py jupyterlab_git && \
     # For Matplotlib: https://github.com/matplotlib/jupyter-matplotlib
     $lab_ext_install jupyter-matplotlib && \
@@ -808,60 +808,66 @@ RUN \
     cd $RESOURCES_PATH && \
     mkdir -p $HOME/.vscode/extensions/ && \
     # Install python extension - (newer versions are 30MB bigger)
-    VS_PYTHON_VERSION="2020.7.96456" && \
-    wget --no-verbose https://github.com/microsoft/vscode-python/releases/download/$VS_PYTHON_VERSION/ms-python-release.vsix && \
-    bsdtar -xf ms-python-release.vsix extension && \
-    rm ms-python-release.vsix && \
-    mv extension $HOME/.vscode/extensions/ms-python.python-$VS_PYTHON_VERSION && \
-    sleep $SLEEP_TIMER && \
+    VS_PYTHON_VERSION="2020.7.96456"  \
+    # wget --no-verbose https://github.com/microsoft/vscode-python/releases/download/$VS_PYTHON_VERSION/ms-python-release.vsix && \
+    # bsdtar -xf ms-python-release.vsix extension && \
+    # rm ms-python-release.vsix && \
+    # mv extension $HOME/.vscode/extensions/ms-python.python-$VS_PYTHON_VERSION && \
+    && code-server --install-extension ms-python.python@$VS_PYTHON_VERSION \
+    && sleep $SLEEP_TIMER && \
     # Install vscode-java: https://github.com/redhat-developer/vscode-java/releases
     # higher versions do not support vs code 1.39
-    VS_JAVA_VERSION="0.65.0" && \
+    VS_JAVA_VERSION="0.61.0"  \
     # wget --quiet --no-check-certificate https://github.com/redhat-developer/vscode-java/releases/download/v$VS_JAVA_VERSION/redhat.java-$VS_JAVA_VERSION.vsix && \
-    wget --no-verbose -O redhat.java-$VS_JAVA_VERSION.vsix https://marketplace.visualstudio.com/_apis/public/gallery/publishers/redhat/vsextensions/java/$VS_JAVA_VERSION/vspackage && \
-    bsdtar -xf redhat.java-$VS_JAVA_VERSION.vsix extension && \
-    rm redhat.java-$VS_JAVA_VERSION.vsix && \
-    mv extension $HOME/.vscode/extensions/redhat.java-$VS_JAVA_VERSION && \
+    # wget --no-verbose -O redhat.java-$VS_JAVA_VERSION.vsix https://marketplace.visualstudio.com/_apis/public/gallery/publishers/redhat/vsextensions/java/$VS_JAVA_VERSION/vspackage && \
+    # bsdtar -xf redhat.java-$VS_JAVA_VERSION.vsix extension && \
+    # rm redhat.java-$VS_JAVA_VERSION.vsix && \
+    # mv extension $HOME/.vscode/extensions/redhat.java-$VS_JAVA_VERSION && \
+    && code-server --install-extension redhat.java@$VS_JAVA_VERSION \
     # If light flavor -> exit here
-    if [ "$WORKSPACE_FLAVOR" = "light" ]; then \
+    && if [ "$WORKSPACE_FLAVOR" = "light" ]; then \
         exit 0 ; \
     fi && \
     sleep $SLEEP_TIMER && \
     # Install git lens: https://github.com/eamodio/vscode-gitlens
-    VS_GITLENS_VERSION="10.2.2" && \
-    wget --no-verbose https://github.com/eamodio/vscode-gitlens/releases/download/v$VS_GITLENS_VERSION/gitlens-$VS_GITLENS_VERSION.vsix && \
-    bsdtar -xf gitlens-$VS_GITLENS_VERSION.vsix extension && \
-    rm gitlens-$VS_GITLENS_VERSION.vsix && \
-    mv extension $HOME/.vscode/extensions/eamodio.gitlens-$VS_GITLENS_VERSION && \
+    VS_GITLENS_VERSION="10.2.2"  \
+    # wget --no-verbose https://github.com/eamodio/vscode-gitlens/releases/download/v$VS_GITLENS_VERSION/gitlens-$VS_GITLENS_VERSION.vsix && \
+    # bsdtar -xf gitlens-$VS_GITLENS_VERSION.vsix extension && \
+    # rm gitlens-$VS_GITLENS_VERSION.vsix && \
+    # mv extension $HOME/.vscode/extensions/eamodio.gitlens-$VS_GITLENS_VERSION && \
+    && code-server --install-extension eamodio.gitlens@$VS_GITLENS_VERSION \
     # Install code runner: https://github.com/formulahendry/vscode-code-runner/releases/latest
-    VS_CODE_RUNNER_VERSION="0.9.17" && \
-    wget --no-verbose https://github.com/formulahendry/vscode-code-runner/releases/download/$VS_CODE_RUNNER_VERSION/code-runner-$VS_CODE_RUNNER_VERSION.vsix && \
-    bsdtar -xf code-runner-$VS_CODE_RUNNER_VERSION.vsix extension && \
-    rm code-runner-$VS_CODE_RUNNER_VERSION.vsix && \
-    mv extension $HOME/.vscode/extensions/code-runner-$VS_CODE_RUNNER_VERSION && \
-    sleep $SLEEP_TIMER && \
+    && VS_CODE_RUNNER_VERSION="0.9.17" \
+    # wget --no-verbose https://github.com/formulahendry/vscode-code-runner/releases/download/$VS_CODE_RUNNER_VERSION/code-runner-$VS_CODE_RUNNER_VERSION.vsix && \
+    # bsdtar -xf code-runner-$VS_CODE_RUNNER_VERSION.vsix extension && \
+    # rm code-runner-$VS_CODE_RUNNER_VERSION.vsix && \
+    # mv extension $HOME/.vscode/extensions/code-runner-$VS_CODE_RUNNER_VERSION && \
+    && code-server --install-extension formulahendry.code-runner@$VS_CODE_RUNNER_VERSION \
+    && sleep $SLEEP_TIMER && \
     # Install ESLint extension: https://marketplace.visualstudio.com/items?itemName=dbaeumer.vscode-eslint
     # Older versions do not support vscode 1.39 - https://github.com/microsoft/vscode-eslint/
-    VS_ESLINT_VERSION="2.1.13" && \
-    wget --no-verbose https://marketplace.visualstudio.com/_apis/public/gallery/publishers/dbaeumer/vsextensions/vscode-eslint/$VS_ESLINT_VERSION/vspackage -O dbaeumer.vscode-eslint.vsix && \
-    bsdtar -xf dbaeumer.vscode-eslint.vsix extension && \
-    rm dbaeumer.vscode-eslint.vsix && \
-    mv extension $HOME/.vscode/extensions/dbaeumer.vscode-eslint-$VS_ESLINT_VERSION.vsix && \
-    sleep $SLEEP_TIMER && \
+    VS_ESLINT_VERSION="2.1.10" \
+    # wget --no-verbose https://marketplace.visualstudio.com/_apis/public/gallery/publishers/dbaeumer/vsextensions/vscode-eslint/$VS_ESLINT_VERSION/vspackage -O dbaeumer.vscode-eslint.vsix && \
+    # bsdtar -xf dbaeumer.vscode-eslint.vsix extension && \
+    # rm dbaeumer.vscode-eslint.vsix && \
+    # mv extension $HOME/.vscode/extensions/dbaeumer.vscode-eslint-$VS_ESLINT_VERSION.vsix && \
+    && code-server --install-extension dbaeumer.vscode-eslint@$VS_ESLINT_VERSION \
+    && sleep $SLEEP_TIMER && \
     # Install Markdown lint extension: https://marketplace.visualstudio.com/items?itemName=DavidAnson.vscode-markdownlint
-    VS_MARKDOWN_LINT_VERSION="0.37.2" && \
-    wget --no-verbose https://marketplace.visualstudio.com/_apis/public/gallery/publishers/DavidAnson/vsextensions/vscode-markdownlint/$VS_MARKDOWN_LINT_VERSION/vspackage -O davidanson.vscode-markdownlint.vsix && \
-    bsdtar -xf davidanson.vscode-markdownlint.vsix extension && \
-    rm davidanson.vscode-markdownlint.vsix && \
-    mv extension $HOME/.vscode/extensions/davidanson.vscode-markdownlint-$VS_MARKDOWN_LINT_VERSION.vsix && \
+    VS_MARKDOWN_LINT_VERSION="0.37.2" \
+    # wget --no-verbose https://marketplace.visualstudio.com/_apis/public/gallery/publishers/DavidAnson/vsextensions/vscode-markdownlint/$VS_MARKDOWN_LINT_VERSION/vspackage -O davidanson.vscode-markdownlint.vsix && \
+    # bsdtar -xf davidanson.vscode-markdownlint.vsix extension && \
+    # rm davidanson.vscode-markdownlint.vsix && \
+    # mv extension $HOME/.vscode/extensions/davidanson.vscode-markdownlint-$VS_MARKDOWN_LINT_VERSION.vsix && \
+    && code-server --install-extension davidanson.vscode-markdownlint@$VS_MARKDOWN_LINT_VERSION \
     # Fix permissions
-    fix-permissions.sh $HOME/.vscode/extensions/ && \
+    && fix-permissions.sh $HOME/.vscode/extensions/ && \
     # Cleanup
     clean-layer.sh
 
 ### END VSCODE ###
 
-### INCUBATION ZONE ### 
+### INCUBATION ZONE ###
 
 RUN \
     apt-get update && \
@@ -876,7 +882,7 @@ RUN \
     # apt-get install -y libasound2-dev libjack-dev && \
     # libproj-dev required for cartopy (15MB)
     # apt-get install -y libproj-dev && \
-    # mysql server: 150MB 
+    # mysql server: 150MB
     # apt-get install -y mysql-server && \
    # If minimal or light flavor -> exit here
     if [ "$WORKSPACE_FLAVOR" = "minimal" ] || [ "$WORKSPACE_FLAVOR" = "light" ]; then \
@@ -1021,7 +1027,7 @@ RUN \
 
 # MKL and Hardware Optimization
 # Fix problem with MKL with duplicated libiomp5: https://github.com/dmlc/xgboost/issues/1715
-# Alternative - use openblas instead of Intel MKL: conda install -y nomkl 
+# Alternative - use openblas instead of Intel MKL: conda install -y nomkl
 # http://markus-beuckelmann.de/blog/boosting-numpy-blas.html
 # MKL:
 # https://software.intel.com/en-us/articles/tips-to-improve-performance-for-popular-deep-learning-frameworks-on-multi-core-cpus
@@ -1054,7 +1060,7 @@ ENV CONFIG_BACKUP_ENABLED="true" \
     WORKSPACE_PORT="8080" \
     # Set zsh as default shell (e.g. in jupyter)
     SHELL="/usr/bin/zsh" \
-    # Fix dark blue color for ls command (unreadable): 
+    # Fix dark blue color for ls command (unreadable):
     # https://askubuntu.com/questions/466198/how-do-i-change-the-color-for-directories-with-ls-in-the-console
     # USE default LS_COLORS - Dont set LS COLORS - overwritten in zshrc
     # LS_COLORS="" \
@@ -1062,7 +1068,7 @@ ENV CONFIG_BACKUP_ENABLED="true" \
     # this can be problematic since docker restricts CPUs by stil showing all
     MAX_NUM_THREADS="auto"
 
-### END CONFIGURATION ### 
+### END CONFIGURATION ###
 ARG ARG_BUILD_DATE="unknown"
 ARG ARG_VCS_REF="unknown"
 ARG ARG_WORKSPACE_VERSION="unknown"
@@ -1092,7 +1098,7 @@ LABEL \
     "org.opencontainers.image.vendor"="ML Tooling" \
     "org.opencontainers.image.authors"="Lukas Masuch & Benjamin Raethlein" \
     "org.opencontainers.image.revision"=$ARG_VCS_REF \
-    "org.opencontainers.image.created"=$ARG_BUILD_DATE \ 
+    "org.opencontainers.image.created"=$ARG_BUILD_DATE \
     # Label Schema Convention (deprecated): http://label-schema.org/rc1/
     "org.label-schema.name"="Machine Learning Workspace" \
     "org.label-schema.description"="All-in-one web-based development environment for machine learning." \
@@ -1115,7 +1121,7 @@ LABEL \
 # use global option with tini to kill full process groups: https://github.com/krallin/tini#process-group-killing
 ENTRYPOINT ["/tini", "-g", "--"]
 
-CMD ["python", "/resources/docker-entrypoint.py"] 
+CMD ["python", "/resources/docker-entrypoint.py"]
 
 # Port 8080 is the main access port (also includes SSH)
 # Port 5091 is the VNC port
