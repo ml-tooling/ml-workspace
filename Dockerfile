@@ -568,9 +568,9 @@ RUN \
             cmake \
             joblib \
             Pillow \
-            'ipython=7.16.*' \
-            'notebook=6.0.*' \
-            'jupyterlab=2.1.*' \
+            'ipython=7.19.*' \
+            'notebook=6.1.*' \
+            'jupyterlab=2.2.*' \
             # Selected by library evaluation
             networkx \
             click \
@@ -602,9 +602,9 @@ RUN \
     # Install numba
     conda install -y numba && \
     # Install tensorflow - cpu only -  mkl support
-    conda install -y 'tensorflow=2.0.*' && \
+    conda install -y 'tensorflow=2.3.*' && \
     # Install pytorch - cpu only
-    conda install -y -c pytorch "pytorch==1.4.*"  torchvision cpuonly && \
+    conda install -y -c pytorch "pytorch==1.7.*"  torchvision cpuonly && \
     # Install light pip requirements
     pip install --no-cache-dir --upgrade -r ${RESOURCES_PATH}/libraries/requirements-light.txt && \
     # If light light flavor - exit here
