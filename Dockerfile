@@ -820,7 +820,8 @@ RUN \
     sleep $SLEEP_TIMER && \
     # Install vscode-java: https://github.com/redhat-developer/vscode-java/releases
     # higher versions do not support vs code 1.39
-    VS_JAVA_VERSION="0.65.0" && \
+    # Todo: Check if comment is obsolete and can be updated / removed
+    VS_JAVA_VERSION="0.61.0" && \
     # wget --quiet --no-check-certificate https://github.com/redhat-developer/vscode-java/releases/download/v$VS_JAVA_VERSION/redhat.java-$VS_JAVA_VERSION.vsix && \
     wget --no-verbose -O redhat.java-$VS_JAVA_VERSION.vsix https://marketplace.visualstudio.com/_apis/public/gallery/publishers/redhat/vsextensions/java/$VS_JAVA_VERSION/vspackage && \
     bsdtar -xf redhat.java-$VS_JAVA_VERSION.vsix extension && \
@@ -846,7 +847,7 @@ RUN \
     sleep $SLEEP_TIMER && \
     # Install ESLint extension: https://marketplace.visualstudio.com/items?itemName=dbaeumer.vscode-eslint
     # Older versions do not support vscode 1.39 - https://github.com/microsoft/vscode-eslint/
-    VS_ESLINT_VERSION="2.1.8" && \
+    VS_ESLINT_VERSION="2.1.13" && \
     wget --no-verbose https://marketplace.visualstudio.com/_apis/public/gallery/publishers/dbaeumer/vsextensions/vscode-eslint/$VS_ESLINT_VERSION/vspackage -O dbaeumer.vscode-eslint.vsix && \
     bsdtar -xf dbaeumer.vscode-eslint.vsix extension && \
     rm dbaeumer.vscode-eslint.vsix && \
