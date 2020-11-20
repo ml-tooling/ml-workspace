@@ -55,8 +55,7 @@ We plan to do a full workspace image update (all libraries and tools) about ever
    - robo3t.sh: [latest release](https://github.com/Studio3T/robomongo/releases/latest)
    - metabase.sh: [latest release](https://github.com/metabase/metabase/releases/latest)
    - fasttext.sh: [latest release](https://github.com/facebookresearch/fastText/releases/latest)
-   - kubernetes-client.sh: [kube-prompt release](https://github.com/c-bata/kube-prompt/releases/latest)
-   - guacamole.sh: [latest relesase](https://guacamole.apache.org/releases/)
+   - kubernetes-utils.sh: [kube-prompt release](https://github.com/c-bata/kube-prompt/releases/latest)
 
 7. Update `minimmal` and `light` flavor python libraries:
 
