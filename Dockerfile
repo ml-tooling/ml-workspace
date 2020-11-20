@@ -387,8 +387,8 @@ RUN \
     # use older version of websockify to prevent hanging connections on offline containers?, see https://github.com/ConSol/docker-headless-vnc-container/issues/50
     # Todo: Check and remove previous comment since issue is closed and websockify seems already be updated to latest version?
     # Todo: Check if still works after removal
-    # wget -qO- https://github.com/novnc/websockify/archive/v0.9.0.tar.gz | tar xz --strip 1 -C ./novnc/utils/websockify && \
-    # chmod +x -v ./novnc/utils/*.sh && \
+    wget -qO- https://github.com/novnc/websockify/archive/v0.9.0.tar.gz | tar xz --strip 1 -C ./novnc/utils/websockify && \
+    chmod +x -v ./novnc/utils/*.sh && \
     # create user vnc directory
     mkdir -p $HOME/.vnc && \
     # Fix permissions
