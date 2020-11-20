@@ -820,7 +820,7 @@ RUN \
     # higher versions do not support vs code 1.39
     VS_JAVA_VERSION="0.61.0"  \
     && wget --quiet --no-check-certificate https://github.com/redhat-developer/vscode-java/releases/download/v$VS_JAVA_VERSION/redhat.java-$VS_JAVA_VERSION.vsix && \
-    wget --no-verbose -O redhat.java-$VS_JAVA_VERSION.vsix https://marketplace.visualstudio.com/_apis/public/gallery/publishers/redhat/vsextensions/java/$VS_JAVA_VERSION/vspackage && \
+    # wget --no-verbose -O redhat.java-$VS_JAVA_VERSION.vsix https://marketplace.visualstudio.com/_apis/public/gallery/publishers/redhat/vsextensions/java/$VS_JAVA_VERSION/vspackage && \
     bsdtar -xf redhat.java-$VS_JAVA_VERSION.vsix extension && \
     rm redhat.java-$VS_JAVA_VERSION.vsix && \
     mv extension $HOME/.vscode/extensions/redhat.java-$VS_JAVA_VERSION \
@@ -847,8 +847,9 @@ RUN \
     && sleep $SLEEP_TIMER && \
     # Install ESLint extension: https://marketplace.visualstudio.com/items?itemName=dbaeumer.vscode-eslint
     # Older versions do not support vscode 1.39 - https://github.com/microsoft/vscode-eslint/
-    VS_ESLINT_VERSION="2.1.10" \
-    && wget --no-verbose https://marketplace.visualstudio.com/_apis/public/gallery/publishers/dbaeumer/vsextensions/vscode-eslint/$VS_ESLINT_VERSION/vspackage -O dbaeumer.vscode-eslint.vsix && \
+    VS_ESLINT_VERSION="2.1.9" \
+    # && wget --no-verbose https://marketplace.visualstudio.com/_apis/public/gallery/publishers/dbaeumer/vsextensions/vscode-eslint/$VS_ESLINT_VERSION/vspackage -O dbaeumer.vscode-eslint.vsix && \
+    && wget --no-verbose https://github.com/microsoft/vscode-eslint/releases/download/$VS_ESLINT_VERSION-insider.2/vscode-eslint-$VS_ESLINT_VERSION.vsix && \
     bsdtar -xf dbaeumer.vscode-eslint.vsix extension && \
     rm dbaeumer.vscode-eslint.vsix && \
     mv extension $HOME/.vscode/extensions/dbaeumer.vscode-eslint-$VS_ESLINT_VERSION.vsix \
@@ -856,7 +857,7 @@ RUN \
     && sleep $SLEEP_TIMER && \
     # Install Markdown lint extension: https://marketplace.visualstudio.com/items?itemName=DavidAnson.vscode-markdownlint
     VS_MARKDOWN_LINT_VERSION="0.37.2" \
-    && wget --no-verbose https://marketplace.visualstudio.com/_apis/public/gallery/publishers/DavidAnson/vsextensions/vscode-markdownlint/$VS_MARKDOWN_LINT_VERSION/vspackage -O davidanson.vscode-markdownlint.vsix && \
+    && wget --retry-on-http-error=429 --waitretry 10 --tries 5 --no-verbose https://marketplace.visualstudio.com/_apis/public/gallery/publishers/DavidAnson/vsextensions/vscode-markdownlint/$VS_MARKDOWN_LINT_VERSION/vspackage -O davidanson.vscode-markdownlint.vsix && \
     bsdtar -xf davidanson.vscode-markdownlint.vsix extension && \
     rm davidanson.vscode-markdownlint.vsix && \
     mv extension $HOME/.vscode/extensions/davidanson.vscode-markdownlint-$VS_MARKDOWN_LINT_VERSION.vsix \
