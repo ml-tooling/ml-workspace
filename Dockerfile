@@ -270,7 +270,8 @@ RUN wget --no-verbose https://repo.anaconda.com/miniconda/Miniconda3-py37_${COND
     # Link Conda
     ln -s $CONDA_DIR/bin/python /usr/local/bin/python && \
     ln -s $CONDA_DIR/bin/conda /usr/bin/conda && \
-    # Update pip
+    # Update
+    $CONDA_DIR/bin/pip install -y pip && \
     $CONDA_DIR/bin/pip install --upgrade pip && \
     chmod -R a+rwx /usr/local/bin/ && \
     # Cleanup - Remove all here since conda is not in path as of now
