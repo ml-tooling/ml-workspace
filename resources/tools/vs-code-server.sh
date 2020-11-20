@@ -23,8 +23,8 @@ if [ ! -f "/usr/local/bin/code-server"  ]; then
     # Use older version, since newer has some problems with python extension
     # Todo: Check if update from 3.4.1 causes problems
     # Todo: Remove comment if no problem
-    VS_CODE_VERSION=3.7.1
-    wget -q https://github.com/cdr/code-server/releases/download/$VS_CODE_VERSION/code-server_${VS_CODE_VERSION}_amd64.deb -O ./code-server.deb
+    VS_CODE_VERSION=3.7.2
+    wget -q https://github.com/cdr/code-server/releases/download/v$VS_CODE_VERSION/code-server_${VS_CODE_VERSION}_amd64.deb -O ./code-server.deb
     apt-get update
     apt-get install -y ./code-server.deb
     rm ./code-server.deb

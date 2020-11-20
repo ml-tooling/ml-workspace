@@ -250,8 +250,7 @@ ENV \
     CONDA_PYTHON_DIR=/opt/conda/lib/python3.8 \
     MINICONDA_VERSION=4.8.3 \
     MINICONDA_MD5=d63adf39f2c220950a063e0529d4ff74 \
-    CONDA_VERSION=4.9.1
-
+    CONDA_VERSION=4.8.3
 RUN wget --no-verbose https://repo.anaconda.com/miniconda/Miniconda3-py38_${CONDA_VERSION}-Linux-x86_64.sh -O ~/miniconda.sh && \
     echo "${MINICONDA_MD5} *miniconda.sh" | md5sum -c - && \
     /bin/bash ~/miniconda.sh -b -p $CONDA_DIR && \
