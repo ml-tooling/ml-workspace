@@ -3,6 +3,7 @@ import datetime
 import subprocess
 
 from universal_build import build_utils
+from universal_build.helpers import build_docker
 
 parser = argparse.ArgumentParser(add_help=False)
 parser.add_argument(
@@ -93,7 +94,7 @@ if args[build_utils.FLAG_MAKE]:
         + build_date_build_arg
     )
 
-    completed_process = build_utils.build_docker_image(
+    completed_process = build_docker.build_docker_image(
         service_name, version=args[build_utils.FLAG_VERSION], build_args=build_args
     )
     if completed_process.returncode > 0:
@@ -106,8 +107,8 @@ if args[build_utils.FLAG_TEST]:
     completed_process = build_utils.run("python ./tests/run.py", exit_on_error=True)
 
 if args[build_utils.FLAG_RELEASE]:
-    build_utils.release_docker_image(
+    build_docker.release_docker_image(
         service_name,
         args[build_utils.FLAG_VERSION],
-        args[build_utils.FLAG_DOCKER_IMAGE_PREFIX],
+        args[build_docker.FLAG_DOCKER_IMAGE_PREFIX],
     )
