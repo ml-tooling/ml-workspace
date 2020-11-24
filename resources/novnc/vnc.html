@@ -588,6 +588,7 @@
     <!-- This is where the RFB elements will attach -->
     <!-- CUSTOM CODE: Added styling -->
     <div id="noVNC_container" style="border-radius: 0 0 0 0">
+      <!-- END CUSTOM CODE -->
       <!-- Note that Google Chrome on Android doesn't respect any of these,
              html attributes which attempt to disable text suggestions on the
              on-screen keyboard. Let's hope Chrome implements the ime-mode
@@ -605,5 +606,8 @@
       <source src="app/sounds/bell.oga" type="audio/ogg" />
       <source src="app/sounds/bell.mp3" type="audio/mpeg" />
     </audio>
+    <!-- CUSTOM CODE -->
+    <textarea id="clipboard" style="position: fixed; z-index: -1"></textarea>
+    <!-- END CUSTOM CODE -->
   </body>
 </html>
