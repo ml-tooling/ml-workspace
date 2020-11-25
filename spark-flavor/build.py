@@ -16,7 +16,7 @@ REMOTE_IMAGE_PREFIX = "mltooling/"
 FLAG_FLAVOR = "flavor"
 COMPONENT_NAME = "spark-flavor"
 
-args = build_utils.get_sanitized_arguments(argument_parser=parser)
+args = build_utils.parse_arguments(argument_parser=parser)
 
 if not args[FLAG_FLAVOR]:
     args[FLAG_FLAVOR] = "spark"
