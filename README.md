@@ -1012,33 +1012,39 @@ The OpenResty/Nginx binary package used within the workspace requires to run on 
 
 <summary>Development instructions for contributors (click to expand...)</summary>
 
-### Build
+> _**Requirements**: [Docker](https://docs.docker.com/get-docker/) and [Act](https://github.com/nektos/act#installation) are required to be installed on your machine to execute the build process._
 
-Execute this command in the project root folder to build the docker container:
-
-```bash
-python build.py --version={MAJOR.MINOR.PATCH-TAG}
-```
-
-The version is optional and should follow the [Semantic Versioning](https://semver.org/) standard (MAJOR.MINOR.PATCH). For additional script options:
+To simplify the process of building this project from scratch, we provide build-scripts that run all necessary steps (build, check, test, and release) within a containerized environment. To build and test your changes, execute the following command in the project root folder:
 
 ```bash
-python build.py --help
+act -b -j build
 ```
 
-### Deploy
-
-Execute this command in the project root folder to push the container to the configured docker registry:
+To build a specific flavor, execute for example the following:
 
 ```bash
-python build.py --deploy --version={MAJOR.MINOR.PATCH-TAG}
+act -b -s BUILD_ARGS=" --make --flavor minimal" -j build
 ```
 
-The version has to be provided. The version format should follow the [Semantic Versioning](https://semver.org/) standard (MAJOR.MINOR.PATCH). For additional script options:
+Under the hood it uses the build.py files in this repo based on the [universal-build library](https://github.com/ml-tooling/universal-build). So, if you want to build it locally, you can also execute this command in the project root folder to build the docker container:
+
+```bash
+python build.py --make
+```
+
+For additional script options:
 
 ```bash
 python build.py --help
 ```
+
+To push the container to the configured docker registry, execute the following:
+
+```bash
+python build.py --make --test --release --version={MAJOR.MINOR.PATCH-TAG}
+```
+
+There is also a workflow to release the image to be used with GitHub Actions and act.
 
 </details>
 
