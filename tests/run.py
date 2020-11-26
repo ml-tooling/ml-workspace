@@ -6,27 +6,23 @@ import time
 import docker
 import requests
 
-# from config import workspace_name, workspace_port, network_name
 
 client = docker.from_env()
-# try:
-#     client.networks.get(network_name)
-# except docker.errors.NotFound:
-#     client.networks.create(network_name, driver='bridge')
 workspace_name = "test-ml-workspace"
 container = client.containers.run(
     "mltooling/ml-workspace-minimal:0.9.1",
-    # network=network_name,
     name=workspace_name,
     environment={"WORKSPACE_NAME": workspace_name},
+    ports={'8080/tcp': None},
     detach=True,
 )
 
 container.reload()
-ip_address = container.attrs["NetworkSettings"]["Networks"]["bridge"]["IPAddress"]
+ip_address = os.getenv("_HOST_IP", "localhost")  # container.attrs["NetworkSettings"]["Networks"]["bridge"]["IPAddress"]
 os.environ["WORKSPACE_NAME"] = workspace_name
 os.environ["WORKSPACE_IP"] = ip_address
-workspace_port = 8080
+workspace_port = container.attrs["NetworkSettings"]["Ports"]["8080/tcp"][0]["HostPort"]
+os.environ["WORKSPACE_ACCESS_PORT"] = workspace_port
 
 index = 0
 health_url = f"http://{ip_address}:{workspace_port}/healthy"
@@ -56,18 +52,20 @@ exit_code_api_test = subprocess.call(["pytest", "-s", "tests"])
 # Test libraries within workspace
 print("Execute library tests within workspace", flush=True)
 # Copy and executing unit test file in workspace
+test_file_archive = "./tests/workspace_tests.py.tar"
 subprocess.call(
     [
         "tar",
         "-cvf",
-        "./tests/workspace_tests.py.tar",
+        test_file_archive,
         "-C",
         "./tests",
         "workspace_tests.py",
     ],
     stdout=subprocess.PIPE,
 )
-with open("./tests/workspace_tests.py.tar", "r") as file:
+
+with open(test_file_archive, "r") as file:
     container.put_archive(path="/tmp", data=file.read())
 exit_code_lib_test, output = container.exec_run("python /tmp/workspace_tests.py")
 print(output.decode("UTF-8"), flush=True)
@@ -77,6 +75,7 @@ print("Executed tests.", flush=True)
 # Cleanup
 print("Clean up landscape", flush=True)
 container.remove(force=True)
+os.remove(test_file_archive)
 
 if (exit_code_api_test and exit_code_lib_test) != 0:
     exit_code = 1

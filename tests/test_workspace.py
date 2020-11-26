@@ -4,10 +4,9 @@ from subprocess import PIPE, run
 
 import requests
 
-# from config import workspace_name, workspace_port
 workspace_host = os.getenv("WORKSPACE_IP", "localhost")
 workspace_name = os.getenv("WORKSPACE_NAME", "")
-workspace_port = 8080
+workspace_port = os.getenv("WORKSPACE_ACCESS_PORT", "8080")
 
 
 class TestStringMethods:
@@ -43,13 +42,14 @@ class TestStringMethods:
         # Execute the ssh setup script and automatically pass an ssh connection name to the script
         script_url = match.groups()[0]
         r = requests.get(script_url)
-        with open("/setup-ssh.sh", "w") as f:
+        setup_ssh_file = "./setup-ssh.sh"
+        with open(setup_ssh_file, "w") as f:
             f.write(r.text)
         # make the file executable for the user
-        os.chmod("/setup-ssh.sh", 0o744)
+        os.chmod(setup_ssh_file, 0o744)
         ssh_connection_name = "test"
         completed_process = run(
-            ['/bin/bash -c "/setup-ssh.sh"'],
+            [f'/bin/bash -c "{setup_ssh_file}"'],
             input=ssh_connection_name,
             encoding="ascii",
             shell=True,
@@ -65,3 +65,5 @@ class TestStringMethods:
         assert completed_process.stderr == b""
         stdout = completed_process.stdout.decode("UTF-8").replace("\n", "")
         assert stdout == workspace_name
+
+        os.remove(setup_ssh_file)
