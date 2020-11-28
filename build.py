@@ -2,6 +2,7 @@ import argparse
 import datetime
 import subprocess
 
+import docker
 from universal_build import build_utils
 from universal_build.helpers import build_docker
 
@@ -17,6 +18,8 @@ COMPONENT_NAME = "ml-workspace"
 FLAG_FLAVOR = "flavor"
 
 args = build_utils.parse_arguments(argument_parser=parser)
+
+VERSION = args.get(build_utils.FLAG_VERSION)
 
 if not args[FLAG_FLAVOR]:
     args[FLAG_FLAVOR] = "full"
@@ -101,10 +104,32 @@ if args[build_utils.FLAG_MAKE]:
         build_utils.exit_process(1)
 
 if args[build_utils.FLAG_TEST]:
-    # test_exit_code = int(
-    #     pytest.main(["-x", os.path.join("tests")])
-    # )
-    completed_process = build_utils.run("python ./tests/run.py", exit_on_error=True)
+    workspace_name = "workspace-test"
+    workspace_port = "8080"
+    client = docker.from_env()
+    container = client.containers.run(
+        f"{service_name}:{VERSION}",
+        name=workspace_name,
+        environment={
+            "WORKSPACE_IP": "172.17.0.3",
+            "WORKSPACE_NAME": workspace_name,
+            "WORKSPACE_ACCESS_PORT": workspace_port,
+        },
+        detach=True,
+    )
+
+    container.reload()
+    container_ip = container.attrs["NetworkSettings"]["Networks"]["bridge"]["IPAddress"]
+
+    completed_process = build_utils.run(
+        f"docker exec -it --env WORKSPACE_IP={container_ip} --env WORKSPACE_NAME={workspace_name} --env WORKSPACE_ACCESS_PORT={workspace_port}  {workspace_name} pytest '/resources/tests'",
+        exit_on_error=False,
+    )
+
+    container.remove(force=True)
+    if completed_process.returncode > 0:
+        build_utils.exit_process(1)
+
 
 if args[build_utils.FLAG_RELEASE]:
     build_docker.release_docker_image(
