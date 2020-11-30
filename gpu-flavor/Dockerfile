@@ -10,6 +10,8 @@ ENV WORKSPACE_VERSION=$ARG_WORKSPACE_VERSION
 
 USER root
 
+COPY resources/tests/ /resources/tests
+
 ### NVIDIA CUDA BASE ###
 # https://gitlab.com/nvidia/container-images/cuda/blob/ubuntu18.04/10.1/base/Dockerfile
 RUN apt-get update && apt-get install -y --no-install-recommends gnupg2 curl ca-certificates && \
@@ -17,7 +19,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends gnupg2 curl ca-
     echo "deb https://developer.download.nvidia.com/compute/cuda/repos/ubuntu1804/x86_64 /" > /etc/apt/sources.list.d/cuda.list && \
     echo "deb https://developer.download.nvidia.com/compute/machine-learning/repos/ubuntu1804/x86_64 /" > /etc/apt/sources.list.d/nvidia-ml.list && \
     # Cleanup - cannot use cleanup script here, otherwise too much is removed
-    apt-get clean && \ 
+    apt-get clean && \
     rm -rf $HOME/.cache/* && \
     rm -rf /tmp/* && \
     rm -rf /var/lib/apt/lists/*
@@ -32,7 +34,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     ln -s cuda-10.1 /usr/local/cuda && \
     rm -rf /var/lib/apt/lists/* && \
     # Cleanup - cannot use cleanup script here, otherwise too much is removed
-    apt-get clean && \ 
+    apt-get clean && \
     rm -rf $HOME/.cache/* && \
     rm -rf /tmp/* && \
     rm -rf /var/lib/apt/lists/*
@@ -62,7 +64,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     apt-mark hold libnccl2 && \
     rm -rf /var/lib/apt/lists/* && \
     # Cleanup - cannot use cleanup script here, otherwise too much is removed
-    apt-get clean && \ 
+    apt-get clean && \
     rm -rf $HOME/.cache/* && \
     rm -rf /tmp/* && \
     rm -rf /var/lib/apt/lists/*
@@ -77,9 +79,9 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
         cuda-minimal-build-$CUDA_PKG_VERSION \
         cuda-command-line-tools-$CUDA_PKG_VERSION \
         libnccl-dev=$NCCL_VERSION-1+cuda10.1 && \
-    rm -rf /var/lib/apt/lists/* && \ 
+    rm -rf /var/lib/apt/lists/* && \
     # Cleanup - cannot use cleanup script here, otherwise too much is removed
-    apt-get clean && \ 
+    apt-get clean && \
     rm -rf /root/.cache/* && \
     rm -rf /tmp/* && \
     rm -rf /var/lib/apt/lists/*
@@ -98,9 +100,9 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
             libcudnn7=$CUDNN_VERSION-1+cuda10.1 \
             libcudnn7-dev=$CUDNN_VERSION-1+cuda10.1 && \
     apt-mark hold libcudnn7 && \
-    rm -rf /var/lib/apt/lists/* && \ 
+    rm -rf /var/lib/apt/lists/* && \
     # Cleanup
-    apt-get clean && \ 
+    apt-get clean && \
     rm -rf /root/.cache/* && \
     rm -rf /tmp/* && \
     rm -rf /var/lib/apt/lists/*
@@ -153,9 +155,9 @@ RUN \
     # Install pygpu - Required for theano: http://deeplearning.net/software/libgpuarray/
     conda install -y pygpu && \
     # nvidia python ml lib
-    pip install --upgrade --force-reinstall nvidia-ml-py3 && \ 
+    pip install --upgrade --force-reinstall nvidia-ml-py3 && \
     # SpeedTorch: https://github.com/Santosh-Gupta/SpeedTorch
-    pip install --no-cache-dir SpeedTorch && \ 
+    pip install --no-cache-dir SpeedTorch && \
     # TODO: Install blazingsql
     # Install Jupyterlab GPU Plugin: https://github.com/jacobtomlinson/jupyterlab-nvdashboard - TODO deactivate jupyter plugin
     # pip install --no-cache-dir jupyterlab-nvdashboard && \
@@ -172,7 +174,7 @@ RUN \
 # python=3.7 \
 # cudatoolkit=10.1 && \
 # Install graphvite graph embedding lib: https://github.com/DeepGraphLearning/graphvite
-# conda install -c milagraph graphvite cudatoolkit=10.1 && \ 
+# conda install -c milagraph graphvite cudatoolkit=10.1 && \
 
 # Install Nvidia Apex
 # RUN cd $RESOURCES_PATH && \
@@ -226,7 +228,7 @@ LABEL \
     "workspace.flavor"=$WORKSPACE_FLAVOR \
     "org.opencontainers.image.version"=$WORKSPACE_VERSION \
     "org.opencontainers.image.revision"=$ARG_VCS_REF \
-    "org.opencontainers.image.created"=$ARG_BUILD_DATE \ 
+    "org.opencontainers.image.created"=$ARG_BUILD_DATE \
     "org.label-schema.version"=$WORKSPACE_VERSION \
     "org.label-schema.vcs-ref"=$ARG_VCS_REF \
     "org.label-schema.build-date"=$ARG_BUILD_DATE
