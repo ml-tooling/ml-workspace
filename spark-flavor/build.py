@@ -1,6 +1,6 @@
-import subprocess
 import argparse
 import datetime
+import subprocess
 
 from universal_build import build_utils
 from universal_build.helpers import build_docker
@@ -14,9 +14,15 @@ parser.add_argument(
 
 REMOTE_IMAGE_PREFIX = "mltooling/"
 FLAG_FLAVOR = "flavor"
-COMPONENT_NAME = "spark-flavor"
+COMPONENT_NAME = "ml-workspace"
 
 args = build_utils.parse_arguments(argument_parser=parser)
+
+VERSION = str(args.get(build_utils.FLAG_VERSION))
+docker_image_prefix = args.get(build_docker.FLAG_DOCKER_IMAGE_PREFIX)
+
+if not docker_image_prefix:
+    docker_image_prefix = REMOTE_IMAGE_PREFIX
 
 if not args[FLAG_FLAVOR]:
     args[FLAG_FLAVOR] = "spark"
@@ -34,7 +40,7 @@ if args[FLAG_FLAVOR] not in ["spark"]:
     build_utils.build(args[FLAG_FLAVOR] + "-flavor", args)
     build_utils.exit_process(0)
 
-service_name = COMPONENT_NAME + "-" + args[FLAG_FLAVOR]
+docker_image_name = COMPONENT_NAME + "-" + args[FLAG_FLAVOR]
 
 # docker build
 git_rev = "unknown"
@@ -60,9 +66,7 @@ except Exception:
 vcs_ref_build_arg = " --build-arg ARG_VCS_REF=" + str(git_rev)
 build_date_build_arg = " --build-arg ARG_BUILD_DATE=" + str(build_date)
 flavor_build_arg = " --build-arg ARG_WORKSPACE_FLAVOR=" + str(args[FLAG_FLAVOR])
-version_build_arg = " --build-arg ARG_WORKSPACE_VERSION=" + str(
-    args[build_utils.FLAG_VERSION]
-)
+version_build_arg = " --build-arg ARG_WORKSPACE_VERSION=" + VERSION
 
 if args[build_utils.FLAG_MAKE]:
     build_args = (
@@ -76,14 +80,14 @@ if args[build_utils.FLAG_MAKE]:
     )
 
     completed_process = build_docker.build_docker_image(
-        COMPONENT_NAME, version=args[build_utils.FLAG_VERSION], build_args=build_args
+        docker_image_name, version=VERSION, build_args=build_args
     )
     if completed_process.returncode > 0:
         build_utils.exit_process(1)
 
 if args[build_utils.FLAG_RELEASE]:
     build_docker.release_docker_image(
-        COMPONENT_NAME,
-        args[build_utils.FLAG_VERSION],
-        args[build_docker.FLAG_DOCKER_IMAGE_PREFIX],
+        docker_image_name,
+        VERSION,
+        docker_image_prefix,
     )

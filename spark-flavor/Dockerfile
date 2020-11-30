@@ -8,6 +8,8 @@ ENV WORKSPACE_FLAVOR=$ARG_WORKSPACE_FLAVOR
 ARG ARG_WORKSPACE_VERSION="latest"
 ENV WORKSPACE_VERSION=$ARG_WORKSPACE_VERSION
 
+COPY resources/tests/ /resources/tests
+
 # Inspirations:
 # https://github.com/jupyter/docker-stacks/blob/master/all-spark-notebook/Dockerfile
 
@@ -32,7 +34,7 @@ RUN \
     # Cleanup
     clean-layer.sh
 
-# Install Zeppelin 
+# Install Zeppelin
 RUN \
     /bin/bash $RESOURCES_PATH/tools/zeppelin.sh --install && \
     # Cleanup
@@ -67,18 +69,18 @@ RUN \
     clean-layer.sh
 
 # Install Apache Torre Kernel: https://github.com/apache/incubator-toree
-RUN \ 
+RUN \
     pip install --no-cache-dir toree && \
     jupyter toree install --sys-prefix && \
     # Cleanup
     clean-layer.sh
 
 # Install Spark Monitor: https://github.com/krishnan-r/sparkmonitor
-RUN \ 
+RUN \
     # git+https://github.com/krishnan-r/sparkmonitor#subdirectory=extension && \
-    pip install --no-cache-dir sparkmonitor && \ 
+    pip install --no-cache-dir sparkmonitor && \
     jupyter nbextension install sparkmonitor --py --user --symlink && \
-    jupyter nbextension enable sparkmonitor --py --user && \    
+    jupyter nbextension enable sparkmonitor --py --user && \
     jupyter serverextension enable --py --user sparkmonitor && \
     ipython profile create && echo "c.InteractiveShellApp.extensions.append('sparkmonitor.kernelextension')" >>  $(ipython profile locate default)/ipython_kernel_config.py && \
     # Cleanup
@@ -97,7 +99,7 @@ ENV \
     # PYSPARK_DRIVER_PYTHON / PYSPARK_DRIVER_PYTHON_OPTS / HADOOP_HOME / HADOOP_CLASSPATH / SPARK_DIST_CLASSPATH
     # export HADOOP_HOME=~/hadoop-2.7.0 export PATH=$HADOOP_HOME/bin:$PATH export HADOOP_CONF_DIR=$HADOOP_HOME/etc/hadoop
     # export HADOOP_CLASSPATH=$HADOOP_HOME/share/hadoop/tools/lib/*
-    # export SPARK_DIST_CLASSPATH=`hadoop classpath` 
+    # export SPARK_DIST_CLASSPATH=`hadoop classpath`
     # export PYSPARK_DRIVER_PYTHON="jupyter"
     # export PYSPARK_DRIVER_PYTHON_OPTS="notebook"
     # HADOOP_CONF_DIR=/usr/lib/hadoop
@@ -126,13 +128,13 @@ RUN \
 # SPARK_DRIVER_MEMORY=128m
 # SPARK_EXECUTOR_MEMORY=256m
 
-# TODO start spark master? 
-# TODO configure spark ui to be proxied with base path: 
+# TODO start spark master?
+# TODO configure spark ui to be proxied with base path:
 # https://stackoverflow.com/questions/45971127/wrong-css-location-of-spark-application-ui
 # https://github.com/jupyterhub/jupyter-server-proxy/issues/57
 # https://github.com/yuvipanda/jupyter-sparkui-proxy/blob/master/jupyter_sparkui_proxy/__init__.py
 
-# Todo: Add additional spark configuration: 
+# Todo: Add additional spark configuration:
 # https://spark.apache.org/docs/latest/configuration.html
 # https://zeppelin.apache.org/docs/latest/interpreter/spark.html
 
@@ -155,7 +157,7 @@ LABEL \
     "workspace.baseimage"=mltooling/ml-workspace:$WORKSPACE_VERSION \
     "org.opencontainers.image.version"=$WORKSPACE_VERSION \
     "org.opencontainers.image.revision"=$ARG_VCS_REF \
-    "org.opencontainers.image.created"=$ARG_BUILD_DATE \ 
+    "org.opencontainers.image.created"=$ARG_BUILD_DATE \
     "org.label-schema.version"=$WORKSPACE_VERSION \
     "org.label-schema.vcs-ref"=$ARG_VCS_REF \
     "org.label-schema.build-date"=$ARG_BUILD_DATE
