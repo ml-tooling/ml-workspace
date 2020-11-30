@@ -8,6 +8,8 @@ ENV WORKSPACE_FLAVOR=$ARG_WORKSPACE_FLAVOR
 ARG ARG_WORKSPACE_VERSION="latest"
 ENV WORKSPACE_VERSION=$ARG_WORKSPACE_VERSION
 
+COPY resources/tests/ /resources/tests
+
 # Install r-runtime and r-kernel
 RUN \
     /bin/bash $RESOURCES_PATH/tools/r-runtime.sh --install && \
@@ -39,7 +41,7 @@ LABEL \
     "workspace.baseimage"=mltooling/ml-workspace:$WORKSPACE_VERSION \
     "org.opencontainers.image.version"=$WORKSPACE_VERSION \
     "org.opencontainers.image.revision"=$ARG_VCS_REF \
-    "org.opencontainers.image.created"=$ARG_BUILD_DATE \ 
+    "org.opencontainers.image.created"=$ARG_BUILD_DATE \
     "org.label-schema.version"=$WORKSPACE_VERSION \
     "org.label-schema.vcs-ref"=$ARG_VCS_REF \
     "org.label-schema.build-date"=$ARG_BUILD_DATE
