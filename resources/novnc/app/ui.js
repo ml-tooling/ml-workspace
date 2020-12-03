@@ -181,18 +181,20 @@ const UI = {
     UI.initSetting("port", port);
     UI.initSetting("encrypt", window.location.protocol === "https:");
     UI.initSetting("view_clip", false);
-    UI.initSetting("resize", "off");
+    //UI.initSetting("resize", "off");
     UI.initSetting("quality", 6);
     UI.initSetting("compression", 2);
     UI.initSetting("shared", true);
     UI.initSetting("view_only", false);
     UI.initSetting("show_dot", false);
-    UI.initSetting("path", "websockify");
+    //UI.initSetting("path", "websockify");
     UI.initSetting("repeaterID", "");
-    UI.initSetting("reconnect", false);
+    //UI.initSetting("reconnect", false);
     UI.initSetting("reconnect_delay", 5000);
 
     // ######################## CUSTOM CODE ########################
+    // IMPORTANT: All the init settings from above need to be commented out
+    // Otherwise the changes here will not work
     UI.initSetting("resize", "remote");
     UI.initSetting("reconnect", true);
     // update settings cannot be used anymore to force settings
