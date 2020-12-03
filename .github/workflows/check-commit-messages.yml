@@ -17,4 +17,4 @@ jobs:
         uses: mristin/opinionated-commit-message@v2.2.0
         with:
           allow-one-liners: "true"
-          additional-verbs: "cleanup"
+          additional-verbs: "cleanup, finalize, build, ci, docs, feat, fix, perf, refactor, style, test"

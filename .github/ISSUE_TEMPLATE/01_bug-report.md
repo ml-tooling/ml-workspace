@@ -1,5 +1,5 @@
 ---
-name: "\U0001F6A8 Bug report"
+name: "\U0001F6A8 Bug Report"
 about: Did you come across a bug or unexpected behaviour differing from the docs?
 title: ''
 labels: bug
@@ -10,9 +10,7 @@ assignees: ''
 <!--
 Thanks for reporting a bug 🙌 ❤️
 
-Before opening a new issue, please make sure that we do not have any duplicates already open. You can ensure this by searching the issue list for this repository. If there is a duplicate, please close your issue and add a comment to the existing issue instead.
-
-Also, be sure to check our documentation first: https://github.com/ml-tooling/ml-workspace
+Before opening a new issue, please make sure that we do not have any duplicates already open. You can ensure this by searching the issue list for this repository. If there is a duplicate, please close your issue and add a comment to the existing issue instead. Also, be sure to check our documentation first: https://github.com/ml-tooling/ml-workspace
 -->
 
 **Describe the bug:**

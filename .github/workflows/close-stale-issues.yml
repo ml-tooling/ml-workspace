@@ -1,4 +1,4 @@
-name: close-stale-issuess
+name: close-stale-issues
 
 on:
   workflow_dispatch:

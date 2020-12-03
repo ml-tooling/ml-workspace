@@ -380,10 +380,7 @@ For more information and documentation about ML Hub, please take a look at the [
 
 ## Support
 
-The ML Workspace project is maintained by [Lukas Masuch](https://twitter.com/LukasMasuch)
-and [Benjamin Räthlein](https://twitter.com/raethlein). Please understand that we won't be able
-to provide individual support via email. We also believe that help is much more
-valuable if it's shared publicly so that more people can benefit from it.
+This project is maintained by [Benjamin Räthlein](https://twitter.com/raethlein), [Lukas Masuch](https://twitter.com/LukasMasuch), and [Jan Kalkan](https://www.linkedin.com/in/jan-kalkan-b5390284/). Please understand that we won't be able to provide individual support via email. We also believe that help is much more valuable if it's shared publicly so that more people can benefit from it.
 
 | Type                     | Channel                                              |
 | ------------------------ | ------------------------------------------------------ |
@@ -391,6 +388,7 @@ valuable if it's shared publicly so that more people can benefit from it.
 | 🎁 **Feature Requests**  | <a href="https://github.com/ml-tooling/ml-workspace/issues?q=is%3Aopen+is%3Aissue+label%3Afeature-request+sort%3Areactions-%2B1-desc" title="Open Feature Request"><img src="https://img.shields.io/github/issues/ml-tooling/ml-workspace/feature-request.svg?label=feature%20requests"></a>                                 |
 | 👩‍💻 **Usage Questions**   |  <a href="https://stackoverflow.com/questions/tagged/ml-tooling" title="Open Question on Stackoverflow"><img src="https://img.shields.io/badge/stackoverflow-ml--tooling-orange.svg"></a> <a href="https://gitter.im/ml-tooling/ml-workspace" title="Chat on Gitter"><img src="https://badges.gitter.im/ml-tooling/ml-workspace.svg"></a> |
 | 🗯 **General Discussion** | <a href="https://gitter.im/ml-tooling/ml-workspace" title="Chat on Gitter"><img src="https://badges.gitter.im/ml-tooling/ml-workspace.svg"></a>  <a href="https://twitter.com/mltooling" title="ML Tooling on Twitter"><img src="https://img.shields.io/twitter/follow/mltooling.svg?style=social"></a>                  |
+| ❓ **Other Requests** | <a href="mailto:team@mltooling.org" title="Email ML Tooling Team"><img src="https://img.shields.io/badge/email-ML Tooling-green?logo=mail.ru&style=flat-square&logoColor=white"></a> |
 
 ---
 
@@ -1004,13 +1002,12 @@ The OpenResty/Nginx binary package used within the workspace requires to run on 
 
 ## Contribution
 
-- Pull requests are encouraged and always welcome. Read [`CONTRIBUTING.md`](https://github.com/ml-tooling/ml-workspace/tree/master/CONTRIBUTING.md) and check out [help-wanted](https://github.com/ml-tooling/ml-workspace/issues?utf8=%E2%9C%93&q=is%3Aopen+is%3Aissue+label%3A"help+wanted"+sort%3Areactions-%2B1-desc+) issues.
-- Submit Github issues for any [feature enhancements](https://github.com/ml-tooling/ml-workspace/issues/new?assignees=&labels=feature-request&template=02_feature-request.md&title=), [bugs](https://github.com/ml-tooling/ml-workspace/issues/new?assignees=&labels=bug&template=01_bug-report.md&title=), or [documentation](https://github.com/ml-tooling/ml-workspace/issues/new?assignees=&labels=enhancement%2C+docs&template=03_documentation.md&title=) problems. 
-- By participating in this project, you agree to abide by its [Code of Conduct](https://github.com/ml-tooling/ml-workspace/tree/master/CODE_OF_CONDUCT.md).
+- Pull requests are encouraged and always welcome. Read our [contribution guidelines](https://github.com/ml-tooling/workspace/tree/main/CONTRIBUTING.md) and check out [help-wanted](https://github.com/ml-tooling/workspace/issues?utf8=%E2%9C%93&q=is%3Aopen+is%3Aissue+label%3A"help+wanted"+sort%3Areactions-%2B1-desc+) issues.
+- Submit Github issues for any [feature request and enhancement](https://github.com/ml-tooling/workspace/issues/new?assignees=&labels=feature&template=02_feature-request.md&title=), [bugs](https://github.com/ml-tooling/workspace/issues/new?assignees=&labels=bug&template=01_bug-report.md&title=), or [documentation](https://github.com/ml-tooling/workspace/issues/new?assignees=&labels=documentation&template=03_documentation.md&title=) problems.
+- By participating in this project, you agree to abide by its [Code of Conduct](https://github.com/ml-tooling/workspace/blob/main/.github/CODE_OF_CONDUCT.md).
+- The [development section](#development) below contains information on how to build and test the project after you have implemented some changes.
 
-<details>
-
-<summary>Development instructions for contributors (click to expand...)</summary>
+## Development
 
 > _**Requirements**: [Docker](https://docs.docker.com/get-docker/) and [Act](https://github.com/nektos/act#installation) are required to be installed on your machine to execute the build process._
 
@@ -1018,12 +1015,6 @@ To simplify the process of building this project from scratch, we provide build-
 
 ```bash
 act -b -j build
-```
-
-To build a specific flavor, execute for example the following:
-
-```bash
-act -b -s BUILD_ARGS=" --make --flavor minimal" -j build
 ```
 
 Under the hood it uses the build.py files in this repo based on the [universal-build library](https://github.com/ml-tooling/universal-build). So, if you want to build it locally, you can also execute this command in the project root folder to build the docker container:
@@ -1038,16 +1029,8 @@ For additional script options:
 python build.py --help
 ```
 
-To push the container to the configured docker registry, execute the following:
-
-```bash
-python build.py --make --test --release --version={MAJOR.MINOR.PATCH-TAG}
-```
-
-There is also a workflow to release the image to be used with GitHub Actions and act.
-
-</details>
+Refer to our [contribution guides](https://github.com/ml-tooling/workspace/blob/main/CONTRIBUTING.md#development-instructions) for more detailed information on our build scripts and development process.
 
 ---
 
-Licensed **Apache 2.0**. Created and maintained with ❤️ by developers from SAP in Berlin.
+Licensed **Apache 2.0**. Created and maintained with ❤️ by developers from Berlin.

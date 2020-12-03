@@ -2,59 +2,107 @@ name: release-pipeline
 
 on:
   workflow_dispatch:
-  push:
-    tags:
-      - "v[0-9]+.[0-9]+.[0-9]+"
+    inputs:
+      version:
+        description: "Version of this release."
+        required: true
+  milestone:
+    types: [closed]
+
+env:
+  VERSION: ${{ secrets.VERSION }}
+  BRANCH_PREFIX: "release/v"
+  ACTIONS_ALLOW_UNSECURE_COMMANDS: true # TODO: only needed until act supports the new way
 
 jobs:
   release:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
-      - name: Fetch inofficial GitHub Action get-latest-version
-        run: wget https://github.com/ml-tooling/universal-build/releases/download/v0.1.0/github-action_get-latest-version.tar.gz -O tmp/github-action_get-latest-version.tar.gz && tar -xzvf tmp/github-action_get-latest-version.tar.gz -C ./.github/actions/
-      - name: get-latest-version
-        id: get-latest-version
-        uses: ./.github/actions/get-latest-version
+      - if: ${{ github.event.milestone != null  &&  github.event.milestone.title != null }}
+        name: set-milestone-version
+        run: echo "::set-env name=VERSION::$(sed "s/^v//" <<< "${{ github.event.milestone.title }}")"
+      - if: ${{ github.event.inputs != null  &&  github.event.inputs.version != null }}
+        name: set-input-version
+        run: echo "::set-env name=VERSION::${{ github.event.inputs.version }}"
+      - name: check-version
+        run: 'if [[ ! "${{ env.VERSION }}" =~ ^([0-9]+\.[0-9]+\.[0-9]+.*)$ ]]; then echo "The version is not valid: ${{ env.VERSION }}"; exit 1; fi'
+      - name: set-github-token
+        run: echo "::set-env name=GITHUB_TOKEN::${{ secrets.GITHUB_TOKEN }}"
+      - name: set-host-ip
+        run: echo "::set-env name=_HOST_IP::$(hostname -I | cut -d ' ' -f 1)"
+      - if: ${{ env.GITHUB_TOKEN  &&  env.VERSION }}
+        name: create-release-branch
+        uses: peterjgrainger/action-create-branch@v2.0.1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          current_commit_only: true
+          branch: "${{ env.BRANCH_PREFIX }}${{ env.VERSION }}"
+      - if: ${{ ! env.GITHUB_TOKEN  }}
+        uses: actions/checkout@v2
+      - if: ${{ env.GITHUB_TOKEN }}
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+          ref: ${{ env.BRANCH_PREFIX }}${{ env.VERSION }}
       - name: run-component-builds
         uses: ./.github/actions/build-environment
         with:
-          build_args: --make --force --version=${{ steps.get-latest-version.outputs.latest_version }}
+          build_args: --make --force --version=${{ env.VERSION  }}
       - name: run-linting-and-style-checks
         uses: ./.github/actions/build-environment
         with:
-          build_args: --check --force --version=${{ steps.get-latest-version.outputs.latest_version }}
+          build_args: --check --force --version=${{ env.VERSION  }}
       - name: run-component-tests
         uses: ./.github/actions/build-environment
         with:
-          build_args: --test --force --version=${{ steps.get-latest-version.outputs.latest_version }}
+          build_args: --test --force --test-marker=slow --version=${{ env.VERSION  }}
       - name: release-components
         uses: ./.github/actions/build-environment
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          PYPI_TOKEN: ${{ secrets.PYPI_TOKEN }}
+          PYPI_REPOSITORY: ${{ secrets.PYPI_REPOSITORY }}
         with:
-          build_args: --release --force --version=${{ steps.get-latest-version.outputs.latest_version }}
-          pypi_token: ${{ secrets.PYPI_TOKEN }}
-          pypi_repository: ${{ secrets.PYPI_REPOSITORY }}
+          build_args: --release --force --version=${{ env.VERSION  }}
           container_registry_url: ${{ secrets.CONTAINER_REGISTRY_URL }}
           container_registry_username: ${{ secrets.CONTAINER_REGISTRY_USERNAME }}
           container_registry_password: ${{ secrets.CONTAINER_REGISTRY_PASSWORD }}
-  create-release-draft:
-    needs: release
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v2
-      - name: Fetch inofficial GitHub Action get-latest-version
-        run: wget https://github.com/ml-tooling/universal-build/releases/download/v0.1.0/github-action_get-latest-version.tar.gz -O tmp/github-action_get-latest-version.tar.gz && tar -xzvf tmp/github-action_get-latest-version.tar.gz -C ./.github/actions/
-      - name: get-latest-version
-        id: get-latest-version
-        uses: ./.github/actions/get-latest-version
+      # Optional: do automatic changes to source code artefacts required for release
+      - if: ${{ env.GITHUB_TOKEN }}
+        name: update-repository
+        uses: stefanzweifel/git-auto-commit-action@v4
         with:
-          current_commit_only: false
-      - name: create-release-draft
-        uses: release-drafter/release-drafter@v5
+          branch: ${{ env.BRANCH_PREFIX }}${{ env.VERSION  }}
+          commit_user_name: Release Bot
+          commit_user_email: actions@github.com
+          commit_message: Apply automatic release changes for v${{ env.VERSION  }}
+          tagging_message: v${{ env.VERSION  }}
+      - if: ${{ env.GITHUB_TOKEN }}
+        name: pull-request
+        uses: repo-sync/pull-request@v2
         with:
-          version: ${{ steps.get-latest-version.outputs.latest_version }}
+          source_branch: ${{ env.BRANCH_PREFIX }}${{ env.VERSION  }}
+          destination_branch: "main"
+          pr_title: Finalize release for version ${{ env.VERSION  }}
+          pr_body: "Automated pull request for release version ${{ env.VERSION  }}"
+          pr_draft: false
+          pr_allow_empty: true
+          pr_label: "skip changelog"
+          # only works if it exist: pr_milestone: v${{ env.VERSION  }}
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+      # Fix of release drafter to allow different events to trigger the release
+      - if: ${{ env.GITHUB_TOKEN }}
+        name: checkout-fixed-release-drafter
+        uses: actions/checkout@v2
+        with:
+          repository: ml-tooling/release-drafter
+          path: ./.github/actions/release-drafter
+      - if: ${{ env.GITHUB_TOKEN }}
+        name: create-release-draft
+        uses: ./.github/actions/release-drafter
+        with:
+          version: ${{ env.VERSION }}
+          tag: v${{ env.VERSION  }}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      # optional: upload release assets via actions/upload-release-asset@v1
+      # Optional: upload release assets via actions/upload-release-asset@v1
