@@ -12,26 +12,26 @@ for arg in "$@"; do
     esac
 done
 
-if [ ! -d "$CONDA_DIR/envs/python2" ]; then
+if [ ! -d "$CONDA_ROOT/envs/python2" ]; then
     echo "Installing Python 2.7 Interpreter and Kernel. Please wait..."
-    conda create --yes -p $CONDA_DIR/envs/python2 python=2.7
-    ln -s $CONDA_DIR/envs/python2/bin/pip $CONDA_DIR/bin/pip2
-    ln -s $CONDA_DIR/envs/python2/bin/ipython2 $CONDA_DIR/bin/ipython2
-    $CONDA_DIR/bin/pip2 install --upgrade pip
+    conda create --yes -p $CONDA_ROOT/envs/python2 python=2.7
+    ln -s $CONDA_ROOT/envs/python2/bin/pip $CONDA_ROOT/bin/pip2
+    ln -s $CONDA_ROOT/envs/python2/bin/ipython2 $CONDA_ROOT/bin/ipython2
+    $CONDA_ROOT/bin/pip2 install --upgrade pip
     # Install compatibility libraries
-    $CONDA_DIR/bin/pip2 install future enum34 six typing
+    $CONDA_ROOT/bin/pip2 install future enum34 six typing
     # Add as Python 2 kernel
     # Install Python 2 kernel spec globally to avoid permission problems when NB_UID
     # switching at runtime and to allow the notebook server running out of the root
     # environment to find it. Also, activate the python2 environment upon kernel launch.
     pip install --no-cache-dir kernda
-    $CONDA_DIR/envs/python2/bin/python -m pip install ipykernel
-    $CONDA_DIR/envs/python2/bin/python -m ipykernel install
+    $CONDA_ROOT/envs/python2/bin/python -m pip install ipykernel
+    $CONDA_ROOT/envs/python2/bin/python -m ipykernel install
     kernda -o -y /usr/local/share/jupyter/kernels/python2/kernel.json
     # link conda python 2 to python 2 bin instances (in /usr/bin)
-    ln -s -f $CONDA_DIR/envs/python2/bin/python /usr/bin/python2
+    ln -s -f $CONDA_ROOT/envs/python2/bin/python /usr/bin/python2
     rm /usr/bin/python2.7
-    ln -s -f $CONDA_DIR/envs/python2/bin/python /usr/bin/python2.7
+    ln -s -f $CONDA_ROOT/envs/python2/bin/python /usr/bin/python2.7
 else
     echo "Python 2.7 Interpreter is already installed"
 fi

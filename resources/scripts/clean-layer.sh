@@ -11,7 +11,7 @@
 set -e
 set -x
 
-# Delete old downloaded archive files 
+# Delete old downloaded archive files
 apt-get autoremove -y
 # Delete downloaded archive files
 apt-get clean
@@ -28,10 +28,10 @@ if [ -x "$(command -v conda)" ]; then
     conda clean --all -f -y
     # Remove source cache files
     conda build purge-all
-    if [ -d $CONDA_DIR ]; then
+    if [ -d $CONDA_ROOT ]; then
         # Cleanup python bytecode files - not needed: https://jcrist.github.io/conda-docker-tips.html
-        find $CONDA_DIR -type f -name '*.pyc' -delete
-        find $CONDA_DIR -type l -name '*.pyc' -delete
+        find $CONDA_ROOT -type f -name '*.pyc' -delete
+        find $CONDA_ROOT -type l -name '*.pyc' -delete
     fi
 fi
 
