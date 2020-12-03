@@ -17,13 +17,7 @@ done
 if [ ! -f "/usr/local/bin/code-server"  ]; then
     echo "Installing VS Code Server. Please wait..."
     cd ${RESOURCES_PATH}
-    # CODE_SERVER_VERSION=2.1698
-    # VS_CODE_VERSION=$CODE_SERVER_VERSION-vsc1.41.1
-    # wget -q https://github.com/cdr/code-server/releases/download/$CODE_SERVER_VERSION/code-server$VS_CODE_VERSION-linux-x86_64.tar.gz -O ./vscode-web.tar.gz
-    # Use older version, since newer has some problems with python extension
-    # Todo: Check if update from 3.4.1 causes problems
-    # Todo: Remove comment if no problem
-    VS_CODE_VERSION=3.7.2
+    VS_CODE_VERSION=3.7.4
     wget -q https://github.com/cdr/code-server/releases/download/v$VS_CODE_VERSION/code-server_${VS_CODE_VERSION}_amd64.deb -O ./code-server.deb
     apt-get update
     apt-get install -y ./code-server.deb
@@ -42,6 +36,6 @@ if [ $INSTALL_ONLY = 0 ] ; then
     echo "Starting VS Code Server on port "$PORT
     # Create tool entry for tooling plugin
     echo '{"id": "vscode-link", "name": "VS Code", "url_path": "/tools/'$PORT'/", "description": "Visual Studio Code webapp"}' > $HOME/.workspace/tools/vscode.json
-    /usr/local/bin/code-server --port=$PORT --disable-telemetry --user-data-dir=$HOME/.config/Code/ --extensions-dir=$HOME/.vscode/extensions/ --auth=none $WORKSPACE_HOME/
+    /usr/local/bin/code-server --port=$PORT --disable-telemetry --user-data-dir=$HOME/.config/Code/ --extensions-dir=$HOME/.vscode/extensions/ --disable-update-check --auth=none $WORKSPACE_HOME/
     sleep 15
 fi
