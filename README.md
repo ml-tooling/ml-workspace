@@ -781,9 +781,9 @@ CMD ["python", "/resources/docker-entrypoint.py", "--code-only"]
 
 The workspace is pre-installed with many popular interpreters, data science libraries, and ubuntu packages:
 
-- **Interpreter:** Python 3.7 (Miniconda 3), Java 11 (OpenJDK), NodeJS 13, Scala, Perl 5
+- **Interpreter:** Python 3.8 (Miniconda 3), Java 11 (OpenJDK), NodeJS 14, Scala, Perl 5
 - **Python libraries:** Tensorflow, Keras, Pytorch, Sklearn, XGBoost, MXNet, Theano, and [many more](https://github.com/ml-tooling/ml-workspace/tree/master/resources/libraries)
-- **Package Manager:** `conda`, `pip`, `npm`, `apt-get`, `yarn`, `sdk`, `gdebi`, `mvn` ...  
+- **Package Manager:** `conda`, `pip`, `apt-get`, `npm`, `yarn`, `sdk`, `poetry`, `gdebi`, `mvn` ...  
 
 The full list of installed tools can be found within the [Dockerfile](https://github.com/ml-tooling/ml-workspace/blob/master/Dockerfile).
 
@@ -911,6 +911,155 @@ If you want to directly connect to the workspace via a VNC client (not using the
 Unfortunately, we currently do not support using a non-root user within the workspace. We plan to provide this capability and already started with some refactoring to allow this configuration. However, this still requires a lot more work, refactoring, and testing from our side.
 
 Using root-user (or users with sudo permission) within containers is generally not recommended since, in case of system/kernel vulnerabilities, a user might be able to break out of the container and be able to access the host system. Since it is not very common to have such problematic kernel vulnerabilities, the risk of a severe attack is quite minimal. As explained in the [official Docker documentation](https://docs.docker.com/engine/security/security/#linux-kernel-capabilities), containers (even with root users) are generally quite secure in preventing a breakout to the host. And compared to many other container use-cases, we actually want to provide the flexibility to the user to have control and system-level installation permissions within the workspace container.
+
+</details>
+
+<details>
+<summary><b>How to create and use a virtual environment?</b> (click to expand...)</summary>
+
+The workspace comes preinstalled with various common tools to create isolated Python environments (virtual environments). The following sections provide a quick-intro on how to use these tools within the workspace. You can find information on when to use which tool [here](https://stackoverflow.com/a/41573588). Please refer to the documentation of the given tool for additional usage information.
+
+**venv** (recommended):
+
+To create a virtual environment via [venv](https://docs.python.org/3/tutorial/venv.html), execute the following commands:
+
+```bash
+# Create environment in the working directory
+python -m venv my-venv
+# Activate environment in shell
+source ./my-venv/bin/activate
+# Optional: Create Jupyter kernel for this environment
+pip install ipykernel
+python -m ipykernel install --user --name=my-venv --display-name="my-venv ($(python --version))"
+# Optional: Close enviornment session
+deactivate
+```
+
+**pipenv** (recommended):
+
+To create a virtual environment via [pipenv](https://pipenv.pypa.io/en/latest/), execute the following commands:
+
+```bash
+# Create environment in the working directory
+pipenv install
+# Activate environment session in shell
+pipenv shell
+# Optional: Create Jupyter kernel for this environment
+pipenv install ipykernel
+python -m ipykernel install --user --name=my-pipenv --display-name="my-pipenv ($(python --version))"
+# Optional: Close environment session
+exit
+```
+
+**virtualenv**:
+
+To create a virtual environment via [virtualenv](https://virtualenv.pypa.io/en/latest/), execute the following commands:
+
+```bash
+# Create environment in the working directory
+virtualenv my-virtualenv
+# Activate environment session in shell
+source ./my-virtualenv/bin/activate
+# Optional: Create Jupyter kernel for this environment
+pip install ipykernel
+python -m ipykernel install --user --name=my-virtualenv --display-name="my-virtualenv ($(python --version))"
+# Optional: Close environment session
+deactivate
+```
+
+**conda**:
+
+To create a virtual environment via [conda](https://docs.conda.io/projects/conda/en/latest/user-guide/tasks/manage-environments.html), execute the following commands:
+
+```bash
+# Create environment (globally)
+conda create -n my-conda-env
+# Activate environment session in shell
+conda activate my-conda-env
+# Optional: Create Jupyter kernel for this environment
+python -m ipykernel install --user --name=my-conda-env --display-name="my-conda-env ($(python --version))"
+# Optional: Close environment session
+conda deactivate
+```
+
+**Tip: Shell Commands in Jupyter Notebooks:**
+
+If you install and use a virtual environment via a dedicated Jupyter Kernel and use shell commands within Jupyter (e.g. `!pip install matplotlib`), the wrong python/pip version will be used. To use the python/pip version of the selected kernel, do the following instead:
+
+```python
+import sys
+!{sys.executable} -m pip install matplotlib
+```
+
+</details>
+
+<details>
+<summary><b>How to install a different Python version?</b> (click to expand...)</summary>
+
+The workspace provides three easy options to install different Python versions alongside the main Python instance: [pyenv](https://github.com/pyenv/pyenv), [pipenv](https://pipenv.pypa.io/en/latest/cli/) (recommended), [conda](https://github.com/pyenv/pyenv).
+
+**pipenv** (recommended):
+
+To install a different python version (e.g. `3.7.8`) within the workspace via [pipenv](https://pipenv.pypa.io/en/latest/cli/), execute the following commands:
+
+```bash
+# Install python vers
+pipenv install --python=3.7.8
+# Activate environment session in shell
+pipenv shell
+# Check python installation
+python --version
+# Optional: Create Jupyter kernel for this environment
+pipenv install ipykernel
+python -m ipykernel install --user --name=my-pipenv --display-name="my-pipenv ($(python --version))"
+# Optional: Close environment session
+exit
+```
+
+**pyenv**:
+
+To install a different python version (e.g. `3.7.8`) within the workspace via [pyenv](https://github.com/pyenv/pyenv), execute the following commands:
+
+```bash
+# Install python version
+pyenv install 3.7.8
+# Make globally accessible
+pyenv global 3.7.8
+# Activate python version in shell
+pyenv shell 3.7.8
+# Check python installation
+python3.7 --version
+# Optional: Create Jupyter kernel for this python version
+python3.7 -m pip install ipykernel
+python3.7 -m ipykernel install --user --name=my-pyenv-3.7.8 --display-name="my-pyenv (Python 3.7.8)"
+```
+
+**conda**:
+
+To install a different python version (e.g. `3.7.8`) within the workspace via [conda](https://github.com/pyenv/pyenv), execute the following commands:
+
+```bash
+# Create environment with python version
+conda create -n my-conda-3.7 python=3.7.8
+# Activate environment session in shell
+conda activate my-conda-3.7
+# Check python installation
+python --version
+# Optional: Create Jupyter kernel for this python version
+pip install ipykerne
+python -m ipykernel install --user --name=my-conda-3.7 --display-name="my-conda ($(python --version))"
+# Optional: Close environment session
+conda deactivate
+```
+
+**Tip: Shell Commands in Jupyter Notebooks:**
+
+If you install and use another Python version via a dedicated Jupyter Kernel and use shell commands within Jupyter (e.g. `!pip install matplotlib`), the wrong python/pip version will be used. To use the python/pip version of the selected kernel, do the following instead:
+
+```python
+import sys
+!{sys.executable} -m pip install matplotlib
+```
 
 </details>
 
