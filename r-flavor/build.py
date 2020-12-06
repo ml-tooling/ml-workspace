@@ -2,20 +2,19 @@ import argparse
 import datetime
 import subprocess
 
-import docker
 from universal_build import build_utils
 from universal_build.helpers import build_docker
 
-parser = argparse.ArgumentParser(add_help=False)
-parser.add_argument(
-    "--flavor",
-    help="flavor (full, light, minimal) used for docker container",
-    default="r",
-)
-
 REMOTE_IMAGE_PREFIX = "mltooling/"
 FLAG_FLAVOR = "flavor"
-COMPONENT_NAME = "ml-workspace"
+IMAGE_NAME = "ml-workspace"
+
+parser = argparse.ArgumentParser(add_help=False)
+parser.add_argument(
+    "--" + FLAG_FLAVOR,
+    help="Flavor (r) used for docker container",
+    default="r",
+)
 
 args = build_utils.parse_arguments(argument_parser=parser)
 
@@ -25,7 +24,7 @@ docker_image_prefix = args.get(build_docker.FLAG_DOCKER_IMAGE_PREFIX)
 if not docker_image_prefix:
     docker_image_prefix = REMOTE_IMAGE_PREFIX
 
-if not args[FLAG_FLAVOR]:
+if not args.get(FLAG_FLAVOR):
     args[FLAG_FLAVOR] = "r"
 
 args[FLAG_FLAVOR] = str(args[FLAG_FLAVOR]).lower()
@@ -41,7 +40,7 @@ if args[FLAG_FLAVOR] not in ["r"]:
     build_utils.build(args[FLAG_FLAVOR] + "-flavor", args)
     build_utils.exit_process(0)
 
-docker_image_name = COMPONENT_NAME + "-" + args[FLAG_FLAVOR]
+docker_image_name = IMAGE_NAME + "-" + args[FLAG_FLAVOR]
 
 # docker build
 git_rev = "unknown"
@@ -64,29 +63,26 @@ try:
 except Exception:
     pass
 
+base_image = "ml-workspace:" + VERSION
+if args.get(build_utils.FLAG_RELEASE):
+    base_image = docker_image_prefix + base_image
+
+base_image_build_arg = " --build-arg ARG_WORKSPACE_BASE_IMAGE=" + base_image
 vcs_ref_build_arg = " --build-arg ARG_VCS_REF=" + str(git_rev)
 build_date_build_arg = " --build-arg ARG_BUILD_DATE=" + str(build_date)
 flavor_build_arg = " --build-arg ARG_WORKSPACE_FLAVOR=" + str(args[FLAG_FLAVOR])
 version_build_arg = " --build-arg ARG_WORKSPACE_VERSION=" + VERSION
 
-if args[build_utils.FLAG_MAKE]:
-    build_args = (
-        version_build_arg
-        + " "
-        + flavor_build_arg
-        + " "
-        + vcs_ref_build_arg
-        + " "
-        + build_date_build_arg
+if args.get(build_utils.FLAG_MAKE):
+    build_args = f"{base_image_build_arg} {version_build_arg} {flavor_build_arg} {vcs_ref_build_arg} {build_date_build_arg}"
+
+    build_docker.build_docker_image(
+        docker_image_name, version=VERSION, build_args=build_args, exit_on_error=True
     )
 
-    completed_process = build_docker.build_docker_image(
-        docker_image_name, version=VERSION, build_args=build_args
-    )
-    if completed_process.returncode > 0:
-        build_utils.exit_process(1)
+if args.get(build_utils.FLAG_TEST):
+    import docker
 
-if args[build_utils.FLAG_TEST]:
     workspace_name = f"workspace-test-{args[build_utils.FLAG_FLAVOR]}"
     workspace_port = "8080"
     client = docker.from_env()
@@ -112,9 +108,7 @@ if args[build_utils.FLAG_TEST]:
     if completed_process.returncode > 0:
         build_utils.exit_process(1)
 
-if args[build_utils.FLAG_RELEASE]:
+if args.get(build_utils.FLAG_RELEASE):
     build_docker.release_docker_image(
-        docker_image_name,
-        VERSION,
-        docker_image_prefix,
+        docker_image_name, VERSION, docker_image_prefix, exit_on_error=True
     )

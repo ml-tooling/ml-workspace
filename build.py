@@ -6,16 +6,16 @@ import docker
 from universal_build import build_utils
 from universal_build.helpers import build_docker
 
-parser = argparse.ArgumentParser(add_help=False)
-parser.add_argument(
-    "--flavor",
-    help="flavor (full, light, minimal) used for docker container",
-    default="full",
-)
-
 REMOTE_IMAGE_PREFIX = "mltooling/"
 COMPONENT_NAME = "ml-workspace"
 FLAG_FLAVOR = "flavor"
+
+parser = argparse.ArgumentParser(add_help=False)
+parser.add_argument(
+    "--" + FLAG_FLAVOR,
+    help="Flavor (full, light, minimal, r, spark, gpu) used for docker container",
+    default="full",
+)
 
 args = build_utils.parse_arguments(argument_parser=parser)
 
@@ -25,7 +25,7 @@ docker_image_prefix = args.get(build_docker.FLAG_DOCKER_IMAGE_PREFIX)
 if not docker_image_prefix:
     docker_image_prefix = REMOTE_IMAGE_PREFIX
 
-if not args[FLAG_FLAVOR]:
+if not args.get(FLAG_FLAVOR):
     args[FLAG_FLAVOR] = "full"
 
 args[FLAG_FLAVOR] = str(args[FLAG_FLAVOR]).lower()
@@ -41,20 +41,20 @@ if args[FLAG_FLAVOR] == "all":
     build_utils.build(".", args)
 
     args[FLAG_FLAVOR] = "r"
-    build_utils.build(".", args)
+    build_utils.build("r-flavor", args)
 
     args[FLAG_FLAVOR] = "spark"
-    build_utils.build(".", args)
+    build_utils.build("spark-flavor", args)
 
     args[FLAG_FLAVOR] = "gpu"
-    build_utils.build(".", args)
+    build_utils.build("gpu-flavor", args)
 
     build_utils.exit_process(0)
 
 # unknown flavor -> try to build from subdirectory
 if args[FLAG_FLAVOR] not in ["full", "minimal", "light"]:
     # assume that flavor has its own directory with build.py
-    build_utils.build(args[FLAG_FLAVOR], args)
+    build_utils.build(args[FLAG_FLAVOR] + "-flavor", args)
     build_utils.exit_process(0)
 
 docker_image_name = COMPONENT_NAME
