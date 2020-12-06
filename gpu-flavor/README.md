@@ -21,4 +21,4 @@ Please visit our [Github repository](https://github.com/ml-tooling/ml-workspace#
 
 ---
 
-Licensed **Apache 2.0**. Created and maintained with ❤️ by developers from SAP in Berlin. 
+Licensed **Apache 2.0**. Created and maintained with ❤️ by developers from Berlin.
