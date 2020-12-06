@@ -18,7 +18,7 @@ if [ ! -f "/usr/local/bin/filebrowser"  ]; then
     echo "Installing Filebrowser. Please wait..."
     mkdir -p $RESOURCES_PATH/filebrowser
     cd $RESOURCES_PATH/filebrowser
-    wget -q https://github.com/filebrowser/filebrowser/releases/download/v2.9.0/linux-amd64-filebrowser.tar.gz -O ./filebrowser.tar.gz
+    wget -q https://github.com/filebrowser/filebrowser/releases/download/v2.10.0/linux-amd64-filebrowser.tar.gz -O ./filebrowser.tar.gz
     tar -xzf ./filebrowser.tar.gz
     chmod +x "./filebrowser"
     mv "./filebrowser" "/usr/local/bin/filebrowser"
