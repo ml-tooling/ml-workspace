@@ -14,9 +14,9 @@ done
 
 if ! hash atom 2>/dev/null; then
     echo "Installing Atom. Please wait..."
-    add-apt-repository ppa:webupd8team/atom --yes
+    add-apt-repository -y ppa:webupd8team/atom
     apt-get update
-    apt-get install atom --yes
+    apt-get install -y atom
     apt-get clean
 else
     echo "Atom is already installed"
