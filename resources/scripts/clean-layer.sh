@@ -8,8 +8,13 @@
 # At the end of each command, we should ensure we clean up downloaded
 # archives and source files used to produce binary to reduce the size
 # of the layer.
-set -e
+
+# Disable exit on error
+set +e
+# Show all commands
 set -x
+
+echo "Running layer cleanup script..."
 
 # Delete old downloaded archive files
 apt-get autoremove -y
@@ -40,3 +45,13 @@ if [ -x "$(command -v npm)" ]; then
     npm cache clean --force
     rm -rf $HOME/.npm/* $HOME/.node-gyp/*
 fi
+
+# Clean yarn
+if [ -x "$(command -v yarn)" ]; then
+    yarn cache clean --all
+fi
+
+# pip is cleaned by the rm -rf $HOME/.cache/* commmand above
+
+# Always exit without error
+exit 0
