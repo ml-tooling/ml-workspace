@@ -1,14 +1,12 @@
-ARG ARG_WORKSPACE_VERSION="latest"
+ARG ARG_WORKSPACE_BASE_IMAGE="mltooling/ml-workspace:latest"
 # Build from full flavor of workspace with same version
-FROM mltooling/ml-workspace:$ARG_WORKSPACE_VERSION
+FROM $ARG_WORKSPACE_BASE_IMAGE
 
 ARG ARG_WORKSPACE_FLAVOR="r"
 ENV WORKSPACE_FLAVOR=$ARG_WORKSPACE_FLAVOR
 # argument needs to be initalized again
 ARG ARG_WORKSPACE_VERSION="latest"
 ENV WORKSPACE_VERSION=$ARG_WORKSPACE_VERSION
-
-COPY resources/tests/ /resources/tests
 
 # Install r-runtime and r-kernel
 RUN \
@@ -21,6 +19,11 @@ RUN \
     /bin/bash $RESOURCES_PATH/tools/r-studio-server.sh --install && \
     # Cleanup
     clean-layer.sh
+
+# Add R tutorials
+COPY resources/tutorials $RESOURCES_PATH/tutorials/tutorials
+
+# TODO: tests are currently empty COPY resources/tests/ /resources/tests
 
 ### CONFIGURATION ###
 
@@ -38,7 +41,7 @@ ARG ARG_VCS_REF="unknown"
 LABEL \
     "workspace.version"=$WORKSPACE_VERSION \
     "workspace.flavor"=$WORKSPACE_FLAVOR \
-    "workspace.baseimage"=mltooling/ml-workspace:$WORKSPACE_VERSION \
+    "workspace.baseimage"=$ARG_WORKSPACE_BASE_IMAGE \
     "org.opencontainers.image.version"=$WORKSPACE_VERSION \
     "org.opencontainers.image.revision"=$ARG_VCS_REF \
     "org.opencontainers.image.created"=$ARG_BUILD_DATE \
