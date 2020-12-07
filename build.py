@@ -28,39 +28,39 @@ if not docker_image_prefix:
 if not args.get(FLAG_FLAVOR):
     args[FLAG_FLAVOR] = "full"
 
-args[FLAG_FLAVOR] = str(args[FLAG_FLAVOR]).lower()
+flavor = str(args[FLAG_FLAVOR]).lower().strip()
 
-if args[FLAG_FLAVOR] == "all":
-    args[FLAG_FLAVOR] = "full"
+if flavor == "all":
+    flavor = "full"
     build_utils.build(".", args)
 
-    args[FLAG_FLAVOR] = "light"
+    flavor = "light"
     build_utils.build(".", args)
 
-    args[FLAG_FLAVOR] = "minimal"
+    flavor = "minimal"
     build_utils.build(".", args)
 
-    args[FLAG_FLAVOR] = "r"
+    flavor = "r"
     build_utils.build("r-flavor", args)
 
-    args[FLAG_FLAVOR] = "spark"
+    flavor = "spark"
     build_utils.build("spark-flavor", args)
 
-    args[FLAG_FLAVOR] = "gpu"
+    flavor = "gpu"
     build_utils.build("gpu-flavor", args)
 
     build_utils.exit_process(0)
 
 # unknown flavor -> try to build from subdirectory
-if args[FLAG_FLAVOR] not in ["full", "minimal", "light"]:
+if flavor not in ["full", "minimal", "light"]:
     # assume that flavor has its own directory with build.py
-    build_utils.build(args[FLAG_FLAVOR] + "-flavor", args)
+    build_utils.build(flavor + "-flavor", args)
     build_utils.exit_process(0)
 
 docker_image_name = COMPONENT_NAME
 # Build full image without suffix if the flavor is not minimal or light
-if args[FLAG_FLAVOR] in ["minimal", "light"]:
-    docker_image_name += "-" + args[FLAG_FLAVOR]
+if flavor in ["minimal", "light"]:
+    docker_image_name += "-" + flavor
 
 # docker build
 git_rev = "unknown"
@@ -85,7 +85,7 @@ except Exception:
 
 vcs_ref_build_arg = " --build-arg ARG_VCS_REF=" + str(git_rev)
 build_date_build_arg = " --build-arg ARG_BUILD_DATE=" + str(build_date)
-flavor_build_arg = " --build-arg ARG_WORKSPACE_FLAVOR=" + str(args[FLAG_FLAVOR])
+flavor_build_arg = " --build-arg ARG_WORKSPACE_FLAVOR=" + str(flavor)
 version_build_arg = " --build-arg ARG_WORKSPACE_VERSION=" + VERSION
 
 if args[build_utils.FLAG_MAKE]:
@@ -106,7 +106,7 @@ if args[build_utils.FLAG_MAKE]:
         build_utils.exit_process(1)
 
 if args[build_utils.FLAG_TEST]:
-    workspace_name = f"workspace-test-{args[build_utils.FLAG_FLAVOR]}"
+    workspace_name = f"workspace-test-{flavor}"
     workspace_port = "8080"
     client = docker.from_env()
     container = client.containers.run(
