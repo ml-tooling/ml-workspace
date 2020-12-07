@@ -100,10 +100,10 @@ We plan to do a full workspace image update (all libraries and tools) about ever
     - Check all gui-tools in VNC Desktop (just open and see of running): VS Code, glogg, Chrome, Firefox, DB Browser, Task Manager
     - Run from inside workspace: `/bin/bash /resources/tests/scan-python-vulnerabilities.sh`
     - Run from inside workspace: `/bin/bash /resources/tests/scan-clamav-virus.sh`
-    - Run from inside workspace: `/bin/bash /resources/tests/scan-system-vulnerabilities.sh`
     - Run from inside workspace: `python /resources/tests/test-code-execution.py`
     - Update reports and licenses in Git repo
     - Check if tutorials are still working in `/workspace/tutorials`
+    - Scan workspace image: `docker scan --dependency-tree --file Dockerfile ml-workspace` -> no high-severity vulnerabilities.
 
 11. Update, build and test `gpu` flavor:
 
