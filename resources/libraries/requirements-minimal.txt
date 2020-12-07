@@ -1,5 +1,29 @@
 # Minimum Requirements
 
+## Basics
+# numpy Installed via conda
+Cython==0.29.21 # The Cython compiler for writing C extensions for the Python language.
+tqdm==4.54.1 # Fast, Extensible Progress Meter
+matplotlib==3.3.3 # Python plotting package
+requests==2.25.0 # Python HTTP for Humans.
+# NOTE: use
+urllib3==1.25.11 # HTTP library with thread-safe connection pooling, file post, and more.
+idna==2.10 # Internationalized Domain Names in Applications (IDNA)
+pandas==1.1.4 # Powerful data structures for data analysis, time series, and statistics
+attrs==20.3.0 # Classes Without Boilerplate
+six==1.15.0 # Python 2 and 3 compatibility utilities
+future==0.18.2 # Clean single-source support for Python 3 and 2
+python-dateutil==2.8.1 # Extensions to the standard Python datetime module
+PyYAML==5.3.1 # YAML parser and emitter for Python
+joblib==0.17.0 # Lightweight pipelining: using Python functions as pipeline jobs.
+Pillow==8.0.1 # Python Imaging Library (Fork)
+# NOTE: yarl version 1.5 is required for lots of libraries
+yarl==1.5.1 # Yet another URL library
+pyzmq==20.0.0 # Python bindings for 0MQ
+python-crontab==2.5.1 # Python Crontab API
+cmake==3.18.4 # CMake is an open-source, cross-platform family of tools designed to build, test and package software
+protobuf==3.14.0 # Protocol Buffers
+
 ## Utilities
 httpie==2.3.0 # HTTPie - a CLI, cURL-like tool for humans.
 cloudpickle==1.6.0  # Extended pickling support for Python objects
@@ -9,21 +33,54 @@ cysignals==1.10.2 # Interrupt and signal handling for Cython
 h5py==3.1.0 # Read and write HDF5 files from Python
 seaborn==0.11.0 # Python visualization library based on matplotlib  - Basic
 SQLAlchemy==1.3.20 # Database Abstraction Library
-virtualenv==20.1.0 # Virtual Python Environment builder
+sortedcontainers==2.3.0 # Sorted Containers -- Sorted List, Sorted Dict, Sorted Set
+simplejson==3.17.2 # Simple, fast, extensible JSON encoder/decoder for Python
+Pygments==2.7.2 # Pygments is a syntax highlighting package written in Python.
+jsonschema==3.2.0 # An implementation of JSON Schema validation for Python
+loguru==0.5.3 # Python logging made (stupidly) simple
+click==7.1.2 # Composable command line interface toolkit
+docutils==0.16 # Docutils -- Python Documentation Utilities
+tabulate==0.8.7 # Pretty-print tabular data
+regex==2020.11.13 # Alternative regular expression module, to replace re.
+toolz==0.11.1 # List processing tools and functional utilities
+jmespath==0.10.0 # JSON Matching Expressions
+dill==0.3.3 # Serialize all of python
+imageio==2.9.0 # Library for reading and writing a wide range of image, video, scientific, and volumetric data formats.
+pyparsing==2.4.7 # Python parsing module
+graphviz==0.15 # Simple Python interface for Graphviz
+colorama==0.4.4 # Cross-platform colored terminal text.
+cffi==1.14.4 # Foreign Function Interface for Python calling C code.
+
+# Development Helper
+tox==3.20.1 # tox is a generic virtualenv management and test command line tool
+pipenv==2020.11.15 # Python Development Workflow for Humans.
+poetry==1.1.4 # Python dependency management and packaging made easy
+virtualenv==20.2.1 # Virtual Python Environment builder
 pytest==6.1.2 # pytest: simple powerful testing with Python
 autopep8==1.5.4 # A tool that automatically formats Python code to conform to the PEP 8 style guide
 flake8==3.8.4 # The modular source code checker: pep8, pyflakes and co
-black==19.10b0 # The uncompromising code formatter.
+black==20.8b1 # The uncompromising code formatter.
 pylint==2.6.0 # python code static checker
 pycodestyle==2.6.0 # Python style guide checker
 pydocstyle==5.1.1 # Python docstring style checker
-sortedcontainers==2.3.0 # Sorted Containers -- Sorted List, Sorted Dict, Sorted Set
-simplejson==3.17.2 # Simple, fast, extensible JSON encoder/decoder for Python
 mock==4.0.2 # Rolling backport of unittest.mock for all Pythons
-python-dateutil==2.8.1 # 2.8.0 required by botocore: Extensions to the standard Python datetime module
+nox==2020.8.22 # Flexible test automation.
+pip-tools==5.4.0 # pip-tools keeps your pinned dependencies fresh.
+virtualenvwrapper==4.8.4 # Enhancements to virtualenv
+isort==5.6.4 # A Python utility / library to sort Python imports.
+jedi==0.17.2 # An autocompletion tool for Python that can be used for text editors.
+pipreqs==0.4.10 # Pip requirements.txt generator based on imports in project
+mypy==0.790 # Static type checker
+
+# Web Frameworks
+tornado==6.1 # Tornado is a Python web framework and asynchronous networking library, originally developed at FriendFeed.
+flask==1.1.2 # A simple framework for building complex web applications.
+gunicorn==20.0.4 # WSGI HTTP Server for UNIX
+uvicorn==0.12.3 # The lightning-fast ASGI server.
 
 # ML libraries
 tensorboard==2.4.0 # TensorBoard lets you watch Tensors Flow
+scipy==1.5.4 # SciPy: Scientific Library for Python
 
 ## Glances
 psutil==5.7.3 # Cross-platform lib for process and system monitoring in Python.
@@ -34,13 +91,14 @@ glances==3.1.5 # A cross-platform curses-based monitoring tool
 pymdstat==0.4.2 # Python library to parse Linux /proc/mdstat
 
 ## Jupyter
+# Via conda: ipython notebook jupyterlab
+ipykernel==5.3.4 # IPython Kernel for Jupyter
 jupytext==1.7.1 # Jupyter notebooks as Markdown documents, Julia, Python or R scripts
-nbresuse==0.3.6  # Simple Jupyter extension to show how much resources (RAM) your notebook is using
+nbresuse==0.4.0  # Simple Jupyter extension to show how much resources (RAM) your notebook is using
 ipympl==0.5.8 # Matplotlib Jupyter Extension
-jupyterhub==1.2.1 # JupyterHub: A multi-user server for Jupyter notebooks
+jupyterhub==1.2.2 # JupyterHub: A multi-user server for Jupyter notebooks
 remote_ikernel==0.4.6 # Running IPython kernels through batch queues
 jupyter_contrib_nbextensions==0.5.1 # A collection of Jupyter nbextensions.
 jupyter_nbextensions_configurator==0.4.1 # jupyter serverextension providing configuration interfaces for nbextensions.
-# jupyter-tensorboard version has a bug and hence does not support tensorboard 2.3 - 2.4 currently
-git+https://github.com/InfuseAI/jupyter_tensorboard.git
+# TODO: jupyter-tensorboard version has a bug and hence does not support tensorboard 2.3 - 2.4 currently -> installed later
 nbdime==2.1.0 # Diff and merge of Jupyter Notebooks
