@@ -1,6 +1,6 @@
-ARG ARG_WORKSPACE_VERSION="latest"
+ARG ARG_WORKSPACE_BASE_IMAGE="mltooling/ml-workspace:latest"
 # Build from full flavor of workspace with same version
-FROM mltooling/ml-workspace:$ARG_WORKSPACE_VERSION
+FROM $ARG_WORKSPACE_BASE_IMAGE
 
 ARG ARG_WORKSPACE_FLAVOR="gpu"
 ENV WORKSPACE_FLAVOR=$ARG_WORKSPACE_FLAVOR
@@ -10,10 +10,10 @@ ENV WORKSPACE_VERSION=$ARG_WORKSPACE_VERSION
 
 USER root
 
-COPY resources/tests/ /resources/tests
+#TODO: tests are currently empty COPY resources/tests/ /resources/tests
 
 ### NVIDIA CUDA BASE ###
-# https://gitlab.com/nvidia/container-images/cuda/blob/ubuntu18.04/10.1/base/Dockerfile
+# https://gitlab.com/nvidia/container-images/cuda/-/blob/master/dist/10.1/ubuntu18.04-x86_64/base/Dockerfile
 RUN apt-get update && apt-get install -y --no-install-recommends gnupg2 curl ca-certificates && \
     curl -fsSL https://developer.download.nvidia.com/compute/cuda/repos/ubuntu1804/x86_64/7fa2af80.pub | apt-key add - && \
     echo "deb https://developer.download.nvidia.com/compute/cuda/repos/ubuntu1804/x86_64 /" > /etc/apt/sources.list.d/cuda.list && \
@@ -24,7 +24,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends gnupg2 curl ca-
     rm -rf /tmp/* && \
     rm -rf /var/lib/apt/lists/*
 
-ENV CUDA_VERSION 10.1.168
+ENV CUDA_VERSION 10.1.243
 ENV CUDA_PKG_VERSION 10-1=$CUDA_VERSION-1
 
 # For libraries in the cuda-compat-* package: https://docs.nvidia.com/cuda/eula/index.html#attachment-a
@@ -48,59 +48,70 @@ ENV LD_LIBRARY_PATH /usr/local/nvidia/lib:/usr/local/nvidia/lib64:${LD_LIBRARY_P
 
 # nvidia-container-runtime
 # https://github.com/NVIDIA/nvidia-container-runtime#environment-variables-oci-spec
+# nvidia-container-runtime
 ENV NVIDIA_VISIBLE_DEVICES all
 ENV NVIDIA_DRIVER_CAPABILITIES compute,utility
-ENV NVIDIA_REQUIRE_CUDA "cuda>=10.1 brand=tesla,driver>=384,driver<385 brand=tesla,driver>=396,driver<397 brand=tesla,driver>=410,driver<411"
+ENV NVIDIA_REQUIRE_CUDA "cuda>=10.1 brand=tesla,driver>=396,driver<397 brand=tesla,driver>=410,driver<411 brand=tesla,driver>=418,driver<419"
 
 ### CUDA RUNTIME ###
-# https://gitlab.com/nvidia/container-images/cuda/blob/ubuntu18.04/10.1/runtime/Dockerfile
+# https://gitlab.com/nvidia/container-images/cuda/-/blob/master/dist/10.1/ubuntu18.04-x86_64/runtime/Dockerfile
 
-ENV NCCL_VERSION 2.4.2
+ENV NCCL_VERSION 2.7.8
 
 RUN apt-get update && apt-get install -y --no-install-recommends \
         cuda-libraries-$CUDA_PKG_VERSION \
+        cuda-npp-$CUDA_PKG_VERSION \
         cuda-nvtx-$CUDA_PKG_VERSION \
+        libcublas10=10.2.1.243-1 \
         libnccl2=$NCCL_VERSION-1+cuda10.1 && \
     apt-mark hold libnccl2 && \
-    rm -rf /var/lib/apt/lists/* && \
     # Cleanup - cannot use cleanup script here, otherwise too much is removed
     apt-get clean && \
     rm -rf $HOME/.cache/* && \
     rm -rf /tmp/* && \
     rm -rf /var/lib/apt/lists/*
 
+# apt from auto upgrading the cublas package. See https://gitlab.com/nvidia/container-images/cuda/-/issues/88
+RUN apt-mark hold libcublas10
+
 ### END CUDA RUNTIME ###
 
 ### CUDA DEVEL ###
-# https://gitlab.com/nvidia/container-images/cuda/blob/ubuntu18.04/10.1/devel/Dockerfile
+# https://gitlab.com/nvidia/container-images/cuda/-/blob/master/dist/10.1/ubuntu18.04-x86_64/devel/Dockerfile
 RUN apt-get update && apt-get install -y --no-install-recommends \
-        cuda-libraries-dev-$CUDA_PKG_VERSION \
         cuda-nvml-dev-$CUDA_PKG_VERSION \
-        cuda-minimal-build-$CUDA_PKG_VERSION \
         cuda-command-line-tools-$CUDA_PKG_VERSION \
+        cuda-nvprof-$CUDA_PKG_VERSION \
+        cuda-npp-dev-$CUDA_PKG_VERSION \
+        cuda-libraries-dev-$CUDA_PKG_VERSION \
+        cuda-minimal-build-$CUDA_PKG_VERSION \
+        libcublas-dev=10.2.1.243-1 \
         libnccl-dev=$NCCL_VERSION-1+cuda10.1 && \
-    rm -rf /var/lib/apt/lists/* && \
+    apt-mark hold libnccl-dev && \
     # Cleanup - cannot use cleanup script here, otherwise too much is removed
     apt-get clean && \
-    rm -rf /root/.cache/* && \
+    rm -rf $HOME/.cache/* && \
     rm -rf /tmp/* && \
     rm -rf /var/lib/apt/lists/*
+
+# apt from auto upgrading the cublas package. See https://gitlab.com/nvidia/container-images/cuda/-/issues/88
+RUN apt-mark hold libcublas-dev
 
 ENV LIBRARY_PATH /usr/local/cuda/lib64/stubs
 
 ### END CUDA DEVEL ###
 
 ### CUDANN7 DEVEL ###
-# https://gitlab.com/nvidia/container-images/cuda/blob/ubuntu18.04/10.1/devel/cudnn7/Dockerfile
+# https://gitlab.com/nvidia/container-images/cuda/-/blob/master/dist/10.1/ubuntu18.04-x86_64/devel/cudnn7/Dockerfile
 
-ENV CUDNN_VERSION 7.6.0.64
+ENV CUDNN_VERSION 7.6.5.32
 LABEL com.nvidia.cudnn.version="${CUDNN_VERSION}"
 
-RUN apt-get update && apt-get install -y --no-install-recommends \
+RUN apt-get update && \
+    apt-get install -y --no-install-recommends \
             libcudnn7=$CUDNN_VERSION-1+cuda10.1 \
             libcudnn7-dev=$CUDNN_VERSION-1+cuda10.1 && \
     apt-mark hold libcudnn7 && \
-    rm -rf /var/lib/apt/lists/* && \
     # Cleanup
     apt-get clean && \
     rm -rf /root/.cache/* && \
@@ -114,9 +125,10 @@ ENV LD_LIBRARY_PATH ${LD_LIBRARY_PATH}:/usr/local/cuda/extras/CUPTI/lib64
 
 # Install TensorRT. Requires that libcudnn7 is installed above.
 # https://www.tensorflow.org/install/gpu#ubuntu_1804_cuda_101
-RUN apt-get update && apt-get install -y --no-install-recommends libnvinfer6=6.0.1-1+cuda10.1 \
-    libnvinfer-dev=6.0.1-1+cuda10.1 \
-    libnvinfer-plugin6=6.0.1-1+cuda10.1 && \
+RUN apt-get update && apt-get install -y --no-install-recommends \
+        libnvinfer6=6.0.1-1+cuda10.1 \
+        libnvinfer-dev=6.0.1-1+cuda10.1 \
+        libnvinfer-plugin6=6.0.1-1+cuda10.1 && \
     # Cleanup
     clean-layer.sh
 
@@ -135,23 +147,22 @@ RUN \
     pip install --no-cache-dir gpustat py3nvml gputil && \
     # Install scikit-cuda: https://scikit-cuda.readthedocs.io/en/latest/install.html
     pip install --no-cache-dir scikit-cuda && \
-    # Install tensorflow gpu - conda uninstall removes too much and conda remove corrupts environment
-    # only tensorflow 2.1 supports cuda 10.1
+    # Install tensorflow gpu
     pip uninstall -y tensorflow && \
-    pip install --no-cache-dir tensorflow-gpu==2.1.0 && \
+    pip install --no-cache-dir tensorflow-gpu==2.3.1 && \
     # Install ONNX GPU Runtime
     pip uninstall -y onnxruntime && \
-    pip install --no-cache-dir onnxruntime-gpu==1.1.1 && \
+    pip install --no-cache-dir onnxruntime-gpu==1.4.0 && \
     # Install pytorch gpu
     # uninstall cpu only packages via conda
-    conda remove --force -y pytorch torchvision cpuonly && \
+    conda remove --force -y pytorch torchvision torchaudio cpuonly && \
     # https://pytorch.org/get-started/locally/
-    conda install -y pytorch torchvision -c pytorch && \
+    conda install -y pytorch torchvision torchaudio -c pytorch && \
     # Update mxnet to gpu edition
     pip uninstall -y mxnet-mkl && \
-    pip install --no-cache-dir mxnet-cu101mkl==1.5.1.post0 && \
+    pip install --no-cache-dir mxnet-cu101mkl==1.6.0.post0 && \
     # install jax: https://github.com/google/jax#pip-installation
-    pip install --no-cache-dir --upgrade jax https://storage.googleapis.com/jax-releases/cuda101/jaxlib-0.1.37-cp37-none-linux_x86_64.whl && \
+    pip install --upgrade jax jaxlib==0.1.57+cuda101 -f https://storage.googleapis.com/jax-releases/jax_releases.html  && \
     # Install pygpu - Required for theano: http://deeplearning.net/software/libgpuarray/
     conda install -y pygpu && \
     # nvidia python ml lib
@@ -163,11 +174,9 @@ RUN \
     # pip install --no-cache-dir jupyterlab-nvdashboard && \
     # jupyter labextension install jupyterlab-nvdashboard && \
     # Cleanup
-    # Cleanup python bytecode files - not needed: https://jcrist.github.io/conda-docker-tips.html
-    find ${CONDA_DIR} -type f -name '*.pyc' -delete && \
-    find ${CONDA_DIR} -type l -name '*.pyc' -delete && \
     clean-layer.sh
 
+# TODO: if > Ubuntu 19.04 -> install nvtop: https://github.com/Syllo/nvtop
 # Install Rapids: https://rapids.ai/start.html#conda-install
 # conda install -c rapidsai -c nvidia -c conda-forge -c defaults \
 # rapids=0.11 \
@@ -197,19 +206,18 @@ ENV TF_FORCE_GPU_ALLOW_GROWTH true
 ### GPU TOOLS ###
 
 # Install Glances & Netdata GPU Support
-RUN \
-    apt-get update -y && \
-    apt-get install lm-sensors -y && \
-    apt-get install netcat -y && \
-    apt-get install iproute2 -y && \
-    apt-get clean && \
-    rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/* && \
-    git clone https://github.com/Splo0sh/netdata_nv_plugin --depth 1 /tmp/netdata_nv_plugin && \
-    cp /tmp/netdata_nv_plugin/nv.chart.py /usr/libexec/netdata/python.d/ && \
-    cp /tmp/netdata_nv_plugin/python_modules/pynvml.py /usr/libexec/netdata/python.d/python_modules/ && \
-    cp /tmp/netdata_nv_plugin/nv.conf /etc/netdata/python.d/ && \
-    # Cleanup
-    clean-layer.sh
+# TODO: not needed since this should be discovered automaticallys
+# RUN \
+#     apt-get update -y && \
+#     apt-get install lm-sensors netcat iproute2 -y && \
+#     apt-get clean && \
+#     rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/* && \
+#     git clone https://github.com/Splo0sh/netdata_nv_plugin --depth 1 /tmp/netdata_nv_plugin && \
+#     cp /tmp/netdata_nv_plugin/nv.chart.py /usr/libexec/netdata/python.d/ && \
+#     cp /tmp/netdata_nv_plugin/python_modules/pynvml.py /usr/libexec/netdata/python.d/python_modules/ && \
+#     cp /tmp/netdata_nv_plugin/nv.conf /etc/netdata/python.d/ && \
+#     # Cleanup
+#     clean-layer.sh
 
 ### END GPU TOOLS ###
 
@@ -226,6 +234,7 @@ ARG ARG_VCS_REF="unknown"
 LABEL \
     "workspace.version"=$WORKSPACE_VERSION \
     "workspace.flavor"=$WORKSPACE_FLAVOR \
+    "workspace.baseimage"=$ARG_WORKSPACE_BASE_IMAGE \
     "org.opencontainers.image.version"=$WORKSPACE_VERSION \
     "org.opencontainers.image.revision"=$ARG_VCS_REF \
     "org.opencontainers.image.created"=$ARG_BUILD_DATE \
