@@ -30,7 +30,7 @@ if not args.get(FLAG_FLAVOR):
 flavor = str(args[FLAG_FLAVOR]).lower().strip()
 
 if flavor == "all":
-    flavor = "gpu"
+    args[FLAG_FLAVOR] = "gpu"
     build_utils.build(".", args)
     build_utils.exit_process(0)
 

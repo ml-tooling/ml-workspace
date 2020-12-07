@@ -31,22 +31,22 @@ if not args.get(FLAG_FLAVOR):
 flavor = str(args[FLAG_FLAVOR]).lower().strip()
 
 if flavor == "all":
-    flavor = "full"
+    args[FLAG_FLAVOR] = "full"
     build_utils.build(".", args)
 
-    flavor = "light"
+    args[FLAG_FLAVOR] = "light"
     build_utils.build(".", args)
 
-    flavor = "minimal"
+    args[FLAG_FLAVOR] = "minimal"
     build_utils.build(".", args)
 
-    flavor = "r"
+    args[FLAG_FLAVOR] = "r"
     build_utils.build("r-flavor", args)
 
-    flavor = "spark"
+    args[FLAG_FLAVOR] = "spark"
     build_utils.build("spark-flavor", args)
 
-    flavor = "gpu"
+    args[FLAG_FLAVOR] = "gpu"
     build_utils.build("gpu-flavor", args)
 
     build_utils.exit_process(0)
