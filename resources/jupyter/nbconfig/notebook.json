@@ -2,5 +2,13 @@
   "load_extensions": {
     "jupyter_tooling/open-tools-widget": true,
     "jupyter_tooling/tooling-notebook-widget": true
+  },
+  "toc2": {
+    "moveMenuLeft": false,
+    "widenNotebook": false,
+    "skip_h1_title": false,
+    "sideBar": true,
+    "number_sections": false,
+    "collapse_to_match_collapsible_headings": true
   }
 }
