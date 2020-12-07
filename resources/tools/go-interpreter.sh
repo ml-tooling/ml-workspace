@@ -16,6 +16,7 @@ if ! hash go 2>/dev/null; then
     echo "Installing Go Interpreter. Please wait..."
     apt-get update
     apt-get install -y golang-go
+    # TODO: Install go kernel: https://github.com/gopherdata/gophernotes
     # Set env variables?:
     # export GOROOT=/usr/local/go
     # export GOPATH=$HOME/go
