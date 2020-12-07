@@ -1,6 +1,6 @@
-ARG ARG_WORKSPACE_VERSION="latest"
+ARG ARG_WORKSPACE_BASE_IMAGE="mltooling/ml-workspace:latest"
 # Build from full flavor of workspace with same version
-FROM mltooling/ml-workspace-r:$ARG_WORKSPACE_VERSION
+FROM $ARG_WORKSPACE_BASE_IMAGE
 
 ARG ARG_WORKSPACE_FLAVOR="spark"
 ENV WORKSPACE_FLAVOR=$ARG_WORKSPACE_FLAVOR
@@ -8,31 +8,46 @@ ENV WORKSPACE_FLAVOR=$ARG_WORKSPACE_FLAVOR
 ARG ARG_WORKSPACE_VERSION="latest"
 ENV WORKSPACE_VERSION=$ARG_WORKSPACE_VERSION
 
-COPY resources/tests/ /resources/tests
-
 # Inspirations:
 # https://github.com/jupyter/docker-stacks/blob/master/all-spark-notebook/Dockerfile
 
 # Install Scala
 RUN \
+    # Scala 2.12 is required for spark
+    apt-get remove scala-library scala && \
+    wget -q https://downloads.lightbend.com/scala/2.12.3/scala-2.12.3.deb -O ./scala.deb && \
+    dpkg -i scala.deb && \
+    rm scala.deb && \
     apt-get update && \
-    apt-get install scala
+    apt-get install scala && \
+    # Install SBT
+    echo "deb https://dl.bintray.com/sbt/debian /" | sudo tee -a /etc/apt/sources.list.d/sbt.list && \
+    apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv 2EE0EA64E40A89B84B2DF73499E82A75642AC823 && \
+    apt-get update && \
+    apt-get install sbt && \
     # default-jdk
+    # Cleanup
+    clean-layer.sh
 
 # Install Spark
+# https://github.com/jupyter/docker-stacks/blob/master/pyspark-notebook/Dockerfile
 ENV \
-    SPARK_VERSION="2.4.4" \
-    HADOOP_VERSION="2.7"
+    SPARK_VERSION="3.0.1" \
+    HADOOP_VERSION="3.2"
 
 RUN \
     # https://github.com/jupyter/docker-stacks/blob/master/pyspark-notebook/Dockerfile#L18
-    wget -q https://www-eu.apache.org/dist/spark/spark-${SPARK_VERSION}/spark-${SPARK_VERSION}-bin-hadoop${HADOOP_VERSION}.tgz -O ./spark.tar.gz && \
+    wget -q https://mirror.checkdomain.de/apache/spark/spark-${SPARK_VERSION}/spark-${SPARK_VERSION}-bin-hadoop${HADOOP_VERSION}.tgz -O ./spark.tar.gz && \
     tar xfz spark.tar.gz -C /usr/local --owner root --group root --no-same-owner && \
     rm spark.tar.gz && \
     # link spark folder to /usr/local/spark
     ln -s /usr/local/spark-${SPARK_VERSION}-bin-hadoop${HADOOP_VERSION} /usr/local/spark && \
     # Cleanup
     clean-layer.sh
+
+# Configure Spark
+ENV SPARK_HOME=/usr/local/spark \
+    PATH=$PATH:$SPARK_HOME/bin
 
 # Install Zeppelin
 RUN \
@@ -44,6 +59,7 @@ RUN \
 RUN \
     # pyspark
     pip install --no-cache-dir \
+                        pyspark \
                         findspark \
                         pyarrow \
                         # downgrades sklearn: spark-sklearn \
@@ -63,6 +79,8 @@ RUN \
 
 # Install Sparkmagic: https://github.com/jupyter-incubator/sparkmagic
 RUN \
+    apt-get update && \
+    apt-get install -y libkrb5-dev && \
     pip install --no-cache-dir sparkmagic && \
     jupyter serverextension enable --py sparkmagic && \
     # Cleanup
@@ -71,7 +89,7 @@ RUN \
 # Install Apache Torre Kernel: https://github.com/apache/incubator-toree
 RUN \
     pip install --no-cache-dir toree && \
-    jupyter toree install --sys-prefix && \
+    jupyter toree install --sys-prefix --spark_home=/usr/local/spark && \
     # Cleanup
     clean-layer.sh
 
@@ -79,19 +97,19 @@ RUN \
 RUN \
     # git+https://github.com/krishnan-r/sparkmonitor#subdirectory=extension && \
     pip install --no-cache-dir sparkmonitor && \
-    jupyter nbextension install sparkmonitor --py --user --symlink && \
-    jupyter nbextension enable sparkmonitor --py --user && \
-    jupyter serverextension enable --py --user sparkmonitor && \
+    jupyter nbextension install sparkmonitor --py --sys-prefix --symlink && \
+    jupyter nbextension enable sparkmonitor --py --sys-prefix && \
+    jupyter serverextension enable --py --sys-prefix sparkmonitor && \
     ipython profile create && echo "c.InteractiveShellApp.extensions.append('sparkmonitor.kernelextension')" >>  $(ipython profile locate default)/ipython_kernel_config.py && \
     # Cleanup
     clean-layer.sh
 
-# R Spark support
-ENV R_LIBS_USER $SPARK_HOME/R/lib
+# TODO: removed R Spark supportwget -q https://www.apache.org/dyn/closer
+# ENV R_LIBS_USER $SPARK_HOME/R/lib
 
-RUN conda install --quiet --yes 'r-sparklyr' && \
+#RUN conda install --yes 'r-sparklyr' && \
     # Cleanup
-    clean-layer.sh
+#    clean-layer.sh
 
 ### CONFIGURATION ###
 
@@ -103,11 +121,9 @@ ENV \
     # export PYSPARK_DRIVER_PYTHON="jupyter"
     # export PYSPARK_DRIVER_PYTHON_OPTS="notebook"
     # HADOOP_CONF_DIR=/usr/lib/hadoop
-    SPARK_HOME="/usr/local/spark" \
     PYSPARK_PYTHON="python3" \
+    PYTHONPATH=$SPARK_HOME/python:$SPARK_HOME/python/lib/py4j-0.10.9-src.zip:$PYTHONPATH \
     SPARK_OPTS="--driver-java-options=-Xms1024M --driver-java-options=-Xmx4096M --driver-java-options=-Dlog4j.logLevel=info" \
-    PYTHONPATH=$SPARK_HOME/python:$SPARK_HOME/python/lib/py4j-0.10.7-src.zip:$PYTHONPATH \
-    PATH=$SPARK_HOME/bin:$PATH \
     # http://blog.stuart.axelbrooke.com/python-3-on-spark-return-of-the-pythonhashseed
     PYTHONHASHSEED=0
 
@@ -144,6 +160,9 @@ COPY resources/spark-defaults.conf ${SPARK_HOME}/conf/
 # Add supervisor config to start zeppelin on port 8072
 COPY resources/zeppelin-service.conf  /etc/supervisor/conf.d/
 
+# TODO: current tests are empty:
+# COPY resources/tests/ /resources/tests
+
 # Add spark tutorials
 COPY resources/tutorials $RESOURCES_PATH/tutorials/tutorials
 
@@ -154,7 +173,7 @@ ARG ARG_VCS_REF="unknown"
 LABEL \
     "workspace.version"=$WORKSPACE_VERSION \
     "workspace.flavor"=$WORKSPACE_FLAVOR \
-    "workspace.baseimage"=mltooling/ml-workspace:$WORKSPACE_VERSION \
+    "workspace.baseimage"=$ARG_WORKSPACE_BASE_IMAGE \
     "org.opencontainers.image.version"=$WORKSPACE_VERSION \
     "org.opencontainers.image.revision"=$ARG_VCS_REF \
     "org.opencontainers.image.created"=$ARG_BUILD_DATE \
