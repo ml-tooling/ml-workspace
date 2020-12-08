@@ -900,10 +900,14 @@ RUN \
     apt-get update && \
     # Install socat to map remote ports to localhost
     apt-get install -y socat && \
+    # GCC OpenMP (GOMP) support library
+    apt-get install -y libgomp1 && \
     # Update git to newest version
     add-apt-repository -y ppa:git-core/ppa  && \
     apt-get update && \
     apt-get install -y git && \
+    # Install mkl service
+    conda install -y mkl-service && \
     # TBB threading optimization
     apt-get install -y --no-install-recommends libtbb-dev && \
     # Newer jedi makes trouble with jupyterlab-lsp
