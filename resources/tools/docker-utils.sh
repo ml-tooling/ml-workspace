@@ -29,9 +29,17 @@ if ! hash docker 2>/dev/null; then
     # Todo install docker compose
     # curl  -L "https://github.com/docker/compose/releases/download/1.7.1/docker-compose-`uname -s`-`uname -m`" > /usr/local/bin/docker-compose &&\
     # chmod +x /usr/local/bin/docker-compose
+    # Install docker python dependency
     pip install -U --no-cache-dir docker
+    # Intall act:
+    curl https://raw.githubusercontent.com/nektos/act/master/install.sh | sudo bash
 else
     echo "Docker Client is already installed"
+fi
+
+if ! hash act 2>/dev/null; then
+    echo "Installing Act. Please wait..."
+    curl https://raw.githubusercontent.com/nektos/act/master/install.sh | sudo bash
 fi
 
 # Install vscode docker extension
