@@ -899,15 +899,15 @@ RUN \
     conda config --system --set channel_priority false  && \
     apt-get update && \
     # Install socat to map remote ports to localhost
-    apt-get install -y socat && \
+    apt-get install -y --no-install-recommends socat && \
     # GCC OpenMP (GOMP) support library
-    apt-get install -y libgomp1 && \
+    apt-get install -y --no-install-recommends libgomp1 && \
     # Install GNU parallel
-    apt-get install parallel && \
+    apt-get install -y --no-install-recommends parallel && \
     # Update git to newest version
     add-apt-repository -y ppa:git-core/ppa  && \
     apt-get update && \
-    apt-get install -y git && \
+    apt-get install -y --no-install-recommends git && \
     # Install mkl service
     conda install -y mkl-service && \
     # TBB threading optimization
