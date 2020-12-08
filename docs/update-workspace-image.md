@@ -57,6 +57,7 @@ We plan to do a full workspace image update (all libraries and tools) about ever
    - fasttext.sh: [latest release](https://github.com/facebookresearch/fastText/releases/latest)
    - kubernetes-utils.sh: [kube-prompt release](https://github.com/c-bata/kube-prompt/releases/latest)
    - portainer.sh: [latests release](https://github.com/portainer/portainer/releases/latest)
+   - rapids-gpu.sh: [latests release](https://rapids.ai/)
 
 7. Update `minimmal` and `light` flavor python libraries:
 
@@ -99,11 +100,11 @@ We plan to do a full workspace image update (all libraries and tools) about ever
     - Run from inside workspace: `tutorials/workspace-test-utilities.ipynb`
     - Check all gui-tools in VNC Desktop (just open and see of running): VS Code, glogg, Chrome, Firefox, DB Browser, Task Manager
     - Run from inside workspace: `/bin/bash /resources/tests/scan-python-vulnerabilities.sh`
-    - Run from inside workspace: `/bin/bash /resources/tests/scan-clamav-virus.sh`
+    - Run from inside workspace (virus scan via [clamav](https://www.clamav.net/)): `/bin/bash /resources/tests/scan-clamav-virus.sh`
     - Run from inside workspace: `python /resources/tests/test-code-execution.py`
     - Update reports and licenses in Git repo
     - Check if tutorials are still working in `/workspace/tutorials`
-    - Scan workspace image: `docker scan --dependency-tree --file Dockerfile ml-workspace` -> no high-severity vulnerabilities.
+    - Scan workspace image with [docker scan](https://docs.docker.com/engine/scan/): `docker scan --accept license --dependency-tree --file Dockerfile ml-workspace`. Fix or prevent high- or critical-severity vulnerabilities. Update report in `resources/reports/docker-snyk-scan.txt`.
 
 11. Update, build and test `gpu` flavor:
 
