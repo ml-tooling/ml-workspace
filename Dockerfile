@@ -902,6 +902,8 @@ RUN \
     apt-get install -y socat && \
     # GCC OpenMP (GOMP) support library
     apt-get install -y libgomp1 && \
+    # Install GNU parallel
+    apt-get install parallel && \
     # Update git to newest version
     add-apt-repository -y ppa:git-core/ppa  && \
     apt-get update && \
