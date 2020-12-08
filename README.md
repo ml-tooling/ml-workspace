@@ -1046,7 +1046,7 @@ conda activate my-conda-3.7
 # Check python installation
 python --version
 # Optional: Create Jupyter kernel for this python version
-pip install ipykerne
+pip install ipykernel
 python -m ipykernel install --user --name=my-conda-3.7 --display-name="my-conda ($(python --version))"
 # Optional: Close environment session
 conda deactivate
