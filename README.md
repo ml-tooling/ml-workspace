@@ -787,7 +787,7 @@ The workspace is pre-installed with many popular interpreters, data science libr
 
 The full list of installed tools can be found within the [Dockerfile](https://github.com/ml-tooling/ml-workspace/blob/master/Dockerfile).
 
-> _For every minor version release, we run vulnerability, virus, and security checks within the workspace using [vuls](https://vuls.io/), [safety](https://pyup.io/safety/), and [clamav](https://www.clamav.net/) to make sure that the workspace environment is as secure as possible._
+> _For every minor version release, we run vulnerability, virus, and security checks within the workspace using [safety](https://pyup.io/safety/), [clamav](https://www.clamav.net/), [trivy](https://github.com/aquasecurity/trivy), and [snyk via docker scan](https://docs.docker.com/engine/scan/) to make sure that the workspace environment is as secure as possible. We are committed to fix and prevent all high- or critical-severity vulnerabilities. You can find some up-to-date reports [here](https://github.com/ml-tooling/ml-workspace/tree/master/resources/reports)._
 
 ### Extensibility
 
