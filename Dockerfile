@@ -898,6 +898,8 @@ RUN \
     # Strict channel priority currently makes problems with installing with conda
     conda config --system --set channel_priority false  && \
     apt-get update && \
+    # Install socat to map remote ports to localhost
+    apt-get install -y socat && \
     # Update git to newest version
     add-apt-repository -y ppa:git-core/ppa  && \
     apt-get update && \
