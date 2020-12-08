@@ -4,13 +4,8 @@ FROM $ARG_WORKSPACE_BASE_IMAGE
 
 ARG ARG_WORKSPACE_FLAVOR="gpu"
 ENV WORKSPACE_FLAVOR=$ARG_WORKSPACE_FLAVOR
-# argument needs to be initalized again
-ARG ARG_WORKSPACE_VERSION="latest"
-ENV WORKSPACE_VERSION=$ARG_WORKSPACE_VERSION
 
 USER root
-
-#TODO: tests are currently empty COPY resources/tests/ /resources/tests
 
 ### NVIDIA CUDA BASE ###
 # https://gitlab.com/nvidia/container-images/cuda/-/blob/master/dist/10.1/ubuntu18.04-x86_64/base/Dockerfile
@@ -151,6 +146,7 @@ RUN \
     pip uninstall -y tensorflow tensorflow-cpu intel-tensorflow && \
     pip install --no-cache-dir tensorflow-gpu==2.3.1 && \
     # Install ONNX GPU Runtime
+    # TODO: 1.4.x is latest with cuda 10.1 support
     pip uninstall -y onnxruntime && \
     pip install --no-cache-dir onnxruntime-gpu==1.4.0 && \
     # Install pytorch gpu
@@ -169,29 +165,35 @@ RUN \
     pip install --upgrade --force-reinstall nvidia-ml-py3 && \
     # SpeedTorch: https://github.com/Santosh-Gupta/SpeedTorch
     pip install --no-cache-dir SpeedTorch && \
-    # TODO: Install blazingsql
-    # Install Jupyterlab GPU Plugin: https://github.com/jacobtomlinson/jupyterlab-nvdashboard - TODO deactivate jupyter plugin
-    # pip install --no-cache-dir jupyterlab-nvdashboard && \
-    # jupyter labextension install jupyterlab-nvdashboard && \
+    # Ipyexperiments - fix memory leaks
+    pip install --no-cache-dir ipyexperiments && \
     # Cleanup
     clean-layer.sh
 
-# TODO: if > Ubuntu 19.04 -> install nvtop: https://github.com/Syllo/nvtop
-# Install Rapids: https://rapids.ai/start.html#conda-install
-# conda install -c rapidsai -c nvidia -c conda-forge -c defaults \
-# rapids=0.11 \
-# python=3.7 \
-# cudatoolkit=10.1 && \
-# Install graphvite graph embedding lib: https://github.com/DeepGraphLearning/graphvite
-# conda install -c milagraph graphvite cudatoolkit=10.1 && \
-
-# Install Nvidia Apex
-# RUN cd $RESOURCES_PATH && \
-#    git clone https://github.com/NVIDIA/apex && \
-#    cd apex && \
-#    pip install -v --no-cache-dir --global-option="--cpp_ext" --global-option="--cuda_ext" ./ && \
+RUN \
+    # Install Jupyterlab GPU Plugin: https://github.com/rapidsai/jupyterlab-nvdashboard
+    pip install jupyterlab-nvdashboard && \
+    jupyter labextension install jupyterlab-nvdashboard && \
+    # Clean jupyter lab cache: https://github.com/jupyterlab/jupyterlab/issues/4930
+    jupyter lab clean && \
+    jlpm cache clean && \
+    # Remove build folder -> should be remove by lab clean as well?
+    rm -rf $CONDA_ROOT/share/jupyter/lab/staging && \
     # Cleanup
-#   clean-layer.sh
+    clean-layer.sh
+
+# TODO install DALI: https://docs.nvidia.com/deeplearning/dali/user-guide/docs/installation.html#dali-and-ngc
+# TODO: removed rapids install, provided via installer script
+# TODO: if > Ubuntu 19.04 -> install nvtop: https://github.com/Syllo/nvtop
+# TODO: Install Arrrayfire: https://arrayfire.com/download/ pip install --no-cache-dir arrayfire && \
+# TODO Nvidia Apex: https://github.com/NVIDIA/apex
+
+# cd $RESOURCES_PATH && \
+# git clone https://github.com/NVIDIA/apex && \
+# cd apex  && \
+# # Surpress output - if there is a problem remove to see logs &> /dev/null
+# pip install -v --disable-pip-version-check --no-cache-dir --global-option="--cpp_ext" --global-option="--cuda_ext" ./ && \
+# rm -rf apex && \
 
 # https://www.anaconda.com/getting-started-with-gpu-computing-in-anaconda/
 
@@ -205,27 +207,19 @@ ENV TF_FORCE_GPU_ALLOW_GROWTH true
 
 ### GPU TOOLS ###
 
-# Install Glances & Netdata GPU Support
-# TODO: not needed since this should be discovered automaticallys
-# RUN \
-#     apt-get update -y && \
-#     apt-get install lm-sensors netcat iproute2 -y && \
-#     apt-get clean && \
-#     rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/* && \
-#     git clone https://github.com/Splo0sh/netdata_nv_plugin --depth 1 /tmp/netdata_nv_plugin && \
-#     cp /tmp/netdata_nv_plugin/nv.chart.py /usr/libexec/netdata/python.d/ && \
-#     cp /tmp/netdata_nv_plugin/python_modules/pynvml.py /usr/libexec/netdata/python.d/python_modules/ && \
-#     cp /tmp/netdata_nv_plugin/nv.conf /etc/netdata/python.d/ && \
-#     # Cleanup
-#     clean-layer.sh
-
 ### END GPU TOOLS ###
 
 ### CONFIGURATION ###
 
-# TODO what does this line do?
-RUN \
-    echo 'Defaults env_keep += "ftp_proxy http_proxy https_proxy no_proxy"' >> /etc/sudoers
+#TODO: tests are currently empty COPY resources/tests/ /resources/tests
+
+# TODO what does this line do? - removed for now
+#RUN \
+#    echo 'Defaults env_keep += "ftp_proxy http_proxy https_proxy no_proxy"' >> /etc/sudoers
+
+# argument needs to be initalized again
+ARG ARG_WORKSPACE_VERSION="latest"
+ENV WORKSPACE_VERSION=$ARG_WORKSPACE_VERSION
 
 # Overwrite & add Labels
 ARG ARG_BUILD_DATE="unknown"
@@ -242,10 +236,3 @@ LABEL \
     "org.label-schema.vcs-ref"=$ARG_VCS_REF \
     "org.label-schema.build-date"=$ARG_BUILD_DATE
 
-# TODO use temp as data environment to use temp folder?
-# DATA_ENVIRONMENT="temp"
-
-# USER $NB_USER
-
-#RUN \
-#    echo "export PATH=$PATH" >> $HOME/.bashrc
