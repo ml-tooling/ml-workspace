@@ -17,16 +17,16 @@ if ! hash clamscan 2>/dev/null; then
     # https://help.ubuntu.com/community/ClamAV
     echo "Installing ClamAV - Virus Scan"
     apt-get update
-    apt-get install -y clamav clamtk
+    apt-get install -y clamav clamtk clamav-daemon
 else
-    echo "ClamAV is already installed" 
+    echo "ClamAV is already installed"
 fi
 
 # Run
 if [ $INSTALL_ONLY = 0 ] ; then
-    echo "Running clamav scan"
-    sudo freshclam
+    echo "Running clamav scan..."
+    freshclam
     mkdir -p  $WORKSPACE_HOME/reports
-    sudo clamscan --max-filesize=3999M --max-scansize=3999M --exclude-dir=/sys/* -i -r / | tee $WORKSPACE_HOME/reports/clamav-scan.txt
+    clamscan --max-filesize=3999M --max-scansize=3999M --exclude-dir="/sys/*" --infected --recursive=yes / | tee $WORKSPACE_HOME/reports/clamav-virus-scan.txt
     sleep 100
 fi
