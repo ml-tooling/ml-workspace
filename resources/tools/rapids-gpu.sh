@@ -13,11 +13,14 @@ for arg in "$@"; do
 done
 
 
-if hash nvidia-smi 2>/dev/null; then
+if hash nvcc 2>/dev/null; then
+    # https://rapids.ai/start.html#conda-install
     echo "Installing Rapids.ai. Please wait..."
-    conda install --yes -c rapidsai -c nvidia -c conda-forge -c defaults rapids=0.11 python=3.7 cudatoolkit=10.1
+    conda create -n rapids-0.16 -c rapidsai -c nvidia -c conda-forge -c defaults rapids=0.16 python=3.8 ipykernel cudatoolkit=10.1
+    conda run -n rapids-0.16 python -m ipykernel install --user --name=rapids-0.16 --display-name="rapids-0.16"
+    # TODO: Install blazingsql
 else
-    echo "Nvidia-smi is not installed. Rapids.ai requires CUDA support, so it cannot be installed within this container."
+    echo "NVCC / CUDA is not installed. Rapids.ai requires CUDA support, so it cannot be installed within this container."
 fi
 
 # Run
