@@ -96,7 +96,6 @@ RUN \
         libreadline-dev \
         libedit-dev \
         xz-utils \
-        libffi-dev \
         gawk \
         # Simplified Wrapper and Interface Generator (5.8MB) - required by lots of py-libs
         swig \
@@ -151,7 +150,6 @@ RUN \
         libtiff-dev \
         libjpeg-dev \
         libpng-dev \
-        # TODO: no 18.04 installation candidate: libjasper-dev \
         libglib2.0-0 \
         libxext6 \
         libsm6 \
@@ -898,6 +896,8 @@ RUN \
     # Strict channel priority currently makes problems with installing with conda
     conda config --system --set channel_priority false  && \
     apt-get update && \
+    # TODO: lib contains high vulnerability
+    # apt-get install -y --no-install-recommends libffi-dev \
     # Install socat to map remote ports to localhost
     apt-get install -y --no-install-recommends socat && \
     # GCC OpenMP (GOMP) support library
@@ -1066,7 +1066,7 @@ RUN \
     chmod 1777 /tmp && \
     # TODO: does 1777 work fine? chmod a+rwx /tmp && \
     # Set /workspace as default directory to navigate to as root user
-    echo  'cd '$WORKSPACE_HOME >> $HOME/.bashrc
+    echo 'cd '$WORKSPACE_HOME >> $HOME/.bashrc
 
 # MKL and Hardware Optimization
 # Fix problem with MKL with duplicated libiomp5: https://github.com/dmlc/xgboost/issues/1715
