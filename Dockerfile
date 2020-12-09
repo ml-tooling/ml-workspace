@@ -705,7 +705,7 @@ RUN \
     jupyter nbextension enable collapsible_headings/main --sys-prefix && \
     jupyter nbextension enable codefolding/main --sys-prefix && \
     # TODO: tensorboard support is not working right now: Activate Jupyter Tensorboard
-    pip install --no-cache-dir git+https://github.com/rhangelxs/jupyter_tensorboard.git && \
+    pip install --no-cache-dir git+https://github.com/InfuseAI/jupyter_tensorboard.git && \
     jupyter tensorboard enable --sys-prefix && \
     # TODO moved to configuration files = resources/jupyter/nbconfig Edit notebook config
     # echo '{"nbext_hide_incompat": false}' > $HOME/.jupyter/nbconfig/common.json && \
@@ -839,7 +839,7 @@ RUN \
 # https://github.com/cdr/code-server/issues/171
 # Alternative install: /usr/local/bin/code-server --user-data-dir=$HOME/.config/Code/ --extensions-dir=$HOME/.vscode/extensions/ --install-extension ms-python-release && \
 RUN \
-    SLEEP_TIMER=20 && \
+    SLEEP_TIMER=25 && \
     # If minimal flavor -> exit here
     if [ "$WORKSPACE_FLAVOR" = "minimal" ]; then \
         exit 0 ; \
