@@ -2,7 +2,8 @@
 
 ## ML Frameworks
 # pytorch is installed via conda
-tensorflow-cpu==2.3.1 # TensorFlow is an open source machine learning framework for everyone.
+# TODO: 2.3.1 version uses tensorboard 2.4.0 with bug with relativ pathes
+intel-tensorflow==2.3.0 # TensorFlow is an open source machine learning framework for everyone.
 keras==2.4.3 # Deep Learning for humans
 xgboost==1.2.1 # Scalable, Portable and Distributed Gradient Boosting
 scikit-learn==0.23.2 # A set of python modules for machine learning and data mining

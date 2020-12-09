@@ -144,7 +144,8 @@ RUN \
     pip install --no-cache-dir scikit-cuda && \
     # Install tensorflow gpu
     pip uninstall -y tensorflow tensorflow-cpu intel-tensorflow && \
-    pip install --no-cache-dir tensorflow-gpu==2.3.1 && \
+    # TODO: tensorflow 2.3.1 installs tenorboard 2.4.0 with problems, use 2.3.0
+    pip install --no-cache-dir tensorflow-gpu==2.3.0 && \
     # Install ONNX GPU Runtime
     # TODO: 1.4.x is latest with cuda 10.1 support
     pip uninstall -y onnxruntime && \

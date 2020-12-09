@@ -79,7 +79,8 @@ gunicorn==20.0.4 # WSGI HTTP Server for UNIX
 uvicorn==0.12.3 # The lightning-fast ASGI server.
 
 # ML libraries
-tensorboard==2.4.0 # TensorBoard lets you watch Tensors Flow
+# TODO: tensorboard 2.4.0 introduces problem with relativ paths: https://github.com/tensorflow/tensorboard/issues/4421
+tensorboard==2.3.0 # TensorBoard lets you watch Tensors Flow
 scipy==1.5.4 # SciPy: Scientific Library for Python
 
 ## Glances
