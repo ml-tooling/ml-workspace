@@ -171,17 +171,18 @@ RUN \
     # Cleanup
     clean-layer.sh
 
-RUN \
-    # Install Jupyterlab GPU Plugin: https://github.com/rapidsai/jupyterlab-nvdashboard
-    pip install jupyterlab-nvdashboard && \
-    jupyter labextension install jupyterlab-nvdashboard && \
-    # Clean jupyter lab cache: https://github.com/jupyterlab/jupyterlab/issues/4930
-    jupyter lab clean && \
-    jlpm cache clean && \
-    # Remove build folder -> should be remove by lab clean as well?
-    rm -rf $CONDA_ROOT/share/jupyter/lab/staging && \
-    # Cleanup
-    clean-layer.sh
+# TODO: nvdashboard does not work with relative paths
+# RUN \
+#     # Install Jupyterlab GPU Plugin: https://github.com/rapidsai/jupyterlab-nvdashboard
+#     pip install jupyterlab-nvdashboard && \
+#     jupyter labextension install jupyterlab-nvdashboard && \
+#     # Clean jupyter lab cache: https://github.com/jupyterlab/jupyterlab/issues/4930
+#     jupyter lab clean && \
+#     jlpm cache clean && \
+#     # Remove build folder -> should be remove by lab clean as well?
+#     rm -rf $CONDA_ROOT/share/jupyter/lab/staging && \
+#     # Cleanup
+#     clean-layer.sh
 
 # TODO install DALI: https://docs.nvidia.com/deeplearning/dali/user-guide/docs/installation.html#dali-and-ngc
 # TODO: removed rapids install, provided via installer script
