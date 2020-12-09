@@ -111,6 +111,8 @@ RUN \
         sqlite3 \
         # XML Utils
         xmlstarlet \
+        # GNU parallel
+        parallel \
         #  R*-tree implementation - Required for earthpy, geoviews (3MB)
         libspatialindex-dev \
         # Search text and binary files
@@ -135,6 +137,8 @@ RUN \
         bash-completion \
         # ping support
         iputils-ping \
+        # Map remote ports to localhosM
+        socat \
         # Json Processor
         jq \
         rsync \
@@ -180,6 +184,11 @@ RUN \
         libbz2-dev \
         liblzma-dev \
         zlib1g-dev && \
+    # Update git to newest version
+    add-apt-repository -y ppa:git-core/ppa  && \
+    apt-get update && \
+    apt-get install -y --no-install-recommends git && \
+    # Fix all execution permissions
     chmod -R a+rwx /usr/local/bin/ && \
     # configure dynamic linker run-time bindings
     ldconfig && \
@@ -274,6 +283,8 @@ RUN wget --no-verbose https://repo.anaconda.com/miniconda/Miniconda3-py38_${COND
     $CONDA_ROOT/bin/conda config --system --set auto_update_conda False && \
     $CONDA_ROOT/bin/conda config --system --set show_channel_urls True && \
     $CONDA_ROOT/bin/conda config --system --set channel_priority strict && \
+    # Deactivate pip interoperability (currently default), otherwise conda tries to uninstall pip packages
+    $CONDA_ROOT/bin/conda config --system --set pip_interop_enabled false && \
     # Update conda
     $CONDA_ROOT/bin/conda update -y -n base -c defaults conda && \
     $CONDA_ROOT/bin/conda update -y setuptools && \
@@ -574,7 +585,7 @@ RUN \
         conda install -y --update-all 'python='$PYTHON_VERSION nomkl ; \
     else \
         # Install mkl for faster computations
-        conda install -y --update-all 'python='$PYTHON_VERSION mkl ; \
+        conda install -y --update-all 'python='$PYTHON_VERSION mkl-service mkl ; \
     fi && \
     # Install some basics - required to run container
     conda install -y --update-all \
@@ -626,12 +637,16 @@ RUN \
     # pandoc -> installs libluajit -> problem for openresty
     # HDF5 (19MB)
     apt-get install -y --no-install-recommends libhdf5-dev && \
+    # TBB threading optimization
+    apt-get install -y --no-install-recommends libtbb-dev && \
     # required for tesseract: 11MB - tesseract-ocr-dev?
     apt-get install -y --no-install-recommends libtesseract-dev && \
     pip install --no-cache-dir tesserocr && \
     # Required for tensorflow graphics (9MB)
     apt-get install -y --no-install-recommends libopenexr-dev && \
     pip install --no-cache-dir tensorflow-graphics==2020.5.20 && \
+    # GCC OpenMP (GOMP) support library
+    apt-get install -y --no-install-recommends libgomp1 && \
     # Install libjpeg turbo for speedup in image processing
     #TODO conda install -y 'python='$PYTHON_VERSION libjpeg-turbo && \
     # Faiss - A library for efficient similarity search and clustering of dense vectors.
@@ -690,8 +705,8 @@ RUN \
     jupyter nbextension enable collapsible_headings/main --sys-prefix && \
     jupyter nbextension enable codefolding/main --sys-prefix && \
     # TODO: tensorboard support is not working right now: Activate Jupyter Tensorboard
-    #pip install --no-cache-dir git+https://github.com/rhangelxs/jupyter_tensorboard.git && \
-    # jupyter tensorboard enable --sys-prefix && \
+    pip install --no-cache-dir git+https://github.com/rhangelxs/jupyter_tensorboard.git && \
+    jupyter tensorboard enable --sys-prefix && \
     # TODO moved to configuration files = resources/jupyter/nbconfig Edit notebook config
     # echo '{"nbext_hide_incompat": false}' > $HOME/.jupyter/nbconfig/common.json && \
     cat $HOME/.jupyter/nbconfig/notebook.json | jq '.toc2={"moveMenuLeft": false,"widenNotebook": false,"skip_h1_title": false,"sideBar": true,"number_sections": false,"collapse_to_match_collapsible_headings": true}' > tmp.$$.json && mv tmp.$$.json $HOME/.jupyter/nbconfig/notebook.json && \
@@ -764,7 +779,7 @@ RUN \
         exit 0 ; \
     fi && \
     # Install jupyterlab language server support
-    pip install --pre jupyter-lsp && \
+    pip install jupyter-lsp && \
     $lab_ext_install @krassowski/jupyterlab-lsp && \
     # For Plotly
     $lab_ext_install jupyterlab-plotly && \
@@ -858,7 +873,7 @@ RUN \
     rm prettier-vscode-$PRETTIER_VERSION.vsix && \
     mv extension $HOME/.vscode/extensions/prettier-vscode-$PRETTIER_VERSION.vsix && \
     # Install vs code jupyter
-    VS_JUPYTER_VERSION="2020.11.392013122" && \
+    VS_JUPYTER_VERSION="2020.11.399280825" && \
     wget --retry-on-http-error=429 --waitretry 15 --tries 5 --no-verbose https://marketplace.visualstudio.com/_apis/public/gallery/publishers/ms-toolsai/vsextensions/jupyter/$VS_JUPYTER_VERSION/vspackage -O ms-toolsai.jupyter-$VS_JUPYTER_VERSION.vsix && \
     bsdtar -xf ms-toolsai.jupyter-$VS_JUPYTER_VERSION.vsix extension && \
     rm ms-toolsai.jupyter-$VS_JUPYTER_VERSION.vsix && \
@@ -891,30 +906,11 @@ RUN \
 ### INCUBATION ZONE ###
 
 RUN \
-    # Deactivate pip interoperability: makes problems with lots of package
-    conda config --system --set pip_interop_enabled false && \
     # Strict channel priority currently makes problems with installing with conda
     conda config --system --set channel_priority false  && \
     apt-get update && \
     # TODO: lib contains high vulnerability
     # apt-get install -y --no-install-recommends libffi-dev \
-    # Install socat to map remote ports to localhost
-    apt-get install -y --no-install-recommends socat && \
-    # GCC OpenMP (GOMP) support library
-    apt-get install -y --no-install-recommends libgomp1 && \
-    # Install GNU parallel
-    apt-get install -y --no-install-recommends parallel && \
-    # Update git to newest version
-    add-apt-repository -y ppa:git-core/ppa  && \
-    apt-get update && \
-    apt-get install -y --no-install-recommends git && \
-    # Install mkl service
-    conda install -y mkl-service && \
-    # TBB threading optimization
-    apt-get install -y --no-install-recommends libtbb-dev && \
-    # Newer jedi makes trouble with jupyterlab-lsp
-    # ! Not moved to prevent autoupdate
-    # pip install --no-cache-dir jedi==0.15.2 && \
     # Required by magenta
     # apt-get install -y libasound2-dev && \
     # apt-get install -y xfce4-clipman && \
