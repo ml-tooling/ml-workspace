@@ -23,7 +23,8 @@ c.NotebookApp.disable_check_xsrf = True
 c.NotebookApp.allow_origin = "*"
 c.NotebookApp.trust_xheaders = True
 c.MappingKernelManager.buffer_offline_messages = True
-# c.NotebookApp.log_level="WARN"
+c.Application.log_level = "WARN"
+c.NotebookApp.log_level = "WARN"
 
 c.JupyterApp.answer_yes = True
 
