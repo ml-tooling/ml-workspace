@@ -9,7 +9,7 @@ requests==2.25.0 # Python HTTP for Humans.
 # NOTE: use
 urllib3==1.25.11 # HTTP library with thread-safe connection pooling, file post, and more.
 idna==2.10 # Internationalized Domain Names in Applications (IDNA)
-pandas==1.1.4 # Powerful data structures for data analysis, time series, and statistics
+pandas==1.1.5 # Powerful data structures for data analysis, time series, and statistics
 attrs==20.3.0 # Classes Without Boilerplate
 six==1.15.0 # Python 2 and 3 compatibility utilities
 future==0.18.2 # Clean single-source support for Python 3 and 2
@@ -35,7 +35,7 @@ seaborn==0.11.0 # Python visualization library based on matplotlib  - Basic
 SQLAlchemy==1.3.20 # Database Abstraction Library
 sortedcontainers==2.3.0 # Sorted Containers -- Sorted List, Sorted Dict, Sorted Set
 simplejson==3.17.2 # Simple, fast, extensible JSON encoder/decoder for Python
-Pygments==2.7.2 # Pygments is a syntax highlighting package written in Python.
+Pygments==2.7.3 # Pygments is a syntax highlighting package written in Python.
 jsonschema==3.2.0 # An implementation of JSON Schema validation for Python
 loguru==0.5.3 # Python logging made (stupidly) simple
 click==7.1.2 # Composable command line interface toolkit
@@ -55,7 +55,7 @@ cffi==1.14.4 # Foreign Function Interface for Python calling C code.
 tox==3.20.1 # tox is a generic virtualenv management and test command line tool
 pipenv==2020.11.15 # Python Development Workflow for Humans.
 poetry==1.1.4 # Python dependency management and packaging made easy
-virtualenv==20.2.1 # Virtual Python Environment builder
+virtualenv==20.2.2 # Virtual Python Environment builder
 pytest==6.1.2 # pytest: simple powerful testing with Python
 autopep8==1.5.4 # A tool that automatically formats Python code to conform to the PEP 8 style guide
 flake8==3.8.4 # The modular source code checker: pep8, pyflakes and co
