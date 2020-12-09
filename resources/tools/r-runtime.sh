@@ -21,7 +21,7 @@ if ! hash Rscript 2>/dev/null; then
     # TODO install: r-cran-rodbc via apt-get -> removed since it install an r-base via apt-get
     # Install newest version, basics, and essentials https://docs.anaconda.com/anaconda/packages/r-language-pkg-docs/
     # use conda-forge https://anaconda.org/conda-forge/r-base
-    conda install -y --freeze-installed r-base r-reticulate rpy2 r-rodbc unixodbc cyrus-sasl r-cairo r-irkernel r-essentials
+    conda install -y --freeze-installed r-base r-reticulate rpy2 r-rodbc unixodbc cyrus-sasl r-cairo r-irkernel r-essentials r-languageserver
     # link R executable to usr/bin
     ln -s $CONDA_ROOT/bin/R /usr/bin/R
     apt-get clean
