@@ -31,13 +31,13 @@ if not args.get(FLAG_FLAVOR):
 flavor = str(args[FLAG_FLAVOR]).lower().strip()
 
 if flavor == "all":
-    args[FLAG_FLAVOR] = "full"
+    args[FLAG_FLAVOR] = "minimal"
     build_utils.build(".", args)
 
     args[FLAG_FLAVOR] = "light"
     build_utils.build(".", args)
 
-    args[FLAG_FLAVOR] = "minimal"
+    args[FLAG_FLAVOR] = "full"
     build_utils.build(".", args)
 
     args[FLAG_FLAVOR] = "r"
