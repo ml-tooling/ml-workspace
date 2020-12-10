@@ -13,7 +13,7 @@ for arg in "$@"; do
 done
 
 if ! hash sqlectron 2>/dev/null; then
-    cd /resources
+    cd $RESOURCES_PATH
     echo "Installing Sqlectron Term. Please wait..."
     npm install -g sqlectron-term
     echo "Installing Sqlectron GUI"
@@ -27,6 +27,6 @@ fi
 if [ $INSTALL_ONLY = 0 ] ; then
     echo "Starting Sqlectron..."
     echo "Sqlectron is a GUI application. Make sure to run this script only within the VNC Desktop."
-    sqlectron
+    sqlectron --no-sandbox
     sleep 10
 fi

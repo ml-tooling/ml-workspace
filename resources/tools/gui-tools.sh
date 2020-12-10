@@ -24,3 +24,5 @@ LD_LIBRARY_PATH="" LD_PRELOAD="" apt-get install -y --no-install-recommends \
         ark \
         neovim \
         muon
+# Fix tmp permissions. Needed?
+chmod 1777 /tmp
