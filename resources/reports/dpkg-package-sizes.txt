@@ -5,7 +5,8 @@
 168547	openjdk-11-jre-headless
 117378	nodejs
 72359	libllvm10
-31508	git
+44735	libllvm3.9
+33817	git
 31074	libicu60
 30768	libatlas-base-dev
 28420	vim-runtime
@@ -66,8 +67,8 @@
 5826	libleptonica-dev
 5670	libgtk2.0-0
 5647	ubuntu-mono
-5446	linux-libc-dev
 5443	orage
+5434	linux-libc-dev
 5399	adwaita-icon-theme
 5386	libopenexr-dev
 5370	swig3.0
@@ -115,6 +116,7 @@
 3006	libbinutils
 3004	graphviz
 2993	libopenexr22
+2987	libgtk2-perl
 2796	gftp-common
 2789	vim
 2784	xrdp
@@ -133,6 +135,7 @@
 2431	libx11-dev
 2428	man-db
 2424	sqlite3
+2352	libclamav9
 2348	libgstreamer-plugins-base1.0-0
 2295	libprotoc10
 2293	libguava-java
@@ -161,6 +164,7 @@
 1928	dpkg-dev
 1882	libwnck-common
 1860	autoconf
+1858	git-man
 1829	xfdesktop4-data
 1829	libmaven3-core-java
 1806	jed-common
@@ -174,7 +178,6 @@
 1615	libtbb-dev
 1608	gvfs-backends
 1591	xarchiver
-1590	git-man
 1588	bash
 1569	libunistring2
 1544	libslang2
@@ -196,7 +199,7 @@
 1231	mousepad
 1228	libtool
 1227	e2fsprogs
-1223	openssl
+1222	openssl
 1213	libgcrypt20
 1212	login
 1196	libnet-ssleay-perl
@@ -204,6 +207,8 @@
 1176	font-manager
 1172	autogen
 1171	libepoxy0
+1168	sysstat
+1145	clamav-daemon
 1137	thunar-volman
 1112	libncursesw5-dev
 1086	gpg
@@ -217,13 +222,16 @@
 1028	libbonobo2-0
 1023	libtsan0
 1011	libkrb5-3
+1010	socat
 1004	libpulse0
 999	gir1.2-gtk-3.0
+997	parallel
 993	libncurses5-dev
 992	libgoogle-perftools4
 986	screen
 973	p7zip
 969	libtiff5-dev
+954	clamtk
 943	libgdata22
 933	pavucontrol
 932	wget
@@ -231,6 +239,7 @@
 921	libltdl-dev
 918	libfreetype6
 916	libpam-modules
+909	libglib-perl
 906	thunar
 905	libtracker-sparql-2.0-0
 884	baobab
@@ -259,6 +268,7 @@
 758	libarchive13
 757	dictionaries-common
 752	libmaven-resolver-java
+738	clamav
 734	libqt5dbus5
 731	gigolo
 726	libtheora0
@@ -279,7 +289,7 @@
 688	libpixman-1-0
 681	libxcb1-dev
 675	libwebrtc-audio-processing1
-673	python3-apt
+674	python3-apt
 671	libgl1
 668	xfonts-encodings
 665	libpcre3
@@ -339,6 +349,7 @@
 538	gftp-gtk
 537	sound-theme-freedesktop
 536	upower
+536	libpcre2-8-0
 535	xfdesktop4
 534	libpcre16-3
 533	xserver-xorg-video-radeon
@@ -367,6 +378,7 @@
 492	gnome-desktop3-data
 489	gvfs-daemons
 487	libxaw7
+487	libpango-perl
 482	libdevmapper1.02.1
 481	libhtml-tree-perl
 477	xfce4-pulseaudio-plugin
@@ -377,6 +389,7 @@
 473	libslang2-modules
 473	libapt-inst2.0
 467	libblas3
+467	clamav-freshclam
 466	gnupg-utils
 463	libglu1-mesa
 457	x11-xkb-utils
@@ -455,9 +468,9 @@
 362	libgc1c2
 362	gnupg
 358	libjudydebian1
+357	libcairo-perl
 356	libexif12
 354	liblsan0
-354	libffi-dev
 350	csh
 349	libstemmer0d
 349	libntfs-3g88
@@ -488,6 +501,7 @@
 319	libpng16-16
 319	git-flow
 317	libgpgme11
+317	clamdscan
 316	swig
 316	gtk2-engines-murrine
 314	libopus0
@@ -508,6 +522,7 @@
 298	libwnck-3-0
 292	libsemanage1
 291	xserver-xorg-input-wacom
+291	libtext-csv-perl
 290	libsmbclient
 288	libbonobo2-common
 287	libxext-dev
@@ -525,6 +540,7 @@
 273	libxkbcommon0
 272	libgtk2.0-common
 272	gsettings-desktop-schemas
+271	libtext-csv-xs-perl
 271	libcroco3
 270	xserver-xorg-video-nouveau
 270	libhcrypto4-heimdal
@@ -548,14 +564,15 @@
 259	libksba8
 258	libaprutil1
 254	dmsetup
+252	python-apt-common
 251	python3-cairo
 251	libcommons-io-java
 251	gpg-wks-client
 250	desktop-file-utils
-248	python-apt-common
 248	libsisu-plexus-java
 247	libmpdec2
 247	cron
+246	libtfm1
 244	multiarch-support
 244	gftp-text
 243	libgirepository-1.0-1
@@ -585,6 +602,7 @@
 215	libspatialindex-c4v5
 215	libhtml-parser-perl
 214	dash
+213	libjson-perl
 213	libatspi2.0-0
 212	libxfont2
 212	libpam0g
@@ -608,6 +626,7 @@
 196	software-properties-common
 195	xxd
 193	libselinux1
+192	libjson-xs-perl
 191	libgdbm-dev
 190	libupower-glib3
 189	libpcrecpp0v5
@@ -647,6 +666,7 @@
 165	librdmacm1
 164	libhiredis-dev
 164	libgpg-error0
+164	clamav-base
 163	librhash0
 163	libcairomm-1.0-1v5
 162	uuid-dev
@@ -707,6 +727,7 @@
 127	libitm1
 126	maven
 126	libhtml-format-perl
+125	logrotate
 125	libxft2
 124	libusb-1.0-0
 124	libevdev2
@@ -773,6 +794,7 @@
 94	libcdi-api-java
 94	libbz2-dev
 91	ncdu
+91	libmspack0
 90	libthai0
 90	libpangocairo-1.0-0
 90	libglx0
@@ -852,7 +874,6 @@
 67	libsm6
 67	libqrencode3
 67	libconfig9
-67	ctop
 66	libjson-c3
 65	lsb-release
 65	libxrandr2
@@ -862,6 +883,7 @@
 62	sensible-utils
 62	liberror-perl
 61	libxcb-render-util0
+61	libtypes-serialiser-perl
 61	libtie-ixhash-perl
 61	libsasl2-modules-db
 61	libfastjson4
@@ -924,6 +946,7 @@
 50	libwayland-cursor0
 50	libusbmuxd4
 50	libinput-bin
+50	libcommon-sense-perl
 50	libcanberra-gtk3-module
 50	gcc
 49	libxinerama1

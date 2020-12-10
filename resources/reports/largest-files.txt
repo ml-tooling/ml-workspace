@@ -1,30 +1,35 @@
   564.4 MB	577976	 /opt/conda/lib/python3.8/site-packages/tensorflow/python/_pywrap_tensorflow_internal.so
-  397.3 MB	406848	 /opt/conda/lib/python3.8/site-packages/xgboost/lib/libxgboost.so
+  397.3 MB	406844	 /opt/conda/lib/python3.8/site-packages/xgboost/lib/libxgboost.so
   167.0 MB	171012	 /usr/lib/chromium-browser/chromium-browser
+  155.2 MB	158972	 /root/.cache/trivy/db/trivy.db
   135.9 MB	139120	 /usr/lib/jvm/java-11-openjdk-amd64/jmods/java.base.jmod
-  135.4 MB	138656	 /usr/lib/jvm/java-11-openjdk-amd64/lib/modules
+  135.4 MB	138652	 /usr/lib/jvm/java-11-openjdk-amd64/lib/modules
   132.0 MB	135128	 /opt/conda/lib/python3.8/site-packages/torch/lib/libtorch_cpu.so
-  125.8 MB	128788	 /opt/conda/lib/libmklml_intel.so
+  125.8 MB	128784	 /opt/conda/lib/libmklml_intel.so
+  124.1 MB	127072	 /opt/conda/lib/python3.8/site-packages/_solib_k8/_U@mkl_Ulinux_S_S_Cmkl_Ulibs_Ulinux___Uexternal_Smkl_Ulinux_Slib/libmklml_intel.so
   124.1 MB	127072	 /opt/conda/lib/python3.8/site-packages/mxnet/libmklml_intel.so
   114.6 MB	117384	 /usr/share/code/code
-  108.2 MB	110800	 /opt/conda/bin/pandoc
+  112.4 MB	115100	 /var/lib/clamav/main.cvd
+  109.6 MB	112204	 /var/lib/clamav/daily.cvd
+  108.2 MB	110796	 /opt/conda/bin/pandoc
    88.3 MB	90456	 /opt/conda/lib/python3.8/site-packages/mxnet/libmxnet.so
    84.2 MB	86268	 /opt/conda/lib/python3.8/site-packages/jaxlib/xla_extension.so
    76.4 MB	78240	 /opt/conda/lib/python3.8/site-packages/llvmlite/binding/libllvmlite.so
-   71.1 MB	72828	 /opt/conda/lib/libmkl_core.so
+   71.1 MB	72824	 /opt/conda/lib/libmkl_core.so
    70.6 MB	72304	 /usr/lib/x86_64-linux-gnu/libLLVM-10.so.1
    70.4 MB	72100	 /usr/bin/node
    69.3 MB	70976	 /usr/lib/firefox/libxul.so
-   64.4 MB	65988	 /opt/conda/lib/python3.8/site-packages/dbbd1b679b3c31e8ff5a__mypyc.cpython-38-x86_64-linux-gnu.so
-   63.8 MB	65336	 /opt/conda/lib/libmkl_avx512_mic.so
-   62.8 MB	64264	 /opt/conda/share/jupyter/lab/static/vendors~main.40639bf379998cb3839f.js.map
-   61.4 MB	62832	 /opt/conda/lib/libmkl_intel_thread.so
-   60.4 MB	61864	 /opt/conda/lib/libmkl_avx512.so
+   64.4 MB	65984	 /opt/conda/lib/python3.8/site-packages/dbbd1b679b3c31e8ff5a__mypyc.cpython-38-x86_64-linux-gnu.so
+   63.8 MB	65332	 /opt/conda/lib/libmkl_avx512_mic.so
+   62.8 MB	64272	 /opt/conda/share/jupyter/lab/static/vendors~main.15cc557f02c75ed79a47.js.map
+   61.4 MB	62828	 /opt/conda/lib/libmkl_intel_thread.so
+   60.4 MB	61860	 /opt/conda/lib/libmkl_avx512.so
    57.1 MB	58420	 /opt/conda/lib/python3.8/site-packages/cv2/cv2.cpython-38-x86_64-linux-gnu.so
    49.8 MB	51040	 /opt/conda/lib/libmkl_avx.so
    47.5 MB	48592	 /opt/conda/lib/libmkl_mc3.so
    46.6 MB	47760	 /opt/conda/lib/libmkl_avx2.so
    45.9 MB	47028	 /opt/conda/lib/libmkl_mc.so
+   43.6 MB	44684	 /usr/lib/x86_64-linux-gnu/libLLVM-3.9.so.1
    39.9 MB	40848	 /opt/conda/lib/libmkl_def.so
    39.5 MB	40444	 /opt/conda/lib/libmkl_pgi_thread.so
    36.4 MB	37288	 /opt/conda/lib/python3.8/site-packages/tensorflow/libtensorflow_framework.so.2
@@ -42,6 +47,7 @@
    26.4 MB	27060	 /usr/local/share/.config/yarn/global/node_modules/code-server/lib/vscode/out/vs/workbench/workbench.web.api.js.map
    25.8 MB	26396	 /opt/conda/lib/python3.8/site-packages/pyarrow/libarrow.so.200
    25.7 MB	26276	 /usr/lib/x86_64-linux-gnu/libicudata.so.60.2
+   25.1 MB	25656	 /usr/local/bin/trivy
    24.1 MB	24696	 /usr/lib/gcc/x86_64-linux-gnu/7/cc1plus
    22.4 MB	22956	 /usr/lib/gcc/x86_64-linux-gnu/7/cc1
    22.2 MB	22696	 /opt/conda/lib/python3.8/site-packages/numpy/core/_multiarray_umath.cpython-38-x86_64-linux-gnu.so
@@ -60,12 +66,12 @@
    19.3 MB	19788	 /usr/lib/x86_64-linux-gnu/dri/kms_swrast_dri.so
    19.3 MB	19788	 /usr/lib/x86_64-linux-gnu/dri/iris_dri.so
    19.1 MB	19584	 /opt/conda/lib/python3.8/site-packages/mxnet/libmkldnn.so.0
-   19.1 MB	19564	 /opt/conda/lib/python3.8/site-packages/tensorboard/plugins/projector/tf_projector_plugin/projector_binary.js
    18.9 MB	19376	 /usr/lib/jvm/java-11-openjdk-amd64/lib/server/libjvm.so
-   18.4 MB	18864	 /usr/libexec/netdata/plugins.d/go.d.plugin
-   18.2 MB	18624	 /opt/conda/share/jupyter/lab/static/vendors~main.40639bf379998cb3839f.js
+   18.4 MB	18872	 /usr/libexec/netdata/plugins.d/go.d.plugin
+   18.2 MB	18624	 /opt/conda/share/jupyter/lab/static/vendors~main.15cc557f02c75ed79a47.js
    18.1 MB	18540	 /opt/conda/lib/libmkldnn.so.0.16.0
    17.3 MB	17760	 /usr/lib/jvm/java-11-openjdk-amd64/lib/server/classes.jsa
+   17.3 MB	17708	 /var/lib/apt/lists/archive.ubuntu.com_ubuntu_dists_bionic_universe_binary-amd64_Packages.lz4
    15.8 MB	16212	 /opt/conda/lib/python3.8/site-packages/bokeh/server/static/js/compiler.js
    15.3 MB	15716	 /opt/conda/lib/python3.8/site-packages/dgl/libdgl.so
    15.2 MB	15552	 /opt/conda/lib/python3.8/site-packages/torchvision/image.so
@@ -92,9 +98,3 @@
    12.7 MB	13020	 /usr/lib/x86_64-linux-gnu/dri/radeon_dri.so
    12.7 MB	13020	 /usr/lib/x86_64-linux-gnu/dri/r200_dri.so
    12.7 MB	13020	 /usr/lib/x86_64-linux-gnu/dri/nouveau_vieux_dri.so
-   12.7 MB	13020	 /usr/lib/x86_64-linux-gnu/dri/i965_dri.so
-   12.7 MB	13020	 /usr/lib/x86_64-linux-gnu/dri/i915_dri.so
-   12.7 MB	12968	 /opt/conda/lib/python3.8/site-packages/decord/.libs/libavcodec-4cf96bc1.so.58.65.103
-   12.6 MB	12932	 /root/.vscode/extensions/redhat.java-0.61.0/server/plugins/com.ibm.icu_64.2.0.v20190507-1337.jar
-   12.5 MB	12832	 /opt/conda/lib/libstdc++.so.6.0.28
-   12.5 MB	12816	 /opt/conda/lib/libmkl_intel_lp64.so
