@@ -943,7 +943,7 @@ RUN \
     # Faiss - A library for efficient similarity search and clustering of dense vectors.
     conda install -y --freeze-installed faiss-cpu && \
     # New Python Libraries:
-    # pip install --no-cache-dir
+    pip install --no-cache-dir catboost pycaret && \
     # Cleanup
     clean-layer.sh
 
