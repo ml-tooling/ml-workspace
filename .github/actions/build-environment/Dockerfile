@@ -1,4 +1,4 @@
-FROM mltooling/build-environment:0.6.1
+FROM mltooling/build-environment:0.6.6
 
 # Install basics
 # hadolint ignore=DL3005
