@@ -684,7 +684,7 @@ COPY \
 # Configure Jupyter / JupyterLab
 # Add as jupyter system configuration
 COPY resources/jupyter/nbconfig /etc/jupyter/nbconfig
-COPY resources/jupyter/jupyter_notebook_config.py resources/jupyter/jupyter_notebook_config.json /etc/jupyter/
+COPY resources/jupyter/jupyter_notebook_config.json /etc/jupyter/
 
 # install jupyter extensions
 RUN \
@@ -997,6 +997,7 @@ ENV \
 COPY resources/jupyter/tensorboard_notebook_patch.py $CONDA_PYTHON_DIR/site-packages/tensorboard/notebook.py
 
 # Additional jupyter configuration
+COPY resources/jupyter/jupyter_notebook_config.py /etc/jupyter/
 COPY resources/jupyter/sidebar.jupyterlab-settings $HOME/.jupyter/lab/user-settings/@jupyterlab/application-extension/
 COPY resources/jupyter/plugin.jupyterlab-settings $HOME/.jupyter/lab/user-settings/@jupyterlab/extensionmanager-extension/
 COPY resources/jupyter/ipython_config.py /etc/ipython/ipython_config.py
