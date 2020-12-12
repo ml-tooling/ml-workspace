@@ -12,17 +12,18 @@ for arg in "$@"; do
     esac
 done
 
-if ! hash spyder 2>/dev/null; then
-    echo "Installing Spyder. Please wait..."
-    conda install -y spyder
-else
-    echo "Spyder is already installed"
+if ! hash pgadmin4 2>/dev/null; then
+    echo "Installing pgAdmin4"
+    pipx install pgadmin4
 fi
 
 # Run
 if [ $INSTALL_ONLY = 0 ] ; then
-    echo "Starting Spyder..."
-    echo "Spyder is a GUI application. Make sure to run this script only within the VNC Desktop."
-    spyder
-    sleep 10
+  if [ -z "$PORT" ]; then
+        read -p "Please provide a port for starting pgAdmin4: " PORT
+    fi
+
+    echo "Starting pgAdmin4 on port "$PORT
+    # TODO: Currently does not use port, can only be used from within VNC
+    pgadmin4
 fi

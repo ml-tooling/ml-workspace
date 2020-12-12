@@ -25,22 +25,26 @@ apt-get install -y --no-install-recommends \
         libhdf5-serial-dev
 
 # Install jupyterlab sql: https://github.com/pbugnion/jupyterlab-sql
-pip install jupyterlab_sql
-jupyter serverextension enable jupyterlab_sql --py --sys-prefix
-jupyter lab build
-jupyter lab clean
-jlpm cache clean
+#pip install jupyterlab_sql
+#jupyter serverextension enable jupyterlab_sql --py --sys-prefix
+#jupyter lab build
+#jupyter lab clean
+#jlpm cache clean
 
 # Install vscode extensions
 if hash code 2>/dev/null; then
     # https://marketplace.visualstudio.com/items?itemName=RandomFractalsInc.vscode-data-preview
     LD_LIBRARY_PATH="" LD_PRELOAD="" code --user-data-dir=$HOME/.config/Code/ --extensions-dir=$HOME/.vscode/extensions/ --install-extension RandomFractalsInc.vscode-data-preview
+    sleep 5
     # https://marketplace.visualstudio.com/items?itemName=mechatroner.rainbow-csv
     LD_LIBRARY_PATH="" LD_PRELOAD="" code --user-data-dir=$HOME/.config/Code/ --extensions-dir=$HOME/.vscode/extensions/ --install-extension mechatroner.rainbow-csv
+    sleep 5
     # https://marketplace.visualstudio.com/items?itemName=dakara.transformer
     LD_LIBRARY_PATH="" LD_PRELOAD="" code --user-data-dir=$HOME/.config/Code/ --extensions-dir=$HOME/.vscode/extensions/ --install-extension dakara.transformer
+    sleep 5
     # https://marketplace.visualstudio.com/items?itemName=alexcvzz.vscode-sqlite
     LD_LIBRARY_PATH="" LD_PRELOAD="" code --user-data-dir=$HOME/.config/Code/ --extensions-dir=$HOME/.vscode/extensions/ --install-extension alexcvzz.vscode-sqlite
 else
     echo "Please install the desktop version of vscode via the vs-code-desktop.sh script to install vscode extensions."
+    sleep 5
 fi

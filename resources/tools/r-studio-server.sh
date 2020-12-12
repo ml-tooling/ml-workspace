@@ -15,13 +15,19 @@ for arg in "$@"; do
 done
 
 if [ ! -f "/usr/lib/rstudio-server/bin/rserver" ]; then
-    echo "Installing RStudio Server. Please wait..."
     cd $RESOURCES_PATH
-    # r-base and r-cairo (for displaying plots)
-    conda install -y -c r r-base r-cairo
+    if ! hash Rscript 2>/dev/null; then
+        echo "Installing R runtime. Please wait..."
+        # R not installed: Install r-base and r-cairo (for displaying plots)
+        conda install -y --freeze-installed r-base r-cairo
+    fi
     apt-get update
-    wget https://download2.rstudio.org/server/trusty/amd64/rstudio-server-1.2.5033-amd64.deb -O ./rstudio.deb
-    apt-get install -y ./rstudio.deb
+    # required by rstudio server
+    apt-get install -y --no-install-recommends libclang-dev
+    echo "Installing RStudio Server. Please wait..."
+    # TODO: RStudio version 1.3 does not support the no-auth setup, 1.4 will support it again
+    wget -q https://download2.rstudio.org/server/trusty/amd64/rstudio-server-1.2.5042-amd64.deb -O ./rstudio.deb
+    gdebi --non-interactive ./rstudio.deb
     rm ./rstudio.deb
     # Rstudio Server cannot run via root -> create rstudio user
     # https://support.rstudio.com/hc/en-us/articles/200552306-Getting-Started
@@ -35,10 +41,12 @@ if [ ! -f "/usr/lib/rstudio-server/bin/rserver" ]; then
     # https://docs.rstudio.com/ide/server-pro/1.0.34/r-sessions.html
     # https://support.rstudio.com/hc/en-us/articles/200552316-Configuring-the-Server
     # add conda lib to ld library -> otherwise plotting does not work: https://github.com/ml-tooling/ml-workspace/issues/6
-    printf "rsession-ld-library-path="$CONDA_DIR"/lib/" > /etc/rstudio/rserver.conf
+    mkdir -p /etc/rstudio
+    printf "rsession-ld-library-path="$CONDA_ROOT"/lib/" > /etc/rstudio/rserver.conf
     # configure working directory to workspace
     printf "session-default-working-dir="$WORKSPACE_HOME"\nsession-default-new-project-dir="$WORKSPACE_HOME > /etc/rstudio/rsession.conf
     printf "setwd ('"$WORKSPACE_HOME"')" > /home/rstudio/.Rprofile
+    apt-get clean
 else
     echo "RStudio Server is already installed"
 fi

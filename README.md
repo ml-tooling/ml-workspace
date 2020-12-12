@@ -380,10 +380,7 @@ For more information and documentation about ML Hub, please take a look at the [
 
 ## Support
 
-The ML Workspace project is maintained by [Lukas Masuch](https://twitter.com/LukasMasuch)
-and [Benjamin Räthlein](https://twitter.com/raethlein). Please understand that we won't be able
-to provide individual support via email. We also believe that help is much more
-valuable if it's shared publicly so that more people can benefit from it.
+This project is maintained by [Benjamin Räthlein](https://twitter.com/raethlein), [Lukas Masuch](https://twitter.com/LukasMasuch), and [Jan Kalkan](https://www.linkedin.com/in/jan-kalkan-b5390284/). Please understand that we won't be able to provide individual support via email. We also believe that help is much more valuable if it's shared publicly so that more people can benefit from it.
 
 | Type                     | Channel                                              |
 | ------------------------ | ------------------------------------------------------ |
@@ -391,6 +388,7 @@ valuable if it's shared publicly so that more people can benefit from it.
 | 🎁 **Feature Requests**  | <a href="https://github.com/ml-tooling/ml-workspace/issues?q=is%3Aopen+is%3Aissue+label%3Afeature-request+sort%3Areactions-%2B1-desc" title="Open Feature Request"><img src="https://img.shields.io/github/issues/ml-tooling/ml-workspace/feature-request.svg?label=feature%20requests"></a>                                 |
 | 👩‍💻 **Usage Questions**   |  <a href="https://stackoverflow.com/questions/tagged/ml-tooling" title="Open Question on Stackoverflow"><img src="https://img.shields.io/badge/stackoverflow-ml--tooling-orange.svg"></a> <a href="https://gitter.im/ml-tooling/ml-workspace" title="Chat on Gitter"><img src="https://badges.gitter.im/ml-tooling/ml-workspace.svg"></a> |
 | 🗯 **General Discussion** | <a href="https://gitter.im/ml-tooling/ml-workspace" title="Chat on Gitter"><img src="https://badges.gitter.im/ml-tooling/ml-workspace.svg"></a>  <a href="https://twitter.com/mltooling" title="ML Tooling on Twitter"><img src="https://img.shields.io/twitter/follow/mltooling.svg?style=social"></a>                  |
+| ❓ **Other Requests** | <a href="mailto:team@mltooling.org" title="Email ML Tooling Team"><img src="https://img.shields.io/badge/email-ML Tooling-green?logo=mail.ru&style=flat-square&logoColor=white"></a> |
 
 ---
 
@@ -654,7 +652,7 @@ In case you want to manually setup and manage remote kernels, use the [remote_ik
 remote_ikernel manage --add \
     --interface=ssh \
     --kernel_cmd="ipython kernel -f {connection_file}" \
-    --name="ml-server Py 3.6" \
+    --name="ml-server (Python)" \
     --host="my-workspace"
 ```
 
@@ -783,13 +781,13 @@ CMD ["python", "/resources/docker-entrypoint.py", "--code-only"]
 
 The workspace is pre-installed with many popular interpreters, data science libraries, and ubuntu packages:
 
-- **Interpreter:** Python 3.7 (Miniconda 3), Java 11 (OpenJDK), NodeJS 13, Scala, Perl 5
+- **Interpreter:** Python 3.8 (Miniconda 3), Java 11 (OpenJDK), NodeJS 14, Scala, Perl 5
 - **Python libraries:** Tensorflow, Keras, Pytorch, Sklearn, XGBoost, MXNet, Theano, and [many more](https://github.com/ml-tooling/ml-workspace/tree/master/resources/libraries)
-- **Package Manager:** `conda`, `pip`, `npm`, `apt-get`, `yarn`, `sdk`, `gdebi`, `mvn` ...  
+- **Package Manager:** `conda`, `pip`, `apt-get`, `npm`, `yarn`, `sdk`, `poetry`, `gdebi`, `mvn` ...  
 
 The full list of installed tools can be found within the [Dockerfile](https://github.com/ml-tooling/ml-workspace/blob/master/Dockerfile).
 
-> _For every minor version release, we run vulnerability, virus, and security checks within the workspace using [vuls](https://vuls.io/), [safety](https://pyup.io/safety/), and [clamav](https://www.clamav.net/) to make sure that the workspace environment is as secure as possible._
+> _For every minor version release, we run vulnerability, virus, and security checks within the workspace using [safety](https://pyup.io/safety/), [clamav](https://www.clamav.net/), [trivy](https://github.com/aquasecurity/trivy), and [snyk via docker scan](https://docs.docker.com/engine/scan/) to make sure that the workspace environment is as secure as possible. We are committed to fix and prevent all high- or critical-severity vulnerabilities. You can find some up-to-date reports [here](https://github.com/ml-tooling/ml-workspace/tree/master/resources/reports)._
 
 ### Extensibility
 
@@ -916,6 +914,155 @@ Using root-user (or users with sudo permission) within containers is generally n
 
 </details>
 
+<details>
+<summary><b>How to create and use a virtual environment?</b> (click to expand...)</summary>
+
+The workspace comes preinstalled with various common tools to create isolated Python environments (virtual environments). The following sections provide a quick-intro on how to use these tools within the workspace. You can find information on when to use which tool [here](https://stackoverflow.com/a/41573588). Please refer to the documentation of the given tool for additional usage information.
+
+**venv** (recommended):
+
+To create a virtual environment via [venv](https://docs.python.org/3/tutorial/venv.html), execute the following commands:
+
+```bash
+# Create environment in the working directory
+python -m venv my-venv
+# Activate environment in shell
+source ./my-venv/bin/activate
+# Optional: Create Jupyter kernel for this environment
+pip install ipykernel
+python -m ipykernel install --user --name=my-venv --display-name="my-venv ($(python --version))"
+# Optional: Close enviornment session
+deactivate
+```
+
+**pipenv** (recommended):
+
+To create a virtual environment via [pipenv](https://pipenv.pypa.io/en/latest/), execute the following commands:
+
+```bash
+# Create environment in the working directory
+pipenv install
+# Activate environment session in shell
+pipenv shell
+# Optional: Create Jupyter kernel for this environment
+pipenv install ipykernel
+python -m ipykernel install --user --name=my-pipenv --display-name="my-pipenv ($(python --version))"
+# Optional: Close environment session
+exit
+```
+
+**virtualenv**:
+
+To create a virtual environment via [virtualenv](https://virtualenv.pypa.io/en/latest/), execute the following commands:
+
+```bash
+# Create environment in the working directory
+virtualenv my-virtualenv
+# Activate environment session in shell
+source ./my-virtualenv/bin/activate
+# Optional: Create Jupyter kernel for this environment
+pip install ipykernel
+python -m ipykernel install --user --name=my-virtualenv --display-name="my-virtualenv ($(python --version))"
+# Optional: Close environment session
+deactivate
+```
+
+**conda**:
+
+To create a virtual environment via [conda](https://docs.conda.io/projects/conda/en/latest/user-guide/tasks/manage-environments.html), execute the following commands:
+
+```bash
+# Create environment (globally)
+conda create -n my-conda-env
+# Activate environment session in shell
+conda activate my-conda-env
+# Optional: Create Jupyter kernel for this environment
+python -m ipykernel install --user --name=my-conda-env --display-name="my-conda-env ($(python --version))"
+# Optional: Close environment session
+conda deactivate
+```
+
+**Tip: Shell Commands in Jupyter Notebooks:**
+
+If you install and use a virtual environment via a dedicated Jupyter Kernel and use shell commands within Jupyter (e.g. `!pip install matplotlib`), the wrong python/pip version will be used. To use the python/pip version of the selected kernel, do the following instead:
+
+```python
+import sys
+!{sys.executable} -m pip install matplotlib
+```
+
+</details>
+
+<details>
+<summary><b>How to install a different Python version?</b> (click to expand...)</summary>
+
+The workspace provides three easy options to install different Python versions alongside the main Python instance: [pyenv](https://github.com/pyenv/pyenv), [pipenv](https://pipenv.pypa.io/en/latest/cli/) (recommended), [conda](https://github.com/pyenv/pyenv).
+
+**pipenv** (recommended):
+
+To install a different python version (e.g. `3.7.8`) within the workspace via [pipenv](https://pipenv.pypa.io/en/latest/cli/), execute the following commands:
+
+```bash
+# Install python vers
+pipenv install --python=3.7.8
+# Activate environment session in shell
+pipenv shell
+# Check python installation
+python --version
+# Optional: Create Jupyter kernel for this environment
+pipenv install ipykernel
+python -m ipykernel install --user --name=my-pipenv --display-name="my-pipenv ($(python --version))"
+# Optional: Close environment session
+exit
+```
+
+**pyenv**:
+
+To install a different python version (e.g. `3.7.8`) within the workspace via [pyenv](https://github.com/pyenv/pyenv), execute the following commands:
+
+```bash
+# Install python version
+pyenv install 3.7.8
+# Make globally accessible
+pyenv global 3.7.8
+# Activate python version in shell
+pyenv shell 3.7.8
+# Check python installation
+python3.7 --version
+# Optional: Create Jupyter kernel for this python version
+python3.7 -m pip install ipykernel
+python3.7 -m ipykernel install --user --name=my-pyenv-3.7.8 --display-name="my-pyenv (Python 3.7.8)"
+```
+
+**conda**:
+
+To install a different python version (e.g. `3.7.8`) within the workspace via [conda](https://github.com/pyenv/pyenv), execute the following commands:
+
+```bash
+# Create environment with python version
+conda create -n my-conda-3.7 python=3.7.8
+# Activate environment session in shell
+conda activate my-conda-3.7
+# Check python installation
+python --version
+# Optional: Create Jupyter kernel for this python version
+pip install ipykernel
+python -m ipykernel install --user --name=my-conda-3.7 --display-name="my-conda ($(python --version))"
+# Optional: Close environment session
+conda deactivate
+```
+
+**Tip: Shell Commands in Jupyter Notebooks:**
+
+If you install and use another Python version via a dedicated Jupyter Kernel and use shell commands within Jupyter (e.g. `!pip install matplotlib`), the wrong python/pip version will be used. To use the python/pip version of the selected kernel, do the following instead:
+
+```python
+import sys
+!{sys.executable} -m pip install matplotlib
+```
+
+</details>
+
 ---
 
 <br>
@@ -1004,44 +1151,35 @@ The OpenResty/Nginx binary package used within the workspace requires to run on 
 
 ## Contribution
 
-- Pull requests are encouraged and always welcome. Read [`CONTRIBUTING.md`](https://github.com/ml-tooling/ml-workspace/tree/master/CONTRIBUTING.md) and check out [help-wanted](https://github.com/ml-tooling/ml-workspace/issues?utf8=%E2%9C%93&q=is%3Aopen+is%3Aissue+label%3A"help+wanted"+sort%3Areactions-%2B1-desc+) issues.
-- Submit Github issues for any [feature enhancements](https://github.com/ml-tooling/ml-workspace/issues/new?assignees=&labels=feature-request&template=02_feature-request.md&title=), [bugs](https://github.com/ml-tooling/ml-workspace/issues/new?assignees=&labels=bug&template=01_bug-report.md&title=), or [documentation](https://github.com/ml-tooling/ml-workspace/issues/new?assignees=&labels=enhancement%2C+docs&template=03_documentation.md&title=) problems. 
-- By participating in this project, you agree to abide by its [Code of Conduct](https://github.com/ml-tooling/ml-workspace/tree/master/CODE_OF_CONDUCT.md).
+- Pull requests are encouraged and always welcome. Read our [contribution guidelines](https://github.com/ml-tooling/workspace/tree/main/CONTRIBUTING.md) and check out [help-wanted](https://github.com/ml-tooling/workspace/issues?utf8=%E2%9C%93&q=is%3Aopen+is%3Aissue+label%3A"help+wanted"+sort%3Areactions-%2B1-desc+) issues.
+- Submit Github issues for any [feature request and enhancement](https://github.com/ml-tooling/workspace/issues/new?assignees=&labels=feature&template=02_feature-request.md&title=), [bugs](https://github.com/ml-tooling/workspace/issues/new?assignees=&labels=bug&template=01_bug-report.md&title=), or [documentation](https://github.com/ml-tooling/workspace/issues/new?assignees=&labels=documentation&template=03_documentation.md&title=) problems.
+- By participating in this project, you agree to abide by its [Code of Conduct](https://github.com/ml-tooling/workspace/blob/main/.github/CODE_OF_CONDUCT.md).
+- The [development section](#development) below contains information on how to build and test the project after you have implemented some changes.
 
-<details>
+## Development
 
-<summary>Development instructions for contributors (click to expand...)</summary>
+> _**Requirements**: [Docker](https://docs.docker.com/get-docker/) and [Act](https://github.com/nektos/act#installation) are required to be installed on your machine to execute the build process._
 
-### Build
-
-Execute this command in the project root folder to build the docker container:
-
-```bash
-python build.py --version={MAJOR.MINOR.PATCH-TAG}
-```
-
-The version is optional and should follow the [Semantic Versioning](https://semver.org/) standard (MAJOR.MINOR.PATCH). For additional script options:
+To simplify the process of building this project from scratch, we provide build-scripts that run all necessary steps (build, check, test, and release) within a containerized environment. To build and test your changes, execute the following command in the project root folder:
 
 ```bash
-python build.py --help
+act -b -j build
 ```
 
-### Deploy
-
-Execute this command in the project root folder to push the container to the configured docker registry:
+Under the hood it uses the build.py files in this repo based on the [universal-build library](https://github.com/ml-tooling/universal-build). So, if you want to build it locally, you can also execute this command in the project root folder to build the docker container:
 
 ```bash
-python build.py --deploy --version={MAJOR.MINOR.PATCH-TAG}
+python build.py --make
 ```
 
-The version has to be provided. The version format should follow the [Semantic Versioning](https://semver.org/) standard (MAJOR.MINOR.PATCH). For additional script options:
+For additional script options:
 
 ```bash
 python build.py --help
 ```
 
-</details>
+Refer to our [contribution guides](https://github.com/ml-tooling/workspace/blob/main/CONTRIBUTING.md#development-instructions) for more detailed information on our build scripts and development process.
 
 ---
 
-Licensed **Apache 2.0**. Created and maintained with ❤️ by developers from SAP in Berlin.
+Licensed **Apache 2.0**. Created and maintained with ❤️ by developers from Berlin.

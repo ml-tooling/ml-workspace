@@ -1,0 +1,23 @@
+name: "build-environment"
+description: "Environment to run build, test, check, and release steps."
+author: "ML Tooling <team@mltooling.org>"
+inputs:
+  build_args:
+    description: "Build arguments passed to the build.py scripts"
+    required: false
+  working_directory:
+    description: "Working directory from where the build command is run"
+    required: false
+  container_registry_url:
+    description: "URL used for container registry login"
+    required: false
+  container_registry_username:
+    description: "Username used for container registry login"
+    required: false
+  container_registry_password:
+    description: "Password used for container registry login"
+    required: false
+
+runs:
+  using: "docker"
+  image: "Dockerfile"

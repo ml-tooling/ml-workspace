@@ -1,110 +1,114 @@
-import os, sys
-import subprocess
 import argparse
 import datetime
+import subprocess
 
-parser = argparse.ArgumentParser()
-parser.add_argument('--name', help='base name of docker container', default="ml-workspace")
-parser.add_argument('--version', help='version tag of docker container', default="latest")
-parser.add_argument('--deploy', help='deploy docker container to remote', action='store_true')
-parser.add_argument('--flavor', help='flavor (gpu) used for docker container', default='gpu')
+from universal_build import build_utils
+from universal_build.helpers import build_docker
 
 REMOTE_IMAGE_PREFIX = "mltooling/"
+FLAG_FLAVOR = "flavor"
+IMAGE_NAME = "ml-workspace"
 
-args, unknown = parser.parse_known_args()
-if unknown:
-    print("Unknown arguments "+str(unknown))
+parser = argparse.ArgumentParser(add_help=False)
+parser.add_argument(
+    "--" + FLAG_FLAVOR,
+    help="Flavor (gpu) used for docker container",
+    default="all",
+)
 
-# Wrapper to print out command
-def call(command):
-    print("Executing: "+command)
-    return subprocess.call(command, shell=True)
+args = build_utils.parse_arguments(argument_parser=parser)
 
-# calls build scripts in every module with same flags
-def build(module="."):
-    
-    if not os.path.isdir(module):
-        print("Could not find directory for " + module)
-        sys.exit(1)
-    
-    build_command = "python build.py"
+VERSION = str(args.get(build_utils.FLAG_VERSION))
+docker_image_prefix = args.get(build_docker.FLAG_DOCKER_IMAGE_PREFIX)
 
-    if args.version:
-        build_command += " --version=" + str(args.version)
+if not docker_image_prefix:
+    docker_image_prefix = REMOTE_IMAGE_PREFIX
 
-    if args.deploy:
-        build_command += " --deploy"
- 
-    if args.flavor:
-        build_command += " --flavor=" + str(args.flavor)
+if not args.get(FLAG_FLAVOR):
+    args[FLAG_FLAVOR] = "all"
 
-    working_dir = os.path.dirname(os.path.realpath(__file__))
-    full_command = "cd " + module + " && " + build_command + " && cd " + working_dir
-    print("Building " + module + " with: " + full_command)
-    failed = call(full_command)
-    if failed:
-        print("Failed to build module " + module)
-        sys.exit(1)
+flavor = str(args[FLAG_FLAVOR]).lower().strip()
 
-if not args.flavor:
-    args.flavor = "gpu"
-
-args.flavor = str(args.flavor).lower()
-
-if args.flavor == "all":
-    args.flavor = "gpu"
-    build()
-    sys.exit(0)
+if flavor == "all":
+    args[FLAG_FLAVOR] = "gpu"
+    build_utils.build(".", args)
+    build_utils.exit_process(0)
 
 # unknown flavor -> try to build from subdirectory
-if args.flavor not in ["gpu"]:
+if flavor not in ["gpu"]:
     # assume that flavor has its own directory with build.py
-    build(args.flavor + "-flavor")
-    sys.exit(0)
+    build_utils.build(flavor + "-flavor", args)
+    build_utils.exit_process(0)
 
-service_name = os.path.basename(os.path.dirname(os.path.realpath(__file__)))
-if args.name:
-    service_name = args.name
-
-# add flavor to service name
-service_name += "-" + args.flavor
+docker_image_name = IMAGE_NAME + "-" + flavor
 
 # docker build
 git_rev = "unknown"
 try:
-    git_rev = subprocess.check_output(["git", "rev-parse", "--short", "HEAD"]).decode('ascii').strip()
-except:
+    git_rev = (
+        subprocess.check_output(["git", "rev-parse", "--short", "HEAD"])
+        .decode("ascii")
+        .strip()
+    )
+except Exception:
     pass
 
 build_date = datetime.datetime.utcnow().isoformat("T") + "Z"
 try:
-    build_date = subprocess.check_output(['date', '-u', '+%Y-%m-%dT%H:%M:%SZ']).decode('ascii').strip()
-except:
+    build_date = (
+        subprocess.check_output(["date", "-u", "+%Y-%m-%dT%H:%M:%SZ"])
+        .decode("ascii")
+        .strip()
+    )
+except Exception:
     pass
 
+base_image = "ml-workspace:" + VERSION
+if args.get(build_utils.FLAG_RELEASE):
+    base_image = docker_image_prefix + base_image
+
+base_image_build_arg = " --build-arg ARG_WORKSPACE_BASE_IMAGE=" + base_image
 vcs_ref_build_arg = " --build-arg ARG_VCS_REF=" + str(git_rev)
 build_date_build_arg = " --build-arg ARG_BUILD_DATE=" + str(build_date)
-flavor_build_arg = " --build-arg ARG_WORKSPACE_FLAVOR=" + str(args.flavor)
-version_build_arg = " --build-arg ARG_WORKSPACE_VERSION=" + str(args.version)
+flavor_build_arg = " --build-arg ARG_WORKSPACE_FLAVOR=" + str(flavor)
+version_build_arg = " --build-arg ARG_WORKSPACE_VERSION=" + VERSION
 
-versioned_image = service_name+":"+str(args.version)
-latest_image = service_name+":latest"
-failed = call("docker build -t "+ versioned_image + " -t " + latest_image + " " 
-            + version_build_arg + " " + flavor_build_arg+ " " + vcs_ref_build_arg + " " + build_date_build_arg + " ./")
+if args.get(build_utils.FLAG_MAKE):
+    build_args = f"{base_image_build_arg} {version_build_arg} {flavor_build_arg} {vcs_ref_build_arg} {build_date_build_arg}"
 
-if failed:
-    print("Failed to build container")
-    sys.exit(1)
+    build_docker.build_docker_image(
+        docker_image_name, version=VERSION, build_args=build_args, exit_on_error=True
+    )
 
-remote_versioned_image = REMOTE_IMAGE_PREFIX + versioned_image
-call("docker tag " + versioned_image + " " + remote_versioned_image)
+if args.get(build_utils.FLAG_TEST):
+    import docker
 
-remote_latest_image = REMOTE_IMAGE_PREFIX + latest_image
-call("docker tag " + latest_image + " " + remote_latest_image)
+    workspace_name = f"workspace-test-{flavor}"
+    workspace_port = "8080"
+    client = docker.from_env()
+    container = client.containers.run(
+        f"{docker_image_name}:{VERSION}",
+        name=workspace_name,
+        environment={
+            "WORKSPACE_NAME": workspace_name,
+            "WORKSPACE_ACCESS_PORT": workspace_port,
+        },
+        detach=True,
+    )
 
-if args.deploy:
-    call("docker push " + remote_versioned_image)
+    container.reload()
+    container_ip = container.attrs["NetworkSettings"]["Networks"]["bridge"]["IPAddress"]
 
-    if "SNAPSHOT" not in args.version:
-    # do not push SNAPSHOT builds as latest version
-        call("docker push " + remote_latest_image)
+    completed_process = build_utils.run(
+        f"docker exec -it --env WORKSPACE_IP={container_ip} {workspace_name} pytest '/resources/tests'",
+        exit_on_error=False,
+    )
+
+    container.remove(force=True)
+    if completed_process.returncode > 0:
+        build_utils.exit_process(1)
+
+if args.get(build_utils.FLAG_RELEASE):
+    build_docker.release_docker_image(
+        docker_image_name, VERSION, docker_image_prefix, exit_on_error=True
+    )

@@ -17,7 +17,7 @@ if ! hash rstudio 2>/dev/null; then
     cd $RESOURCES_PATH
     apt-get update
     #apt-get install --yes r-base
-    wget https://download1.rstudio.org/desktop/xenial/amd64/rstudio-1.2.5033-amd64.deb -O ./rstudio.deb
+    wget https://download1.rstudio.org/desktop/bionic/amd64/rstudio-1.3.1093-amd64.deb -O ./rstudio.deb
     # ld library path makes problems
     LD_LIBRARY_PATH="" gdebi --non-interactive ./rstudio.deb
     rm ./rstudio.deb
@@ -31,11 +31,11 @@ nohup sleep 4 && chown root:root /tmp && chmod a+rwx /tmp &
 # Run
 if [ $INSTALL_ONLY = 0 ] ; then
     echo "Run Rstudio Desktop"
-    LD_LIBRARY_PATH="" rstudio --no-sandbox 
+    LD_LIBRARY_PATH="" rstudio --no-sandbox
     sleep 10
 fi
 
-# Fix tmp permission 
+# Fix tmp permission
 sleep 5
 chown root:root /tmp
 chmod a+rwx /tmp

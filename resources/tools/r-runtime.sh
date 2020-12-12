@@ -20,19 +20,30 @@ if ! hash Rscript 2>/dev/null; then
     apt-get install -y --no-install-recommends fonts-dejavu unixodbc unixodbc-dev gfortran libsasl2-dev libssl-dev
     # TODO install: r-cran-rodbc via apt-get -> removed since it install an r-base via apt-get
     # Install newest version, basics, and essentials https://docs.anaconda.com/anaconda/packages/r-language-pkg-docs/
-    conda install -y -c r "r-base==3.6.*" r-reticulate rpy2 r-rodbc unixodbc cyrus-sasl r-essentials r-cairo
-    # Install irkernel - needs to be installed from conda forge -> otherwise downgrades package
-    conda install -y -c conda-forge r-irkernel
+    # use conda-forge https://anaconda.org/conda-forge/r-base
+    conda install -y --freeze-installed r-base r-reticulate rpy2 r-rodbc unixodbc cyrus-sasl r-cairo r-irkernel r-essentials r-languageserver
+    # link R executable to usr/bin
+    ln -s $CONDA_ROOT/bin/R /usr/bin/R
+    apt-get clean
 else
     echo "R runtime is already installed"
 fi
 
-# Install vscode R extension 
+# Install vscode R extension
 if hash code 2>/dev/null; then
     # https://marketplace.visualstudio.com/items?itemName=Ikuyadeu.r
     LD_LIBRARY_PATH="" LD_PRELOAD="" code --user-data-dir=$HOME/.config/Code/ --extensions-dir=$HOME/.vscode/extensions/ --install-extension Ikuyadeu.r
+
+    # TODO: cannot find R - https://marketplace.visualstudio.com/items?itemName=mikhail-arkhipov.r
+    # Requires .Net runtime
+    # wget -q https://packages.microsoft.com/config/ubuntu/18.04/packages-microsoft-prod.deb -O packages-microsoft-prod.deb  && \
+    # dpkg -i packages-microsoft-prod.deb  && \
+    # apt-get update && \
+    # apt-get install -y dotnet-runtime-3.1
+    # LD_LIBRARY_PATH="" LD_PRELOAD="" code --user-data-dir=$HOME/.config/Code/ --extensions-dir=$HOME/.vscode/extensions/ --install-extension mikhail-arkhipov.r
 else
     echo "Please install the desktop version of vscode via the vs-code-desktop.sh script to install R vscode extensions."
+    sleep 10
 fi
 
 # Run

@@ -1,0 +1,20 @@
+# Add documentation label to any change in documentation related files
+documentation:
+  - "docs/*"
+  - "docs/**/*"
+  - "README.md"
+  - "**/README.md"
+  - "CONTRIBUTING.md"
+
+maintenance:
+  - ".vscode/*"
+  - ".vscode/**/*"
+  - ".github/*"
+  - ".github/**/*"
+  - ".reuse/*"
+  - "LICENSES/*"
+  - ".editorconfig"
+  - ".gitignore"
+  - "**/.gitignore"
+  - "build.py"
+  - "**/build.py"

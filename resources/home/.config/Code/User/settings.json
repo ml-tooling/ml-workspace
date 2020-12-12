@@ -1,28 +1,33 @@
 {
-    "update.mode": "none",
-    "update.showReleaseNotes": false,
-    "extensions.autoUpdate": false,
-    "extensions.autoCheckUpdates": false,
-    "window.menuBarVisibility": "visible",
-    "python.autoComplete.addBrackets": true,
-    "python.formatting.provider": "black",
-    "python.analysis.memory.keepLibraryAst": true,
-    "python.analysis.memory.keepLibraryLocalVariables": true,
-    "python.analysis.cachingLevel": "Library",
-    "python.autoUpdateLanguageServer": false,
-    "python.dataScience.sendSelectionToInteractiveWindow": true,
-    "python.linting.pycodestyleArgs": [
-        "--ignore=E203,E501,W503"
-    ],
-    "terminal.integrated.inheritEnv": false,
-    "python.linting.pylintEnabled": false,
-    "python.linting.flake8Enabled": true,
-    "python.linting.flake8CategorySeverity.E": "Warning",
-    "python.linting.flake8CategorySeverity.W": "Information",
-    "python.linting.flake8CategorySeverity.F": "Warning",
-    "python.linting.flake8Args": [
-        "--ignore=E203,E501,W503"
-    ],
-    "gitlens.showWhatsNewAfterUpgrades": false,
-    "gitlens.advanced.telemetry.enabled": false
+  "update.mode": "none",
+  "update.showReleaseNotes": false,
+  "terminal.integrated.inheritEnv": false,
+  "extensions.autoUpdate": false,
+  "extensions.autoCheckUpdates": false,
+  "window.menuBarVisibility": "visible",
+  "python.autoComplete.addBrackets": true,
+  "python.formatting.provider": "black",
+  "python.analysis.memory.keepLibraryAst": true,
+  "python.autoUpdateLanguageServer": false,
+  "python.linting.enabled": true,
+  "python.linting.lintOnSave": true,
+  "python.linting.pylintEnabled": false,
+  "python.linting.flake8Enabled": true,
+  "python.linting.mypyEnabled": true,
+  "python.linting.flake8CategorySeverity.E": "Warning",
+  "python.linting.flake8CategorySeverity.W": "Information",
+  "python.linting.flake8CategorySeverity.F": "Warning",
+  "python.linting.flake8Args": [
+      "--ignore=E203,E501,W503"
+  ],
+  "python.sortImports.args": [
+      // black compatible attributes
+      "--multi-line=3",
+      "--trailing-comma",
+      "--force-grid-wrap=0",
+      "--use-parentheses",
+      "--line-width=88"
+  ],
+  "python.testing.pytestEnabled": true,
+  "workbench.colorTheme": "Default Dark+"
 }

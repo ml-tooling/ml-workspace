@@ -14,14 +14,14 @@ else
 fi
 
 # Handle special flags if we're root
-# Since we are root user and want to be root on the system and don't change the user, 
+# Since we are root user and want to be root on the system and don't change the user,
 # don't execute the following if-branch, tus added false.
 if [ $(id -u) == 0 ] && false; then
 
     # Handle username change. Since this is cheap, do this unconditionally
     echo "Set username to: $NB_USER"
     usermod -d /home/$NB_USER -l $NB_USER jovyan
-    
+
     # Handle case where provisioned storage does not have the correct permissions by default
     # Ex: default NFS/EFS (no auto-uid/gid)
     if [[ "$CHOWN_HOME" == "1" || "$CHOWN_HOME" == 'yes' ]]; then
@@ -59,12 +59,12 @@ if [ $(id -u) == 0 ] && false; then
 
     # Enable sudo if requested
     if [[ "$GRANT_SUDO" == "1" || "$GRANT_SUDO" == 'yes' ]]; then
-        echo "Granting $NB_USER sudo access and appending $CONDA_DIR/bin to sudo PATH"
+        echo "Granting $NB_USER sudo access and appending $CONDA_ROOT/bin to sudo PATH"
         echo "$NB_USER ALL=(ALL) NOPASSWD:ALL" > /etc/sudoers.d/notebook
     fi
 
-    # Add $CONDA_DIR/bin to sudo secure_path
-    sed -ri "s#Defaults\s+secure_path=\"([^\"]+)\"#Defaults secure_path=\"\1:$CONDA_DIR/bin\"#" /etc/sudoers
+    # Add $CONDA_ROOT/bin to sudo secure_path
+    sed -ri "s#Defaults\s+secure_path=\"([^\"]+)\"#Defaults secure_path=\"\1:$CONDA_ROOT/bin\"#" /etc/sudoers
 
     # Exec the command as NB_USER with the PATH and the rest of
     # the environment preserved

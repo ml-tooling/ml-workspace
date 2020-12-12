@@ -1,18 +1,10 @@
 Warning!!! Possibly conflicting dependencies found:
-* spacy-transformers==0.5.1
- - transformers [required: >=2.0.0,<2.1.0, installed: 2.3.0]
-* pytorch-lightning==0.6.0
- - torchvision [required: >=0.4.0,<0.5, installed: 0.5.0]
-* kaggle==1.5.6
- - urllib3 [required: >=1.21.1,<1.25, installed: 1.25.7]
-* hyperopt==0.2.3
- - networkx [required: ==2.2, installed: 2.4]
-* albumentations==0.4.3
- - imgaug [required: >=0.2.5,<0.2.7, installed: 0.3.0]
+* conda==4.9.2
+ - ruamel-yaml [required: >=0.11.14, installed: ?]
 ------------------------------------------------------------------------
 Warning!! Cyclic dependencies found:
 * suod => pyod => suod
-* pyod => combo => pyod
 * pyod => suod => pyod
+* pyod => combo => pyod
 * combo => pyod => combo
 ------------------------------------------------------------------------
