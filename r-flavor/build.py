@@ -13,7 +13,7 @@ parser = argparse.ArgumentParser(add_help=False)
 parser.add_argument(
     "--" + FLAG_FLAVOR,
     help="Flavor (r) used for docker container",
-    default="r",
+    default="all",
 )
 
 args = build_utils.parse_arguments(argument_parser=parser)

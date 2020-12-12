@@ -14,7 +14,7 @@ parser = argparse.ArgumentParser(add_help=False)
 parser.add_argument(
     "--" + FLAG_FLAVOR,
     help="Flavor (full, light, minimal, r, spark, gpu) used for docker container",
-    default="full",
+    default="all",
 )
 
 args = build_utils.parse_arguments(argument_parser=parser)
