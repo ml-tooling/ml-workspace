@@ -652,7 +652,7 @@ In case you want to manually setup and manage remote kernels, use the [remote_ik
 remote_ikernel manage --add \
     --interface=ssh \
     --kernel_cmd="ipython kernel -f {connection_file}" \
-    --name="ml-server Py 3.6" \
+    --name="ml-server (Python)" \
     --host="my-workspace"
 ```
 
