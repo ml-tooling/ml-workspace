@@ -597,7 +597,13 @@ RUN \
             'jupyterlab=2.2.*' \
             # TODO: temp fix: yarl version 1.5 is required for lots of libraries.
             'yarl==1.5.*' \
-            numpy && \
+            # TODO install scipy, numpy, sklearn, and numexpr via conda for mkl optimizaed versions: https://docs.anaconda.com/mkl-optimizations/
+            # TODO: Newer scipy versions will be downgraded
+            'scipy==1.4.*' \
+            # TODO: Newer numpy versions will be downgraded
+            'numpy==1.18.*' \
+            scikit-learn \
+            numexpr && \
             # installed via apt-get and pip: protobuf \
             # installed via apt-get: zlib  && \
     # Install minimal pip requirements
@@ -618,10 +624,10 @@ RUN \
         'python='$PYTHON_VERSION \
         boost \
         mkl-include && \
-    # TODO - Install was not working
+    # Install mkldnn
     conda install -y --freeze-installed -c mingfeima mkldnn && \
     # Install pytorch - cpu only
-    conda install -y -c pytorch "pytorch==1.7.*" torchvision torchaudio cpuonly && \
+    conda install -y -c pytorch "pytorch==1.7.*" cpuonly && \
     # Install light pip requirements
     pip install --no-cache-dir --upgrade --upgrade-strategy only-if-needed -r ${RESOURCES_PATH}/libraries/requirements-light.txt && \
     # If light light flavor - exit here
@@ -647,10 +653,8 @@ RUN \
     pip install --no-cache-dir tensorflow-graphics==2020.5.20 && \
     # GCC OpenMP (GOMP) support library
     apt-get install -y --no-install-recommends libgomp1 && \
-    # Install libjpeg turbo for speedup in image processing
-    #TODO conda install -y 'python='$PYTHON_VERSION libjpeg-turbo && \
-    # Faiss - A library for efficient similarity search and clustering of dense vectors.
-    #TODO conda install -y -c pytorch faiss-cpu && \
+    # Install Intel(R) Compiler Runtime - numba optimization
+    conda install -y --freeze-installed -c numba icc_rt && \
     # Install full pip requirements
     pip install --no-cache-dir --upgrade --upgrade-strategy only-if-needed -r ${RESOURCES_PATH}/libraries/requirements-full.txt && \
     # Setup Spacy
@@ -704,7 +708,7 @@ RUN \
     jupyter nbextension enable execute_time/ExecuteTime --sys-prefix && \
     jupyter nbextension enable collapsible_headings/main --sys-prefix && \
     jupyter nbextension enable codefolding/main --sys-prefix && \
-    # TODO: tensorboard support is not working right now: Activate Jupyter Tensorboard
+    # Install and activate Jupyter Tensorboard
     pip install --no-cache-dir git+https://github.com/InfuseAI/jupyter_tensorboard.git && \
     jupyter tensorboard enable --sys-prefix && \
     # TODO moved to configuration files = resources/jupyter/nbconfig Edit notebook config
@@ -873,7 +877,7 @@ RUN \
     rm prettier-vscode-$PRETTIER_VERSION.vsix && \
     mv extension $HOME/.vscode/extensions/prettier-vscode-$PRETTIER_VERSION.vsix && \
     # Install vs code jupyter
-    VS_JUPYTER_VERSION="2020.11.399280825" && \
+    VS_JUPYTER_VERSION="2020.12.414227025" && \
     wget --retry-on-http-error=429 --waitretry 15 --tries 5 --no-verbose https://marketplace.visualstudio.com/_apis/public/gallery/publishers/ms-toolsai/vsextensions/jupyter/$VS_JUPYTER_VERSION/vspackage -O ms-toolsai.jupyter-$VS_JUPYTER_VERSION.vsix && \
     bsdtar -xf ms-toolsai.jupyter-$VS_JUPYTER_VERSION.vsix extension && \
     rm ms-toolsai.jupyter-$VS_JUPYTER_VERSION.vsix && \
@@ -908,7 +912,7 @@ RUN \
 RUN \
     # Strict channel priority currently makes problems with installing with conda
     conda config --system --set channel_priority false  && \
-    apt-get update && \
+    # apt-get update && \
     # TODO: lib contains high vulnerability
     # apt-get install -y --no-install-recommends libffi-dev \
     # Required by magenta
@@ -930,6 +934,14 @@ RUN \
         clean-layer.sh  && \
         exit 0 ; \
     fi && \
+    # Install libjpeg turbo for speedup in image processing
+    conda install -y --freeze-installed libjpeg-turbo && \
+    # Add snakemake for workflow management
+    conda install -y -c bioconda -c conda-forge snakemake-minimal && \
+    # Add mamba as conda alternativ
+    conda install -y -c conda-forge mamba && \
+    # Faiss - A library for efficient similarity search and clustering of dense vectors.
+    conda install -y --freeze-installed faiss-cpu && \
     # New Python Libraries:
     # pip install --no-cache-dir
     # Cleanup
