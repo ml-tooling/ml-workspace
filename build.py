@@ -26,7 +26,7 @@ if not docker_image_prefix:
     docker_image_prefix = REMOTE_IMAGE_PREFIX
 
 if not args.get(FLAG_FLAVOR):
-    args[FLAG_FLAVOR] = "full"
+    args[FLAG_FLAVOR] = "all"
 
 flavor = str(args[FLAG_FLAVOR]).lower().strip()
 
