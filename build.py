@@ -133,6 +133,17 @@ if args[build_utils.FLAG_TEST]:
 
 
 if args[build_utils.FLAG_RELEASE]:
+    # Bump all versions in some filess
+    previous_version = build_utils.get_latest_version()
+    if previous_version:
+        build_utils.replace_in_files(
+            previous_version,
+            VERSION,
+            file_paths=["./README.md", "./deployment/google-cloud-run/Dockerfile"],
+            regex=False,
+            exit_on_error=True,
+        )
+
     build_docker.release_docker_image(
         docker_image_name,
         VERSION,
