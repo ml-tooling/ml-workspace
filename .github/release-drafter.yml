@@ -38,6 +38,8 @@ replacers:
   - search: '/(?:and)?(,)?(\s)*@github-actions(?:\[bot\])?,?/g'
     replace: ""
 template: |
+  [![DockerHub Release](https://img.shields.io/docker/v/mltooling/ml-workspace/$RESOLVED_VERSION?label=docker%20version&color=blue)](https://hub.docker.com/repository/docker/mltooling/ml-workspace) [![DockerHub Image Size](https://img.shields.io/docker/image-size/mltooling/ml-workspace/$RESOLVED_VERSION?label=docker%20image%20size&color=blue)](https://hub.docker.com/repository/docker/mltooling/ml-workspace)
+
   $CHANGES
 
   ## 👥 Contributors
