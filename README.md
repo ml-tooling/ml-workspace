@@ -1140,10 +1140,6 @@ The OpenResty/Nginx binary package used within the workspace requires to run on 
 
 <br>
 
----
-
-<br>
-
 ## Contribution
 
 - Pull requests are encouraged and always welcome. Read our [contribution guidelines](https://github.com/ml-tooling/ml-workspace/tree/main/CONTRIBUTING.md) and check out [help-wanted](https://github.com/ml-tooling/ml-workspace/issues?utf8=%E2%9C%93&q=is%3Aopen+is%3Aissue+label%3A"help+wanted"+sort%3Areactions-%2B1-desc+) issues.
