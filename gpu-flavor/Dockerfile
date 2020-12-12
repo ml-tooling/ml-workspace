@@ -152,9 +152,12 @@ RUN \
     pip install --no-cache-dir onnxruntime-gpu==1.4.0 && \
     # Install pytorch gpu
     # uninstall cpu only packages via conda
-    conda remove --force -y pytorch torchvision torchaudio cpuonly && \
+    conda remove --force -y pytorch cpuonly && \
     # https://pytorch.org/get-started/locally/
-    conda install -y pytorch torchvision torchaudio -c pytorch && \
+    conda install -y pytorch -c pytorch && \
+    # Install faiss gpu
+    conda remove --force -y faiss-cpu && \
+    conda install -y faiss-gpu -c pytorch && \
     # Update mxnet to gpu edition
     pip uninstall -y mxnet-mkl && \
     pip install --no-cache-dir mxnet-cu101mkl==1.6.0.post0 && \
