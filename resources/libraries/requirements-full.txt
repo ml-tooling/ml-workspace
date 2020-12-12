@@ -6,7 +6,6 @@ Faker==4.18.0
 ImageHash==4.2.0
 MechanicalSoup==0.12.0
 PyMySQL==0.10.1
-adanet==0.9.0
 addict==2.4.0
 albumentations==0.5.2
 altair==4.1.0
@@ -195,8 +194,9 @@ thinc==7.4.3
 tinydb==4.3.0
 tokenizers==0.9.4
 torch-geometric==1.6.3
-torchaudio==0.7.0
 torchsummary==1.5.1
+torchvision==0.8.2
+torchaudio==0.7.2
 torchtext==0.8.0
 tpot==0.11.6.post2
 transformers==4.0.0
@@ -240,3 +240,4 @@ widgetsnbextension==3.5.1
 # Move to google utils: pandas-gbq==0.13.0
 # too big tensorflow-probability==0.9.0
 # out of date: records==0.5.3
+# adanet==0.9.0 -> too many pinned dependencies

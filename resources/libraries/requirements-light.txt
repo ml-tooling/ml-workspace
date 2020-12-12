@@ -4,9 +4,9 @@
 # pytorch is installed via conda
 # TODO: 2.3.1 version uses tensorboard 2.4.0 with bug with relativ pathes
 # keras: comes preinstalled with tenserflow 2.x
+# scikit-learn installed via conda
 intel-tensorflow==2.3.0 # TensorFlow is an open source machine learning framework for everyone.
 xgboost==1.2.1 # Scalable, Portable and Distributed Gradient Boosting
-scikit-learn==0.23.2 # A set of python modules for machine learning and data mining
 statsmodels==0.12.1 # Statistical modeling and econometrics in Python
 mxnet-mkl==1.6.0 # MXNet is an ultra-scalable deep learning framework. This version uses MKLDNN.
 networkx==2.5 # Python package for creating and manipulating graphs and networks
@@ -35,7 +35,6 @@ networkx==2.5 # Python package for creating and manipulating graphs and networks
 prometheus-client==0.9.0 # Python client for the Prometheus monitoring system.
 typer==0.3.2 # Typer, build great CLIs. Easy to code. Based on Python type hints.
 numba==0.52.0 # Compiling Python code using LLVM
-numexpr==2.7.1 # Fast numerical expression evaluator for NumPy
 python-language-server==0.36.1 # Python Language Server for the Language Server Protocol
 pyls-mypy==0.1.8 # Mypy linter for the Python Language Server
 pyls-isort==0.2.0 # Isort plugin for python-language-server
