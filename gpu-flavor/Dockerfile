@@ -165,6 +165,9 @@ RUN \
     pip install --upgrade jax jaxlib==0.1.57+cuda101 -f https://storage.googleapis.com/jax-releases/jax_releases.html  && \
     # Install pygpu - Required for theano: http://deeplearning.net/software/libgpuarray/
     conda install -y pygpu && \
+    # Install lightgbm
+    pip uninstall -y lightgbm && \
+    pip install lightgbm --install-option=--gpu --install-option="--opencl-include-dir=/usr/local/cuda/include/" --install-option="--opencl-library=/usr/local/cuda/lib64/libOpenCL.so"  && \
     # nvidia python ml lib
     pip install --upgrade --force-reinstall nvidia-ml-py3 && \
     # SpeedTorch: https://github.com/Santosh-Gupta/SpeedTorch
