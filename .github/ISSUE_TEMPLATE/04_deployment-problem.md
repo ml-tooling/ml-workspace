@@ -3,7 +3,7 @@ name: "\U0001F433 Deployment Problem"
 about: Do you have problems with deployment, and none of the suggestions in the docs
   and other issues helped?
 title: ''
-labels: ''
+labels: 'support'
 assignees: ''
 
 ---

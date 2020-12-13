@@ -2,7 +2,7 @@
 name: "\U0001F4DA Documentation"
 about: Is there a mistake in the docs, is anything unclear or do you have a suggestion?
 title: ''
-labels: enhancement, docs
+labels: documentation
 assignees: ''
 
 ---
