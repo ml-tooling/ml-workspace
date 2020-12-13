@@ -58,7 +58,7 @@ The workspace requires **Docker** to be installed on your machine ([📖 Install
 Deploying a single workspace instance is as simple as:
 
 ```bash
-docker run -p 8080:8080 mltooling/ml-workspace:0.10.4
+docker run -p 8080:8080 mltooling/ml-workspace:0.11.0
 ```
 
 Voilà, that was easy! Now, Docker will pull the latest workspace image to your machine. This may take a few minutes, depending on your internet speed. Once the workspace is started, you can access it via http://localhost:8080.
@@ -75,7 +75,7 @@ docker run -d \
     --env AUTHENTICATE_VIA_JUPYTER="mytoken" \
     --shm-size 512m \
     --restart always \
-    mltooling/ml-workspace:0.10.4
+    mltooling/ml-workspace:0.11.0
 ```
 
 This command runs the container in background (`-d`), mounts your current working directory into the `/workspace` folder (`-v`), secures the workspace via a provided token (`--env AUTHENTICATE_VIA_JUPYTER`), provides 512MB of shared memory (`--shm-size`) to prevent unexpected crashes (see [known issues section](#known-issues)), and keeps the container running even on system restarts (`--restart always`). You can find additional options for docker run [here](https://docs.docker.com/engine/reference/commandline/run/) and workspace configuration options in [the section below](#Configuration).
@@ -182,7 +182,7 @@ We strongly recommend enabling authentication via one of the following two optio
 Activate the token-based authentication based on the authentication implementation of Jupyter via the `AUTHENTICATE_VIA_JUPYTER` variable:
 
 ```bash
-docker run -p 8080:8080 --env AUTHENTICATE_VIA_JUPYTER="mytoken" mltooling/ml-workspace:0.10.4
+docker run -p 8080:8080 --env AUTHENTICATE_VIA_JUPYTER="mytoken" mltooling/ml-workspace:0.11.0
 ```
 
 You can also use `<generated>` to let Jupyter generate a random token that is printed out on the container logs. A value of `true` will not set any token but activate that every request to any tool in the workspace will be checked with the Jupyter instance if the user is authenticated. This is used for tools like JupyterHub, which configures its own way of authentication.
@@ -192,7 +192,7 @@ You can also use `<generated>` to let Jupyter generate a random token that is pr
 Activate the basic authentication via the `WORKSPACE_AUTH_USER` and `WORKSPACE_AUTH_PASSWORD` variable:
 
 ```bash
-docker run -p 8080:8080 --env WORKSPACE_AUTH_USER="user" --env WORKSPACE_AUTH_PASSWORD="pwd" mltooling/ml-workspace:0.10.4
+docker run -p 8080:8080 --env WORKSPACE_AUTH_USER="user" --env WORKSPACE_AUTH_PASSWORD="pwd" mltooling/ml-workspace:0.11.0
 ```
 
 The basic authentication is configured via the nginx proxy and might be more performant compared to the other option since with `AUTHENTICATE_VIA_JUPYTER` every request to any tool in the workspace will check via the Jupyter instance if the user (based on the request cookies) is authenticated.
@@ -213,7 +213,7 @@ docker run \
     -p 8080:8080 \
     --env WORKSPACE_SSL_ENABLED="true" \
     -v /path/with/certificate/files:/resources/ssl:ro \
-    mltooling/ml-workspace:0.10.4
+    mltooling/ml-workspace:0.11.0
 ```
 
 If you want to host the workspace on a public domain, we recommend to use [Let's encrypt](https://letsencrypt.org/getting-started/) to get a trusted certificate for your domain.  To use the generated certificate (e.g., via [certbot](https://certbot.eff.org/) tool) for the workspace, the `privkey.pem` corresponds to the `cert.key` file and the `fullchain.pem` to the `cert.crt` file.
@@ -234,7 +234,7 @@ By default, the workspace container has no resource constraints and can use as m
 For example, the following command restricts the workspace to only use a maximum of 8 CPUs, 16 GB of memory, and 1 GB of shared memory (see [Known Issues](#known-issues)):
 
 ```bash
-docker run -p 8080:8080 --cpus=8 --memory=16g --shm-size=1G mltooling/ml-workspace:0.10.4
+docker run -p 8080:8080 --cpus=8 --memory=16g --shm-size=1G mltooling/ml-workspace:0.11.0
 ```
 
 > 📖 _For more options and documentation on resource constraints, please refer to the [official docker guide](https://docs.docker.com/config/containers/resource_constraints/)._
@@ -263,7 +263,7 @@ In addition to the main workspace image (`mltooling/ml-workspace`), we provide o
 The minimal flavor (`mltooling/ml-workspace-minimal`) is our smallest image that contains most of the tools and features described in the [features section](#features) without most of the python libraries that are pre-installed in our main image. Any Python library or excluded tool can be installed manually during runtime by the user.
 
 ```bash
-docker run -p 8080:8080 mltooling/ml-workspace-minimal:0.10.4
+docker run -p 8080:8080 mltooling/ml-workspace-minimal:0.11.0
 ```
 </details>
 
@@ -281,7 +281,7 @@ docker run -p 8080:8080 mltooling/ml-workspace-minimal:0.10.4
 The R flavor (`mltooling/ml-workspace-r`) is based on our default workspace image and extends it with the R-interpreter, R-Jupyter kernel, RStudio server (access via `Open Tool -> RStudio`), and a variety of popular packages from the R ecosystem.
 
 ```bash
-docker run -p 8080:8080 mltooling/ml-workspace-r:0.10.4
+docker run -p 8080:8080 mltooling/ml-workspace-r:0.11.0
 ```
 </details>
 
@@ -299,7 +299,7 @@ docker run -p 8080:8080 mltooling/ml-workspace-r:0.10.4
 The Spark flavor (`mltooling/ml-workspace-spark`) is based on our R-flavor workspace image and extends it with the Spark-interpreter, Spark-Jupyter kernel (Apache Toree), Zeppelin Notebook (access via `Open Tool -> Zeppelin`), and a few additional python libraries & Jupyter extensions.
 
 ```bash
-docker run -p 8080:8080 mltooling/ml-workspace-spark:0.10.4
+docker run -p 8080:8080 mltooling/ml-workspace-spark:0.11.0
 ```
 
 </details>
@@ -323,13 +323,13 @@ The GPU flavor (`mltooling/ml-workspace-gpu`) is based on our default workspace 
 - (Docker >= 19.03) Nvidia Container Toolkit ([📖 Instructions](https://github.com/NVIDIA/nvidia-docker/wiki/Installation-(Native-GPU-Support))).
 
 ```bash
-docker run -p 8080:8080 --gpus all mltooling/ml-workspace-gpu:0.10.4
+docker run -p 8080:8080 --gpus all mltooling/ml-workspace-gpu:0.11.0
 ```
 
 - (Docker < 19.03) Nvidia Docker 2.0 ([📖 Instructions](https://github.com/NVIDIA/nvidia-docker/wiki/Installation-(version-2.0))).
 
 ```bash
-docker run -p 8080:8080 --runtime nvidia --env NVIDIA_VISIBLE_DEVICES="all" mltooling/ml-workspace-gpu:0.10.4
+docker run -p 8080:8080 --runtime nvidia --env NVIDIA_VISIBLE_DEVICES="all" mltooling/ml-workspace-gpu:0.11.0
 ```
 
 The GPU flavor also comes with a few additional configuration options, as explained below:
@@ -368,7 +368,7 @@ The workspace is designed as a single-user development environment. For a multi-
 ML Hub makes it easy to set up a multi-user environment on a single server (via Docker) or a cluster (via Kubernetes) and supports a variety of usage scenarios & authentication providers. You can try out ML Hub via:
 
 ```bash
-docker run -p 8080:8080 -v /var/run/docker.sock:/var/run/docker.sock mltooling/ml-hub:0.10.4
+docker run -p 8080:8080 -v /var/run/docker.sock:/var/run/docker.sock mltooling/ml-hub:0.11.0
 ```
 
 For more information and documentation about ML Hub, please take a look at the [Github Site](https://github.com/ml-tooling/ml-hub).
@@ -727,7 +727,7 @@ To run Python code as a job, you need to provide a path or URL to a code directo
 You can execute code directly from Git, Mercurial, Subversion, or Bazaar by using the pip-vcs format as described in [this guide](https://pip.pypa.io/en/stable/reference/pip_install/#vcs-support). For example, to execute code from a [subdirectory](https://github.com/ml-tooling/ml-workspace/tree/main/resources/tests/ml-job) of a git repository, just run:
 
 ```bash
-docker run --env EXECUTE_CODE="git+https://github.com/ml-tooling/ml-workspace.git#subdirectory=resources/tests/ml-job" mltooling/ml-workspace:0.10.4
+docker run --env EXECUTE_CODE="git+https://github.com/ml-tooling/ml-workspace.git#subdirectory=resources/tests/ml-job" mltooling/ml-workspace:0.11.0
 ```
 
 > 📖 _For additional information on how to specify branches, commits, or tags please refer to [this guide](https://pip.pypa.io/en/stable/reference/pip_install/#vcs-support)._
@@ -737,7 +737,7 @@ docker run --env EXECUTE_CODE="git+https://github.com/ml-tooling/ml-workspace.gi
 In the following example, we mount and execute the current working directory (expected to contain our code) into the `/workspace/ml-job/` directory of the workspace:
 
 ```bash
-docker run -v "${PWD}:/workspace/ml-job/" --env EXECUTE_CODE="/workspace/ml-job/" mltooling/ml-workspace:0.10.4
+docker run -v "${PWD}:/workspace/ml-job/" --env EXECUTE_CODE="/workspace/ml-job/" mltooling/ml-workspace:0.11.0
 ```
 
 #### Install Dependencies
@@ -763,7 +763,7 @@ python /resources/scripts/execute_code.py /path/to/your/job
 It is also possible to embed your code directly into a custom job image, as shown below:
 
 ```dockerfile
-FROM mltooling/ml-workspace:0.10.4
+FROM mltooling/ml-workspace:0.11.0
 
 # Add job code to image
 COPY ml-job /workspace/ml-job
@@ -828,7 +828,7 @@ The workspace can be extended in many ways at runtime, as explained [here](#exte
 
 ```dockerfile
 # Extend from any of the workspace versions/flavors
-FROM mltooling/ml-workspace:0.10.4
+FROM mltooling/ml-workspace:0.11.0
 
 # Run you customizations, e.g.
 RUN \
@@ -1076,7 +1076,7 @@ import sys
 Certain desktop tools (e.g., recent versions of [Firefox](https://github.com/jlesage/docker-firefox#increasing-shared-memory-size)) or libraries (e.g., Pytorch - see Issues: [1](https://github.com/pytorch/pytorch/issues/2244), [2](https://github.com/pytorch/pytorch/issues/1355)) might crash if the shared memory size (`/dev/shm`) is too small. The default shared memory size of Docker is 64MB, which might not be enough for a few tools. You can provide a higher shared memory size via the `shm-size` docker run option:
 
 ```bash
-docker run --shm-size=2G mltooling/ml-workspace:0.10.4
+docker run --shm-size=2G mltooling/ml-workspace:0.11.0
 ```
 
 </details>
