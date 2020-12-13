@@ -654,7 +654,8 @@ RUN \
     # GCC OpenMP (GOMP) support library
     apt-get install -y --no-install-recommends libgomp1 && \
     # Install Intel(R) Compiler Runtime - numba optimization
-    conda install -y --freeze-installed -c numba icc_rt && \
+    # TODO: don't install, results in memory error
+    # conda install -y --freeze-installed -c numba icc_rt && \
     # Install full pip requirements
     pip install --no-cache-dir --upgrade --upgrade-strategy only-if-needed -r ${RESOURCES_PATH}/libraries/requirements-full.txt && \
     # Setup Spacy
@@ -942,8 +943,6 @@ RUN \
     conda install -y -c conda-forge mamba && \
     # Faiss - A library for efficient similarity search and clustering of dense vectors.
     conda install -y --freeze-installed faiss-cpu && \
-    # New Python Libraries:
-    pip install --no-cache-dir catboost pycaret && \
     # Cleanup
     clean-layer.sh
 
@@ -1004,7 +1003,7 @@ COPY resources/jupyter/ipython_config.py /etc/ipython/ipython_config.py
 
 # Branding of various components
 RUN \
-    # Jupyter Bradning
+    # Jupyter Branding
     cp -f $RESOURCES_PATH/branding/logo.png $CONDA_PYTHON_DIR"/site-packages/notebook/static/base/images/logo.png" && \
     cp -f $RESOURCES_PATH/branding/favicon.ico $CONDA_PYTHON_DIR"/site-packages/notebook/static/base/images/favicon.ico" && \
     cp -f $RESOURCES_PATH/branding/favicon.ico $CONDA_PYTHON_DIR"/site-packages/notebook/static/favicon.ico" && \
