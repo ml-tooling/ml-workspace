@@ -88,7 +88,7 @@ jobs:
           container_registry_username: ${{ secrets.CONTAINER_REGISTRY_USERNAME }}
           container_registry_password: ${{ secrets.CONTAINER_REGISTRY_PASSWORD }}
       - if: ${{ env.GITHUB_TOKEN != null && env.GITHUB_TOKEN != '' }}
-        name: update-repository
+        name: push-changes
         uses: stefanzweifel/git-auto-commit-action@v4
         with:
           branch: ${{ env.BRANCH_PREFIX }}${{ env.VERSION  }}
@@ -96,6 +96,8 @@ jobs:
           commit_user_email: actions@github.com
           commit_message: Apply automatic release changes for v${{ env.VERSION  }}
           tagging_message: v${{ env.VERSION  }}
+          skip_dirty_check: true
+          commit_options: "--allow-empty"
       - if: ${{ env.GITHUB_TOKEN != null && env.GITHUB_TOKEN != '' }}
         name: create-pull-request
         shell: bash
