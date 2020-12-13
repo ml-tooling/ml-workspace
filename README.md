@@ -692,7 +692,7 @@ If you have opened a Tensorboard instance in a valid log directory, you will see
 If you prefer to see the tensorboard directly within your notebook, you can make use of following **Jupyter magic**:
 
 ```
-%load_ext tensorboard.notebook
+%load_ext tensorboard
 %tensorboard --logdir /workspace/path/to/logs
 ```
 
