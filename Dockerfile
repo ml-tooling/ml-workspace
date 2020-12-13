@@ -943,6 +943,8 @@ RUN \
     conda install -y -c conda-forge mamba && \
     # Faiss - A library for efficient similarity search and clustering of dense vectors.
     conda install -y --freeze-installed faiss-cpu && \
+    # Install new python libraries
+    pip install --no-cache-dir crc32c soundfile GPflow && \
     # Cleanup
     clean-layer.sh
 
