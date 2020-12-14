@@ -123,7 +123,7 @@ if args[build_utils.FLAG_TEST]:
     container_ip = container.attrs["NetworkSettings"]["Networks"]["bridge"]["IPAddress"]
 
     completed_process = build_utils.run(
-        f"docker exec -it --env WORKSPACE_IP={container_ip} {workspace_name} pytest '/resources/tests'",
+        f"docker exec --env WORKSPACE_IP={container_ip} {workspace_name} pytest '/resources/tests'",
         exit_on_error=False,
     )
 
