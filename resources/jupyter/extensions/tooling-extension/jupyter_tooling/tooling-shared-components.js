@@ -6,7 +6,7 @@ define([
   "exports",
   "module",
 ], function (Jupyter, $, dialog, require, exports, module) {
-  var basePathRegex = "^(/.+?)/(tree|notebooks|edit|terminals)";
+  var basePathRegex = "^(.*?)/(tree|notebooks|edit|terminals)/";
   var basePath =
     window.location.pathname.match(basePathRegex) == null
       ? ""
