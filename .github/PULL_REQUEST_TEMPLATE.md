@@ -7,7 +7,7 @@ Thank you for creating a pull request 🙌 ❤️
 
 - [ ] Bugfix
 - [ ] New Feature
-- [ ] Feature Improvment
+- [ ] Feature Improvement
 - [ ] Refactoring
 - [ ] Documentation
 - [ ] Other, please describe:
