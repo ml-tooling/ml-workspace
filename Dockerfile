@@ -656,6 +656,8 @@ RUN \
     # Install Intel(R) Compiler Runtime - numba optimization
     # TODO: don't install, results in memory error
     # conda install -y --freeze-installed -c numba icc_rt && \
+    # datalad for data management and access to vast range of existing data
+    conda install -y -c conda-forge datalad && \
     # Install full pip requirements
     pip install --no-cache-dir --upgrade --upgrade-strategy only-if-needed -r ${RESOURCES_PATH}/libraries/requirements-full.txt && \
     # Setup Spacy
