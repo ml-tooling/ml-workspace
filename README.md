@@ -173,7 +173,7 @@ The default work directory within the container is `/workspace`, which is also t
 
 We strongly recommend enabling authentication via one of the following two options. For both options, the user will be required to authenticate for accessing any of the pre-installed tools.
 
-> _The authentication only works for all tools accessed through the main Workspace port (default: `8080`). This works for all preinstalled tools and the [Access Ports](#access-ports) feature. If you expose another port of the container, please make sure to secure it with authentication as well!_
+> _The authentication only works for all tools accessed through the main workspace port (default: `8080`). This works for all preinstalled tools and the [Access Ports](#access-ports) feature. If you expose another port of the container, please make sure to secure it with authentication as well!_
 
 <details>
 <summary>Details (click to expand...)</summary>
