@@ -522,7 +522,7 @@ It is possible to securely access any workspace internal port by selecting `Open
 
 If you want to use an HTTP client or share access to a given port, you can select the `Get shareable link` option. This generates a token-secured link that anyone with access to the link can use to access the specified port.
 
-> _The HTTP app requires to be resolved from a relative URL path or configure a base path (`/tools/PORT/`)._
+> _The HTTP app requires to be resolved from a relative URL path or configure a base path (`/tools/PORT/`). Tools made accessible this way are secured by the workspace's authentication system! If you decide to publish any other port of the container yourself instead of using this feature to make a tool accessible, please make sure to secure it via an authentication mechanism!_
 
 <details>
 
@@ -1060,6 +1060,11 @@ import sys
 !{sys.executable} -m pip install matplotlib
 ```
 
+</details>
+
+<details>
+<summary><b>Can I publish any other than the default port to access a tool inside the container?</b> (click to expand...)</summary>
+You can do this, but please be aware that this port is <b>not</b> protected by the workspace's authentication mechanism then! For security reasons, we therefore highly recommend to use the <a href="#access-ports">Access Ports</a> functionality of the workspace.
 </details>
 
 ---
