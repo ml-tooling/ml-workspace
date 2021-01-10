@@ -29,9 +29,12 @@ if [ ! -d "$FLINK_HOME" ]; then
     tar xzf flink.tar.gz
     mv flink-$FLINK_VERSION $FLINK_HOME
     rm flink.tar.gz
+    # Install python library for flink
+    # TODO: many dependencies changed: pip install --no-cache-dir apache-flink
 else
     echo "Flink is already installed"
 fi
+
 
 # Run
 if [ $INSTALL_ONLY = 0 ] ; then
