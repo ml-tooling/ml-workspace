@@ -6,7 +6,7 @@ define([
   "exports",
   "module",
 ], function (Jupyter, $, dialog, require, exports, module) {
-  var basePathRegex = "^(.*?)/(tree|notebooks|edit|terminals)/";
+  var basePathRegex = "^(.*?)/(tree|notebooks/|edit/|terminals/)";
   var basePath =
     window.location.pathname.match(basePathRegex) == null
       ? ""
@@ -596,7 +596,7 @@ define([
             click: function () {
               // TODO: Copy cleanup command to clipboard?
               // Open Terminal
-              window.open(basePath + "terminals/cleanup", "_blank");
+              window.open(basePath + "terminals/new/cleanup", "_blank");
             },
           },
         },
