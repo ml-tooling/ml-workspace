@@ -457,7 +457,6 @@ RUN \
     apt-get install -y --no-install-recommends gdebi && \
     # Search for files
     apt-get install -y --no-install-recommends catfish && \
-    # TODO: Unable to locate package:  apt-get install -y --no-install-recommends gnome-search-tool &&
     apt-get install -y --no-install-recommends font-manager && \
     # vs support for thunar
     apt-get install -y thunar-vcs-plugin && \
@@ -591,10 +590,10 @@ RUN \
     conda install -y --update-all \
             'python='$PYTHON_VERSION \
             'ipython=7.19.*' \
-            # TODO: notebook > 6.1.x handels terminal creation differently, but a fix is already merged:
-            # https://github.com/jupyter/notebook/pull/5813
-            'notebook=6.0.3' \
+            'notebook=6.1.6' \
             'jupyterlab=2.2.*' \
+            # TODO: nbconvert 6.x makes problems with template_path
+            'nbconvert=5.6.*' \
             # TODO: temp fix: yarl version 1.5 is required for lots of libraries.
             'yarl==1.5.*' \
             # TODO install scipy, numpy, sklearn, and numexpr via conda for mkl optimizaed versions: https://docs.anaconda.com/mkl-optimizations/
@@ -606,6 +605,8 @@ RUN \
             numexpr && \
             # installed via apt-get and pip: protobuf \
             # installed via apt-get: zlib  && \
+    # Switch of channel priority, makes some trouble
+    conda config --system --set channel_priority false && \
     # Install minimal pip requirements
     pip install --no-cache-dir --upgrade --upgrade-strategy only-if-needed -r ${RESOURCES_PATH}/libraries/requirements-minimal.txt && \
     # If minimal flavor - exit here
@@ -648,14 +649,21 @@ RUN \
     # required for tesseract: 11MB - tesseract-ocr-dev?
     apt-get install -y --no-install-recommends libtesseract-dev && \
     pip install --no-cache-dir tesserocr && \
-    # Required for tensorflow graphics (9MB)
+    # TODO: installs tenserflow 2.4 - Required for tensorflow graphics (9MB)
     apt-get install -y --no-install-recommends libopenexr-dev && \
-    pip install --no-cache-dir tensorflow-graphics==2020.5.20 && \
+    #pip install --no-cache-dir tensorflow-graphics==2020.5.20 && \
     # GCC OpenMP (GOMP) support library
     apt-get install -y --no-install-recommends libgomp1 && \
     # Install Intel(R) Compiler Runtime - numba optimization
-    # TODO: don't install, results in memory error
-    # conda install -y --freeze-installed -c numba icc_rt && \
+    # TODO: don't install, results in memory error: conda install -y --freeze-installed -c numba icc_rt && \
+    # TODO: problem with channel-prio setting. Install libjpeg turbo for speedup in image processing
+    conda install -y --freeze-installed libjpeg-turbo && \
+    # TODO: problem with channel-prio setting. Add snakemake for workflow management
+    conda install -y -c bioconda -c conda-forge snakemake-minimal && \
+    # TODO: problem with channel-prio setting. Add mamba as conda alternativ
+    conda install -y -c conda-forge mamba && \
+    # TODO: problem with channel-prio setting. Faiss - A library for efficient similarity search and clustering of dense vectors.
+    conda install -y --freeze-installed faiss-cpu && \
     # Install full pip requirements
     pip install --no-cache-dir --upgrade --upgrade-strategy only-if-needed -r ${RESOURCES_PATH}/libraries/requirements-full.txt && \
     # Setup Spacy
@@ -732,6 +740,10 @@ RUN \
         clean-layer.sh && \
         exit 0 ; \
     fi && \
+    # Install and activate what if tool 
+    pip install witwidget && \
+    jupyter nbextension install --py --symlink --sys-prefix witwidget && \
+    jupyter nbextension enable --py --sys-prefix witwidget && \
     # Activate qgrid
     jupyter nbextension enable --py --sys-prefix qgrid && \
     # TODO: Activate Colab support
@@ -771,7 +783,7 @@ RUN \
     pip install jupyterlab-git && \
     jupyter serverextension enable --py jupyterlab_git && \
     # For Matplotlib: https://github.com/matplotlib/jupyter-matplotlib
-    $lab_ext_install jupyter-matplotlib && \
+    #$lab_ext_install jupyter-matplotlib && \
     # Do not install any other jupyterlab extensions
     if [ "$WORKSPACE_FLAVOR" = "light" ]; then \
         # Final build with minimization
@@ -791,16 +803,17 @@ RUN \
     $lab_ext_install install @jupyter-widgets/jupyterlab-manager plotlywidget && \
     # produces build error: jupyter labextension install jupyterlab-chart-editor && \
     $lab_ext_install jupyterlab-chart-editor && \
-    # For holoview
-    $lab_ext_install @pyviz/jupyterlab_pyviz && \
     # Install jupyterlab variable inspector - https://github.com/lckr/jupyterlab-variableInspector
     $lab_ext_install @lckr/jupyterlab_variableinspector && \
+    # For holoview
+    $lab_ext_install @pyviz/jupyterlab_pyviz && \
     # Install Debugger in Jupyter Lab
     # pip install --no-cache-dir xeus-python && \
     # $lab_ext_install @jupyterlab/debugger && \
     # Install jupyterlab code formattor - https://github.com/ryantam626/jupyterlab_code_formatter
     $lab_ext_install @ryantam626/jupyterlab_code_formatter && \
-    pip install jupyterlab_code_formatter && \
+    # TODO: 1.4.1 forces jupyterlab 3.X
+    pip install jupyterlab_code_formatter==1.3.8 && \
     jupyter serverextension enable --py jupyterlab_code_formatter && \
     # Final build with minimization
     jupyter lab build -y --debug-log-path=/dev/stdout --log-level=WARN && \
@@ -852,7 +865,7 @@ RUN \
     cd $RESOURCES_PATH && \
     mkdir -p $HOME/.vscode/extensions/ && \
     # Install python extension - (newer versions are 30MB bigger)
-    VS_PYTHON_VERSION="2020.11.371526539" && \
+    VS_PYTHON_VERSION="2020.12.424452561" && \
     wget --no-verbose https://github.com/microsoft/vscode-python/releases/download/$VS_PYTHON_VERSION/ms-python-release.vsix && \
     bsdtar -xf ms-python-release.vsix extension && \
     rm ms-python-release.vsix && \
@@ -893,8 +906,7 @@ RUN \
     # && code-server --install-extension formulahendry.code-runner@$VS_CODE_RUNNER_VERSION \
     sleep $SLEEP_TIMER && \
     # Install ESLint extension: https://marketplace.visualstudio.com/items?itemName=dbaeumer.vscode-eslint
-    # Older versions do not support vscode 1.39 - https://github.com/microsoft/vscode-eslint/
-    VS_ESLINT_VERSION="2.1.13" && \
+    VS_ESLINT_VERSION="2.1.14" && \
     wget --retry-on-http-error=429 --waitretry 15 --tries 5 --no-verbose https://marketplace.visualstudio.com/_apis/public/gallery/publishers/dbaeumer/vsextensions/vscode-eslint/$VS_ESLINT_VERSION/vspackage -O dbaeumer.vscode-eslint.vsix && \
     # && wget --no-verbose https://github.com/microsoft/vscode-eslint/releases/download/$VS_ESLINT_VERSION-insider.2/vscode-eslint-$VS_ESLINT_VERSION.vsix -O dbaeumer.vscode-eslint.vsix && \
     bsdtar -xf dbaeumer.vscode-eslint.vsix extension && \
@@ -911,11 +923,13 @@ RUN \
 ### INCUBATION ZONE ###
 
 RUN \
-    # Strict channel priority currently makes problems with installing with conda
-    conda config --system --set channel_priority false  && \
-    # apt-get update && \
+    # TODO: Fix problem with jupyter extension panel: https://github.com/Jupyter-contrib/jupyter_nbextensions_configurator/issues/125
+    sed -i 's:notebook/js/mathjaxutils:base/js/mathjaxutils:g' $CONDA_PYTHON_DIR/site-packages/jupyter_nbextensions_configurator/static/nbextensions_configurator/render/render.js && \
+    # TODO: Disable pydeck extension, cannot be loaded (404)
+    jupyter nbextension disable pydeck/extension && \
+    apt-get update && \
     # TODO: lib contains high vulnerability
-    # apt-get install -y --no-install-recommends libffi-dev \
+    apt-get install -y --no-install-recommends libffi-dev && \
     # Required by magenta
     # apt-get install -y libasound2-dev && \
     # apt-get install -y xfce4-clipman && \
@@ -935,25 +949,8 @@ RUN \
         clean-layer.sh  && \
         exit 0 ; \
     fi && \
-    # Install libjpeg turbo for speedup in image processing
-    conda install -y --freeze-installed libjpeg-turbo && \
-    # Add snakemake for workflow management
-    conda install -y -c bioconda -c conda-forge snakemake-minimal && \
-    # Add mamba as conda alternativ
-    conda install -y -c conda-forge mamba && \
-    # Faiss - A library for efficient similarity search and clustering of dense vectors.
-    conda install -y --freeze-installed faiss-cpu && \
-    # Install new python libraries
-    pip install --no-cache-dir crc32c soundfile GPflow bpytop && \
-    # Install fkill-cli
-    npm install --global fkill-cli && \
-    # Install pretty-errors
-    pip install pretty_errors && \
-    python -m pretty_errors && \
-    # Install what if tool
-    pip install witwidget && \
-    jupyter nbextension install --py --symlink --sys-prefix witwidget && \
-    jupyter nbextension enable --py --sys-prefix witwidget && \
+    # Activate pretty-errors
+    python -m pretty_errors -u -p && \
     # Cleanup
     clean-layer.sh
 
@@ -1115,10 +1112,10 @@ ENV KMP_DUPLICATE_LIB_OK="True" \
     MKL_THREADING_LAYER=GNU \
     # To avoid over-subscription when using TBB, let the TBB schedulers use Inter Process Communication to coordinate:
     ENABLE_IPC=1 \
+    # will cause pretty_errors to check if it is running in an interactive terminal
+    PYTHON_PRETTY_ERRORS_ISATTY_ONLY=1 \
     # TODO: evaluate - Deactivate hdf5 file locking
-    HDF5_USE_FILE_LOCKING=False
-    # Activate better python execptions as default
-    # TODO: might break stuff BETTER_EXCEPTIONS=1
+    HDF5_USE_FILE_LOCKING=False\
 
 # Set default values for environment variables
 ENV CONFIG_BACKUP_ENABLED="true" \
