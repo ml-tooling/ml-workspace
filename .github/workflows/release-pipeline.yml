@@ -1,10 +1,11 @@
+# Based on https://github.com/ml-tooling/universal-build/blob/v0.6.6/workflows/build-pipeline.yml
 name: release-pipeline
 
 on:
   workflow_dispatch:
     inputs:
       version:
-        description: "Version of this release."
+        description: "Version of this release"
         required: true
   milestone:
     types: [closed]
