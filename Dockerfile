@@ -1115,7 +1115,7 @@ ENV KMP_DUPLICATE_LIB_OK="True" \
     # will cause pretty_errors to check if it is running in an interactive terminal
     PYTHON_PRETTY_ERRORS_ISATTY_ONLY=1 \
     # TODO: evaluate - Deactivate hdf5 file locking
-    HDF5_USE_FILE_LOCKING=False\
+    HDF5_USE_FILE_LOCKING=False
 
 # Set default values for environment variables
 ENV CONFIG_BACKUP_ENABLED="true" \
