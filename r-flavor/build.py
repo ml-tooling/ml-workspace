@@ -34,8 +34,12 @@ if flavor == "all":
     build_utils.build(".", args)
     build_utils.exit_process(0)
 
+    args[FLAG_FLAVOR] = "gpu-r"
+    build_utils.build(".", args)
+    build_utils.exit_process(0)
+
 # unknown flavor -> try to build from subdirectory
-if flavor not in ["r"]:
+if flavor not in ["r", "gpu-r"]:
     # assume that flavor has its own directory with build.py
     build_utils.build(flavor + "-flavor", args)
     build_utils.exit_process(0)
@@ -64,6 +68,10 @@ except Exception:
     pass
 
 base_image = "ml-workspace:" + VERSION
+
+if flavor == "gpu-r":
+    base_image = "ml-workspace-gpu:" + VERSION
+
 if args.get(build_utils.FLAG_RELEASE):
     base_image = docker_image_prefix + base_image
 

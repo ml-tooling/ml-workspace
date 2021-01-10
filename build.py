@@ -49,6 +49,9 @@ if flavor == "all":
     args[FLAG_FLAVOR] = "gpu"
     build_utils.build("gpu-flavor", args)
 
+    args[FLAG_FLAVOR] = "gpu-r"
+    build_utils.build("gpu-flavor", args)
+
     build_utils.exit_process(0)
 
 # unknown flavor -> try to build from subdirectory
