@@ -220,11 +220,13 @@ yfinance==0.1.55
 you-get==0.4.1488
 catboost==0.24.3
 pycaret==2.2.2
+crc32c==2.2
+SoundFile==0.10.2
+gpflow==2.1.4
 
 # Jupyter
 facets-overview==1.0.0
 ipython-sql==0.4.0
-ipywidgets==7.5.1
 jupyter-console==6.2.0
 jupyter-kernel-gateway==2.4.3
 jupyter-server-proxy==1.5.0
@@ -234,7 +236,6 @@ papermill==2.2.2
 pivottablejs==0.9.0
 pythreejs==2.2.1
 qgrid==1.3.1
-widgetsnbextension==3.5.1
 
 # jupyter_http_over_ws==0.0.7
 # Brokern: nbinteract==0.2.5
