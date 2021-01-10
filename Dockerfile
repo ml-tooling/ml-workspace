@@ -944,7 +944,16 @@ RUN \
     # Faiss - A library for efficient similarity search and clustering of dense vectors.
     conda install -y --freeze-installed faiss-cpu && \
     # Install new python libraries
-    pip install --no-cache-dir crc32c soundfile GPflow && \
+    pip install --no-cache-dir crc32c soundfile GPflow bpytop && \
+    # Install fkill-cli
+    npm install --global fkill-cli && \
+    # Install pretty-errors
+    pip install pretty_errors && \
+    python -m pretty_errors && \
+    # Install what if tool
+    pip install witwidget && \
+    jupyter nbextension install --py --symlink --sys-prefix witwidget && \
+    jupyter nbextension enable --py --sys-prefix witwidget && \
     # Cleanup
     clean-layer.sh
 
