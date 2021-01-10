@@ -798,7 +798,7 @@ RUN \
     # Install jupyterlab language server support
     # TODO update versions for jupyterlab 3.0 release
     pip install jupyter-lsp==0.9.3 && \
-    $lab_ext_install install @krassowski/jupyterlab-lsp@@2.0.8 && \
+    $lab_ext_install install @krassowski/jupyterlab-lsp@2.0.8 && \
     # For Plotly
     $lab_ext_install jupyterlab-plotly && \
     $lab_ext_install install @jupyter-widgets/jupyterlab-manager plotlywidget && \
