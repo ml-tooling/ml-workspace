@@ -11,7 +11,7 @@
 <p align="center">
     <a href="https://hub.docker.com/r/mltooling/ml-workspace" title="Docker Image Version"><img src="https://img.shields.io/docker/v/mltooling/ml-workspace?color=blue&sort=semver"></a>
     <a href="https://hub.docker.com/r/mltooling/ml-workspace" title="Docker Pulls"><img src="https://img.shields.io/docker/pulls/mltooling/ml-workspace.svg?color=blue"></a>
-    <a href="https://hub.docker.com/r/mltooling/ml-workspace" title="Docker Image Metadata"><img src="https://images.microbadger.com/badges/image/mltooling/ml-workspace.svg"></a>
+    <a href="https://hub.docker.com/r/mltooling/ml-workspace" title="Docker Image Size"><img src="https://img.shields.io/docker/image-size/mltooling/ml-workspace?color=blue&sort=semver"></a>
     <a href="https://github.com/ml-tooling/ml-workspace/blob/main/LICENSE" title="ML Workspace License"><img src="https://img.shields.io/badge/License-Apache%202.0-green.svg"></a>
     <a href="https://gitter.im/ml-tooling/ml-workspace" title="Chat on Gitter"><img src="https://badges.gitter.im/ml-tooling/ml-workspace.svg"></a>
     <a href="https://twitter.com/mltooling" title="ML Tooling on Twitter"><img src="https://img.shields.io/twitter/follow/mltooling.svg?style=social"></a>
