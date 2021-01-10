@@ -63,7 +63,7 @@ try:
 except Exception:
     pass
 
-base_image = "ml-workspace:" + VERSION
+base_image = "ml-workspace-r:" + VERSION
 if args.get(build_utils.FLAG_RELEASE):
     base_image = docker_image_prefix + base_image
 

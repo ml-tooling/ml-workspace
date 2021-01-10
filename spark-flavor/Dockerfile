@@ -1,4 +1,4 @@
-ARG ARG_WORKSPACE_BASE_IMAGE="mltooling/ml-workspace:latest"
+ARG ARG_WORKSPACE_BASE_IMAGE="mltooling/ml-workspace-r:latest"
 # Build from full flavor of workspace with same version
 FROM $ARG_WORKSPACE_BASE_IMAGE
 
@@ -24,6 +24,32 @@ RUN \
     # Cleanup
     clean-layer.sh
 
+# Install Hadoop
+RUN \
+    /bin/bash $RESOURCES_PATH/tools/hadoop-local-cluster.sh --install && \
+    # Cleanup
+    clean-layer.sh
+
+# Needs to be seperated, otherwise it does not exist yet
+ENV HADOOP_HOME="/opt/hadoop"
+
+ENV \
+    HADOOP_INSTALL=$HADOOP_HOME \
+    HADOOP_MAPRED_HOME=$HADOOP_HOME \
+    HADOOP_COMMON_HOME=$HADOOP_HOME \
+    HADOOP_HDFS_HOME=$HADOOP_HOME \
+    HADOOP_CONF_DIR=$HADOOP_HOME/etc/hadoop \
+    # HADOOP_CLASSPATH=$HADOOP_HOME/share/hadoop/tools/lib/* \
+    HADOOP_COMMON_LIB_NATIVE_DIR=$HADOOP_HOME/lib/native \
+    HADOOP_OPTS="-Djava.library.path=$HADOOP_COMMON_LIB_NATIVE_DIR" \
+    HDFS_NAMENODE_USER=$NB_USER \
+    HDFS_DATANODE_USER=$NB_USER \
+    HDFS_SECONDARYNAMENODE_USER=$NB_USER \
+    YARN_HOME=$HADOOP_HOME \
+    YARN_RESOURCEMANAGER_USER=$NB_USER \
+    YARN_NODEMANAGER_USER=$NB_USER \
+    PATH=$PATH:$HADOOP_HOME/sbin:$HADOOP_HOME/bin
+
 # Install Spark
 RUN \
     /bin/bash $RESOURCES_PATH/tools/spark-local-cluster.sh --install && \
@@ -31,7 +57,19 @@ RUN \
     clean-layer.sh
 
 # Configure Spark
-ENV SPARK_HOME=/opt/spark \
+ENV SPARK_HOME="/opt/spark"
+
+ENV \
+    # PYSPARK_DRIVER_PYTHON="jupyter"
+    # PYSPARK_DRIVER_PYTHON_OPTS='notebook'
+    # https://zeppelin.apache.org/docs/latest/interpreter/spark.html
+    # export SPARK_DIST_CLASSPATH=`hadoop classpath`
+    PYSPARK_PYTHON=$CONDA_ROOT/bin/python \
+    PYSPARK_DRIVER_PYTHON=$CONDA_ROOT/bin/python \
+    SPARK_OPTS="--driver-java-options=-Xms1024M --driver-java-options=-Xmx4096M --driver-java-options=-Dlog4j.logLevel=info" \
+    # http://blog.stuart.axelbrooke.com/python-3-on-spark-return-of-the-pythonhashseed
+    PYTHONHASHSEED=0 \
+    PYTHONPATH=$SPARK_HOME/python:$SPARK_HOME/python/lib/py4j-0.10.9-src.zip:$PYTHONPATH \
     PATH=$PATH:$SPARK_HOME/bin
 
 # Install Zeppelin
@@ -40,45 +78,15 @@ RUN \
     # Cleanup
     clean-layer.sh
 
+RUN \
+    # Install almond jupyter scala kernel: https://almond.sh/
+    # TODO: The installation in scala-utils does not seem to work currently
+    curl -Lo coursier https://git.io/coursier-cli && \
+    chmod +x coursier && \
+    ./coursier launch --fork almond -- --install --force && \
+    rm -f coursier
+
 ### CONFIGURATION ###
-
-ENV \
-    PYSPARK_PYTHON="python" \
-    PYTHONPATH=$SPARK_HOME/python:$SPARK_HOME/python/lib/py4j-0.10.9-src.zip:$PYTHONPATH \
-    SPARK_OPTS="--driver-java-options=-Xms1024M --driver-java-options=-Xmx4096M --driver-java-options=-Dlog4j.logLevel=info" \
-    # http://blog.stuart.axelbrooke.com/python-3-on-spark-return-of-the-pythonhashseed
-    PYTHONHASHSEED=0
-
-# Todo: Add additional spark configuration:
-# https://spark.apache.org/docs/latest/configuration.html
-# https://zeppelin.apache.org/docs/latest/interpreter/spark.html
-
-# PYSPARK_DRIVER_PYTHON / PYSPARK_DRIVER_PYTHON_OPTS / HADOOP_HOME / HADOOP_CLASSPATH / SPARK_DIST_CLASSPATH
-# export HADOOP_HOME=~/hadoop-2.7.0 export PATH=$HADOOP_HOME/bin:$PATH export HADOOP_CONF_DIR=$HADOOP_HOME/etc/hadoop
-# export HADOOP_CLASSPATH=$HADOOP_HOME/share/hadoop/tools/lib/*
-# export SPARK_DIST_CLASSPATH=`hadoop classpath`
-# export PYSPARK_DRIVER_PYTHON="jupyter"
-# export PYSPARK_DRIVER_PYTHON_OPTS="notebook"
-# HADOOP_CONF_DIR=/usr/lib/hadoop
-
-# TODO start spark master?
-# https://medium.com/@marcovillarreal_40011/creating-a-spark-standalone-cluster-with-docker-and-docker-compose-ba9d743a157f
-# ENV SPARK_MASTER_PORT 7077
-# ENV SPARK_MASTER_WEBUI_PORT 8080
-# ENV SPARK_WORKER_WEBUI_PORT 8081
-# ENV SPARK_MASTER_LOG /spark/logs
-# ENV SPARK_WORKER_LOG /spark/logs
-# CMD ["/bin/bash", "/start-master.sh"]
-# export SPARK_MASTER_HOST=`hostname`
-# SPARK_WORKER_CORES=1
-# SPARK_WORKER_MEMORY=1G
-# SPARK_DRIVER_MEMORY=128m
-# SPARK_EXECUTOR_MEMORY=256m
-
-# TODO configure spark ui to be proxied with base path:
-# https://stackoverflow.com/questions/45971127/wrong-css-location-of-spark-application-ui
-# https://github.com/jupyterhub/jupyter-server-proxy/issues/57
-# https://github.com/yuvipanda/jupyter-sparkui-proxy/blob/master/jupyter_sparkui_proxy/__init__.py
 
 # Add supervisor config to start zeppelin on port 8072
 COPY resources/zeppelin-service.conf  /etc/supervisor/conf.d/
