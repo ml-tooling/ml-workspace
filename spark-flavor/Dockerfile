@@ -80,7 +80,7 @@ RUN \
 
 RUN \
     # Install almond jupyter scala kernel: https://almond.sh/
-    # TODO: The installation in scala-utils does not seem to work currently
+    # TODO: The installation in scala-utils does not seem to work currently, cleanup layer the probelm?
     curl -Lo coursier https://git.io/coursier-cli && \
     chmod +x coursier && \
     ./coursier launch --fork almond -- --install --force && \
