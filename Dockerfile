@@ -796,8 +796,9 @@ RUN \
         exit 0 ; \
     fi && \
     # Install jupyterlab language server support
-    pip install jupyter-lsp && \
-    $lab_ext_install @krassowski/jupyterlab-lsp && \
+    # TODO update versions for jupyterlab 3.0 release
+    pip install jupyter-lsp==0.9.3 && \
+    $lab_ext_install install @krassowski/jupyterlab-lsp@@2.0.8 && \
     # For Plotly
     $lab_ext_install jupyterlab-plotly && \
     $lab_ext_install install @jupyter-widgets/jupyterlab-manager plotlywidget && \
@@ -930,6 +931,8 @@ RUN \
     apt-get update && \
     # TODO: lib contains high vulnerability
     apt-get install -y --no-install-recommends libffi-dev && \
+    # TODO: Downgrade nbresuse to be lab comapatible, upgrade to jupyter-resoure-usage soon: https://github.com/jupyter-server/jupyter-resource-usage
+    pip install --no-cache-dir nbresuse==0.3.6 && \
     # Required by magenta
     # apt-get install -y libasound2-dev && \
     # apt-get install -y xfce4-clipman && \
