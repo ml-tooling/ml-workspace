@@ -4,10 +4,12 @@
 set -e
 
 INSTALL_ONLY=0
+PORT=""
 # Loop through arguments and process them: https://pretzelhands.com/posts/command-line-flags
 for arg in "$@"; do
     case $arg in
         -i|--install) INSTALL_ONLY=1 ; shift ;;
+        -p=*|--port=*) PORT="${arg#*=}" ; shift ;; # TODO Does not allow --port 1234
         *) break ;;
     esac
 done
@@ -124,13 +126,16 @@ if [ $INSTALL_ONLY = 0 ] ; then
         read -p "Please provide a port for starting a local Spark cluster: " PORT
     fi
 
-    echo "Starting local Spark cluster on port "$PORT
+    echo "Starting local Spark Master with WebUI on port "$PORT
     echo "spark.ui.proxyBase /tools/"$PORT >> $SPARK_HOME/conf/spark-defaults.conf;
-
     $SPARK_HOME/sbin/stop-master.sh
-    $SPARK_HOME/sbin/start-master.sh --webui-port $PORT
+    $SPARK_HOME/sbin/start-master.sh --webui-port $PORT --host 0.0.0.0 --port 7077
+    # Connect Slaves
+    echo "Starting local Spark Worker with WebUI on port 7066"
+    $SPARK_HOME/sbin/stop-slave.sh
+    $SPARK_HOME/sbin/start-slave.sh spark://0.0.0.0:7077 --webui-port 7066 --host 0.0.0.0
     echo "Spark cluster is started. To access the dashboard, use the link in the open tools menu."
-    echo '{"id": "spark-link", "name": "Spark", "url_path": "/tools/'$PORT'/", "description": "Apache Spark Dashboard"}' > $HOME/.workspace/tools/spark.json
+    echo '{"id": "spark-link", "name": "Spark Master", "url_path": "/tools/'$PORT'/", "description": "Apache Spark Master Dashboard"}' > $HOME/.workspace/tools/spark.json
     sleep 20
 fi
 
