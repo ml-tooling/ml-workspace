@@ -34,7 +34,8 @@ if [ ! -d "$HADOOP_HOME" ]; then
     echo "Installing Hadoop. Please wait..."
     cd $RESOURCES_PATH
     HADOOP_VERSION=3.3.0
-    wget https://apache.mirror.digionline.de/hadoop/common/hadoop-$HADOOP_VERSION/hadoop-$HADOOP_VERSION.tar.gz -O ./hadoop.tar.gz
+    echo "Downloading..."
+    wget -q https://apache.mirror.digionline.de/hadoop/common/hadoop-$HADOOP_VERSION/hadoop-$HADOOP_VERSION.tar.gz -O ./hadoop.tar.gz
     tar xzf hadoop.tar.gz
     mv hadoop-$HADOOP_VERSION $HADOOP_HOME
     rm hadoop.tar.gz

@@ -23,7 +23,7 @@ if [ ! -f "$RESOURCES_PATH/zeppelin/zeppelin-$ZEPPELIN_VERSION-bin-all/bin/zeppe
     mkdir ./zeppelin
     cd ./zeppelin
     echo "Downloading. Please wait..."
-    wget https://www.apache.org/dist/zeppelin/zeppelin-$ZEPPELIN_VERSION/zeppelin-$ZEPPELIN_VERSION-bin-all.tgz -O ./zeppelin-$ZEPPELIN_VERSION-bin-all.tgz
+    wget -q https://www.apache.org/dist/zeppelin/zeppelin-$ZEPPELIN_VERSION/zeppelin-$ZEPPELIN_VERSION-bin-all.tgz -O ./zeppelin-$ZEPPELIN_VERSION-bin-all.tgz
     tar xfz zeppelin-$ZEPPELIN_VERSION-bin-all.tgz
     rm zeppelin-$ZEPPELIN_VERSION-bin-all.tgz
     # https://github.com/mirkoprescha/spark-zeppelin-docker/blob/master/Dockerfile#L40

@@ -15,18 +15,33 @@ done
 # Script inspired by: https://github.com/jupyter/docker-stacks/blob/master/pyspark-notebook/Dockerfile#L18
 # https://github.com/apache/incubator-toree/blob/master/Dockerfile
 
+
+# Todo: Add additional spark configuration:
+# https://spark.apache.org/docs/latest/configuration.html
+# TODO start spark master?
+# https://medium.com/@marcovillarreal_40011/creating-a-spark-standalone-cluster-with-docker-and-docker-compose-ba9d743a157f
+# ENV SPARK_MASTER_PORT 7077
+# ENV SPARK_MASTER_WEBUI_PORT 8080
+# ENV SPARK_WORKER_WEBUI_PORT 8081
+# ENV SPARK_MASTER_LOG /spark/logs
+# ENV SPARK_WORKER_LOG /spark/logs
+# export SPARK_MASTER_HOST=`hostname`
+# SPARK_WORKER_CORES=1
+# SPARK_WORKER_MEMORY=1G
+# SPARK_DRIVER_MEMORY=128m
+# SPARK_EXECUTOR_MEMORY=256m
+
+# TODO configure spark ui to be proxied with base path:
+# https://stackoverflow.com/questions/45971127/wrong-css-location-of-spark-application-ui
+# https://github.com/jupyterhub/jupyter-server-proxy/issues/57
+# https://github.com/yuvipanda/jupyter-sparkui-proxy/blob/master/jupyter_sparkui_proxy/__init__.py
+
+
 # Install scala 2.12
 if [[ ! $(scala -version 2>&1) =~ "version 2.12" ]]; then
     # Update to Scala 2.12 is required for spark
-    SCALA_VERSION=2.12.12
-    echo "Updating to Scala $SCALA_VERSION. Please wait..."
-    apt-get remove scala-library scala
-    apt-get autoremove
-    wget -q https://downloads.lightbend.com/scala/$SCALA_VERSION/scala-$SCALA_VERSION.deb -O ./scala.deb
-    dpkg -i scala.deb
-    rm scala.deb
-    apt-get update
-    apt-get install scala
+    echo "Scala 2.12 is not installed. You should consider running the scala-utils.sh tool installer before continuing."
+    sleep 10
 else
     echo "Scala 2.12 already installed."
 fi
@@ -38,7 +53,8 @@ if [ ! -d "$SPARK_HOME" ]; then
     cd $RESOURCES_PATH
     SPARK_VERSION="3.0.1"
     HADOOP_VERSION="3.2"
-    wget https://mirror.checkdomain.de/apache/spark/spark-$SPARK_VERSION/spark-$SPARK_VERSION-bin-hadoop$HADOOP_VERSION.tgz -O ./spark.tar.gz
+    echo "Downloading. Please wait..."
+    wget -q https://mirror.checkdomain.de/apache/spark/spark-$SPARK_VERSION/spark-$SPARK_VERSION-bin-hadoop$HADOOP_VERSION.tgz -O ./spark.tar.gz
     tar xzf spark.tar.gz
     mv spark-$SPARK_VERSION-bin-hadoop$HADOOP_VERSION/ $SPARK_HOME
     rm spark.tar.gz
@@ -55,12 +71,12 @@ if [ ! -d "$SPARK_HOME" ]; then
     pip install --no-cache-dir sparkmagic
     jupyter serverextension enable --py sparkmagic
 
-    # Install sparkmonitor: https://github.com/krishnan-r/sparkmonitor
-    pip install --no-cache-dir sparkmonitor
-    jupyter nbextension install sparkmonitor --py --sys-prefix --symlink
-    jupyter nbextension enable sparkmonitor --py --sys-prefix
-    jupyter serverextension enable --py --sys-prefix sparkmonitor
-    ipython profile create && echo "c.InteractiveShellApp.extensions.append('sparkmonitor.kernelextension')" >>  $(ipython profile locate default)/ipython_kernel_config.py
+    # TODO: does not work right now: Install sparkmonitor: https://github.com/krishnan-r/sparkmonitor
+    # pip install --no-cache-dir sparkmonitor
+    # jupyter nbextension install sparkmonitor --py --sys-prefix --symlink
+    # jupyter nbextension enable sparkmonitor --py --sys-prefix
+    # jupyter serverextension enable --py --sys-prefix sparkmonitor
+    # ipython profile create && echo "c.InteractiveShellApp.extensions.append('sparkmonitor.kernelextension')" >>  $(ipython profile locate default)/ipython_kernel_config.py
 
     # Deprecated: jupyter-spark: https://github.com/mozilla/jupyter-spark
     # jupyter serverextension enable --py jupyter_spark && \
@@ -85,8 +101,10 @@ pip install --no-cache-dir pyspark findspark pyarrow spylon-kernel
 if [[ ! $(jupyter kernelspec list) =~ "toree" ]]; then
     echo "Installing Toree Kernel for Jupyter. Please wait..."
     TOREE_VERSION=0.5.0
-    pip install --no-cache-dir https://dist.apache.org/repos/dist/dev/incubator/toree/$TOREE_VERSION-incubating-rc1/toree-pip/toree-$TOREE_VERSION.tar.gz
-    jupyter toree install --sys-prefix --spark_home=$SPARK_HOME
+    echo "Torre Kernel does not seem to work with the installed spark and scala verison."
+    # TODO: Fix installation
+    # pip install --no-cache-dir https://dist.apache.org/repos/dist/dev/incubator/toree/$TOREE_VERSION-incubating-rc1/toree-pip/toree-$TOREE_VERSION.tar.gz
+    # jupyter toree install --sys-prefix --spark_home=$SPARK_HOME
 else
     echo "Toree Kernel for Jupyter is already installed."
 fi

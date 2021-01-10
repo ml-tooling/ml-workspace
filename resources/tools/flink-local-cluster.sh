@@ -22,7 +22,8 @@ if [ ! -d "$FLINK_HOME" ]; then
     cd $RESOURCES_PATH
     FLINK_VERSION=1.12.0
     SCALA_VERSION=2.12
-    wget https://ftp.fau.de/apache/flink/flink-$FLINK_VERSION/flink-$FLINK_VERSION-bin-scala_$SCALA_VERSION.tgz -O ./flink.tar.gz
+    echo "Downloading. Please wait..."
+    wget -q https://ftp.fau.de/apache/flink/flink-$FLINK_VERSION/flink-$FLINK_VERSION-bin-scala_$SCALA_VERSION.tgz -O ./flink.tar.gz
     tar xzf flink.tar.gz
     mv flink-$FLINK_VERSION $FLINK_HOME
     rm flink.tar.gz

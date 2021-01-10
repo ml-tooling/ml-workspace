@@ -40,6 +40,8 @@ else
 fi
 
 
+# TODO: Install Coursier https://get-coursier.io/docs/cli-installation
+
 if [ ! -d "$HOME/.local/share/jupyter/kernels/scala" ]; then
     echo "Installing Almond Scala Kernel for Jupyter. Please wait..."
     curl -Lo coursier https://git.io/coursier-cli
