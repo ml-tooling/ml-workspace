@@ -50,7 +50,7 @@ if flavor == "all":
     build_utils.build("gpu-flavor", args)
 
     args[FLAG_FLAVOR] = "gpu-r"
-    build_utils.build("gpu-flavor", args)
+    build_utils.build("r-flavor", args)
 
     build_utils.exit_process(0)
 
