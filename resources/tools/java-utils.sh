@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 # Stops script execution if a command has an error
 set -e
@@ -21,7 +21,9 @@ apt-get install -y --no-install-recommends \
 # Install Java - Python Integrations
 pip install --no-cache-dir jep py4j
 
-if [[ ! $(jupyter kernelspec list) =~ "java" ]]; then
+if [[ $(jupyter kernelspec list) =~ "java" ]]; then
+    echo "Java Kernel for Jupyter is already installed."
+else
     echo "Installing Java Kernel for Jupyter. Please wait..."
     cd $RESOURCES_PATH
     wget https://github.com/SpencerPark/IJava/releases/download/v1.3.0/ijava-1.3.0.zip -O ./ijava.zip
@@ -30,8 +32,6 @@ if [[ ! $(jupyter kernelspec list) =~ "java" ]]; then
     python ./ijava/install.py --sys-prefix
     rm ./ijava.zip
     rm -r ./ijava
-else
-    echo "Java Kernel for Jupyter is already installed."
 fi
 
 # Install vscode java extension pack
@@ -41,5 +41,3 @@ if hash code 2>/dev/null; then
 else
     echo "Please install the desktop version of vscode via the vs-code-desktop.sh script to install java vscode extensions."
 fi
-
-# TODO install java kernel? https://github.com/SpencerPark/IJava

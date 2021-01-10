@@ -15,7 +15,7 @@ for arg in "$@"; do
 done
 
 
-ZEPPELIN_VERSION=0.8.2
+ZEPPELIN_VERSION=0.9.0
 
 if [ ! -f "$RESOURCES_PATH/zeppelin/zeppelin-$ZEPPELIN_VERSION-bin-all/bin/zeppelin-daemon.sh"  ]; then
     echo "Installing Zeppelin. Please wait..."
@@ -23,7 +23,7 @@ if [ ! -f "$RESOURCES_PATH/zeppelin/zeppelin-$ZEPPELIN_VERSION-bin-all/bin/zeppe
     mkdir ./zeppelin
     cd ./zeppelin
     echo "Downloading. Please wait..."
-    wget -q https://www.apache.org/dist/zeppelin/zeppelin-$ZEPPELIN_VERSION/zeppelin-$ZEPPELIN_VERSION-bin-all.tgz -O ./zeppelin-$ZEPPELIN_VERSION-bin-all.tgz
+    wget https://www.apache.org/dist/zeppelin/zeppelin-$ZEPPELIN_VERSION/zeppelin-$ZEPPELIN_VERSION-bin-all.tgz -O ./zeppelin-$ZEPPELIN_VERSION-bin-all.tgz
     tar xfz zeppelin-$ZEPPELIN_VERSION-bin-all.tgz
     rm zeppelin-$ZEPPELIN_VERSION-bin-all.tgz
     # https://github.com/mirkoprescha/spark-zeppelin-docker/blob/master/Dockerfile#L40
@@ -48,6 +48,6 @@ if [ $INSTALL_ONLY = 0 ] ; then
     export ZEPPELIN_NOTEBOOK_DIR=$WORKSPACE_HOME/zeppelin
     export ZEPPELIN_PORT=$PORT
     # ZEPPELIN_CONF_DIR=$ZEPPELIN_HOME/conf
-    $ZEPPELIN_HOME/bin/zeppelin.sh start
+    $ZEPPELIN_HOME/bin/zeppelin.sh
     sleep 15
 fi
