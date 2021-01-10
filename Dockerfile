@@ -949,10 +949,10 @@ RUN \
         clean-layer.sh  && \
         exit 0 ; \
     fi && \
-    # Activate pretty-errors
-    python -m pretty_errors -u -p && \
     # Install fkill-cli program  TODO: 30MB, remove?
     npm install --global fkill-cli && \
+    # Activate pretty-errors
+    python -m pretty_errors -u -p && \
     # Cleanup
     clean-layer.sh
 
