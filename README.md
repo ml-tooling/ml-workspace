@@ -31,14 +31,14 @@ The ML workspace is an all-in-one web-based IDE specialized for machine learning
 
 ## Highlights
 
-- 💫 Jupyter, JupyterLab, and Visual Studio Code web-based IDEs.
-- 🗃 Pre-installed with many popular data science libraries & tools.
-- 🖥 Full Linux desktop GUI accessible via web browser.
-- 🔀 Seamless Git integration optimized for notebooks.
-- 📈 Integrated hardware & training monitoring via Tensorboard & Netdata.
-- 🚪 Access from anywhere via Web, SSH, or VNC under a single port.
-- 🎛 Usable as remote kernel (Jupyter) or remote machine (VS Code) via SSH.
-- 🐳 Easy to deploy on Mac, Linux, and Windows via Docker.
+- 💫&nbsp; Jupyter, JupyterLab, and Visual Studio Code web-based IDEs.
+- 🗃&nbsp; Pre-installed with many popular data science libraries & tools.
+- 🖥&nbsp; Full Linux desktop GUI accessible via web browser.
+- 🔀&nbsp; Seamless Git integration optimized for notebooks.
+- 📈&nbsp; Integrated hardware & training monitoring via Tensorboard & Netdata.
+- 🚪&nbsp; Access from anywhere via Web, SSH, or VNC under a single port.
+- 🎛&nbsp; Usable as remote kernel (Jupyter) or remote machine (VS Code) via SSH.
+- 🐳&nbsp; Easy to deploy on Mac, Linux, and Windows via Docker.
 
 <br>
 
@@ -254,7 +254,7 @@ In addition to the main workspace image (`mltooling/ml-workspace`), we provide o
 
 <p>
 <a href="https://hub.docker.com/r/mltooling/ml-workspace" title="Docker Image Version"><img src="https://img.shields.io/docker/v/mltooling/ml-workspace?color=blue&sort=semver"></a>
-<a href="https://hub.docker.com/r/mltooling/ml-workspace-minimal" title="Docker Image Metadata"><img src="https://images.microbadger.com/badges/image/mltooling/ml-workspace-minimal.svg"></a>
+<a href="https://hub.docker.com/r/mltooling/ml-workspace-minimal" title="Docker Image Size"><img src="https://img.shields.io/docker/image-size/mltooling/ml-workspace-minimal?color=blue&sort=semver"></a>
 <a href="https://hub.docker.com/r/mltooling/ml-workspace-minimal" title="Docker Pulls"><img src="https://img.shields.io/docker/pulls/mltooling/ml-workspace-minimal.svg"></a>
 </p>
 
@@ -272,7 +272,7 @@ docker run -p 8080:8080 mltooling/ml-workspace-minimal:0.11.0
 
 <p>
 <a href="https://hub.docker.com/r/mltooling/ml-workspace-r" title="Docker Image Version"><img src="https://img.shields.io/docker/v/mltooling/ml-workspace-r?color=blue&sort=semver"></a>
-<a href="https://hub.docker.com/r/mltooling/ml-workspace-r" title="Docker Image Metadata"><img src="https://images.microbadger.com/badges/image/mltooling/ml-workspace-r.svg"></a>
+<a href="https://hub.docker.com/r/mltooling/ml-workspace-r" title="Docker Image Size"><img src="https://img.shields.io/docker/image-size/mltooling/ml-workspace-r?color=blue&sort=semver"></a>
 <a href="https://hub.docker.com/r/mltooling/ml-workspace-r" title="Docker Pulls"><img src="https://img.shields.io/docker/pulls/mltooling/ml-workspace-r.svg"></a>
 </p>
 
@@ -290,14 +290,14 @@ docker run -p 8080:8080 mltooling/ml-workspace-r:0.11.0
 
 <p>
 <a href="https://hub.docker.com/r/mltooling/ml-workspace-spark" title="Docker Image Version"><img src="https://img.shields.io/docker/v/mltooling/ml-workspace-spark?color=blue&sort=semver"></a>
-<a href="https://hub.docker.com/r/mltooling/ml-workspace-spark" title="Docker Image Metadata"><img src="https://images.microbadger.com/badges/image/mltooling/ml-workspace-spark.svg"></a>
+<a href="https://hub.docker.com/r/mltooling/ml-workspace-spark" title="Docker Image Size"><img src="https://img.shields.io/docker/image-size/mltooling/ml-workspace-spark?color=blue&sort=semver"></a>
 <a href="https://hub.docker.com/r/mltooling/ml-workspace-spark" title="Docker Pulls"><img src="https://img.shields.io/docker/pulls/mltooling/ml-workspace-spark.svg"></a>
 </p>
 
 <details>
 <summary>Details (click to expand...)</summary>
 
-The Spark flavor (`mltooling/ml-workspace-spark`) is based on our R-flavor workspace image and extends it with the Spark-interpreter, Spark-Jupyter kernel (Apache Toree), Zeppelin Notebook (access via `Open Tool -> Zeppelin`), and a few additional python libraries & Jupyter extensions.
+The Spark flavor (`mltooling/ml-workspace-spark`) is based on our R-flavor workspace image and extends it with the Spark runtime, Spark-Jupyter kernel, Zeppelin Notebook (access via `Open Tool -> Zeppelin`), PySpark, Hadoop, Java Kernel, and a few additional libraries & Jupyter extensions.
 
 ```bash
 docker run -p 8080:8080 mltooling/ml-workspace-spark:0.11.0
@@ -309,7 +309,7 @@ docker run -p 8080:8080 mltooling/ml-workspace-spark:0.11.0
 
 <p>
 <a href="https://hub.docker.com/r/mltooling/ml-workspace-gpu" title="Docker Image Version"><img src="https://img.shields.io/docker/v/mltooling/ml-workspace-gpu?color=blue&sort=semver"></a>
-<a href="https://hub.docker.com/r/mltooling/ml-workspace-gpu" title="Docker Image Metadata"><img src="https://images.microbadger.com/badges/image/mltooling/ml-workspace-gpu.svg"></a>
+<a href="https://hub.docker.com/r/mltooling/ml-workspace-gpu" ttitle="Docker Image Size"><img src="https://img.shields.io/docker/image-size/mltooling/ml-workspace-gpu?color=blue&sort=semver"></a>
 <a href="https://hub.docker.com/r/mltooling/ml-workspace-gpu" title="Docker Pulls"><img src="https://img.shields.io/docker/pulls/mltooling/ml-workspace-gpu.svg"></a>
 </p>
 
@@ -386,11 +386,11 @@ This project is maintained by [Benjamin Räthlein](https://twitter.com/raethlein
 
 | Type                     | Channel                                              |
 | ------------------------ | ------------------------------------------------------ |
-| 🚨 **Bug Reports**       | <a href="https://github.com/ml-tooling/ml-workspace/issues?utf8=%E2%9C%93&q=is%3Aopen+is%3Aissue+label%3Abug+sort%3Areactions-%2B1-desc+" title="Open Bug Report"><img src="https://img.shields.io/github/issues/ml-tooling/ml-workspace/bug.svg"></a>                                 |
-| 🎁 **Feature Requests**  | <a href="https://github.com/ml-tooling/ml-workspace/issues?q=is%3Aopen+is%3Aissue+label%3Afeature+sort%3Areactions-%2B1-desc" title="Open Feature Request"><img src="https://img.shields.io/github/issues/ml-tooling/ml-workspace/feature.svg?label=feature%20request"></a>                                 |
-| 👩‍💻 **Usage Questions**   |  <a href="https://stackoverflow.com/questions/tagged/ml-tooling" title="Open Question on Stackoverflow"><img src="https://img.shields.io/badge/stackoverflow-ml--tooling-orange.svg"></a> <a href="https://gitter.im/ml-tooling/ml-workspace" title="Chat on Gitter"><img src="https://badges.gitter.im/ml-tooling/ml-workspace.svg"></a> |
-| 🗯 **General Discussion** | <a href="https://gitter.im/ml-tooling/ml-workspace" title="Chat on Gitter"><img src="https://badges.gitter.im/ml-tooling/ml-workspace.svg"></a>  <a href="https://twitter.com/mltooling" title="ML Tooling on Twitter"><img src="https://img.shields.io/twitter/follow/mltooling.svg?style=social"></a>                  |
-| ❓ **Other Requests** | <a href="mailto:team@mltooling.org" title="Email ML Tooling Team"><img src="https://img.shields.io/badge/email-ML Tooling-green?logo=mail.ru&logoColor=white"></a> |
+| 🚨&nbsp; **Bug Reports**       | <a href="https://github.com/ml-tooling/ml-workspace/issues?utf8=%E2%9C%93&q=is%3Aopen+is%3Aissue+label%3Abug+sort%3Areactions-%2B1-desc+" title="Open Bug Report"><img src="https://img.shields.io/github/issues/ml-tooling/ml-workspace/bug.svg"></a>                                  |
+| 🎁&nbsp; **Feature Requests**  | <a href="https://github.com/ml-tooling/ml-workspace/issues?q=is%3Aopen+is%3Aissue+label%3Afeature+sort%3Areactions-%2B1-desc" title="Open Feature Request"><img src="https://img.shields.io/github/issues/ml-tooling/ml-workspace/feature.svg?label=feature%20request"></a>                                 |
+| 👩‍💻&nbsp; **Usage Questions**   |  <a href="https://github.com/ml-tooling/ml-workspace/issues?q=is%3Aopen+is%3Aissue+label%3Asupport+sort%3Areactions-%2B1-desc" title="Open Support Request"> <img src="https://img.shields.io/github/issues/ml-tooling/ml-workspace/support.svg?label=support%20request"></a> <a href="https://stackoverflow.com/questions/tagged/ml-tooling" title="Open Question on Stackoverflow"> <img src="https://img.shields.io/badge/stackoverflow-ml--tooling-orange.svg"></a> <a href="https://gitter.im/ml-tooling/ml-workspace" title="Chat on Gitter"><img src="https://badges.gitter.im/ml-tooling/ml-workspace.svg"></a> |
+| 📢&nbsp; **Announcements** | <a href="https://gitter.im/ml-tooling/ml-workspace" title="Chat on Gitter"><img src="https://badges.gitter.im/ml-tooling/ml-workspace.svg"></a> <a href="https://mltooling.substack.com/subscribe" title="Subscribe for updates"><img src="http://bit.ly/2Md9rxM"></a> <a href="https://twitter.com/mltooling" title="ML Tooling on Twitter"><img src="https://img.shields.io/twitter/follow/mltooling.svg?style=social&label=Follow"> |
+| ❓&nbsp; **Other Requests** | <a href="mailto:team@mltooling.org" title="Email ML Tooling Team"><img src="https://img.shields.io/badge/email-ML Tooling-green?logo=mail.ru&logoColor=white"></a> |
 
 ---
 
@@ -1180,4 +1180,4 @@ Refer to our [contribution guides](https://github.com/ml-tooling/ml-workspace/bl
 
 ---
 
-Licensed **Apache 2.0**. Created and maintained with ❤️ by developers from Berlin.
+Licensed **Apache 2.0**. Created and maintained with ❤️&nbsp; by developers from Berlin.
