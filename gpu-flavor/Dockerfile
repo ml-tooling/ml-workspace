@@ -191,7 +191,6 @@ RUN \
 #     clean-layer.sh
 
 # TODO install DALI: https://docs.nvidia.com/deeplearning/dali/user-guide/docs/installation.html#dali-and-ngc
-# TODO: removed rapids install, provided via installer script
 # TODO: if > Ubuntu 19.04 -> install nvtop: https://github.com/Syllo/nvtop
 # TODO: Install Arrrayfire: https://arrayfire.com/download/ pip install --no-cache-dir arrayfire && \
 # TODO Nvidia Apex: https://github.com/NVIDIA/apex
@@ -220,10 +219,6 @@ ENV TF_FORCE_GPU_ALLOW_GROWTH true
 ### CONFIGURATION ###
 
 #TODO: tests are currently empty COPY resources/tests/ /resources/tests
-
-# TODO what does this line do? - removed for now
-#RUN \
-#    echo 'Defaults env_keep += "ftp_proxy http_proxy https_proxy no_proxy"' >> /etc/sudoers
 
 # argument needs to be initalized again
 ARG ARG_WORKSPACE_VERSION="latest"
