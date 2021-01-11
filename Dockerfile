@@ -656,13 +656,13 @@ RUN \
     apt-get install -y --no-install-recommends libgomp1 && \
     # Install Intel(R) Compiler Runtime - numba optimization
     # TODO: don't install, results in memory error: conda install -y --freeze-installed -c numba icc_rt && \
-    # TODO: problem with channel-prio setting. Install libjpeg turbo for speedup in image processing
+    # Install libjpeg turbo for speedup in image processing
     conda install -y --freeze-installed libjpeg-turbo && \
-    # TODO: problem with channel-prio setting. Add snakemake for workflow management
+    # Add snakemake for workflow management
     conda install -y -c bioconda -c conda-forge snakemake-minimal && \
-    # TODO: problem with channel-prio setting. Add mamba as conda alternativ
+    # Add mamba as conda alternativ
     conda install -y -c conda-forge mamba && \
-    # TODO: problem with channel-prio setting. Faiss - A library for efficient similarity search and clustering of dense vectors.
+    # Faiss - A library for efficient similarity search and clustering of dense vectors.
     conda install -y --freeze-installed faiss-cpu && \
     # Install full pip requirements
     pip install --no-cache-dir --upgrade --upgrade-strategy only-if-needed -r ${RESOURCES_PATH}/libraries/requirements-full.txt && \
