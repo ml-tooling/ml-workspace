@@ -42,7 +42,7 @@ trap "kill_app" SIGINT SIGTERM EXIT
 
 #cleanup tmp from previous run
 # run vncserver kill in background
-vncserver -kill $DISPLAY &
+/usr/libexec/vncserver -kill $DISPLAY &
 rm -rfv /tmp/.X*-lock /tmp/.x*-lock /tmp/.X11-unix
 # Delete existing logs
 find $HOME/.vnc/ -name '*.log' -delete
