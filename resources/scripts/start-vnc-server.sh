@@ -27,7 +27,7 @@ chmod 600 $HOME/.vnc/passwd
 pidfile="$HOME/.vnc/*:1.pid"
 config_file=$HOME/.vnc/config
 touch $config_file
-printf "geometry=$VNC_RESOLUTION\ndepth=$VNC_COL_DEPTH\ndesktop=Desktop-GUI" > ~/.vnc/config
+printf "geometry=$VNC_RESOLUTION\ndepth=$VNC_COL_DEPTH\ndesktop=Desktop-GUI\nsession=xfce" > ~/.vnc/config
 command="/usr/libexec/vncserver $DISPLAY"
 
 # Proxy signals
