@@ -1,4 +1,4 @@
-FROM ubuntu:18.04
+FROM ubuntu:20.04
 
 USER root
 
@@ -177,7 +177,8 @@ RUN \
         unzip \
         bzip2 \
         lzop \
-        bsdtar \
+	# deprecates bsdtar (https://ubuntu.pkgs.org/20.04/ubuntu-universe-i386/libarchive-tools_3.4.0-2ubuntu1_i386.deb.html)
+        libarchive-tools \
         zlibc \
         # unpack (almost) everything with one command
         unp \
