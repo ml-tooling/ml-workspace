@@ -1,6 +1,6 @@
 # Workspace Update Process
 
-We plan to do a full workspace image update (all libraries and tools) about every three month. The full update involves quiet a bit of manual work as documented below:
+We plan to do a full workspace image update (all libraries and tools) about every three months. The full update involves quiet a bit of manual work as documented below:
 
 1. Refactor incubation zone:
 
@@ -17,7 +17,7 @@ We plan to do a full workspace image update (all libraries and tools) about ever
 
 3. Update core (gui) tools:
 
-   - TigetVNC: [latest release](https://dl.bintray.com/tigervnc/stable/)
+   - TigerVNC: [latest release](https://dl.bintray.com/tigervnc/stable/)
    - noVNC: [latest release](https://github.com/novnc/noVNC/releases/latest)
    - Websockify: [latest release](https://github.com/novnc/websockify/releases/latest)
    - VS Code Server: [latest release](https://github.com/cdr/code-server/releases/latest)
@@ -58,7 +58,7 @@ We plan to do a full workspace image update (all libraries and tools) about ever
    - portainer.sh: [latests release](https://github.com/portainer/portainer/releases/latest)
    - rapids-gpu.sh: [latests release](https://rapids.ai/)
 
-7. Update `minimmal` and `light` flavor python libraries:
+7. Update `minimmal` and `light` flavor Python libraries:
 
    - Update requirement files using [piprot](https://github.com/sesh/piprot), [pur](https://github.com/alanhamlett/pip-update-requirements), or [pip-upgrader](https://github.com/simion/pip-upgrader):
      - `piprot ./resources/libraries/requirements-minimal.txt`
@@ -108,25 +108,25 @@ We plan to do a full workspace image update (all libraries and tools) about ever
 
 11. Update, build and test `gpu` flavor:
 
-   - Update CUDA Tooling based on [cuda container images](https://gitlab.com/nvidia/container-images/cuda/)
-   - Decide for CUDA version update based on tensorflow & pytorch support
-   - Update GPU libraries and tooling inside Dockerfile
-   - Build via `python build.py --flavor=gpu`
-   - Test `nvidia-smi` in terminal to check for GPU access
-   - Test image on GPU machine und run `/workspace/tutorials/workspace-test-utilities.ipynb`
-   - Test GPU interface in Netdata and Glances
+    - Update CUDA Tooling based on [cuda container images](https://gitlab.com/nvidia/container-images/cuda/)
+    - Decide for CUDA version update based on tensorflow & pytorch support
+    - Update GPU libraries and tooling inside Dockerfile
+    - Build via `python build.py --flavor=gpu`
+    - Test `nvidia-smi` in terminal to check for GPU access
+    - Test image on GPU machine und run `/workspace/tutorials/workspace-test-utilities.ipynb`
+    - Test GPU interface in Netdata and Glances
 
 12. Update, build and test `R` flavor:
 
-   - Build via `python build.py --flavor=R`
-   - Run `/workspace/tutorials/test-r-runtime.Rmd` via R kernel.
-   - Test `R Studio Server` tool and run the `/workspace/tutorials/test-r-runtime.Rmd`.
+    - Build via `python build.py --flavor=R`
+    - Run `/workspace/tutorials/test-r-runtime.Rmd` via R kernel.
+    - Test `R Studio Server` tool and run the `/workspace/tutorials/test-r-runtime.Rmd`.
 
 13. Build and test `spark` flavor via `python build.py --flavor=spark`
 
-   - Build via `python build.py --flavor=spark`
-   - Run `/workspace/tutorials/test-spark.ipynb` via Python kernel.
-   - Run `/workspace/tutorials/toree-scala-kernel-tutorial.ipynb` via Toree kernel.
-   - Test `Zeppelin` tool.
+    - Build via `python build.py --flavor=spark`
+    - Run `/workspace/tutorials/test-spark.ipynb` via Python kernel.
+    - Run `/workspace/tutorials/toree-scala-kernel-tutorial.ipynb` via Toree kernel.
+    - Test `Zeppelin` tool.
 
 14. Build and push all flavors via `python build.py --deploy --version=<VERSION> --flavor=all`
