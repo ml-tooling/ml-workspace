@@ -7,7 +7,8 @@ tqdm==4.59.0 # Fast, Extensible Progress Meter
 matplotlib==3.3.4 # Python plotting package
 requests==2.25.1 # Python HTTP for Humans.
 urllib3==1.26.3 # HTTP library with thread-safe connection pooling, file post, and more.
-idna==3.1 # Internationalized Domain Names in Applications (IDNA)
+# requests can't use idna >3 yet
+idna==2.10 # Internationalized Domain Names in Applications (IDNA)
 pandas==1.2.3 # Powerful data structures for data analysis, time series, and statistics
 attrs==20.3.0 # Classes Without Boilerplate
 six==1.15.0 # Python 2 and 3 compatibility utilities
