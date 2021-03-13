@@ -83,7 +83,7 @@ We plan to do a full workspace image update (all libraries and tools) about ever
    - Run workspace container and check startup logs
    - Check/Compare layer sizes of new image with previous version (via Portainer)
    - Check folder sizes via `Disk Usage Analyzer` within the Desktop VNC
-   - Run `/resources/tests/evaluate-python-libraries.ipynb` notebook to update `requirements-full.txt`
+   - Run `/resources/tests/evaluate-py-libraries.ipynb` notebook to update `requirements-full.txt`
    - Run `/resources/tests/test-tool-installers.ipynb` notebook to test installer scripts.
 
 10. Build and test `full` flavor:
