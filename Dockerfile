@@ -778,7 +778,11 @@ RUN \
         exit 0 ; \
     fi && \
     $lab_ext_install @jupyterlab/toc && \
-    $lab_ext_install jupyterlab_tensorboard && \
+    
+    # install temporarily from gitrepo due to the issue that jupyterlab_tensorboard does not work with 3.x yet as described here: https://github.com/chaoleili/jupyterlab_tensorboard/issues/28#issuecomment-783594541
+    #$lab_ext_install jupyterlab_tensorboard && \
+    pip install git+https://github.com/chaoleili/jupyterlab_tensorboard.git && \
+    
     # install jupyterlab git
     $lab_ext_install @jupyterlab/git && \
     pip install jupyterlab-git && \
@@ -873,10 +877,11 @@ RUN \
     rm ms-python-release.vsix && \
     mv extension $HOME/.vscode/extensions/ms-python.python-$VS_PYTHON_VERSION && \
     # && code-server --install-extension ms-python.python@$VS_PYTHON_VERSION \
-    sleep $SLEEP_TIMER && \
+    sleep $SLEEP_TIMER
+RUN \
     # Install vscode-java: https://github.com/redhat-developer/vscode-java/releases
     VS_JAVA_VERSION="0.76.0"  && \
-    wget --quiet --no-check-certificate https://github.com/redhat-developer/vscode-java/releases/download/v$VS_JAVA_VERSION/redhat.java-$VS_JAVA_VERSION.vsix && \
+    wget --retry-on-http-error=429 --waitretry 15 --tries 5 --no-verbose https://marketplace.visualstudio.com/_apis/public/gallery/publishers/redhat/vsextensions/java/$VS_JAVA_VERSION/vspackage -O redhat.java-$VS_JAVA_VERSION.vsix && \
     # wget --no-verbose -O redhat.java-$VS_JAVA_VERSION.vsix https://marketplace.visualstudio.com/_apis/public/gallery/publishers/redhat/vsextensions/java/$VS_JAVA_VERSION/vspackage && \
     bsdtar -xf redhat.java-$VS_JAVA_VERSION.vsix extension && \
     rm redhat.java-$VS_JAVA_VERSION.vsix && \
