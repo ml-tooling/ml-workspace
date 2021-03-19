@@ -15,7 +15,7 @@ future==0.18.2 # Clean single-source support for Python 3 and 2
 python-dateutil==2.8.1 # Extensions to the standard Python datetime module
 PyYAML==5.3.1 # YAML parser and emitter for Python
 joblib==0.17.0 # Lightweight pipelining: using Python functions as pipeline jobs.
-Pillow==8.1.0 # Python Imaging Library (Fork)
+Pillow==8.1.1 # Python Imaging Library (Fork)
 # NOTE: yarl version 1.5 is required for lots of libraries
 yarl==1.5.1 # Yet another URL library
 pyzmq==20.0.0 # Python bindings for 0MQ
