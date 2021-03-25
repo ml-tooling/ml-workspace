@@ -13,7 +13,7 @@ attrs==20.3.0 # Classes Without Boilerplate
 six==1.15.0 # Python 2 and 3 compatibility utilities
 future==0.18.2 # Clean single-source support for Python 3 and 2
 python-dateutil==2.8.1 # Extensions to the standard Python datetime module
-PyYAML==5.3.1 # YAML parser and emitter for Python
+PyYAML==5.4 # YAML parser and emitter for Python
 joblib==0.17.0 # Lightweight pipelining: using Python functions as pipeline jobs.
 Pillow==8.1.0 # Python Imaging Library (Fork)
 # NOTE: yarl version 1.5 is required for lots of libraries
