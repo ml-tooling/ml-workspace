@@ -1069,6 +1069,11 @@ import sys
 You can do this, but please be aware that this port is <b>not</b> protected by the workspace's authentication mechanism then! For security reasons, we therefore highly recommend to use the <a href="#access-ports">Access Ports</a> functionality of the workspace.
 </details>
 
+<details>
+<summary><b>System and Tool Translations</b> (click to expand...)</summary>
+If you want to configure another language than English in your workspace and some tools are not translated properly, have a look <a href="https://github.com/ml-tooling/ml-workspace/issues/70#issuecomment-841863145">at this issue</a>. Try to comment out the 'exclude translations' line in `/etc/dpkg/dpkg.cfg.d/excludes` and re-install / configure the package.
+</details>
+
 ---
 
 <br>
