@@ -6,7 +6,7 @@ Cython==0.29.21 # The Cython compiler for writing C extensions for the Python la
 tqdm==4.55.2 # Fast, Extensible Progress Meter
 matplotlib==3.3.3 # Python plotting package
 requests==2.25.1 # Python HTTP for Humans.
-urllib3==1.26.2 # HTTP library with thread-safe connection pooling, file post, and more.
+urllib3==1.26.5 # HTTP library with thread-safe connection pooling, file post, and more.
 idna==2.10 # Internationalized Domain Names in Applications (IDNA)
 pandas==1.2.0 # Powerful data structures for data analysis, time series, and statistics
 attrs==20.3.0 # Classes Without Boilerplate
