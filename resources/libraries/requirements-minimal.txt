@@ -16,7 +16,7 @@ future==0.18.2 # Clean single-source support for Python 3 and 2
 python-dateutil==2.8.1 # Extensions to the standard Python datetime module
 PyYAML==5.4.1 # YAML parser and emitter for Python
 joblib==1.0.1 # Lightweight pipelining: using Python functions as pipeline jobs.
-Pillow==8.1.2 # Python Imaging Library (Fork)
+Pillow==7.2.0 # Python Imaging Library (Fork)
 # NOTE: yarl version 1.5 is required for lots of libraries
 yarl==1.6.3 # Yet another URL library
 pyzmq==22.0.3 # Python bindings for 0MQ
@@ -94,7 +94,7 @@ pymdstat==0.4.2 # Python library to parse Linux /proc/mdstat
 ## Jupyter
 # Via conda: ipython notebook jupyterlab
 ipykernel==5.5.0 # IPython Kernel for Jupyter
-jupytext==1.10.3 # Jupyter notebooks as Markdown documents, Julia, Python or R scripts
+jupytext==1.11.2 # Jupyter notebooks as Markdown documents, Julia, Python or R scripts
 nbresuse==0.4.0  # Simple Jupyter extension to show how much resources (RAM) your notebook is using
 ipympl==0.6.3 # Matplotlib Jupyter Extension
 jupyterhub==1.3.0 # JupyterHub: A multi-user server for Jupyter notebooks
