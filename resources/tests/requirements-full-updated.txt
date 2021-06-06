@@ -76,6 +76,7 @@ gunicorn==20.1.0
 gym==0.18.0
 holoviews==1.14.3
 hyperopt==0.2.5
+h5py==3.1.0
 idna==2.10
 # imageai==2.1.6
 imbalanced-learn==0.8.0
@@ -152,6 +153,7 @@ pickledb==0.9.2
 pipdeptree==2.0.0
 plotly==4.14.3
 portalocker==2.0.0 # required by fairseq
+prettytable==0.7.2
 psycopg2==2.8.6
 py-spy==0.3.6
 pyahocorasick==1.4.2
