@@ -48,7 +48,7 @@ eli5==0.10.1
 empyrical==0.5.5
 fairseq==0.10.1
 fastai==2.1.8
-fastapi==0.62.0
+fastapi==0.65.2
 featuretools==0.22.0
 flashtext==2.7
 folium==0.11.0
