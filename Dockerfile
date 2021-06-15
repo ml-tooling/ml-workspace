@@ -784,9 +784,9 @@ RUN \
     pip install git+https://github.com/chaoleili/jupyterlab_tensorboard.git && \
     
     # install jupyterlab git
-    $lab_ext_install @jupyterlab/git && \
+    # $lab_ext_install @jupyterlab/git && \
     pip install jupyterlab-git && \
-    jupyter serverextension enable --py jupyterlab_git && \
+    # jupyter serverextension enable --py jupyterlab_git && \
     # For Matplotlib: https://github.com/matplotlib/jupyter-matplotlib
     #$lab_ext_install jupyter-matplotlib && \
     # Do not install any other jupyterlab extensions
@@ -799,20 +799,25 @@ RUN \
         rm -rf $CONDA_ROOT/share/jupyter/lab/staging && \
         clean-layer.sh && \
         exit 0 ; \
-    fi && \
+    fi \
     # Install jupyterlab language server support
     # TODO update versions for jupyterlab 3.0 release
-    pip install jupyter-lsp==0.9.3 && \
+    && pip install jupyter-lsp==0.9.3 && \
     $lab_ext_install install @krassowski/jupyterlab-lsp@2.0.8 && \
     # For Plotly
     $lab_ext_install jupyterlab-plotly && \
     $lab_ext_install install @jupyter-widgets/jupyterlab-manager plotlywidget && \
     # produces build error: jupyter labextension install jupyterlab-chart-editor && \
     $lab_ext_install jupyterlab-chart-editor && \
+    
     # Install jupyterlab variable inspector - https://github.com/lckr/jupyterlab-variableInspector
-    $lab_ext_install @lckr/jupyterlab_variableinspector && \
+    # TODO: see issue https://github.com/lckr/jupyterlab-variableInspector/issues/207 with installing it
+#     $lab_ext_install @lckr/jupyterlab_variableinspector && \
+    pip install lckr-jupyterlab-variableinspector && \
+    
     # For holoview
-    $lab_ext_install @pyviz/jupyterlab_pyviz && \
+    # TODO: pyviz is not yet supported by the current JupyterLab version
+#     $lab_ext_install @pyviz/jupyterlab_pyviz && \
     # Install Debugger in Jupyter Lab
     # pip install --no-cache-dir xeus-python && \
     # $lab_ext_install @jupyterlab/debugger && \
@@ -820,9 +825,9 @@ RUN \
     $lab_ext_install @ryantam626/jupyterlab_code_formatter && \
     # TODO: 1.4.1 forces jupyterlab 3.X
     pip install jupyterlab_code_formatter==1.3.8 && \
-    jupyter serverextension enable --py jupyterlab_code_formatter && \
+    jupyter serverextension enable --py jupyterlab_code_formatter \
     # Final build with minimization
-    jupyter lab build -y --debug-log-path=/dev/stdout --log-level=WARN && \
+    && jupyter lab build -y --debug-log-path=/dev/stdout --log-level=WARN && \
     jupyter lab build && \
     # Cleanup
     # Clean jupyter lab cache: https://github.com/jupyterlab/jupyterlab/issues/4930
@@ -877,10 +882,9 @@ RUN \
     rm ms-python-release.vsix && \
     mv extension $HOME/.vscode/extensions/ms-python.python-$VS_PYTHON_VERSION && \
     # && code-server --install-extension ms-python.python@$VS_PYTHON_VERSION \
-    sleep $SLEEP_TIMER
-RUN \
+    sleep $SLEEP_TIMER \
     # Install vscode-java: https://github.com/redhat-developer/vscode-java/releases
-    VS_JAVA_VERSION="0.76.0"  && \
+    && VS_JAVA_VERSION="0.79.2"  && \
     wget --retry-on-http-error=429 --waitretry 15 --tries 5 --no-verbose https://marketplace.visualstudio.com/_apis/public/gallery/publishers/redhat/vsextensions/java/$VS_JAVA_VERSION/vspackage -O redhat.java-$VS_JAVA_VERSION.vsix && \
     # wget --no-verbose -O redhat.java-$VS_JAVA_VERSION.vsix https://marketplace.visualstudio.com/_apis/public/gallery/publishers/redhat/vsextensions/java/$VS_JAVA_VERSION/vspackage && \
     bsdtar -xf redhat.java-$VS_JAVA_VERSION.vsix extension && \
