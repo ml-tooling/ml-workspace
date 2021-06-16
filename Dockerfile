@@ -227,7 +227,7 @@ RUN \
     clean-layer.sh
 
 RUN \
-    OPEN_RESTY_VERSION="1.19.3.1" && \
+    OPEN_RESTY_VERSION="1.19.3.2" && \
     mkdir $RESOURCES_PATH"/openresty" && \
     cd $RESOURCES_PATH"/openresty" && \
     apt-get update && \
@@ -266,7 +266,7 @@ ENV \
     # TODO: CONDA_DIR is deprecated and should be removed in the future
     CONDA_DIR=/opt/conda \
     CONDA_ROOT=/opt/conda \
-    PYTHON_VERSION="3.8.5" \
+    PYTHON_VERSION="3.8.10" \
     CONDA_PYTHON_DIR=/opt/conda/lib/python3.8 \
     MINICONDA_VERSION=4.9.2 \
     MINICONDA_MD5=122c8c9beb51e124ab32a0fa6426c656 \
@@ -338,7 +338,7 @@ ENV PATH=$HOME/.local/bin:$PATH
 RUN \
     apt-get update && \
     # https://nodejs.org/en/about/releases/ use even numbered releases, i.e. LTS versions
-    curl -sL https://deb.nodesource.com/setup_15.x | sudo -E bash - && \
+    curl -sL https://deb.nodesource.com/setup_14.x | sudo -E bash - && \
     apt-get install -y nodejs && \
     # As conda is first in path, the commands 'node' and 'npm' reference to the version of conda.
     # Replace those versions with the newly installed versions of node
@@ -351,17 +351,18 @@ RUN \
     mkdir -p /opt/node/bin && \
     ln -s /usr/bin/node /opt/node/bin/node && \
     ln -s /usr/bin/npm /opt/node/bin/npm && \
-    # Install YARN
-    curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | sudo apt-key add - && \
-    echo "deb https://dl.yarnpkg.com/debian/ stable main" | sudo tee /etc/apt/sources.list.d/yarn.list && \
-    apt-get update && \
-    apt-get install -y --no-install-recommends yarn && \
+    # Update npm
+    /usr/bin/npm install -g npm && \
+    # Install Yarn
+    /usr/bin/npm install -g yarn && \
     # Install typescript
     /usr/bin/npm install -g typescript && \
     # Install webpack - 32 MB
     /usr/bin/npm install -g webpack && \
     # Install node-gyp
     /usr/bin/npm install -g node-gyp && \
+    # Update all packages to latest version
+    /usr/bin/npm update -g && \
     # Cleanup
     clean-layer.sh
 
@@ -372,7 +373,7 @@ RUN \
     apt-get update && \
     # libgl1-mesa-dri > 150 MB -> Install jdk-headless version (without gui support)?
     # java runtime is extenable via the java-utils.sh tool intstaller script
-    apt-get install -y --no-install-recommends openjdk-11-jdk maven scala && \
+    apt-get install -y --no-install-recommends openjdk-11-jdk-headless maven scala && \
     # Cleanup
     clean-layer.sh
 
@@ -484,10 +485,13 @@ RUN \
     # Install gigolo - Access remote systems
     apt-get install -y --no-install-recommends gigolo gvfs-bin && \
     # xfce systemload panel plugin - needs to be activated
-    apt-get install -y --no-install-recommends xfce4-systemload-plugin && \
+    # apt-get install -y --no-install-recommends xfce4-systemload-plugin && \
     # Leightweight ftp client that supports sftp, http, ...
     apt-get install -y --no-install-recommends gftp && \
     # Install chrome
+    # sudo add-apt-repository ppa:system76/pop
+    add-apt-repository ppa:saiarcot895/chromium-beta && \
+    apt-get update && \
     apt-get install -y chromium-browser chromium-browser-l10n chromium-codecs-ffmpeg && \
     ln -s /usr/bin/chromium-browser /usr/bin/google-chrome && \
     # Cleanup
@@ -590,8 +594,8 @@ RUN \
     # Install some basics - required to run container
     conda install -y --update-all \
             'python='$PYTHON_VERSION \
-            'ipython=7.21.*' \
-            'notebook=6.2.0' \
+            'ipython=7.24.*' \
+            'notebook=6.4.*' \
             'jupyterlab=3.0.*' \
             # TODO: nbconvert 6.x makes problems with template_path
             'nbconvert=5.6.*' \
@@ -629,7 +633,7 @@ RUN \
     # Install mkldnn
     conda install -y --freeze-installed -c mingfeima mkldnn && \
     # Install pytorch - cpu only
-    conda install -y -c pytorch "pytorch==1.8.*" cpuonly && \
+    conda install -y -c pytorch "pytorch==1.9.*" cpuonly && \
     # Install light pip requirements
     pip install --no-cache-dir --upgrade --upgrade-strategy only-if-needed -r ${RESOURCES_PATH}/libraries/requirements-light.txt && \
     # If light light flavor - exit here
@@ -782,7 +786,6 @@ RUN \
     # install temporarily from gitrepo due to the issue that jupyterlab_tensorboard does not work with 3.x yet as described here: https://github.com/chaoleili/jupyterlab_tensorboard/issues/28#issuecomment-783594541
     #$lab_ext_install jupyterlab_tensorboard && \
     pip install git+https://github.com/chaoleili/jupyterlab_tensorboard.git && \
-    
     # install jupyterlab git
     # $lab_ext_install @jupyterlab/git && \
     pip install jupyterlab-git && \
@@ -812,12 +815,12 @@ RUN \
     
     # Install jupyterlab variable inspector - https://github.com/lckr/jupyterlab-variableInspector
     # TODO: see issue https://github.com/lckr/jupyterlab-variableInspector/issues/207 with installing it
-#     $lab_ext_install @lckr/jupyterlab_variableinspector && \
+    #     $lab_ext_install @lckr/jupyterlab_variableinspector && \
     pip install lckr-jupyterlab-variableinspector && \
     
     # For holoview
     # TODO: pyviz is not yet supported by the current JupyterLab version
-#     $lab_ext_install @pyviz/jupyterlab_pyviz && \
+    #     $lab_ext_install @pyviz/jupyterlab_pyviz && \
     # Install Debugger in Jupyter Lab
     # pip install --no-cache-dir xeus-python && \
     # $lab_ext_install @jupyterlab/debugger && \
@@ -875,8 +878,15 @@ RUN \
     fi && \
     cd $RESOURCES_PATH && \
     mkdir -p $HOME/.vscode/extensions/ && \
+    # Install vs code jupyter - required by python extension
+    VS_JUPYTER_VERSION="2021.6.832593372" && \
+    wget --retry-on-http-error=429 --waitretry 15 --tries 5 --no-verbose https://marketplace.visualstudio.com/_apis/public/gallery/publishers/ms-toolsai/vsextensions/jupyter/$VS_JUPYTER_VERSION/vspackage -O ms-toolsai.jupyter-$VS_JUPYTER_VERSION.vsix && \
+    bsdtar -xf ms-toolsai.jupyter-$VS_JUPYTER_VERSION.vsix extension && \
+    rm ms-toolsai.jupyter-$VS_JUPYTER_VERSION.vsix && \
+    mv extension $HOME/.vscode/extensions/ms-toolsai.jupyter-$VS_JUPYTER_VERSION && \
+    sleep $SLEEP_TIMER && \
     # Install python extension - (newer versions are 30MB bigger)
-    VS_PYTHON_VERSION="2021.2.636928669" && \
+    VS_PYTHON_VERSION="2021.5.926500501" && \
     wget --no-verbose https://github.com/microsoft/vscode-python/releases/download/$VS_PYTHON_VERSION/ms-python-release.vsix && \
     bsdtar -xf ms-python-release.vsix extension && \
     rm ms-python-release.vsix && \
@@ -896,18 +906,11 @@ RUN \
         exit 0 ; \
     fi && \
     # Install prettie: https://github.com/prettier/prettier-vscode/releases
-    PRETTIER_VERSION="5.9.2" && \
+    PRETTIER_VERSION="6.4.0" && \
     wget --no-verbose https://github.com/prettier/prettier-vscode/releases/download/v$PRETTIER_VERSION/prettier-vscode-$PRETTIER_VERSION.vsix && \
     bsdtar -xf prettier-vscode-$PRETTIER_VERSION.vsix extension && \
     rm prettier-vscode-$PRETTIER_VERSION.vsix && \
     mv extension $HOME/.vscode/extensions/prettier-vscode-$PRETTIER_VERSION.vsix && \
-    # Install vs code jupyter
-    VS_JUPYTER_VERSION="2021.4.641214696" && \
-    wget --retry-on-http-error=429 --waitretry 15 --tries 5 --no-verbose https://marketplace.visualstudio.com/_apis/public/gallery/publishers/ms-toolsai/vsextensions/jupyter/$VS_JUPYTER_VERSION/vspackage -O ms-toolsai.jupyter-$VS_JUPYTER_VERSION.vsix && \
-    bsdtar -xf ms-toolsai.jupyter-$VS_JUPYTER_VERSION.vsix extension && \
-    rm ms-toolsai.jupyter-$VS_JUPYTER_VERSION.vsix && \
-    mv extension $HOME/.vscode/extensions/ms-toolsai.jupyter-$VS_JUPYTER_VERSION && \
-    sleep $SLEEP_TIMER && \
     # Install code runner: https://github.com/formulahendry/vscode-code-runner/releases/latest
     VS_CODE_RUNNER_VERSION="0.9.17" && \
     wget --no-verbose https://github.com/formulahendry/vscode-code-runner/releases/download/$VS_CODE_RUNNER_VERSION/code-runner-$VS_CODE_RUNNER_VERSION.vsix && \
@@ -917,7 +920,7 @@ RUN \
     # && code-server --install-extension formulahendry.code-runner@$VS_CODE_RUNNER_VERSION \
     sleep $SLEEP_TIMER && \
     # Install ESLint extension: https://marketplace.visualstudio.com/items?itemName=dbaeumer.vscode-eslint
-    VS_ESLINT_VERSION="2.1.17" && \
+    VS_ESLINT_VERSION="2.1.23" && \
     wget --retry-on-http-error=429 --waitretry 15 --tries 5 --no-verbose https://marketplace.visualstudio.com/_apis/public/gallery/publishers/dbaeumer/vsextensions/vscode-eslint/$VS_ESLINT_VERSION/vspackage -O dbaeumer.vscode-eslint.vsix && \
     # && wget --no-verbose https://github.com/microsoft/vscode-eslint/releases/download/$VS_ESLINT_VERSION-insider.2/vscode-eslint-$VS_ESLINT_VERSION.vsix -O dbaeumer.vscode-eslint.vsix && \
     bsdtar -xf dbaeumer.vscode-eslint.vsix extension && \
