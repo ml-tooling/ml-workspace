@@ -53,10 +53,10 @@ export SPARK_HOME=/opt/spark
 if [ ! -d "$SPARK_HOME" ]; then
     echo "Installing Spark. Please wait..."
     cd $RESOURCES_PATH
-    SPARK_VERSION="3.0.1"
+    SPARK_VERSION="3.1.2"
     HADOOP_VERSION="3.2"
     echo "Downloading. Please wait..."
-    wget -q https://mirror.checkdomain.de/apache/spark/spark-$SPARK_VERSION/spark-$SPARK_VERSION-bin-hadoop$HADOOP_VERSION.tgz -O ./spark.tar.gz
+    wget https://mirror.dkd.de/apache/spark/spark-$SPARK_VERSION/spark-$SPARK_VERSION-bin-hadoop$HADOOP_VERSION.tgz -O ./spark.tar.gz
     tar xzf spark.tar.gz
     mv spark-$SPARK_VERSION-bin-hadoop$HADOOP_VERSION/ $SPARK_HOME
     rm spark.tar.gz

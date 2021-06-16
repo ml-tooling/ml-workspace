@@ -14,7 +14,8 @@ done
 
 if ! hash atom 2>/dev/null; then
     echo "Installing Atom. Please wait..."
-    add-apt-repository -y ppa:webupd8team/atom
+    wget -qO - https://packagecloud.io/AtomEditor/atom/gpgkey | sudo apt-key add -
+    sh -c 'echo "deb [arch=amd64] https://packagecloud.io/AtomEditor/atom/any/ any main" > /etc/apt/sources.list.d/atom.list'
     apt-get update
     apt-get install -y atom
     apt-get clean

@@ -22,7 +22,7 @@ export PATH=$PATH:$FLINK_HOME/bin
 if [ ! -d "$FLINK_HOME" ]; then
     echo "Installing Flink. Please wait..."
     cd $RESOURCES_PATH
-    FLINK_VERSION=1.12.0
+    FLINK_VERSION=1.13.1
     SCALA_VERSION=2.12
     echo "Downloading. Please wait..."
     wget -q https://ftp.fau.de/apache/flink/flink-$FLINK_VERSION/flink-$FLINK_VERSION-bin-scala_$SCALA_VERSION.tgz -O ./flink.tar.gz

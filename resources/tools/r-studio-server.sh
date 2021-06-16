@@ -25,7 +25,7 @@ if [ ! -f "/usr/lib/rstudio-server/bin/rserver" ]; then
     # required by rstudio server
     apt-get install -y --no-install-recommends libclang-dev
     echo "Installing RStudio Server. Please wait..."
-    wget -q https://download2.rstudio.org/server/trusty/amd64/rstudio-server-1.4.1717-amd64.deb -O ./rstudio.deb
+    wget -q https://download2.rstudio.org/server/bionic/amd64/rstudio-server-1.4.1717-amd64.deb -O ./rstudio.deb
     gdebi --non-interactive ./rstudio.deb
     rm ./rstudio.deb
     # Rstudio Server cannot run via root -> create rstudio user
