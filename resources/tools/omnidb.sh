@@ -17,7 +17,7 @@ done
 if ! hash omnidb-server 2>/dev/null; then
     echo "Installing OmniDB"
     cd $RESOURCES_PATH
-    wget https://github.com/OmniDB/OmniDB/releases/download/3.0.2b/omnidb-server_3.0.2b_linux_x86_64.deb -O ./omnidb-server.deb
+    wget https://github.com/OmniDB/OmniDB/releases/download/3.0.3b/omnidb-app_3.0.3b_linux_x86_64.deb -O ./omnidb-server.deb
     apt-get update
     apt-get install -y ./omnidb-server.deb
     rm ./omnidb-server.deb

@@ -23,7 +23,7 @@ if ! hash kubectl 2>/dev/null; then
     apt-get install -y --no-install-recommends jq
     # kube-prompt
     wget https://github.com/c-bata/kube-prompt/releases/download/v1.0.11/kube-prompt_v1.0.11_linux_amd64.zip
-    unzip kube-prompt_v1.0.10_linux_amd64.zip
+    unzip kube-prompt_v1.0.11_linux_amd64.zip
     chmod +x kube-prompt
     mv ./kube-prompt /usr/local/bin/kube-prompt
     # Install python kubernetes client
@@ -42,7 +42,7 @@ if ! hash kubectl 2>/dev/null; then
     mv conftest /usr/local/bin
     rm conftest.tar.gz
     # Get yp
-    wget https://github.com/mikefarah/yq/releases/download/4.6.1/yq_linux_amd64 -O /usr/local/bin/yq
+    wget https://github.com/mikefarah/yq/releases/download/v4.9.6/yq_darwin_amd64 -O /usr/local/bin/yq
     chmod +x /usr/local/bin/yq
     # Remove temp dir
     cd $RESOURCES_PATH
