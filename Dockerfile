@@ -805,8 +805,8 @@ RUN \
     fi \
     # Install jupyterlab language server support
     # TODO update versions for jupyterlab 3.0 release
-    && pip install jupyter-lsp==0.9.3 && \
-    $lab_ext_install install @krassowski/jupyterlab-lsp@2.0.8 && \
+    && pip install jupyterlab-lsp==3.7.0 jupyter-lsp==1.3.0 && \
+    # $lab_ext_install install @krassowski/jupyterlab-lsp@2.0.8 && \
     # For Plotly
     $lab_ext_install jupyterlab-plotly && \
     $lab_ext_install install @jupyter-widgets/jupyterlab-manager plotlywidget && \
@@ -817,7 +817,6 @@ RUN \
     # TODO: see issue https://github.com/lckr/jupyterlab-variableInspector/issues/207 with installing it
     #     $lab_ext_install @lckr/jupyterlab_variableinspector && \
     pip install lckr-jupyterlab-variableinspector && \
-    
     # For holoview
     # TODO: pyviz is not yet supported by the current JupyterLab version
     #     $lab_ext_install @pyviz/jupyterlab_pyviz && \
@@ -826,8 +825,7 @@ RUN \
     # $lab_ext_install @jupyterlab/debugger && \
     # Install jupyterlab code formattor - https://github.com/ryantam626/jupyterlab_code_formatter
     $lab_ext_install @ryantam626/jupyterlab_code_formatter && \
-    # TODO: 1.4.1 forces jupyterlab 3.X
-    pip install jupyterlab_code_formatter==1.3.8 && \
+    pip install jupyterlab_code_formatter && \
     jupyter serverextension enable --py jupyterlab_code_formatter \
     # Final build with minimization
     && jupyter lab build -y --debug-log-path=/dev/stdout --log-level=WARN && \
