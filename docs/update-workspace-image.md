@@ -116,12 +116,6 @@ We plan to do a full workspace image update (all libraries and tools) about ever
     - Test image on GPU machine und run `/workspace/tutorials/workspace-test-utilities.ipynb`
     - Test GPU interface in Netdata and Glances
 
-12. Update, build and test `R` flavor:
-
-    - Build via `python build.py --flavor=R`
-    - Run `/workspace/tutorials/test-r-runtime.Rmd` via R kernel.
-    - Test `R Studio Server` tool and run the `/workspace/tutorials/test-r-runtime.Rmd`.
-
 13. Build and test `spark` flavor via `python build.py --flavor=spark`
 
     - Build via `python build.py --flavor=spark`

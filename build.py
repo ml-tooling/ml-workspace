@@ -40,18 +40,12 @@ if flavor == "all":
     args[FLAG_FLAVOR] = "full"
     build_utils.build(".", args)
 
-    args[FLAG_FLAVOR] = "r"
-    build_utils.build("r-flavor", args)
-
     args[FLAG_FLAVOR] = "spark"
     build_utils.build("spark-flavor", args)
 
     args[FLAG_FLAVOR] = "gpu"
     build_utils.build("gpu-flavor", args)
-
-    args[FLAG_FLAVOR] = "gpu-r"
-    build_utils.build("r-flavor", args)
-
+    
     build_utils.exit_process(0)
 
 # unknown flavor -> try to build from subdirectory
