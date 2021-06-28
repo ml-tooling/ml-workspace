@@ -27,6 +27,6 @@ fi
 if [ $INSTALL_ONLY = 0 ] ; then
     echo "Starting Atom..."
     echo "Atom is a GUI application. Make sure to run this script only within the VNC Desktop."
-    atom
+    atom --no-sandbox
     sleep 10
 fi
