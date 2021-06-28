@@ -17,7 +17,7 @@ if [ ! -f "/usr/sbin/xrdp"  ]; then
     echo "Installing XRDP. Please wait..."
     cd ${RESOURCES_PATH}
     apt-get update
-    apt-get install -y --no-install-recommends xrdp
+    yes N | apt-get install -y --no-install-recommends xrdp
     # use xfce
     sudo sed -i.bak '/fi/a #xrdp multiple users configuration \n xfce-session \n' /etc/xrdp/startwm.sh
     # generate /etc/xrdp/rsakeys.ini
