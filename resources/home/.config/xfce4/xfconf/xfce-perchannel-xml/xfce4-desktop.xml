@@ -68,4 +68,8 @@
     <property name="window-width" type="int" value="1280"/>
     <property name="window-height" type="int" value="1024"/>
   </property>
+  <property name="desktop-icons" type="empty">
+    <property name="icon-size" type="uint" value="52"/>
+    <property name="show-hidden-files" type="bool" value="true"/>
+  </property>
 </channel>
