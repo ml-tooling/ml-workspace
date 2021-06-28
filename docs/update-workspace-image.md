@@ -47,8 +47,6 @@ We plan to do a full workspace image update (all libraries and tools) about ever
    - pycharm.sh: [latest release](https://www.jetbrains.com/pycharm/download/other.html)
    - nteract.sh: [latest release](https://github.com/nteract/nteract/releases/latest)
    - r-runtime.sh: [latest release](https://www.rstudio.com/products/rstudio/download-server/)
-   - rstudio-server.sh: [latest release](https://www.rstudio.com/products/rstudio/download-server/)
-   - rstudio-desktop.sh: [latest release](https://www.rstudio.com/products/rstudio/download/#download)
    - sqlectron.sh: [latest release](https://github.com/sqlectron/sqlectron-gui/releases/latest)
    - zeppelin.sh: [latest release](http://zeppelin.apache.org/download.html)
    - robo3t.sh: [latest release](https://github.com/Studio3T/robomongo/releases/latest)
