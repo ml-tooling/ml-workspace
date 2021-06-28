@@ -96,7 +96,6 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 RUN apt-mark hold libcublas-dev-11-2 libnccl-dev
 ENV LIBRARY_PATH /usr/local/cuda/lib64/stubs
 
-
 ### END CUDA DEVEL ###
 
 ### CUDANN8 DEVEL ###
