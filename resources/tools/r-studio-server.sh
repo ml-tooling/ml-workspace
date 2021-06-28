@@ -23,7 +23,7 @@ if [ ! -f "/usr/lib/rstudio-server/bin/rserver" ]; then
     fi
     apt-get update
     # required by rstudio server
-    apt-get install -y --no-install-recommends libclang-dev
+    apt-get install -y --no-install-recommends libclang-dev gdebi-core
     echo "Installing RStudio Server. Please wait..."
     wget -q https://download2.rstudio.org/server/bionic/amd64/rstudio-server-1.4.1717-amd64.deb -O ./rstudio.deb
     gdebi --non-interactive ./rstudio.deb
@@ -63,7 +63,6 @@ if [ $INSTALL_ONLY = 0 ] ; then
     # Fix tmp permissions - does not work if tmp permissions are wrong
     chmod 1777 /tmp
     # Run rstudio with rstudio user and empty ld_library_path (otherwise it gets stuck)
-    LD_LIBRARY_PATH="" LD_PRELOAD="" USER=rstudio /usr/lib/rstudio-server/bin/rserver --server-working-dir=$WORKSPACE_HOME --server-daemonize=0 --auth-none=1 --auth-validate-users=0 --www-port $PORT
+    LD_LIBRARY_PATH="" LD_PRELOAD="" USER=rstudio /usr/lib/rstudio-server/bin/rserver --server-working-dir=$WORKSPACE_HOME --server-daemonize=0 --auth-none=1 --auth-validate-users=0 --www-verify-user-agent=0  --www-frame-origin=same --www-root-path="./" --www-port $PORT
     sleep 10
 fi
-
