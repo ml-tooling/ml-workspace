@@ -177,7 +177,7 @@ RUN \
         unzip \
         bzip2 \
         lzop \
-	# deprecates bsdtar (https://ubuntu.pkgs.org/20.04/ubuntu-universe-i386/libarchive-tools_3.4.0-2ubuntu1_i386.deb.html)
+	    # deprecates bsdtar (https://ubuntu.pkgs.org/20.04/ubuntu-universe-i386/libarchive-tools_3.4.0-2ubuntu1_i386.deb.html)
         libarchive-tools \
         zlibc \
         # unpack (almost) everything with one command
@@ -318,9 +318,9 @@ ENV LD_LIBRARY_PATH=$CONDA_ROOT/lib
 RUN git clone https://github.com/pyenv/pyenv.git $RESOURCES_PATH/.pyenv && \
     # Install pyenv plugins based on pyenv installer
     git clone https://github.com/pyenv/pyenv-virtualenv.git $RESOURCES_PATH/.pyenv/plugins/pyenv-virtualenv  && \
-    git clone git://github.com/pyenv/pyenv-doctor.git $RESOURCES_PATH/plugins/pyenv-doctor && \
-    git clone https://github.com/pyenv/pyenv-update.git $RESOURCES_PATH/plugins/pyenv-update && \
-    git clone https://github.com/pyenv/pyenv-which-ext.git $RESOURCES_PATH/plugins/pyenv-which-ext
+    git clone git://github.com/pyenv/pyenv-doctor.git $RESOURCES_PATH/.pyenv/plugins/pyenv-doctor && \
+    git clone https://github.com/pyenv/pyenv-update.git $RESOURCES_PATH/.pyenv/plugins/pyenv-update && \
+    git clone https://github.com/pyenv/pyenv-which-ext.git $RESOURCES_PATH/.pyenv/plugins/pyenv-which-ext
 
 # Add pyenv to path
 ENV PATH=$RESOURCES_PATH/.pyenv/shims:$RESOURCES_PATH/.pyenv/bin:$PATH \
@@ -368,42 +368,13 @@ RUN \
 
 ENV PATH=/opt/node/bin:$PATH
 
-# Install Java Runtime
-RUN \
-    apt-get update && \
-    # libgl1-mesa-dri > 150 MB -> Install jdk-headless version (without gui support)?
-    # java runtime is extenable via the java-utils.sh tool intstaller script
-    apt-get install -y --no-install-recommends openjdk-11-jdk-headless maven scala && \
-    # Cleanup
-    clean-layer.sh
-
-ENV JAVA_HOME="/usr/lib/jvm/java-11-openjdk-amd64"
-# TODO add MAVEN_HOME?
+# Java - removed
 
 ### END RUNTIMES ###
 
 ### PROCESS TOOLS ###
 
-### Install xfce UI
-RUN \
-    apt-get update && \
-    # Install custom font
-    apt-get install -y xfce4 xfce4-terminal xterm && \
-    apt-get purge -y pm-utils xscreensaver* && \
-    apt-get install -y xfce4-clipman && \
-    # Cleanup
-    clean-layer.sh
-
-# Install rdp support via xrdp
-RUN \
-    apt-get update && \
-    apt-get install -y --no-install-recommends xrdp && \
-    # use xfce
-    sudo sed -i.bak '/fi/a #xrdp multiple users configuration \n xfce-session \n' /etc/xrdp/startwm.sh && \
-    # generate /etc/xrdp/rsakeys.ini
-    cd /etc/xrdp/ && xrdp-keygen xrdp && \
-    # Cleanup
-    clean-layer.sh
+# Removed XRDP
 
 # Install supervisor for process supervision
 RUN \
@@ -422,6 +393,17 @@ RUN \
 ### END PROCESS TOOLS ###
 
 ### GUI TOOLS ###
+
+### Install xfce UI
+RUN \
+    apt-get update && \
+    # Install custom font
+    apt-get install -y xfce4 xfce4-terminal xterm && \
+    apt-get purge -y pm-utils xscreensaver* && \
+    apt-get install -y xfce4-clipman && \
+    # Cleanup
+    clean-layer.sh
+
 # Install VNC
 RUN \
     apt-get update  && \
@@ -722,6 +704,8 @@ RUN \
     jupyter nbextension enable execute_time/ExecuteTime --sys-prefix && \
     jupyter nbextension enable collapsible_headings/main --sys-prefix && \
     jupyter nbextension enable codefolding/main --sys-prefix && \
+    # TODO: Disable pydeck extension, cannot be loaded (404)
+    jupyter nbextension disable pydeck/extension && \
     # Install and activate Jupyter Tensorboard
     pip install --no-cache-dir git+https://github.com/InfuseAI/jupyter_tensorboard.git && \
     jupyter tensorboard enable --sys-prefix && \
@@ -782,7 +766,7 @@ RUN \
         exit 0 ; \
     fi && \
     $lab_ext_install @jupyterlab/toc && \
-    
+
     # install temporarily from gitrepo due to the issue that jupyterlab_tensorboard does not work with 3.x yet as described here: https://github.com/chaoleili/jupyterlab_tensorboard/issues/28#issuecomment-783594541
     #$lab_ext_install jupyterlab_tensorboard && \
     pip install git+https://github.com/chaoleili/jupyterlab_tensorboard.git && \
@@ -804,7 +788,6 @@ RUN \
         exit 0 ; \
     fi \
     # Install jupyterlab language server support
-    # TODO update versions for jupyterlab 3.0 release
     && pip install jupyterlab-lsp==3.7.0 jupyter-lsp==1.3.0 && \
     # $lab_ext_install install @krassowski/jupyterlab-lsp@2.0.8 && \
     # For Plotly
@@ -812,7 +795,6 @@ RUN \
     $lab_ext_install install @jupyter-widgets/jupyterlab-manager plotlywidget && \
     # produces build error: jupyter labextension install jupyterlab-chart-editor && \
     $lab_ext_install jupyterlab-chart-editor && \
-    
     # Install jupyterlab variable inspector - https://github.com/lckr/jupyterlab-variableInspector
     # TODO: see issue https://github.com/lckr/jupyterlab-variableInspector/issues/207 with installing it
     #     $lab_ext_install @lckr/jupyterlab_variableinspector && \
@@ -890,15 +872,7 @@ RUN \
     rm ms-python-release.vsix && \
     mv extension $HOME/.vscode/extensions/ms-python.python-$VS_PYTHON_VERSION && \
     # && code-server --install-extension ms-python.python@$VS_PYTHON_VERSION \
-    sleep $SLEEP_TIMER \
-    # Install vscode-java: https://github.com/redhat-developer/vscode-java/releases
-    && VS_JAVA_VERSION="0.79.2"  && \
-    wget --retry-on-http-error=429 --waitretry 15 --tries 5 --no-verbose https://marketplace.visualstudio.com/_apis/public/gallery/publishers/redhat/vsextensions/java/$VS_JAVA_VERSION/vspackage -O redhat.java-$VS_JAVA_VERSION.vsix && \
-    # wget --no-verbose -O redhat.java-$VS_JAVA_VERSION.vsix https://marketplace.visualstudio.com/_apis/public/gallery/publishers/redhat/vsextensions/java/$VS_JAVA_VERSION/vspackage && \
-    bsdtar -xf redhat.java-$VS_JAVA_VERSION.vsix extension && \
-    rm redhat.java-$VS_JAVA_VERSION.vsix && \
-    mv extension $HOME/.vscode/extensions/redhat.java-$VS_JAVA_VERSION && \
-    # && code-server --install-extension redhat.java@$VS_JAVA_VERSION \
+    sleep $SLEEP_TIMER && \
     # If light flavor -> exit here
     if [ "$WORKSPACE_FLAVOR" = "light" ]; then \
         exit 0 ; \
@@ -936,9 +910,7 @@ RUN \
 
 RUN \
     # TODO: Fix problem with jupyter extension panel: https://github.com/Jupyter-contrib/jupyter_nbextensions_configurator/issues/125
-    sed -i 's:notebook/js/mathjaxutils:base/js/mathjaxutils:g' $CONDA_PYTHON_DIR/site-packages/jupyter_nbextensions_configurator/static/nbextensions_configurator/render/render.js && \
-    # TODO: Disable pydeck extension, cannot be loaded (404)
-    jupyter nbextension disable pydeck/extension && \
+    # TODO sed -i 's:notebook/js/mathjaxutils:base/js/mathjaxutils:g' $CONDA_PYTHON_DIR/site-packages/jupyter_nbextensions_configurator/static/nbextensions_configurator/render/render.js && \
     apt-get update && \
     # TODO: lib contains high vulnerability
     apt-get install -y --no-install-recommends libffi-dev && \
@@ -1034,7 +1006,6 @@ RUN \
     # Fielbrowser Branding
     mkdir -p $RESOURCES_PATH"/filebrowser/img/icons/" && \
     cp -f $RESOURCES_PATH/branding/favicon.ico $RESOURCES_PATH"/filebrowser/img/icons/favicon.ico" && \
-    # Todo - use actual png
     cp -f $RESOURCES_PATH/branding/favicon.ico $RESOURCES_PATH"/filebrowser/img/icons/favicon-32x32.png" && \
     cp -f $RESOURCES_PATH/branding/favicon.ico $RESOURCES_PATH"/filebrowser/img/icons/favicon-16x16.png" && \
     cp -f $RESOURCES_PATH/branding/ml-workspace-logo.svg $RESOURCES_PATH"/filebrowser/img/logo.svg"
