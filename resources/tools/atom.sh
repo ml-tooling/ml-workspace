@@ -14,7 +14,8 @@ done
 
 if ! hash atom 2>/dev/null; then
     echo "Installing Atom. Please wait..."
-    add-apt-repository -y ppa:webupd8team/atom
+    wget -qO - https://packagecloud.io/AtomEditor/atom/gpgkey | sudo apt-key add -
+    sh -c 'echo "deb [arch=amd64] https://packagecloud.io/AtomEditor/atom/any/ any main" > /etc/apt/sources.list.d/atom.list'
     apt-get update
     apt-get install -y atom
     apt-get clean
@@ -26,6 +27,6 @@ fi
 if [ $INSTALL_ONLY = 0 ] ; then
     echo "Starting Atom..."
     echo "Atom is a GUI application. Make sure to run this script only within the VNC Desktop."
-    atom
+    atom --no-sandbox
     sleep 10
 fi

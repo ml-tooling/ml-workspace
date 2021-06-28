@@ -18,7 +18,7 @@ if [ ! -f "/usr/local/bin/filebrowser"  ]; then
     echo "Installing Filebrowser. Please wait..."
     mkdir -p $RESOURCES_PATH/filebrowser
     cd $RESOURCES_PATH/filebrowser
-    FILEBROWSER_VERSION=2.11.0
+    FILEBROWSER_VERSION=2.15.0
     wget -q https://github.com/filebrowser/filebrowser/releases/download/v$FILEBROWSER_VERSION/linux-amd64-filebrowser.tar.gz -O ./filebrowser.tar.gz
     tar -xzf ./filebrowser.tar.gz
     chmod +x "./filebrowser"

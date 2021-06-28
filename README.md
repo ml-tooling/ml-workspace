@@ -572,7 +572,6 @@ Port tunneling is quite useful when you have started any server-based tool withi
 - `8090`: Jupyter server.
 - `8054`: VS Code server.
 - `5901`: VNC server.
-- `3389`: RDP server.
 - `22`: SSH server.
 
 You can find port information on all the tools in the [supervisor configuration](https://github.com/ml-tooling/ml-workspace/blob/main/resources/supervisor/supervisord.conf).
@@ -1067,6 +1066,11 @@ import sys
 <details>
 <summary><b>Can I publish any other than the default port to access a tool inside the container?</b> (click to expand...)</summary>
 You can do this, but please be aware that this port is <b>not</b> protected by the workspace's authentication mechanism then! For security reasons, we therefore highly recommend to use the <a href="#access-ports">Access Ports</a> functionality of the workspace.
+</details>
+
+<details>
+<summary><b>System and Tool Translations</b> (click to expand...)</summary>
+If you want to configure another language than English in your workspace and some tools are not translated properly, have a look <a href="https://github.com/ml-tooling/ml-workspace/issues/70#issuecomment-841863145">at this issue</a>. Try to comment out the 'exclude translations' line in `/etc/dpkg/dpkg.cfg.d/excludes` and re-install / configure the package.
 </details>
 
 ---

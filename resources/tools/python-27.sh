@@ -30,7 +30,7 @@ if [ ! -d "$CONDA_ROOT/envs/python2" ]; then
     kernda -o -y /usr/local/share/jupyter/kernels/python2/kernel.json
     # link conda python 2 to python 2 bin instances (in /usr/bin)
     ln -s -f $CONDA_ROOT/envs/python2/bin/python /usr/bin/python2
-    rm /usr/bin/python2.7
+    rm -f /usr/bin/python2.7
     ln -s -f $CONDA_ROOT/envs/python2/bin/python /usr/bin/python2.7
 else
     echo "Python 2.7 Interpreter is already installed"

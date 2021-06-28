@@ -17,7 +17,7 @@ done
 if [ ! -f "$RESOURCES_PATH/portainer/portainer"  ]; then
     echo "Installing Portainer. Please wait..."
     cd $RESOURCES_PATH
-    PORTAINER_VERSION=2.0.1
+    PORTAINER_VERSION=2.5.1
     wget https://github.com/portainer/portainer/releases/download/$PORTAINER_VERSION/portainer-$PORTAINER_VERSION-linux-amd64.tar.gz
     tar xvpfz portainer-$PORTAINER_VERSION-linux-amd64.tar.gz
     rm ./portainer-$PORTAINER_VERSION-linux-amd64.tar.gz

@@ -1,10 +1,12 @@
 Warning!!! Possibly conflicting dependencies found:
-* conda==4.9.2
- - ruamel-yaml [required: >=0.11.14, installed: ?]
-------------------------------------------------------------------------
-Warning!! Cyclic dependencies found:
-* suod => pyod => suod
-* pyod => suod => pyod
-* pyod => combo => pyod
-* combo => pyod => combo
+* eagerpy==0.29.0
+ - typing-extensions [required: >=3.7.4.1, installed: 3.7.4]
+* foolbox==3.3.1
+ - typing-extensions [required: >=3.7.4.1, installed: 3.7.4]
+* pyppeteer==0.2.5
+ - websockets [required: >=8.1,<9.0, installed: 9.1]
+* sacrebleu==1.5.1
+ - portalocker [required: ==2.0.0, installed: 2.3.0]
+* tensorflow-metadata==1.1.0
+ - absl-py [required: >=0.9,<0.13, installed: 0.13.0]
 ------------------------------------------------------------------------

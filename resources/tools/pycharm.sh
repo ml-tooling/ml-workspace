@@ -15,7 +15,7 @@ done
 if ! hash pycharm-community 2>/dev/null; then
     echo "Installing PyCharm Community. Please wait..."
     cd /resources
-    wget https://download-cf.jetbrains.com/python/pycharm-community-2020.3.tar.gz -O ./pycharm.tar.gz
+    wget https://download-cf.jetbrains.com/python/pycharm-community-2021.1.tar.gz -O ./pycharm.tar.gz
     tar xfz ./pycharm.tar.gz
     mv pycharm-* /opt/pycharm
     rm ./pycharm.tar.gz

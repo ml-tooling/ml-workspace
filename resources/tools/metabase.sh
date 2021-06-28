@@ -17,7 +17,7 @@ done
 if [ ! -f "$RESOURCES_PATH/metabase.jar" ]; then
     cd $RESOURCES_PATH
     echo "Installing Metabase. Please wait..."
-    wget https://downloads.metabase.com/v0.37.3/metabase.jar
+    wget https://downloads.metabase.com/v0.39.4/metabase.jar
 else
     echo "Metabase is already installed"
 fi

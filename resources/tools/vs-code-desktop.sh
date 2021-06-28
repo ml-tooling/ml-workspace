@@ -15,7 +15,9 @@ done
 if [ ! -f "/usr/share/code/code" ]; then
     echo "Installing VS Code. Please wait..."
     cd $RESOURCES_PATH
-    wget -q https://go.microsoft.com/fwlink/?LinkID=760868 -O ./vscode.deb
+    # Tmp fix to run vs code without no-sandbox: https://github.com/microsoft/vscode/issues/126027
+    wget -q https://az764295.vo.msecnd.net/stable/054a9295330880ed74ceaedda236253b4f39a335/code_1.56.2-1620838498_amd64.deb -O ./vscode.deb
+    # wget -q https://go.microsoft.com/fwlink/?LinkID=760868 -O ./vscode.deb
     apt-get update
     apt-get install -y ./vscode.deb
     rm ./vscode.deb
@@ -27,6 +29,6 @@ fi
 # Run
 if [ $INSTALL_ONLY = 0 ] ; then
     echo "Starting VS Code"
-    /usr/share/code/code --unity-launch $WORKSPACE_HOME
+    /usr/share/code/code --no-sandbox --unity-launch $WORKSPACE_HOME
     sleep 10
 fi

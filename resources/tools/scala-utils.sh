@@ -18,8 +18,9 @@ if [[ ! $(scala -version 2>&1) =~ "version 2.12" ]]; then
     # Update to Scala 2.12 is required for spark
     SCALA_VERSION=2.12.12
     echo "Updating to Scala $SCALA_VERSION. Please wait..."
-    apt-get remove scala-library scala
-    apt-get autoremove
+    # TODO: remove scala - only works if scala exists
+    # apt-get remove scala-library scala
+    # apt-get autoremove
     wget -q https://downloads.lightbend.com/scala/$SCALA_VERSION/scala-$SCALA_VERSION.deb -O ./scala.deb
     dpkg -i scala.deb
     rm scala.deb

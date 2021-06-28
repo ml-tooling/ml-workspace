@@ -1,4 +1,4 @@
-FROM ubuntu:18.04
+FROM ubuntu:20.04
 
 USER root
 
@@ -177,7 +177,8 @@ RUN \
         unzip \
         bzip2 \
         lzop \
-        bsdtar \
+	    # deprecates bsdtar (https://ubuntu.pkgs.org/20.04/ubuntu-universe-i386/libarchive-tools_3.4.0-2ubuntu1_i386.deb.html)
+        libarchive-tools \
         zlibc \
         # unpack (almost) everything with one command
         unp \
@@ -226,7 +227,7 @@ RUN \
     clean-layer.sh
 
 RUN \
-    OPEN_RESTY_VERSION="1.19.3.1" && \
+    OPEN_RESTY_VERSION="1.19.3.2" && \
     mkdir $RESOURCES_PATH"/openresty" && \
     cd $RESOURCES_PATH"/openresty" && \
     apt-get update && \
@@ -265,7 +266,7 @@ ENV \
     # TODO: CONDA_DIR is deprecated and should be removed in the future
     CONDA_DIR=/opt/conda \
     CONDA_ROOT=/opt/conda \
-    PYTHON_VERSION="3.8.5" \
+    PYTHON_VERSION="3.8.10" \
     CONDA_PYTHON_DIR=/opt/conda/lib/python3.8 \
     MINICONDA_VERSION=4.9.2 \
     MINICONDA_MD5=122c8c9beb51e124ab32a0fa6426c656 \
@@ -317,9 +318,14 @@ ENV LD_LIBRARY_PATH=$CONDA_ROOT/lib
 RUN git clone https://github.com/pyenv/pyenv.git $RESOURCES_PATH/.pyenv && \
     # Install pyenv plugins based on pyenv installer
     git clone https://github.com/pyenv/pyenv-virtualenv.git $RESOURCES_PATH/.pyenv/plugins/pyenv-virtualenv  && \
-    git clone git://github.com/pyenv/pyenv-doctor.git $RESOURCES_PATH/plugins/pyenv-doctor && \
-    git clone https://github.com/pyenv/pyenv-update.git $RESOURCES_PATH/plugins/pyenv-update && \
-    git clone https://github.com/pyenv/pyenv-which-ext.git $RESOURCES_PATH/plugins/pyenv-which-ext
+    git clone git://github.com/pyenv/pyenv-doctor.git $RESOURCES_PATH/.pyenv/plugins/pyenv-doctor && \
+    git clone https://github.com/pyenv/pyenv-update.git $RESOURCES_PATH/.pyenv/plugins/pyenv-update && \
+    git clone https://github.com/pyenv/pyenv-which-ext.git $RESOURCES_PATH/.pyenv/plugins/pyenv-which-ext && \
+    apt-get update && \
+    # TODO: lib might contain high vulnerability
+    # Required by pyenv
+    apt-get install -y --no-install-recommends libffi-dev && \
+    clean-layer.sh
 
 # Add pyenv to path
 ENV PATH=$RESOURCES_PATH/.pyenv/shims:$RESOURCES_PATH/.pyenv/bin:$PATH \
@@ -350,58 +356,30 @@ RUN \
     mkdir -p /opt/node/bin && \
     ln -s /usr/bin/node /opt/node/bin/node && \
     ln -s /usr/bin/npm /opt/node/bin/npm && \
-    # Install YARN
-    curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | sudo apt-key add - && \
-    echo "deb https://dl.yarnpkg.com/debian/ stable main" | sudo tee /etc/apt/sources.list.d/yarn.list && \
-    apt-get update && \
-    apt-get install -y --no-install-recommends yarn && \
+    # Update npm
+    /usr/bin/npm install -g npm && \
+    # Install Yarn
+    /usr/bin/npm install -g yarn && \
     # Install typescript
     /usr/bin/npm install -g typescript && \
     # Install webpack - 32 MB
     /usr/bin/npm install -g webpack && \
     # Install node-gyp
     /usr/bin/npm install -g node-gyp && \
+    # Update all packages to latest version
+    /usr/bin/npm update -g && \
     # Cleanup
     clean-layer.sh
 
 ENV PATH=/opt/node/bin:$PATH
 
-# Install Java Runtime
-RUN \
-    apt-get update && \
-    # libgl1-mesa-dri > 150 MB -> Install jdk-headless version (without gui support)?
-    # java runtime is extenable via the java-utils.sh tool intstaller script
-    apt-get install -y --no-install-recommends openjdk-11-jdk maven scala && \
-    # Cleanup
-    clean-layer.sh
-
-ENV JAVA_HOME="/usr/lib/jvm/java-11-openjdk-amd64"
-# TODO add MAVEN_HOME?
+# Java - removed
 
 ### END RUNTIMES ###
 
 ### PROCESS TOOLS ###
 
-### Install xfce UI
-RUN \
-    apt-get update && \
-    # Install custom font
-    apt-get install -y xfce4 xfce4-terminal xterm && \
-    apt-get purge -y pm-utils xscreensaver* && \
-    apt-get install -y xfce4-clipman && \
-    # Cleanup
-    clean-layer.sh
-
-# Install rdp support via xrdp
-RUN \
-    apt-get update && \
-    apt-get install -y --no-install-recommends xrdp && \
-    # use xfce
-    sudo sed -i.bak '/fi/a #xrdp multiple users configuration \n xfce-session \n' /etc/xrdp/startwm.sh && \
-    # generate /etc/xrdp/rsakeys.ini
-    cd /etc/xrdp/ && xrdp-keygen xrdp && \
-    # Cleanup
-    clean-layer.sh
+# Removed XRDP
 
 # Install supervisor for process supervision
 RUN \
@@ -420,6 +398,70 @@ RUN \
 ### END PROCESS TOOLS ###
 
 ### GUI TOOLS ###
+
+# Install xfce4 & gui tools
+RUN \
+    # Use staging channel to get newest xfce4 version (4.16)
+    add-apt-repository -y ppa:xubuntu-dev/staging && \
+    apt-get update && \
+    apt-get install -y --no-install-recommends xfce4 && \
+    apt-get install -y --no-install-recommends gconf2 && \
+    apt-get install -y --no-install-recommends xfce4-terminal && \
+    apt-get install -y --no-install-recommends xfce4-clipman && \
+    apt-get install -y --no-install-recommends xterm && \
+    apt-get install -y --no-install-recommends --allow-unauthenticated xfce4-taskmanager  && \
+    # Install dependencies to enable vncserver
+    apt-get install -y --no-install-recommends xauth xinit dbus-x11 && \
+    # Install gdebi deb installer
+    apt-get install -y --no-install-recommends gdebi && \
+    # Search for files
+    apt-get install -y --no-install-recommends catfish && \
+    apt-get install -y --no-install-recommends font-manager && \
+    # vs support for thunar
+    apt-get install -y thunar-vcs-plugin && \
+    # Streaming text editor for large files - klogg is alternative to glogg
+    apt-get install -y --no-install-recommends libqt5concurrent5 libqt5widgets5 libqt5xml5 && \
+    wget --no-verbose https://github.com/variar/klogg/releases/download/v20.12/klogg-20.12.0.813-Linux.deb -O $RESOURCES_PATH/klogg.deb && \
+    dpkg -i $RESOURCES_PATH/klogg.deb && \
+    rm $RESOURCES_PATH/klogg.deb && \
+    # Disk Usage Visualizer
+    apt-get install -y --no-install-recommends baobab && \
+    # Lightweight text editor
+    apt-get install -y --no-install-recommends mousepad && \
+    apt-get install -y --no-install-recommends vim && \
+    # Process monitoring
+    apt-get install -y --no-install-recommends htop && \
+    # Install Archive/Compression Tools: https://wiki.ubuntuusers.de/Archivmanager/
+    apt-get install -y p7zip p7zip-rar && \
+    apt-get install -y --no-install-recommends thunar-archive-plugin && \
+    apt-get install -y xarchiver && \
+    # DB Utils
+    apt-get install -y --no-install-recommends sqlitebrowser && \
+    # Install nautilus and support for sftp mounting
+    apt-get install -y --no-install-recommends nautilus gvfs-backends && \
+    # Install gigolo - Access remote systems
+    apt-get install -y --no-install-recommends gigolo gvfs-bin && \
+    # xfce systemload panel plugin - needs to be activated
+    # apt-get install -y --no-install-recommends xfce4-systemload-plugin && \
+    # Leightweight ftp client that supports sftp, http, ...
+    apt-get install -y --no-install-recommends gftp && \
+    # Install chrome
+    # sudo add-apt-repository ppa:system76/pop
+    add-apt-repository ppa:saiarcot895/chromium-beta && \
+    apt-get update && \
+    apt-get install -y chromium-browser chromium-browser-l10n chromium-codecs-ffmpeg && \
+    ln -s /usr/bin/chromium-browser /usr/bin/google-chrome && \
+    # Cleanup
+    apt-get purge -y pm-utils xscreensaver* && \
+    # Large package: gnome-user-guide 50MB app-install-data 50MB
+    apt-get remove -y app-install-data gnome-user-guide && \
+    clean-layer.sh
+
+# Add the defaults from /lib/x86_64-linux-gnu, otherwise lots of no version errors
+# cannot be added above otherwise there are errors in the installation of the gui tools
+# Call order: https://unix.stackexchange.com/questions/367600/what-is-the-order-that-linuxs-dynamic-linker-searches-paths-in
+ENV LD_LIBRARY_PATH=/lib/x86_64-linux-gnu:/usr/lib/x86_64-linux-gnu:$CONDA_ROOT/lib
+
 # Install VNC
 RUN \
     apt-get update  && \
@@ -427,7 +469,7 @@ RUN \
     # apt-get install -y python-numpy  && \
     cd ${RESOURCES_PATH} && \
     # Tiger VNC
-    wget -qO- https://dl.bintray.com/tigervnc/stable/tigervnc-1.11.0.x86_64.tar.gz | tar xz --strip 1 -C / && \
+    wget -qO- https://sourceforge.net/projects/tigervnc/files/stable/1.11.0/tigervnc-1.11.0.x86_64.tar.gz/download | tar xz --strip 1 -C / && \
     # Install websockify
     mkdir -p ./novnc/utils/websockify && \
     # Before updating the noVNC version, we need to make sure that our monkey patching scripts still work!!
@@ -440,64 +482,6 @@ RUN \
     fix-permissions.sh ${RESOURCES_PATH} && \
     # Cleanup
     clean-layer.sh
-
-# Install Terminal / GDebi (Package Manager) / Glogg (Stream file viewer) & archive tools
-# Discover Tools:
-# https://wiki.ubuntuusers.de/Startseite/
-# https://wiki.ubuntuusers.de/Xfce_empfohlene_Anwendungen/
-# https://goodies.xfce.org/start
-# https://linux.die.net/man/1/
-RUN \
-    apt-get update && \
-    # Configuration database - required by git kraken / atom and other tools (1MB)
-    apt-get install -y --no-install-recommends gconf2 && \
-    apt-get install -y --no-install-recommends xfce4-terminal && \
-    apt-get install -y --no-install-recommends --allow-unauthenticated xfce4-taskmanager  && \
-    # Install gdebi deb installer
-    apt-get install -y --no-install-recommends gdebi && \
-    # Search for files
-    apt-get install -y --no-install-recommends catfish && \
-    apt-get install -y --no-install-recommends font-manager && \
-    # vs support for thunar
-    apt-get install -y thunar-vcs-plugin && \
-    # Streaming text editor for large files
-    apt-get install -y --no-install-recommends glogg  && \
-    apt-get install -y --no-install-recommends baobab && \
-    # Lightweight text editor
-    apt-get install -y mousepad && \
-    apt-get install -y --no-install-recommends vim && \
-    # Install bat - colored cat: https://github.com/sharkdp/bat
-    wget --no-verbose https://github.com/sharkdp/bat/releases/download/v0.12.1/bat_0.12.1_amd64.deb -O $RESOURCES_PATH/bat.deb && \
-    dpkg -i $RESOURCES_PATH/bat.deb && \
-    rm $RESOURCES_PATH/bat.deb && \
-    # Process monitoring
-    apt-get install -y htop && \
-    # Install Archive/Compression Tools: https://wiki.ubuntuusers.de/Archivmanager/
-    apt-get install -y p7zip p7zip-rar && \
-    apt-get install -y --no-install-recommends thunar-archive-plugin && \
-    apt-get install -y xarchiver && \
-    # DB Utils
-    apt-get install -y --no-install-recommends sqlitebrowser && \
-    # Install nautilus and support for sftp mounting
-    apt-get install -y --no-install-recommends nautilus gvfs-backends && \
-    # Install gigolo - Access remote systems
-    apt-get install -y --no-install-recommends gigolo gvfs-bin && \
-    # xfce systemload panel plugin - needs to be activated
-    apt-get install -y --no-install-recommends xfce4-systemload-plugin && \
-    # Leightweight ftp client that supports sftp, http, ...
-    apt-get install -y --no-install-recommends gftp && \
-    # Install chrome
-    apt-get install -y chromium-browser chromium-browser-l10n chromium-codecs-ffmpeg && \
-    ln -s /usr/bin/chromium-browser /usr/bin/google-chrome && \
-    # Cleanup
-    # Large package: gnome-user-guide 50MB app-install-data 50MB
-    apt-get remove -y app-install-data gnome-user-guide && \
-    clean-layer.sh
-
-# Add the defaults from /lib/x86_64-linux-gnu, otherwise lots of no version errors
-# cannot be added above otherwise there are errors in the installation of the gui tools
-# Call order: https://unix.stackexchange.com/questions/367600/what-is-the-order-that-linuxs-dynamic-linker-searches-paths-in
-ENV LD_LIBRARY_PATH=/lib/x86_64-linux-gnu:/usr/lib/x86_64-linux-gnu:$CONDA_ROOT/lib
 
 # Install Web Tools - Offered via Jupyter Tooling Plugin
 
@@ -589,18 +573,16 @@ RUN \
     # Install some basics - required to run container
     conda install -y --update-all \
             'python='$PYTHON_VERSION \
-            'ipython=7.19.*' \
-            'notebook=6.1.6' \
-            'jupyterlab=2.2.*' \
+            'ipython=7.24.*' \
+            'notebook=6.4.*' \
+            'jupyterlab=3.0.*' \
             # TODO: nbconvert 6.x makes problems with template_path
             'nbconvert=5.6.*' \
             # TODO: temp fix: yarl version 1.5 is required for lots of libraries.
             'yarl==1.5.*' \
             # TODO install scipy, numpy, sklearn, and numexpr via conda for mkl optimizaed versions: https://docs.anaconda.com/mkl-optimizations/
-            # TODO: Newer scipy versions will be downgraded
-            'scipy==1.4.*' \
-            # TODO: Newer numpy versions will be downgraded
-            'numpy==1.18.*' \
+            'scipy==1.7.*' \
+            'numpy==1.19.*' \
             scikit-learn \
             numexpr && \
             # installed via apt-get and pip: protobuf \
@@ -628,7 +610,7 @@ RUN \
     # Install mkldnn
     conda install -y --freeze-installed -c mingfeima mkldnn && \
     # Install pytorch - cpu only
-    conda install -y -c pytorch "pytorch==1.7.*" cpuonly && \
+    conda install -y -c pytorch "pytorch==1.9.*" cpuonly && \
     # Install light pip requirements
     pip install --no-cache-dir --upgrade --upgrade-strategy only-if-needed -r ${RESOURCES_PATH}/libraries/requirements-light.txt && \
     # If light light flavor - exit here
@@ -665,7 +647,7 @@ RUN \
     # Faiss - A library for efficient similarity search and clustering of dense vectors.
     conda install -y --freeze-installed faiss-cpu && \
     # Install full pip requirements
-    pip install --no-cache-dir --upgrade --upgrade-strategy only-if-needed -r ${RESOURCES_PATH}/libraries/requirements-full.txt && \
+    pip install --no-cache-dir --upgrade --upgrade-strategy only-if-needed --use-deprecated=legacy-resolver -r ${RESOURCES_PATH}/libraries/requirements-full.txt && \
     # Setup Spacy
     # Spacy - download and large language removal
     python -m spacy download en && \
@@ -706,8 +688,6 @@ RUN \
     jupyter nbextensions_configurator enable --sys-prefix && \
     # Configure nbdime
     nbdime config-git --enable --global && \
-    # Active nbresuse
-    jupyter serverextension enable --py nbresuse --sys-prefix && \
     # Activate Jupytext
     jupyter nbextension enable --py jupytext --sys-prefix && \
     # Enable useful extensions
@@ -717,6 +697,8 @@ RUN \
     jupyter nbextension enable execute_time/ExecuteTime --sys-prefix && \
     jupyter nbextension enable collapsible_headings/main --sys-prefix && \
     jupyter nbextension enable codefolding/main --sys-prefix && \
+    # Disable pydeck extension, cannot be loaded (404)
+    jupyter nbextension disable pydeck/extension && \
     # Install and activate Jupyter Tensorboard
     pip install --no-cache-dir git+https://github.com/InfuseAI/jupyter_tensorboard.git && \
     jupyter tensorboard enable --sys-prefix && \
@@ -740,7 +722,7 @@ RUN \
         clean-layer.sh && \
         exit 0 ; \
     fi && \
-    # Install and activate what if tool 
+    # Install and activate what if tool
     pip install witwidget && \
     jupyter nbextension install --py --symlink --sys-prefix witwidget && \
     jupyter nbextension enable --py --sys-prefix witwidget && \
@@ -777,11 +759,13 @@ RUN \
         exit 0 ; \
     fi && \
     $lab_ext_install @jupyterlab/toc && \
-    $lab_ext_install jupyterlab_tensorboard && \
+    # install temporarily from gitrepo due to the issue that jupyterlab_tensorboard does not work with 3.x yet as described here: https://github.com/chaoleili/jupyterlab_tensorboard/issues/28#issuecomment-783594541
+    #$lab_ext_install jupyterlab_tensorboard && \
+    pip install git+https://github.com/chaoleili/jupyterlab_tensorboard.git && \
     # install jupyterlab git
-    $lab_ext_install @jupyterlab/git && \
+    # $lab_ext_install @jupyterlab/git && \
     pip install jupyterlab-git && \
-    jupyter serverextension enable --py jupyterlab_git && \
+    # jupyter serverextension enable --py jupyterlab_git && \
     # For Matplotlib: https://github.com/matplotlib/jupyter-matplotlib
     #$lab_ext_install jupyter-matplotlib && \
     # Do not install any other jupyterlab extensions
@@ -794,30 +778,29 @@ RUN \
         rm -rf $CONDA_ROOT/share/jupyter/lab/staging && \
         clean-layer.sh && \
         exit 0 ; \
-    fi && \
+    fi \
     # Install jupyterlab language server support
-    # TODO update versions for jupyterlab 3.0 release
-    pip install jupyter-lsp==0.9.3 && \
-    $lab_ext_install install @krassowski/jupyterlab-lsp@2.0.8 && \
+    && pip install jupyterlab-lsp==3.7.0 jupyter-lsp==1.3.0 && \
+    # $lab_ext_install install @krassowski/jupyterlab-lsp@2.0.8 && \
     # For Plotly
     $lab_ext_install jupyterlab-plotly && \
     $lab_ext_install install @jupyter-widgets/jupyterlab-manager plotlywidget && \
     # produces build error: jupyter labextension install jupyterlab-chart-editor && \
     $lab_ext_install jupyterlab-chart-editor && \
     # Install jupyterlab variable inspector - https://github.com/lckr/jupyterlab-variableInspector
-    $lab_ext_install @lckr/jupyterlab_variableinspector && \
+    pip install lckr-jupyterlab-variableinspector && \
     # For holoview
-    $lab_ext_install @pyviz/jupyterlab_pyviz && \
+    # TODO: pyviz is not yet supported by the current JupyterLab version
+    #     $lab_ext_install @pyviz/jupyterlab_pyviz && \
     # Install Debugger in Jupyter Lab
     # pip install --no-cache-dir xeus-python && \
     # $lab_ext_install @jupyterlab/debugger && \
     # Install jupyterlab code formattor - https://github.com/ryantam626/jupyterlab_code_formatter
     $lab_ext_install @ryantam626/jupyterlab_code_formatter && \
-    # TODO: 1.4.1 forces jupyterlab 3.X
-    pip install jupyterlab_code_formatter==1.3.8 && \
-    jupyter serverextension enable --py jupyterlab_code_formatter && \
+    pip install jupyterlab_code_formatter && \
+    jupyter serverextension enable --py jupyterlab_code_formatter \
     # Final build with minimization
-    jupyter lab build -y --debug-log-path=/dev/stdout --log-level=WARN && \
+    && jupyter lab build -y --debug-log-path=/dev/stdout --log-level=WARN && \
     jupyter lab build && \
     # Cleanup
     # Clean jupyter lab cache: https://github.com/jupyterlab/jupyterlab/issues/4930
@@ -852,6 +835,14 @@ RUN \
     # Cleanup
     clean-layer.sh
 
+# Install Git LFS
+COPY resources/tools/git-lfs.sh $RESOURCES_PATH/tools/git-lfs.sh
+
+RUN \
+    /bin/bash $RESOURCES_PATH/tools/git-lfs.sh --install && \
+    # Cleanup
+    clean-layer.sh
+
 ### VSCODE ###
 
 # Install vscode extension
@@ -865,39 +856,31 @@ RUN \
     fi && \
     cd $RESOURCES_PATH && \
     mkdir -p $HOME/.vscode/extensions/ && \
+    # Install vs code jupyter - required by python extension
+    VS_JUPYTER_VERSION="2021.6.832593372" && \
+    wget --retry-on-http-error=429 --waitretry 15 --tries 5 --no-verbose https://marketplace.visualstudio.com/_apis/public/gallery/publishers/ms-toolsai/vsextensions/jupyter/$VS_JUPYTER_VERSION/vspackage -O ms-toolsai.jupyter-$VS_JUPYTER_VERSION.vsix && \
+    bsdtar -xf ms-toolsai.jupyter-$VS_JUPYTER_VERSION.vsix extension && \
+    rm ms-toolsai.jupyter-$VS_JUPYTER_VERSION.vsix && \
+    mv extension $HOME/.vscode/extensions/ms-toolsai.jupyter-$VS_JUPYTER_VERSION && \
+    sleep $SLEEP_TIMER && \
     # Install python extension - (newer versions are 30MB bigger)
-    VS_PYTHON_VERSION="2020.12.424452561" && \
+    VS_PYTHON_VERSION="2021.5.926500501" && \
     wget --no-verbose https://github.com/microsoft/vscode-python/releases/download/$VS_PYTHON_VERSION/ms-python-release.vsix && \
     bsdtar -xf ms-python-release.vsix extension && \
     rm ms-python-release.vsix && \
     mv extension $HOME/.vscode/extensions/ms-python.python-$VS_PYTHON_VERSION && \
     # && code-server --install-extension ms-python.python@$VS_PYTHON_VERSION \
     sleep $SLEEP_TIMER && \
-    # Install vscode-java: https://github.com/redhat-developer/vscode-java/releases
-    VS_JAVA_VERSION="0.61.0"  && \
-    wget --quiet --no-check-certificate https://github.com/redhat-developer/vscode-java/releases/download/v$VS_JAVA_VERSION/redhat.java-$VS_JAVA_VERSION.vsix && \
-    # wget --no-verbose -O redhat.java-$VS_JAVA_VERSION.vsix https://marketplace.visualstudio.com/_apis/public/gallery/publishers/redhat/vsextensions/java/$VS_JAVA_VERSION/vspackage && \
-    bsdtar -xf redhat.java-$VS_JAVA_VERSION.vsix extension && \
-    rm redhat.java-$VS_JAVA_VERSION.vsix && \
-    mv extension $HOME/.vscode/extensions/redhat.java-$VS_JAVA_VERSION && \
-    # && code-server --install-extension redhat.java@$VS_JAVA_VERSION \
     # If light flavor -> exit here
     if [ "$WORKSPACE_FLAVOR" = "light" ]; then \
         exit 0 ; \
     fi && \
     # Install prettie: https://github.com/prettier/prettier-vscode/releases
-    PRETTIER_VERSION="5.8.0" && \
+    PRETTIER_VERSION="6.4.0" && \
     wget --no-verbose https://github.com/prettier/prettier-vscode/releases/download/v$PRETTIER_VERSION/prettier-vscode-$PRETTIER_VERSION.vsix && \
     bsdtar -xf prettier-vscode-$PRETTIER_VERSION.vsix extension && \
     rm prettier-vscode-$PRETTIER_VERSION.vsix && \
     mv extension $HOME/.vscode/extensions/prettier-vscode-$PRETTIER_VERSION.vsix && \
-    # Install vs code jupyter
-    VS_JUPYTER_VERSION="2020.12.414227025" && \
-    wget --retry-on-http-error=429 --waitretry 15 --tries 5 --no-verbose https://marketplace.visualstudio.com/_apis/public/gallery/publishers/ms-toolsai/vsextensions/jupyter/$VS_JUPYTER_VERSION/vspackage -O ms-toolsai.jupyter-$VS_JUPYTER_VERSION.vsix && \
-    bsdtar -xf ms-toolsai.jupyter-$VS_JUPYTER_VERSION.vsix extension && \
-    rm ms-toolsai.jupyter-$VS_JUPYTER_VERSION.vsix && \
-    mv extension $HOME/.vscode/extensions/ms-toolsai.jupyter-$VS_JUPYTER_VERSION && \
-    sleep $SLEEP_TIMER && \
     # Install code runner: https://github.com/formulahendry/vscode-code-runner/releases/latest
     VS_CODE_RUNNER_VERSION="0.9.17" && \
     wget --no-verbose https://github.com/formulahendry/vscode-code-runner/releases/download/$VS_CODE_RUNNER_VERSION/code-runner-$VS_CODE_RUNNER_VERSION.vsix && \
@@ -907,7 +890,7 @@ RUN \
     # && code-server --install-extension formulahendry.code-runner@$VS_CODE_RUNNER_VERSION \
     sleep $SLEEP_TIMER && \
     # Install ESLint extension: https://marketplace.visualstudio.com/items?itemName=dbaeumer.vscode-eslint
-    VS_ESLINT_VERSION="2.1.14" && \
+    VS_ESLINT_VERSION="2.1.23" && \
     wget --retry-on-http-error=429 --waitretry 15 --tries 5 --no-verbose https://marketplace.visualstudio.com/_apis/public/gallery/publishers/dbaeumer/vsextensions/vscode-eslint/$VS_ESLINT_VERSION/vspackage -O dbaeumer.vscode-eslint.vsix && \
     # && wget --no-verbose https://github.com/microsoft/vscode-eslint/releases/download/$VS_ESLINT_VERSION-insider.2/vscode-eslint-$VS_ESLINT_VERSION.vsix -O dbaeumer.vscode-eslint.vsix && \
     bsdtar -xf dbaeumer.vscode-eslint.vsix extension && \
@@ -924,18 +907,9 @@ RUN \
 ### INCUBATION ZONE ###
 
 RUN \
-    # TODO: Fix problem with jupyter extension panel: https://github.com/Jupyter-contrib/jupyter_nbextensions_configurator/issues/125
-    sed -i 's:notebook/js/mathjaxutils:base/js/mathjaxutils:g' $CONDA_PYTHON_DIR/site-packages/jupyter_nbextensions_configurator/static/nbextensions_configurator/render/render.js && \
-    # TODO: Disable pydeck extension, cannot be loaded (404)
-    jupyter nbextension disable pydeck/extension && \
     apt-get update && \
-    # TODO: lib contains high vulnerability
-    apt-get install -y --no-install-recommends libffi-dev && \
-    # TODO: Downgrade nbresuse to be lab comapatible, upgrade to jupyter-resoure-usage soon: https://github.com/jupyter-server/jupyter-resource-usage
-    pip install --no-cache-dir nbresuse==0.3.6 && \
     # Required by magenta
     # apt-get install -y libasound2-dev && \
-    # apt-get install -y xfce4-clipman && \
     # required by rodeo ide (8MB)
     # apt-get install -y libgconf2-4 && \
     # required for pvporcupine (800kb)
@@ -953,9 +927,9 @@ RUN \
         exit 0 ; \
     fi && \
     # Install fkill-cli program  TODO: 30MB, remove?
-    npm install --global fkill-cli && \
+    # npm install --global fkill-cli && \
     # Activate pretty-errors
-    python -m pretty_errors -u -p && \
+    # python -m pretty_errors -u -p && \
     # Cleanup
     clean-layer.sh
 
@@ -1023,7 +997,6 @@ RUN \
     # Fielbrowser Branding
     mkdir -p $RESOURCES_PATH"/filebrowser/img/icons/" && \
     cp -f $RESOURCES_PATH/branding/favicon.ico $RESOURCES_PATH"/filebrowser/img/icons/favicon.ico" && \
-    # Todo - use actual png
     cp -f $RESOURCES_PATH/branding/favicon.ico $RESOURCES_PATH"/filebrowser/img/icons/favicon-32x32.png" && \
     cp -f $RESOURCES_PATH/branding/favicon.ico $RESOURCES_PATH"/filebrowser/img/icons/favicon-16x16.png" && \
     cp -f $RESOURCES_PATH/branding/ml-workspace-logo.svg $RESOURCES_PATH"/filebrowser/img/logo.svg"
@@ -1060,7 +1033,7 @@ RUN \
     echo "[Desktop Entry]\nVersion=1.0\nType=Link\nName=Glances\nComment=Hardware Monitoring\nCategories=System;Utility;\nIcon=/resources/icons/glances-icon.png\nURL=http://localhost:8092/tools/glances" > /usr/share/applications/glances.desktop && \
     chmod +x /usr/share/applications/glances.desktop && \
     # Remove mail and logout desktop icons
-    rm /usr/share/applications/exo-mail-reader.desktop && \
+    rm /usr/share/applications/xfce4-mail-reader.desktop && \
     rm /usr/share/applications/xfce4-session-logout.desktop
 
 # Copy resources into workspace

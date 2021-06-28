@@ -17,7 +17,7 @@ if ! hash sqlectron 2>/dev/null; then
     echo "Installing Sqlectron Term. Please wait..."
     npm install -g sqlectron-term
     echo "Installing Sqlectron GUI"
-    wget https://github.com/sqlectron/sqlectron-gui/releases/download/v1.32.1/sqlectron_1.32.1_amd64.deb -O ./sqlectron.deb
+    wget https://github.com/sqlectron/sqlectron-gui/releases/download/v1.36.0/sqlectron_1.36.0_amd64.deb -O ./sqlectron.deb
     apt-get update
     apt-get install -y ./sqlectron.deb
     rm ./sqlectron.deb

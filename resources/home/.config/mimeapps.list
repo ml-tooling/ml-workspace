@@ -1,3 +1,7 @@
 [Default Applications]
-application/x-shellscript=exo-terminal-emulator.desktop
+application/x-shellscript=xfce4-terminal-emulator.desktop
+text/plain=code.desktop;
+
+[Added Associations]
+application/x-shellscript=xfce4-terminal-emulator.desktop;
 text/plain=code.desktop;

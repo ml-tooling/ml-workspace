@@ -16,8 +16,7 @@ done
 
 if ! hash ungit 2>/dev/null; then
     echo "Installing Ungit. Please wait..."
-    npm update
-    npm install -g ungit@1.5.15
+    npm install -g ungit@1.5.18
 else
     echo "Ungit is already installed"
 fi

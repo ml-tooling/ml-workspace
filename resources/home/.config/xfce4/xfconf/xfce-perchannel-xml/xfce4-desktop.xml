@@ -34,10 +34,42 @@
         <property name="image-show" type="bool" value="true"/>
         <property name="image-style" type="int" value="0"/>
       </property>
+      <property name="monitorVNC-0" type="empty">
+        <property name="workspace0" type="empty">
+          <property name="color-style" type="int" value="0"/>
+          <property name="image-style" type="int" value="4"/>
+          <property name="last-image" type="string" value="/resources/branding/bg_ml_foundation.png"/>
+          <property name="rgba1" type="array">
+            <value type="double" value="0.949020"/>
+            <value type="double" value="0.949020"/>
+            <value type="double" value="0.949020"/>
+            <value type="double" value="1.000000"/>
+          </property>
+        </property>
+        <property name="workspace1" type="empty">
+          <property name="color-style" type="int" value="0"/>
+          <property name="image-style" type="int" value="3"/>
+          <property name="last-image" type="string" value="/resources/branding/bg_ml_foundation.png"/>
+        </property>
+        <property name="workspace2" type="empty">
+          <property name="color-style" type="int" value="0"/>
+          <property name="image-style" type="int" value="3"/>
+          <property name="last-image" type="string" value="/resources/branding/bg_ml_foundation.png"/>
+        </property>
+        <property name="workspace3" type="empty">
+          <property name="color-style" type="int" value="0"/>
+          <property name="image-style" type="int" value="3"/>
+          <property name="last-image" type="string" value="/resources/branding/bg_ml_foundation.png"/>
+        </property>
+      </property>
     </property>
   </property>
   <property name="last" type="empty">
     <property name="window-width" type="int" value="1280"/>
     <property name="window-height" type="int" value="1024"/>
+  </property>
+  <property name="desktop-icons" type="empty">
+    <property name="icon-size" type="uint" value="52"/>
+    <property name="show-hidden-files" type="bool" value="true"/>
   </property>
 </channel>

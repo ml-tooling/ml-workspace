@@ -24,6 +24,8 @@ apt-get clean
 rm -rf /usr/local/src/*
 # Delete cache and temp folders
 rm -rf /tmp/* /var/tmp/* $HOME/.cache/* /var/cache/apt/*
+# Fix permissions on tmp directory
+chmod 1777 /tmp
 # Remove apt lists
 rm -rf /var/lib/apt/lists/* /etc/apt/sources.list.d/*
 

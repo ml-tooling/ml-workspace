@@ -19,7 +19,7 @@ apt-get install -y --no-install-recommends \
         gradle
 
 # Install Java - Python Integrations
-pip install --no-cache-dir jep py4j
+# pip install --no-cache-dir jep py4j
 
 if [[ $(jupyter kernelspec list) =~ "java" ]]; then
     echo "Java Kernel for Jupyter is already installed."

@@ -2,103 +2,102 @@
 
 ## Basics
 # numpy Installed via conda
-Cython==0.29.21 # The Cython compiler for writing C extensions for the Python language.
-tqdm==4.55.2 # Fast, Extensible Progress Meter
-matplotlib==3.3.3 # Python plotting package
+Cython==0.29.23 # The Cython compiler for writing C extensions for the Python language.
+tqdm==4.61.1 # Fast, Extensible Progress Meter
+matplotlib==3.4.2 # Python plotting package
 requests==2.25.1 # Python HTTP for Humans.
-urllib3==1.26.2 # HTTP library with thread-safe connection pooling, file post, and more.
+urllib3==1.26.6 # HTTP library with thread-safe connection pooling, file post, and more.
+# requests can't use idna >3 yet
 idna==2.10 # Internationalized Domain Names in Applications (IDNA)
-pandas==1.2.0 # Powerful data structures for data analysis, time series, and statistics
-attrs==20.3.0 # Classes Without Boilerplate
-six==1.15.0 # Python 2 and 3 compatibility utilities
+pandas==1.2.5 # Powerful data structures for data analysis, time series, and statistics
+attrs==21.2.0 # Classes Without Boilerplate
+six==1.16.0 # Python 2 and 3 compatibility utilities
 future==0.18.2 # Clean single-source support for Python 3 and 2
 python-dateutil==2.8.1 # Extensions to the standard Python datetime module
-PyYAML==5.3.1 # YAML parser and emitter for Python
-joblib==0.17.0 # Lightweight pipelining: using Python functions as pipeline jobs.
-Pillow==8.1.0 # Python Imaging Library (Fork)
-# NOTE: yarl version 1.5 is required for lots of libraries
-yarl==1.5.1 # Yet another URL library
-pyzmq==20.0.0 # Python bindings for 0MQ
+PyYAML==5.4.1 # YAML parser and emitter for Python
+joblib==1.0.1 # Lightweight pipelining: using Python functions as pipeline jobs.
+Pillow==8.2.0 # Python Imaging Library (Fork)
+pyzmq==22.1.0 # Python bindings for 0MQ
 python-crontab==2.5.1 # Python Crontab API
-cmake==3.18.4 # CMake is an open-source, cross-platform family of tools designed to build, test and package software
-protobuf==3.14.0 # Protocol Buffers
+cmake==3.20.4 # CMake is an open-source, cross-platform family of tools designed to build, test and package software
+protobuf==3.17.3 # Protocol Buffers
 
 ## Utilities
-httpie==2.3.0 # HTTPie - a CLI, cURL-like tool for humans.
+httpie==2.4.0 # HTTPie - a CLI, cURL-like tool for humans.
 cloudpickle==1.6.0  # Extended pickling support for Python objects
 msgpack==1.0.2 # MessagePack (de)serializer.
 msgpack-numpy==0.4.7.1 # Numpy data serialization using msgpack
-cysignals==1.10.2 # Interrupt and signal handling for Cython
-h5py==3.1.0 # Read and write HDF5 files from Python
+cysignals==1.10.3 # Interrupt and signal handling for Cython
+h5py==3.3.0 # Read and write HDF5 files from Python
 seaborn==0.11.1 # Python visualization library based on matplotlib  - Basic
-SQLAlchemy==1.3.22 # Database Abstraction Library
-sortedcontainers==2.3.0 # Sorted Containers -- Sorted List, Sorted Dict, Sorted Set
+SQLAlchemy==1.4.19 # Database Abstraction Library
+sortedcontainers==2.4.0 # Sorted Containers -- Sorted List, Sorted Dict, Sorted Set
 simplejson==3.17.2 # Simple, fast, extensible JSON encoder/decoder for Python
-Pygments==2.7.3 # Pygments is a syntax highlighting package written in Python.
+Pygments==2.9.0 # Pygments is a syntax highlighting package written in Python.
 jsonschema==3.2.0 # An implementation of JSON Schema validation for Python
 loguru==0.5.3 # Python logging made (stupidly) simple
-click==7.1.2 # Composable command line interface toolkit
-docutils==0.16 # Docutils -- Python Documentation Utilities
-tabulate==0.8.7 # Pretty-print tabular data
-regex==2020.11.13 # Alternative regular expression module, to replace re.
+click==8.0.1 # Composable command line interface toolkit
+docutils==0.17.1 # Docutils -- Python Documentation Utilities
+tabulate==0.8.9 # Pretty-print tabular data
+regex==2021.4.4 # Alternative regular expression module, to replace re.
 toolz==0.11.1 # List processing tools and functional utilities
 jmespath==0.10.0 # JSON Matching Expressions
-dill==0.3.3 # Serialize all of python
+dill==0.3.4 # Serialize all of python
 imageio==2.9.0 # Library for reading and writing a wide range of image, video, scientific, and volumetric data formats.
 pyparsing==2.4.7 # Python parsing module
 graphviz==0.16 # Simple Python interface for Graphviz
 colorama==0.4.4 # Cross-platform colored terminal text.
-cffi==1.14.4 # Foreign Function Interface for Python calling C code.
+cffi==1.14.5 # Foreign Function Interface for Python calling C code.
 
 # Development Helper
-twine==3.3.0 # Collection of utilities for publishing packages on PyPI
-tox==3.21.0 # tox is a generic virtualenv management and test command line tool
-pipenv==2020.11.15 # Python Development Workflow for Humans.
-poetry==1.1.4 # Python dependency management and packaging made easy
-virtualenv==20.2.2 # Virtual Python Environment builder
-pytest==6.2.1 # pytest: simple powerful testing with Python
-autopep8==1.5.4 # A tool that automatically formats Python code to conform to the PEP 8 style guide
-flake8==3.8.4 # The modular source code checker: pep8, pyflakes and co
-black==20.8b1 # The uncompromising code formatter.
-pylint==2.6.0 # python code static checker
-pycodestyle==2.6.0 # Python style guide checker
-pydocstyle==5.1.1 # Python docstring style checker
+twine==3.4.1 # Collection of utilities for publishing packages on PyPI
+tox==3.23.1 # tox is a generic virtualenv management and test command line tool
+pipenv==2021.5.29 # Python Development Workflow for Humans.
+poetry==1.1.7 # Python dependency management and packaging made easy
+virtualenv==20.4.7 # Virtual Python Environment builder
+pytest==6.2.4 # pytest: simple powerful testing with Python
+autopep8==1.5.7 # A tool that automatically formats Python code to conform to the PEP 8 style guide
+flake8==3.9.2 # The modular source code checker: pep8, pyflakes and co
+black==21.6b0 # The uncompromising code formatter.
+pylint==2.8.3 # python code static checker
+pycodestyle==2.7.0 # Python style guide checker
+pydocstyle==6.1.1 # Python docstring style checker
 mock==4.0.3 # Rolling backport of unittest.mock for all Pythons
-nox==2020.12.31 # Flexible test automation.
-pip-tools==5.5.0 # pip-tools keeps your pinned dependencies fresh.
+nox==2021.6.12 # Flexible test automation.
+pip-tools==6.2.0 # pip-tools keeps your pinned dependencies fresh.
 virtualenvwrapper==4.8.4 # Enhancements to virtualenv
-isort==5.7.0 # A Python utility / library to sort Python imports.
+isort==5.9.1 # A Python utility / library to sort Python imports.
 jedi==0.18.0 # An autocompletion tool for Python that can be used for text editors.
 pipreqs==0.4.10 # Pip requirements.txt generator based on imports in project
-mypy==0.790 # Static type checker
+mypy==0.910 # Static type checker
 
 # Web Frameworks
 tornado==6.1 # Tornado is a Python web framework and asynchronous networking library, originally developed at FriendFeed.
-flask==1.1.2 # A simple framework for building complex web applications.
-gunicorn==20.0.4 # WSGI HTTP Server for UNIX
-uvicorn==0.13.3 # The lightning-fast ASGI server.
+flask==2.0.1 # A simple framework for building complex web applications.
+gunicorn==20.1.0 # WSGI HTTP Server for UNIX
+uvicorn==0.14.0 # The lightning-fast ASGI server.
 
 # ML libraries
 # TODO: tensorboard 2.4.0 introduces problem with relativ paths: https://github.com/tensorflow/tensorboard/issues/4421
-tensorboard==2.3.0 # TensorBoard lets you watch Tensors Flow
+tensorboard==2.5.0 # TensorBoard lets you watch Tensors Flow
 
 ## Glances
 psutil==5.8.0 # Cross-platform lib for process and system monitoring in Python.
 bottle==0.12.19 # Fast and simple WSGI-framework for small web-applications.
-netifaces==0.10.9 # Portable network interface information.
-py-cpuinfo==7.0.0 # Get CPU info with pure Python 2 & 3
-glances==3.1.5 # A cross-platform curses-based monitoring tool
+netifaces==0.11.0 # Portable network interface information.
+py-cpuinfo==8.0.0 # Get CPU info with pure Python 2 & 3
+glances==3.1.7 # A cross-platform curses-based monitoring tool
 pymdstat==0.4.2 # Python library to parse Linux /proc/mdstat
 
 ## Jupyter
 # Via conda: ipython notebook jupyterlab
-ipykernel==5.4.2 # IPython Kernel for Jupyter
-jupytext==1.9.1 # Jupyter notebooks as Markdown documents, Julia, Python or R scripts
-nbresuse==0.4.0  # Simple Jupyter extension to show how much resources (RAM) your notebook is using
-ipympl==0.6.2 # Matplotlib Jupyter Extension
-jupyterhub==1.3.0 # JupyterHub: A multi-user server for Jupyter notebooks
+ipykernel==5.5.5 # IPython Kernel for Jupyter
+jupytext==1.11.3 # Jupyter notebooks as Markdown documents, Julia, Python or R scripts
+jupyter-resource-usage==0.6.0 # Simple Jupyter extension to show how much resources (RAM) your notebook is using
+ipympl==0.7.0 # Matplotlib Jupyter Extension
+jupyterhub==1.4.1 # JupyterHub: A multi-user server for Jupyter notebooks
 remote_ikernel==0.4.6 # Running IPython kernels through batch queues
 jupyter_contrib_nbextensions==0.5.1 # A collection of Jupyter nbextensions.
 jupyter_nbextensions_configurator==0.4.1 # jupyter serverextension providing configuration interfaces for nbextensions.
 # TODO: jupyter-tensorboard version has a bug and hence does not support tensorboard 2.3 - 2.4 currently -> installed later
-nbdime==2.1.0 # Diff and merge of Jupyter Notebooks
+nbdime==3.1.0 # Diff and merge of Jupyter Notebooks
