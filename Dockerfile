@@ -320,7 +320,12 @@ RUN git clone https://github.com/pyenv/pyenv.git $RESOURCES_PATH/.pyenv && \
     git clone https://github.com/pyenv/pyenv-virtualenv.git $RESOURCES_PATH/.pyenv/plugins/pyenv-virtualenv  && \
     git clone git://github.com/pyenv/pyenv-doctor.git $RESOURCES_PATH/.pyenv/plugins/pyenv-doctor && \
     git clone https://github.com/pyenv/pyenv-update.git $RESOURCES_PATH/.pyenv/plugins/pyenv-update && \
-    git clone https://github.com/pyenv/pyenv-which-ext.git $RESOURCES_PATH/.pyenv/plugins/pyenv-which-ext
+    git clone https://github.com/pyenv/pyenv-which-ext.git $RESOURCES_PATH/.pyenv/plugins/pyenv-which-ext && \
+    apt-get update && \
+    # TODO: lib might contain high vulnerability
+    # Required by pyenv
+    apt-get install -y --no-install-recommends libffi-dev && \
+    clean-layer.sh
 
 # Add pyenv to path
 ENV PATH=$RESOURCES_PATH/.pyenv/shims:$RESOURCES_PATH/.pyenv/bin:$PATH \
@@ -394,49 +399,19 @@ RUN \
 
 ### GUI TOOLS ###
 
-### Install xfce UI
+# Install xfce4 & gui tools
 RUN \
+    # Use staging channel to get newest xfce4 version (4.16)
+    add-apt-repository -y ppa:xubuntu-dev/staging && \
     apt-get update && \
-    # Install custom font
-    apt-get install -y xfce4 xfce4-terminal xterm && \
-    apt-get purge -y pm-utils xscreensaver* && \
-    apt-get install -y xfce4-clipman && \
-    # Cleanup
-    clean-layer.sh
-
-# Install VNC
-RUN \
-    apt-get update  && \
-    # required for websockify
-    # apt-get install -y python-numpy  && \
-    cd ${RESOURCES_PATH} && \
-    # Tiger VNC
-    wget -qO- https://sourceforge.net/projects/tigervnc/files/stable/1.11.0/tigervnc-1.11.0.x86_64.tar.gz/download | tar xz --strip 1 -C / && \
-    # Install websockify
-    mkdir -p ./novnc/utils/websockify && \
-    # Before updating the noVNC version, we need to make sure that our monkey patching scripts still work!!
-    wget -qO- https://github.com/novnc/noVNC/archive/v1.2.0.tar.gz | tar xz --strip 1 -C ./novnc && \
-    wget -qO- https://github.com/novnc/websockify/archive/v0.9.0.tar.gz | tar xz --strip 1 -C ./novnc/utils/websockify && \
-    chmod +x -v ./novnc/utils/*.sh && \
-    # create user vnc directory
-    mkdir -p $HOME/.vnc && \
-    # Fix permissions
-    fix-permissions.sh ${RESOURCES_PATH} && \
-    # Cleanup
-    clean-layer.sh
-
-# Install Terminal / GDebi (Package Manager) / Glogg (Stream file viewer) & archive tools
-# Discover Tools:
-# https://wiki.ubuntuusers.de/Startseite/
-# https://wiki.ubuntuusers.de/Xfce_empfohlene_Anwendungen/
-# https://goodies.xfce.org/start
-# https://linux.die.net/man/1/
-RUN \
-    apt-get update && \
-    # Configuration database - required by git kraken / atom and other tools (1MB)
+    apt-get install -y --no-install-recommends xfce4 && \
     apt-get install -y --no-install-recommends gconf2 && \
     apt-get install -y --no-install-recommends xfce4-terminal && \
+    apt-get install -y --no-install-recommends xfce4-clipman && \
+    apt-get install -y --no-install-recommends xterm && \
     apt-get install -y --no-install-recommends --allow-unauthenticated xfce4-taskmanager  && \
+    # Install dependencies to enable vncserver
+    apt-get install -y --no-install-recommends xauth xinit dbus-x11 && \
     # Install gdebi deb installer
     apt-get install -y --no-install-recommends gdebi && \
     # Search for files
@@ -444,18 +419,18 @@ RUN \
     apt-get install -y --no-install-recommends font-manager && \
     # vs support for thunar
     apt-get install -y thunar-vcs-plugin && \
-    # Streaming text editor for large files
-    apt-get install -y --no-install-recommends glogg  && \
+    # Streaming text editor for large files - klogg is alternative to glogg
+    apt-get install -y --no-install-recommends libqt5concurrent5 libqt5widgets5 libqt5xml5 && \
+    wget --no-verbose https://github.com/variar/klogg/releases/download/v20.12/klogg-20.12.0.813-Linux.deb -O $RESOURCES_PATH/klogg.deb && \
+    dpkg -i $RESOURCES_PATH/klogg.deb && \
+    rm $RESOURCES_PATH/klogg.deb && \
+    # Disk Usage Visualizer
     apt-get install -y --no-install-recommends baobab && \
     # Lightweight text editor
-    apt-get install -y mousepad && \
+    apt-get install -y --no-install-recommends mousepad && \
     apt-get install -y --no-install-recommends vim && \
-    # Install bat - colored cat: https://github.com/sharkdp/bat
-    wget --no-verbose https://github.com/sharkdp/bat/releases/download/v0.12.1/bat_0.12.1_amd64.deb -O $RESOURCES_PATH/bat.deb && \
-    dpkg -i $RESOURCES_PATH/bat.deb && \
-    rm $RESOURCES_PATH/bat.deb && \
     # Process monitoring
-    apt-get install -y htop && \
+    apt-get install -y --no-install-recommends htop && \
     # Install Archive/Compression Tools: https://wiki.ubuntuusers.de/Archivmanager/
     apt-get install -y p7zip p7zip-rar && \
     apt-get install -y --no-install-recommends thunar-archive-plugin && \
@@ -477,6 +452,7 @@ RUN \
     apt-get install -y chromium-browser chromium-browser-l10n chromium-codecs-ffmpeg && \
     ln -s /usr/bin/chromium-browser /usr/bin/google-chrome && \
     # Cleanup
+    apt-get purge -y pm-utils xscreensaver* && \
     # Large package: gnome-user-guide 50MB app-install-data 50MB
     apt-get remove -y app-install-data gnome-user-guide && \
     clean-layer.sh
@@ -485,6 +461,27 @@ RUN \
 # cannot be added above otherwise there are errors in the installation of the gui tools
 # Call order: https://unix.stackexchange.com/questions/367600/what-is-the-order-that-linuxs-dynamic-linker-searches-paths-in
 ENV LD_LIBRARY_PATH=/lib/x86_64-linux-gnu:/usr/lib/x86_64-linux-gnu:$CONDA_ROOT/lib
+
+# Install VNC
+RUN \
+    apt-get update  && \
+    # required for websockify
+    # apt-get install -y python-numpy  && \
+    cd ${RESOURCES_PATH} && \
+    # Tiger VNC
+    wget -qO- https://sourceforge.net/projects/tigervnc/files/stable/1.11.0/tigervnc-1.11.0.x86_64.tar.gz/download | tar xz --strip 1 -C / && \
+    # Install websockify
+    mkdir -p ./novnc/utils/websockify && \
+    # Before updating the noVNC version, we need to make sure that our monkey patching scripts still work!!
+    wget -qO- https://github.com/novnc/noVNC/archive/v1.2.0.tar.gz | tar xz --strip 1 -C ./novnc && \
+    wget -qO- https://github.com/novnc/websockify/archive/v0.9.0.tar.gz | tar xz --strip 1 -C ./novnc/utils/websockify && \
+    chmod +x -v ./novnc/utils/*.sh && \
+    # create user vnc directory
+    mkdir -p $HOME/.vnc && \
+    # Fix permissions
+    fix-permissions.sh ${RESOURCES_PATH} && \
+    # Cleanup
+    clean-layer.sh
 
 # Install Web Tools - Offered via Jupyter Tooling Plugin
 
@@ -584,10 +581,8 @@ RUN \
             # TODO: temp fix: yarl version 1.5 is required for lots of libraries.
             'yarl==1.5.*' \
             # TODO install scipy, numpy, sklearn, and numexpr via conda for mkl optimizaed versions: https://docs.anaconda.com/mkl-optimizations/
-            # TODO: Newer scipy versions will be downgraded
-            'scipy==1.4.*' \
-            # TODO: Newer numpy versions will be downgraded
-            'numpy==1.18.*' \
+            'scipy==1.7.*' \
+            'numpy==1.19.*' \
             scikit-learn \
             numexpr && \
             # installed via apt-get and pip: protobuf \
@@ -652,7 +647,7 @@ RUN \
     # Faiss - A library for efficient similarity search and clustering of dense vectors.
     conda install -y --freeze-installed faiss-cpu && \
     # Install full pip requirements
-    pip install --no-cache-dir --upgrade --upgrade-strategy only-if-needed -r ${RESOURCES_PATH}/libraries/requirements-full.txt && \
+    pip install --no-cache-dir --upgrade --upgrade-strategy only-if-needed --use-deprecated=legacy-resolver -r ${RESOURCES_PATH}/libraries/requirements-full.txt && \
     # Setup Spacy
     # Spacy - download and large language removal
     python -m spacy download en && \
@@ -693,8 +688,6 @@ RUN \
     jupyter nbextensions_configurator enable --sys-prefix && \
     # Configure nbdime
     nbdime config-git --enable --global && \
-    # Active nbresuse
-    jupyter serverextension enable --py nbresuse --sys-prefix && \
     # Activate Jupytext
     jupyter nbextension enable --py jupytext --sys-prefix && \
     # Enable useful extensions
@@ -704,7 +697,7 @@ RUN \
     jupyter nbextension enable execute_time/ExecuteTime --sys-prefix && \
     jupyter nbextension enable collapsible_headings/main --sys-prefix && \
     jupyter nbextension enable codefolding/main --sys-prefix && \
-    # TODO: Disable pydeck extension, cannot be loaded (404)
+    # Disable pydeck extension, cannot be loaded (404)
     jupyter nbextension disable pydeck/extension && \
     # Install and activate Jupyter Tensorboard
     pip install --no-cache-dir git+https://github.com/InfuseAI/jupyter_tensorboard.git && \
@@ -766,7 +759,6 @@ RUN \
         exit 0 ; \
     fi && \
     $lab_ext_install @jupyterlab/toc && \
-
     # install temporarily from gitrepo due to the issue that jupyterlab_tensorboard does not work with 3.x yet as described here: https://github.com/chaoleili/jupyterlab_tensorboard/issues/28#issuecomment-783594541
     #$lab_ext_install jupyterlab_tensorboard && \
     pip install git+https://github.com/chaoleili/jupyterlab_tensorboard.git && \
@@ -796,8 +788,6 @@ RUN \
     # produces build error: jupyter labextension install jupyterlab-chart-editor && \
     $lab_ext_install jupyterlab-chart-editor && \
     # Install jupyterlab variable inspector - https://github.com/lckr/jupyterlab-variableInspector
-    # TODO: see issue https://github.com/lckr/jupyterlab-variableInspector/issues/207 with installing it
-    #     $lab_ext_install @lckr/jupyterlab_variableinspector && \
     pip install lckr-jupyterlab-variableinspector && \
     # For holoview
     # TODO: pyviz is not yet supported by the current JupyterLab version
@@ -842,6 +832,14 @@ RUN \
     chsh -s $(which zsh) $NB_USER && \
     # Install sdkman - needs to be executed after zsh
     curl -s https://get.sdkman.io | bash && \
+    # Cleanup
+    clean-layer.sh
+
+# Install Git LFS
+COPY resources/tools/git-lfs.sh $RESOURCES_PATH/tools/git-lfs.sh
+
+RUN \
+    /bin/bash $RESOURCES_PATH/tools/git-lfs.sh --install && \
     # Cleanup
     clean-layer.sh
 
@@ -909,16 +907,9 @@ RUN \
 ### INCUBATION ZONE ###
 
 RUN \
-    # TODO: Fix problem with jupyter extension panel: https://github.com/Jupyter-contrib/jupyter_nbextensions_configurator/issues/125
-    # TODO sed -i 's:notebook/js/mathjaxutils:base/js/mathjaxutils:g' $CONDA_PYTHON_DIR/site-packages/jupyter_nbextensions_configurator/static/nbextensions_configurator/render/render.js && \
     apt-get update && \
-    # TODO: lib contains high vulnerability
-    apt-get install -y --no-install-recommends libffi-dev && \
-    # TODO: Downgrade nbresuse to be lab comapatible, upgrade to jupyter-resoure-usage soon: https://github.com/jupyter-server/jupyter-resource-usage
-    pip install --no-cache-dir nbresuse==0.3.6 && \
     # Required by magenta
     # apt-get install -y libasound2-dev && \
-    # apt-get install -y xfce4-clipman && \
     # required by rodeo ide (8MB)
     # apt-get install -y libgconf2-4 && \
     # required for pvporcupine (800kb)
@@ -936,9 +927,9 @@ RUN \
         exit 0 ; \
     fi && \
     # Install fkill-cli program  TODO: 30MB, remove?
-    npm install --global fkill-cli && \
+    # npm install --global fkill-cli && \
     # Activate pretty-errors
-    python -m pretty_errors -u -p && \
+    # python -m pretty_errors -u -p && \
     # Cleanup
     clean-layer.sh
 
@@ -1042,7 +1033,7 @@ RUN \
     echo "[Desktop Entry]\nVersion=1.0\nType=Link\nName=Glances\nComment=Hardware Monitoring\nCategories=System;Utility;\nIcon=/resources/icons/glances-icon.png\nURL=http://localhost:8092/tools/glances" > /usr/share/applications/glances.desktop && \
     chmod +x /usr/share/applications/glances.desktop && \
     # Remove mail and logout desktop icons
-    rm /usr/share/applications/exo-mail-reader.desktop && \
+    rm /usr/share/applications/xfce4-mail-reader.desktop && \
     rm /usr/share/applications/xfce4-session-logout.desktop
 
 # Copy resources into workspace
