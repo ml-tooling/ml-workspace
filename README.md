@@ -316,11 +316,11 @@ docker run -p 8080:8080 mltooling/ml-workspace-spark:0.12.1
 <details>
 <summary>Details (click to expand...)</summary>
 
-> _Currently, the GPU-flavor only supports CUDA 10.1. Support for other CUDA versions might be added in the future._
+> _Currently, the GPU-flavor only supports CUDA 11.2. Support for other CUDA versions might be added in the future._
 
 The GPU flavor (`mltooling/ml-workspace-gpu`) is based on our default workspace image and extends it with CUDA 10.1 and GPU-ready versions of various machine learning libraries (e.g., tensorflow, pytorch, cntk, jax). This GPU image has the following additional requirements for the system:
 
-- Nvidia Drivers for the GPUs. Drivers need to be CUDA 10.1 compatible, version `>= 418.39` ([📖 Instructions](https://github.com/NVIDIA/nvidia-docker/wiki/Frequently-Asked-Questions#how-do-i-install-the-nvidia-driver)).
+- Nvidia Drivers for the GPUs. Drivers need to be CUDA 11.2 compatible, version `>=460.32.03` ([📖 Instructions](https://github.com/NVIDIA/nvidia-docker/wiki/Frequently-Asked-Questions#how-do-i-install-the-nvidia-driver)).
 - (Docker >= 19.03) Nvidia Container Toolkit ([📖 Instructions](https://github.com/NVIDIA/nvidia-docker/wiki/Installation-(Native-GPU-Support))).
 
 ```bash
@@ -782,9 +782,9 @@ CMD ["python", "/resources/docker-entrypoint.py", "--code-only"]
 
 The workspace is pre-installed with many popular interpreters, data science libraries, and ubuntu packages:
 
-- **Interpreter:** Python 3.8 (Miniconda 3), Java 11 (OpenJDK), NodeJS 14, Scala, Perl 5
+- **Interpreter:** Python 3.8 (Miniconda 3), NodeJS 14, Scala, Perl 5
 - **Python libraries:** Tensorflow, Keras, Pytorch, Sklearn, XGBoost, MXNet, Theano, and [many more](https://github.com/ml-tooling/ml-workspace/tree/main/resources/libraries)
-- **Package Manager:** `conda`, `pip`, `apt-get`, `npm`, `yarn`, `sdk`, `poetry`, `gdebi`, `mvn` ...  
+- **Package Manager:** `conda`, `pip`, `apt-get`, `npm`, `yarn`, `sdk`, `poetry`, `gdebi`...  
 
 The full list of installed tools can be found within the [Dockerfile](https://github.com/ml-tooling/ml-workspace/blob/main/Dockerfile).
 
