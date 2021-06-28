@@ -572,7 +572,6 @@ Port tunneling is quite useful when you have started any server-based tool withi
 - `8090`: Jupyter server.
 - `8054`: VS Code server.
 - `5901`: VNC server.
-- `3389`: RDP server.
 - `22`: SSH server.
 
 You can find port information on all the tools in the [supervisor configuration](https://github.com/ml-tooling/ml-workspace/blob/main/resources/supervisor/supervisord.conf).
