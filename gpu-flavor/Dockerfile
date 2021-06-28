@@ -128,7 +128,8 @@ RUN \
     # uninstall cpu only packages via conda
     conda remove --force -y pytorch cpuonly && \
     # https://pytorch.org/get-started/locally/
-    conda install pytorch cudatoolkit=11.2 -c pytorch -c nvidia && \
+    conda install cudatoolkit=11.2 -c pytorch -c nvidia && \
+    pip install --no-cache-dir torch==1.9.0+cu111 torchvision==0.10.0+cu111 torchaudio==0.9.0 -f https://download.pytorch.org/whl/torch_stable.html && \
     # Install cupy: https://cupy.chainer.org/
     pip install --no-cache-dir cupy-cuda112 && \
     # Install pycuda: https://pypi.org/project/pycuda
@@ -143,9 +144,9 @@ RUN \
     # Install ONNX GPU Runtime
     pip uninstall -y onnxruntime && \
     pip install --no-cache-dir onnxruntime-gpu==1.8.0 onnxruntime-training==1.8.0 && \
-    # Install faiss gpu
-    conda remove --force -y faiss-cpu && \
-    conda install -y faiss-gpu -c pytorch && \
+    # Install faiss gpu - TODO: to large?
+    # conda remove --force -y faiss-cpu && \
+    # conda install -y faiss-gpu -c pytorch && \
     # Update mxnet to gpu edition
     pip uninstall -y mxnet-mkl && \
     # cuda111 -> >= 11.1
