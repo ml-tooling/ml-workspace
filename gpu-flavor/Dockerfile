@@ -131,7 +131,7 @@ RUN \
     # https://pytorch.org/get-started/locally/
     conda install pytorch cudatoolkit=11.2 -c pytorch -c nvidia && \
     # Install cupy: https://cupy.chainer.org/
-    pip install --no-cache-dir cupy-cuda111 && \
+    pip install --no-cache-dir cupy-cuda112 && \
     # Install pycuda: https://pypi.org/project/pycuda
     pip install --no-cache-dir pycuda && \
     # Install gpu utils libs
@@ -150,7 +150,7 @@ RUN \
     # Update mxnet to gpu edition
     pip uninstall -y mxnet-mkl && \
     # cuda111 -> >= 11.1
-    pip install --no-cache-dir mxnet-cu110 && \
+    pip install --no-cache-dir mxnet-cu112 && \
     # install jax: https://github.com/google/jax#pip-installation
     pip install --upgrade jax[cuda111] -f https://storage.googleapis.com/jax-releases/jax_releases.html && \
     # Install pygpu - Required for theano: http://deeplearning.net/software/libgpuarray/
