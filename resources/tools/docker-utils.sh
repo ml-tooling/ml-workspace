@@ -16,7 +16,7 @@ if ! hash docker 2>/dev/null; then
     echo "Installing Docker Client. Please wait..."
     mkdir -p $RESOURCES_PATH"/docker"
     cd $RESOURCES_PATH"/docker"
-    wget https://get.docker.com/builds/Linux/x86_64/docker-latest.tgz -O ./docker.tar.gz
+    wget https://download.docker.com/linux/static/stable/x86_64/docker-20.10.7.tgz -O ./docker.tar.gz
     tar xfz ./docker.tar.gz
     rm -rf ./docker.tar.gz
     # TODO: only move the docker client to bin
