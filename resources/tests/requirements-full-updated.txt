@@ -235,7 +235,7 @@ vega==3.4.0
 vega_datasets==0.9.0
 vispy==0.6.6
 vowpalwabbit==8.10.1
-websockets==8.1
+websockets==9.1
 wordcloud==1.8.1
 xarray==0.17.0
 xlearn==0.40a1
