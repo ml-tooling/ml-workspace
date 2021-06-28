@@ -116,11 +116,4 @@ We plan to do a full workspace image update (all libraries and tools) about ever
     - Test image on GPU machine und run `/workspace/tutorials/workspace-test-utilities.ipynb`
     - Test GPU interface in Netdata and Glances
 
-13. Build and test `spark` flavor via `python build.py --flavor=spark`
-
-    - Build via `python build.py --flavor=spark`
-    - Run `/workspace/tutorials/test-spark.ipynb` via Python kernel.
-    - Run `/workspace/tutorials/toree-scala-kernel-tutorial.ipynb` via Toree kernel.
-    - Test `Zeppelin` tool.
-
-14. Build and push all flavors via `python build.py --deploy --version=<VERSION> --flavor=all`
+12. Build and push all flavors via `python build.py --deploy --version=<VERSION> --flavor=all`
