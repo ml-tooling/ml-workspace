@@ -15,7 +15,7 @@ done
 if ! hash java 2>/dev/null; then
     echo "Installing Java Runtime. Please wait..."
     apt-get update
-    apt-get install -y --no-install-recommends openjdk-11-jdk maven scala && \
+    apt-get install -y --no-install-recommends openjdk-11-jdk maven scala
 else
     echo "Java Runtime is already installed"
 fi
