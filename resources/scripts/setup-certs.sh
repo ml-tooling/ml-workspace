@@ -23,4 +23,3 @@ update-ca-certificates > /dev/null
 
 # Add following add certificates to certify python package
 cat ${SSL_RESOURCES_PATH}/$SSLNAME.crt >> ${CONDA_PYTHON_DIR}/site-packages/certifi/cacert.pem
-cat ${SSL_RESOURCES_PATH}/$SSLNAME.crt >> ${CONDA_ROOT}/envs/python2/lib/python2.7/site-packages/certifi/cacert.pem
