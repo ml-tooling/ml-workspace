@@ -15,7 +15,7 @@ for arg in "$@"; do
 done
 
 
-ZEPPELIN_VERSION=0.9.0
+ZEPPELIN_VERSION=0.10.0
 
 if [ ! -f "$RESOURCES_PATH/zeppelin/zeppelin-$ZEPPELIN_VERSION-bin-all/bin/zeppelin-daemon.sh"  ]; then
     echo "Installing Zeppelin. Please wait..."

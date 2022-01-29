@@ -22,6 +22,8 @@ if [ ! -f "/usr/sbin/netdata"  ]; then
     # Surpress output - if there is a problem remove to see logs > /dev/null
     /bin/bash $RESOURCES_PATH/netdata-install.sh --dont-wait --dont-start-it --stable-channel --disable-telemetry --disable-cloud > /dev/null
     rm $RESOURCES_PATH/netdata-install.sh
+    chown netdata:netdata -R /usr/share/netdata
+    chown netdata:netdata -R /var/lib/netdata/www
 else
     echo "Netdata is already installed"
 fi

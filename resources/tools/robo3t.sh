@@ -15,7 +15,7 @@ done
 if ! hash robo3t 2>/dev/null; then
     echo "Installing Robo3T. Please wait..."
     cd $RESOURCES_PATH
-    wget https://github.com/Studio3T/robomongo/releases/download/v1.4.3/robo3t-1.4.3-linux-x86_64-48f7dfd.tar.gz -O ./robomongo.tar.gz
+    wget https://github.com/Studio3T/robomongo/releases/download/v1.4.4/robo3t-1.4.4-linux-x86_64-e6ac9ec.tar.gz -O ./robomongo.tar.gz
     mkdir robo3t
     tar xfz ./robomongo.tar.gz -C robo3t --strip-components=1
     chmod a+rwx ./robo3t/bin/robo3t

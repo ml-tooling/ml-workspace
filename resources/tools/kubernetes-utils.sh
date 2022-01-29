@@ -36,13 +36,13 @@ if ! hash kubectl 2>/dev/null; then
     mv ./kubeval /usr/local/bin
     rm kubeval-linux-amd64.tar.gz
     # Install conftest
-    wget https://github.com/open-policy-agent/conftest/releases/download/v0.23.0/conftest_0.23.0_Linux_x86_64.tar.gz -O conftest.tar.gz
+    wget https://github.com/open-policy-agent/conftest/releases/download/v0.30.0/conftest_0.30.0_Linux_x86_64.tar.gz -O conftest.tar.gz
     tar xzf conftest.tar.gz
     chmod +x conftest
     mv conftest /usr/local/bin
     rm conftest.tar.gz
     # Get yp
-    wget https://github.com/mikefarah/yq/releases/download/v4.9.6/yq_darwin_amd64 -O /usr/local/bin/yq
+    wget https://github.com/mikefarah/yq/releases/download/v4.18.1/yq_darwin_amd64 -O /usr/local/bin/yq
     chmod +x /usr/local/bin/yq
     # Remove temp dir
     cd $RESOURCES_PATH

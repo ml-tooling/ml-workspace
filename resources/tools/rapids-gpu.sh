@@ -16,7 +16,7 @@ done
 if hash nvcc 2>/dev/null; then
     # https://rapids.ai/start.html#conda-install
     echo "Installing Rapids.ai. Please wait..."
-    RAPIDS_VERSION=21.06
+    RAPIDS_VERSION=21.12
     conda create -n rapids-$RAPIDS_VERSION -c rapidsai -c nvidia -c conda-forge -c defaults rapids-blazing=$RAPIDS_VERSION ipykernel python=3.8 cudatoolkit=11.0
     conda run -n rapids-$RAPIDS_VERSION python -m ipykernel install --user --name=rapids-$RAPIDS_VERSION --display-name="rapids-$RAPIDS_VERSION"
 else

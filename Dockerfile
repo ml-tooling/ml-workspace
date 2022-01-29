@@ -62,6 +62,10 @@ RUN \
     apt-get install -y sudo apt-utils && \
     apt-get upgrade -y && \
     apt-get update && \
+
+    # fix a problem with the update-ca-certificates script (see https://github.com/ml-tooling/ml-workspace/issues/69#issuecomment-835463555)
+    # echo "post-invoke=sed -i 's@exec test@exec /usr/bin/test@g' /usr/sbin/update-ca-certificates" > /etc/dpkg/dpkg.cfg.d/update-ca-certificates && \
+
     apt-get install -y --no-install-recommends \
         # This is necessary for apt to access HTTPS sources:
         apt-transport-https \
@@ -227,7 +231,7 @@ RUN \
     clean-layer.sh
 
 RUN \
-    OPEN_RESTY_VERSION="1.19.3.2" && \
+    OPEN_RESTY_VERSION="1.19.9.1" && \
     mkdir $RESOURCES_PATH"/openresty" && \
     cd $RESOURCES_PATH"/openresty" && \
     apt-get update && \
@@ -266,13 +270,13 @@ ENV \
     # TODO: CONDA_DIR is deprecated and should be removed in the future
     CONDA_DIR=/opt/conda \
     CONDA_ROOT=/opt/conda \
-    PYTHON_VERSION="3.8.10" \
-    CONDA_PYTHON_DIR=/opt/conda/lib/python3.8 \
-    MINICONDA_VERSION=4.9.2 \
-    MINICONDA_MD5=122c8c9beb51e124ab32a0fa6426c656 \
-    CONDA_VERSION=4.9.2
+    PYTHON_VERSION="3.9.10" \
+    CONDA_PYTHON_DIR=/opt/conda/lib/python3.9 \
+    MINICONDA_VERSION=4.10.3 \
+    MINICONDA_MD5=8c69f65a4ae27fb41df0fe552b4a8a3b \
+    CONDA_VERSION=4.10.3
 
-RUN wget --no-verbose https://repo.anaconda.com/miniconda/Miniconda3-py38_${CONDA_VERSION}-Linux-x86_64.sh -O ~/miniconda.sh && \
+RUN wget --no-verbose https://repo.anaconda.com/miniconda/Miniconda3-py39_${CONDA_VERSION}-Linux-x86_64.sh -O ~/miniconda.sh && \
     echo "${MINICONDA_MD5} *miniconda.sh" | md5sum -c - && \
     /bin/bash ~/miniconda.sh -b -p $CONDA_ROOT && \
     export PATH=$CONDA_ROOT/bin:$PATH && \
@@ -343,6 +347,7 @@ ENV PATH=$HOME/.local/bin:$PATH
 RUN \
     apt-get update && \
     # https://nodejs.org/en/about/releases/ use even numbered releases, i.e. LTS versions
+    # code-server currently requires node v14 (from 2022-01-29)
     curl -sL https://deb.nodesource.com/setup_14.x | sudo -E bash - && \
     apt-get install -y nodejs && \
     # As conda is first in path, the commands 'node' and 'npm' reference to the version of conda.
@@ -469,13 +474,13 @@ RUN \
     # apt-get install -y python-numpy  && \
     cd ${RESOURCES_PATH} && \
     # Tiger VNC
-    wget -qO- https://sourceforge.net/projects/tigervnc/files/stable/1.11.0/tigervnc-1.11.0.x86_64.tar.gz/download | tar xz --strip 1 -C / && \
+    wget -qO- https://sourceforge.net/projects/tigervnc/files/stable/1.12.0/tigervnc-1.12.0.x86_64.tar.gz/download | tar xz --strip 1 -C / && \
     # Install websockify
     mkdir -p ./novnc/utils/websockify && \
     # Before updating the noVNC version, we need to make sure that our monkey patching scripts still work!!
-    wget -qO- https://github.com/novnc/noVNC/archive/v1.2.0.tar.gz | tar xz --strip 1 -C ./novnc && \
-    wget -qO- https://github.com/novnc/websockify/archive/v0.9.0.tar.gz | tar xz --strip 1 -C ./novnc/utils/websockify && \
-    chmod +x -v ./novnc/utils/*.sh && \
+    wget -qO- https://github.com/novnc/noVNC/archive/v1.3.0.tar.gz | tar xz --strip 1 -C ./novnc && \
+    wget -qO- https://github.com/novnc/websockify/archive/v0.10.0.tar.gz | tar xz --strip 1 -C ./novnc/utils/websockify && \
+    # chmod +x -v ./novnc/utils/*.sh && \
     # create user vnc directory
     mkdir -p $HOME/.vnc && \
     # Fix permissions
@@ -573,9 +578,9 @@ RUN \
     # Install some basics - required to run container
     conda install -y --update-all \
             'python='$PYTHON_VERSION \
-            'ipython=7.24.*' \
+            'ipython=8.0.*' \
             'notebook=6.4.*' \
-            'jupyterlab=3.0.*' \
+            'jupyterlab=3.2.*' \
             # TODO: nbconvert 6.x makes problems with template_path
             'nbconvert=5.6.*' \
             # TODO: temp fix: yarl version 1.5 is required for lots of libraries.
@@ -610,7 +615,7 @@ RUN \
     # Install mkldnn
     conda install -y --freeze-installed -c mingfeima mkldnn && \
     # Install pytorch - cpu only
-    conda install -y -c pytorch "pytorch==1.9.*" cpuonly && \
+    conda install -y -c pytorch "pytorch==1.10.*" cpuonly && \
     # Install light pip requirements
     pip install --no-cache-dir --upgrade --upgrade-strategy only-if-needed -r ${RESOURCES_PATH}/libraries/requirements-light.txt && \
     # If light light flavor - exit here
@@ -857,14 +862,14 @@ RUN \
     cd $RESOURCES_PATH && \
     mkdir -p $HOME/.vscode/extensions/ && \
     # Install vs code jupyter - required by python extension
-    VS_JUPYTER_VERSION="2021.6.832593372" && \
+    VS_JUPYTER_VERSION="2022.1.1001760686" && \
     wget --retry-on-http-error=429 --waitretry 15 --tries 5 --no-verbose https://marketplace.visualstudio.com/_apis/public/gallery/publishers/ms-toolsai/vsextensions/jupyter/$VS_JUPYTER_VERSION/vspackage -O ms-toolsai.jupyter-$VS_JUPYTER_VERSION.vsix && \
     bsdtar -xf ms-toolsai.jupyter-$VS_JUPYTER_VERSION.vsix extension && \
     rm ms-toolsai.jupyter-$VS_JUPYTER_VERSION.vsix && \
     mv extension $HOME/.vscode/extensions/ms-toolsai.jupyter-$VS_JUPYTER_VERSION && \
     sleep $SLEEP_TIMER && \
     # Install python extension - (newer versions are 30MB bigger)
-    VS_PYTHON_VERSION="2021.5.926500501" && \
+    VS_PYTHON_VERSION="2021.12.1559732655" && \
     wget --no-verbose https://github.com/microsoft/vscode-python/releases/download/$VS_PYTHON_VERSION/ms-python-release.vsix && \
     bsdtar -xf ms-python-release.vsix extension && \
     rm ms-python-release.vsix && \
@@ -876,7 +881,7 @@ RUN \
         exit 0 ; \
     fi && \
     # Install prettie: https://github.com/prettier/prettier-vscode/releases
-    PRETTIER_VERSION="6.4.0" && \
+    PRETTIER_VERSION="9.1.1" && \
     wget --no-verbose https://github.com/prettier/prettier-vscode/releases/download/v$PRETTIER_VERSION/prettier-vscode-$PRETTIER_VERSION.vsix && \
     bsdtar -xf prettier-vscode-$PRETTIER_VERSION.vsix extension && \
     rm prettier-vscode-$PRETTIER_VERSION.vsix && \
@@ -890,7 +895,7 @@ RUN \
     # && code-server --install-extension formulahendry.code-runner@$VS_CODE_RUNNER_VERSION \
     sleep $SLEEP_TIMER && \
     # Install ESLint extension: https://marketplace.visualstudio.com/items?itemName=dbaeumer.vscode-eslint
-    VS_ESLINT_VERSION="2.1.23" && \
+    VS_ESLINT_VERSION="2.2.3" && \
     wget --retry-on-http-error=429 --waitretry 15 --tries 5 --no-verbose https://marketplace.visualstudio.com/_apis/public/gallery/publishers/dbaeumer/vsextensions/vscode-eslint/$VS_ESLINT_VERSION/vspackage -O dbaeumer.vscode-eslint.vsix && \
     # && wget --no-verbose https://github.com/microsoft/vscode-eslint/releases/download/$VS_ESLINT_VERSION-insider.2/vscode-eslint-$VS_ESLINT_VERSION.vsix -O dbaeumer.vscode-eslint.vsix && \
     bsdtar -xf dbaeumer.vscode-eslint.vsix extension && \
