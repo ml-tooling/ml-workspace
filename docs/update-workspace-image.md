@@ -1,5 +1,8 @@
 # Workspace Update Process
 
+> Upstream's quarterly update checklist, kept for reference. For this fork, building and rolling out
+> images is in [BUILD.md](../BUILD.md), and what has changed is in [CHANGE.md](../CHANGE.md).
+
 We plan to do a full workspace image update (all libraries and tools) about every three months. The full update involves quiet a bit of manual work as documented below:
 
 1. Refactor incubation zone:

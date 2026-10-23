@@ -64,20 +64,32 @@ if ENV_MAX_NUM_THREADS:
     # Determine the number of availabel CPU resources, but limit to a max number
     if ENV_MAX_NUM_THREADS.lower() == "auto":
         ENV_MAX_NUM_THREADS = str(math.ceil(os.cpu_count()))
+        # This container's own CPU limit (docker --cpus / Kubernetes limits.cpu), read at every start,
+        # so each pod gets a thread count matching what it was given. cgroup v2 first - the v1 file
+        # alone doesn't exist on cgroup v2 hosts, which made every container fall back to the
+        # host's full CPU count (capped to 32 below) regardless of its limit.
+        cpu_limit = None
         try:
-            # read out docker information - if docker limits cpu quota
-            cpu_count = math.ceil(
-                int(
-                    os.popen("cat /sys/fs/cgroup/cpu/cpu.cfs_quota_us")
-                    .read()
-                    .replace("\n", "")
-                )
-                / 100000
-            )
+            # cgroup v2: "<quota> <period>", or "max <period>" when unlimited
+            with open("/sys/fs/cgroup/cpu.max") as f:
+                quota, period = f.read().split()
+            if quota != "max":
+                cpu_limit = int(quota) / int(period)
+        except (OSError, ValueError):
+            try:
+                # cgroup v1: quota is -1 when unlimited
+                with open("/sys/fs/cgroup/cpu/cpu.cfs_quota_us") as f:
+                    quota = int(f.read())
+                with open("/sys/fs/cgroup/cpu/cpu.cfs_period_us") as f:
+                    period = int(f.read())
+                if quota > 0:
+                    cpu_limit = quota / period
+            except (OSError, ValueError):
+                pass
+        if cpu_limit:
+            cpu_count = math.ceil(cpu_limit)
             if cpu_count > 0 and cpu_count < os.cpu_count():
                 ENV_MAX_NUM_THREADS = str(cpu_count)
-        except:
-            pass
         if (
             not ENV_MAX_NUM_THREADS
             or not ENV_MAX_NUM_THREADS.isnumeric()

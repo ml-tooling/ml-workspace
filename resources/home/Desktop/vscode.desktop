@@ -1,0 +1,13 @@
+[Desktop Entry]
+Version=1.0
+Encoding=UTF-8
+Name=VS Code
+Comment=Code Editing. Redefined.
+Exec=/usr/share/code/code --no-sandbox --unity-launch %F
+Terminal=false
+X-MultipleArgs=false
+Type=Application
+Icon=vscode
+Categories=Utility;TextEditor;Development;IDE;
+MimeType=text/plain;inode/directory;
+StartupNotify=true

@@ -1,24 +1,16 @@
-<h1 align="center">
-    <a href="https://github.com/ml-tooling/ml-workspace" title="ML Workspace Home">
-    <img width=50% alt="" src="https://github.com/ml-tooling/ml-workspace/raw/main/docs/images/ml-workspace-logo.png"> </a>
-    <br>
-</h1>
+# GPU flavor
 
-<p align="center">
-    <strong>[GPU-flavor] All-in-one web-based development environment for machine learning</strong>
-</p>
+The GPU image: CUDA 12, cuDNN 9 and GPU builds of the ML libraries, built **on top of** the CPU image
+from the repo root (`ARG_WORKSPACE_BASE_IMAGE`), and tagged `ml-workspace:<commit>-gpu`.
 
-<p align="center">
-<a href="https://hub.docker.com/r/mltooling/ml-workspace-gpu" title="Docker Image Version"><img src="https://images.microbadger.com/badges/version/mltooling/ml-workspace-gpu.svg"></a>
-<a href="https://hub.docker.com/r/mltooling/ml-workspace-gpu" title="Docker Image Metadata"><img src="https://images.microbadger.com/badges/image/mltooling/ml-workspace-gpu.svg"></a>
-<a href="https://hub.docker.com/r/mltooling/ml-workspace-gpu" title="Docker Pulls"><img src="https://img.shields.io/docker/pulls/mltooling/ml-workspace-gpu.svg"></a>
-    <a href="https://github.com/ml-tooling/ml-workspace/blob/main/LICENSE" title="ML Workspace License"><img src="https://img.shields.io/badge/License-Apache%202.0-green.svg"></a>
-    <a href="https://gitter.im/ml-tooling/ml-workspace" title="Chat on Gitter"><img src="https://badges.gitter.im/ml-tooling/ml-workspace.svg"></a>
-    <a href="https://twitter.com/mltooling" title="ML Tooling on Twitter"><img src="https://img.shields.io/twitter/follow/mltooling.svg?style=social"></a>
-</p>
+- Build and push: [BUILD.md](../BUILD.md) - always build the CPU image from the same commit first.
+- Nested Docker uses the `vfs` storage driver in this flavor (the `sed` at the end of the
+  [Dockerfile](Dockerfile)), because fuse-overlayfs breaks `docker run --gpus` - see
+  [DOCKER_IN_DOCKER.md](../DOCKER_IN_DOCKER.md).
+- The CUDA version used inside must be supported by the host's driver (e.g. driver 570 supports up
+  to CUDA 12.8).
+- `NVIDIA_VISIBLE_DEVICES=all` is baked into the image. Deployments must override it with the
+  GPUs the workspace should get (e.g. `0,1`), or `void` for none - otherwise the NVIDIA runtime
+  hands the container every GPU on the host.
 
-Please visit our [Github repository](https://github.com/ml-tooling/ml-workspace#gpu-flavor) for documentation and deployment information.
-
----
-
-Licensed **Apache 2.0**. Created and maintained with ❤️ by developers from Berlin.
+Upstream's GPU flavor: [ml-tooling/ml-workspace](https://github.com/ml-tooling/ml-workspace#gpu-flavor).

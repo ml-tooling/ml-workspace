@@ -11,21 +11,33 @@
 
 set -eu
 
-# Set default values for vnc settings if not provided
-VNC_PW=${VNC_PW:-"vncpassword"}
+# Set default values for vnc settings if not provided.
+# VNC_PW uses `-` not `:-` on purpose: unset -> default password, but set-and-empty (VNC_PW="")
+# -> no VNC password at all (see below). `:-` treated both the same, so a blank VNC_PW silently
+# fell back to "vncpassword".
+VNC_PW=${VNC_PW-"vncpassword"}
 VNC_RESOLUTION=${VNC_RESOLUTION:-"1600x900"}
 VNC_COL_DEPTH=${VNC_COL_DEPTH:-"24"}
 
 mkdir -p $HOME/.vnc
-touch $HOME/.vnc/passwd
 
-# Set password:
-echo "$VNC_PW" | vncpasswd -f >> $HOME/.vnc/passwd
-chmod 600 $HOME/.vnc/passwd
+# Set password. Overwrite (>), never append (>>): Xvnc only reads the first entry in this file,
+# so appending kept the very first password forever once $HOME is on a persistent volume -
+# changing VNC_PW afterwards had no effect.
+if [ -z "$VNC_PW" ]; then
+    # No VNC password. Only safe because the server is bound to localhost (below) and the sole way
+    # in is noVNC through nginx, which is already behind workspace/JupyterHub authentication.
+    rm -f $HOME/.vnc/passwd
+    vnc_security="SecurityTypes=None"
+else
+    echo "$VNC_PW" | vncpasswd -f > $HOME/.vnc/passwd
+    chmod 600 $HOME/.vnc/passwd
+    vnc_security="SecurityTypes=VncAuth"
+fi
 
-config_file=$HOME/.vnc/config
-touch $config_file
-printf "geometry=$VNC_RESOLUTION\ndepth=$VNC_COL_DEPTH\ndesktop=Desktop-GUI\nsession=xfce" > ~/.vnc/config
+# localhost: Xvnc listens on 127.0.0.1:5901 only - websockify (noVNC) and xrdp both connect from
+# inside the container, so nothing else needs it, and it keeps a passwordless VNC off the network.
+printf "geometry=$VNC_RESOLUTION\ndepth=$VNC_COL_DEPTH\ndesktop=Desktop-GUI\nsession=xfce\nlocalhost\n$vnc_security\n" > $HOME/.vnc/config
 command="/usr/libexec/vncserver $DISPLAY"
 
 # Proxy signals

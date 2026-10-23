@@ -27,6 +27,17 @@
   <a href="#contribution">Contribution</a>
 </p>
 
+> **This is a fork** of [ml-tooling/ml-workspace](https://github.com/ml-tooling/ml-workspace),
+> modernized to Ubuntu 24.04, Python 3.12, JupyterLab 4 and CUDA 12, with working nested Docker and
+> Kubernetes support. Start here:
+>
+> - [BUILD.md](BUILD.md) - build and push the CPU and GPU images
+> - [CHANGE.md](CHANGE.md) - everything changed in this fork, by image version
+> - [UPDATE.md](UPDATE.md) - the modernization in detail; [DOCKER_IN_DOCKER.md](DOCKER_IN_DOCKER.md) - nested Docker
+>
+> The rest of this README is upstream's documentation for running a single workspace. Image names
+> (`mltooling/ml-workspace`), versions and links in it refer to upstream, not to this fork's images.
+
 The ML workspace is an all-in-one web-based IDE specialized for machine learning and data science. It is simple to deploy and gets you started within minutes to productively built ML solutions on your own machines. This workspace is the ultimate tool for developers preloaded with a variety of popular data science libraries (e.g., Tensorflow, PyTorch, Keras, Sklearn) and dev tools (e.g., Jupyter, VS Code, Tensorboard) perfectly configured, optimized, and integrated.
 
 ## Highlights
@@ -316,11 +327,11 @@ docker run -p 8080:8080 mltooling/ml-workspace-spark:0.12.1
 <details>
 <summary>Details (click to expand...)</summary>
 
-> _Currently, the GPU-flavor only supports CUDA 11.2. Support for other CUDA versions might be added in the future._
+> _Currently, the GPU-flavor only supports CUDA 12.6. Support for other CUDA versions might be added in the future._
 
-The GPU flavor (`mltooling/ml-workspace-gpu`) is based on our default workspace image and extends it with CUDA 10.1 and GPU-ready versions of various machine learning libraries (e.g., tensorflow, pytorch, cntk, jax). This GPU image has the following additional requirements for the system:
+The GPU flavor (`mltooling/ml-workspace-gpu`) is based on our default workspace image and extends it with CUDA 12.6 and GPU-ready versions of various machine learning libraries (e.g., tensorflow, pytorch, jax). This GPU image has the following additional requirements for the system:
 
-- Nvidia Drivers for the GPUs. Drivers need to be CUDA 11.2 compatible, version `>=460.32.03` ([📖 Instructions](https://github.com/NVIDIA/nvidia-docker/wiki/Frequently-Asked-Questions#how-do-i-install-the-nvidia-driver)).
+- Nvidia Drivers for the GPUs. Drivers need to be CUDA 12.6 compatible, version `>=560.28.03` ([📖 Instructions](https://github.com/NVIDIA/nvidia-docker/wiki/Frequently-Asked-Questions#how-do-i-install-the-nvidia-driver)).
 - (Docker >= 19.03) Nvidia Container Toolkit ([📖 Instructions](https://github.com/NVIDIA/nvidia-docker/wiki/Installation-(Native-GPU-Support))).
 
 ```bash
@@ -782,7 +793,7 @@ CMD ["python", "/resources/docker-entrypoint.py", "--code-only"]
 
 The workspace is pre-installed with many popular interpreters, data science libraries, and ubuntu packages:
 
-- **Interpreter:** Python 3.8 (Miniconda 3), NodeJS 14, Scala, Perl 5
+- **Interpreter:** Python 3.12 (Miniforge 3), NodeJS 24, Scala, Perl 5
 - **Python libraries:** Tensorflow, Keras, Pytorch, Sklearn, XGBoost, MXNet, Theano, and [many more](https://github.com/ml-tooling/ml-workspace/tree/main/resources/libraries)
 - **Package Manager:** `conda`, `pip`, `apt-get`, `npm`, `yarn`, `sdk`, `poetry`, `gdebi`...  
 

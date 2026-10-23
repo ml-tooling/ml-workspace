@@ -27,7 +27,11 @@ rm -rf /tmp/* /var/tmp/* $HOME/.cache/* /var/cache/apt/*
 # Fix permissions on tmp directory
 chmod 1777 /tmp
 # Remove apt lists
-rm -rf /var/lib/apt/lists/* /etc/apt/sources.list.d/*
+rm -rf /var/lib/apt/lists/*
+# Remove third-party PPA files added via add-apt-repository, but keep the base OS's own sources
+# (Ubuntu 24.04+ ships its default archive entries as /etc/apt/sources.list.d/ubuntu.sources -
+# wiping the whole directory here breaks every apt-get call after the first RUN that calls this script)
+find /etc/apt/sources.list.d/ -maxdepth 1 -type f ! -name 'ubuntu.sources' -delete 2>/dev/null
 
 # Clean conda
 if [ -x "$(command -v conda)" ]; then

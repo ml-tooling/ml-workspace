@@ -1,0 +1,13 @@
+[Desktop Entry]
+Version=1.0
+Encoding=UTF-8
+Name=Firefox Web Browser
+Comment=Access the Internet
+Exec=firefox %U
+Terminal=false
+X-MultipleArgs=false
+Type=Application
+Icon=/usr/lib/firefox/browser/icons/mozicon128.png
+Categories=GNOME;GTK;Network;WebBrowser;
+MimeType=text/html;text/xml;application/xhtml+xml;x-scheme-handler/http;x-scheme-handler/https;
+StartupNotify=true

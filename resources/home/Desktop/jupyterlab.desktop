@@ -1,0 +1,12 @@
+[Desktop Entry]
+Version=1.0
+Encoding=UTF-8
+Name=JupyterLab
+Comment=Open JupyterLab in the browser
+Exec=google-chrome-stable --no-sandbox http://localhost:8080/lab
+Terminal=false
+X-MultipleArgs=false
+Type=Application
+Icon=/resources/branding/favicon.ico
+Categories=Development;Education;
+StartupNotify=true

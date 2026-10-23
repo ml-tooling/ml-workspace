@@ -8,27 +8,29 @@ ENV WORKSPACE_FLAVOR=$ARG_WORKSPACE_FLAVOR
 USER root
 
 ### NVIDIA CUDA BASE ###
-# https://gitlab.com/nvidia/container-images/cuda/-/blob/master/dist/11.2.2/ubuntu20.04-x86_64/base/Dockerfile
+# Uses the cuda-keyring package (NVIDIA's current recommended method) instead of the deprecated
+# apt-key add + hand-written .list file approach - apt-key is removed/non-functional on recent
+# Ubuntu releases. Repo path bumped from ubuntu2004 to ubuntu2404 to match the base image.
 RUN apt-get update && apt-get install -y --no-install-recommends \
     gnupg2 curl ca-certificates && \
-    curl -fsSL https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2004/x86_64/7fa2af80.pub | apt-key add - && \
-    echo "deb https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2004/x86_64 /" > /etc/apt/sources.list.d/cuda.list && \
-    echo "deb https://developer.download.nvidia.com/compute/machine-learning/repos/ubuntu2004/x86_64 /" > /etc/apt/sources.list.d/nvidia-ml.list && \
+    curl -fsSL https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2404/x86_64/cuda-keyring_1.1-1_all.deb -o /tmp/cuda-keyring.deb && \
+    dpkg -i /tmp/cuda-keyring.deb && \
+    rm /tmp/cuda-keyring.deb && \
     # Cleanup - cannot use cleanup script here, otherwise too much is removed
     apt-get clean && \
     rm -rf $HOME/.cache/* && \
     rm -rf /tmp/* && \
     rm -rf /var/lib/apt/lists/*
 
-ENV CUDA_VERSION 11.2.2
-#ENV CUDA_PKG_VERSION 11-2=$CUDA_VERSION-1
-#ENV CUDART_VERSION 11-2=$CUDA_VERSION46-1
+ENV CUDA_VERSION=12.6
 
-# For libraries in the cuda-compat-* package: https://docs.nvidia.com/cuda/eula/index.html#attachment-a
+# Package versions are left unpinned (just the 12-6 series name, no exact patch) rather than hand-pinned
+# to one apt revision like the original - NVIDIA ships frequent point releases within a CUDA minor
+# version and a hardcoded patch pin goes stale (and fails to resolve) within weeks.
 RUN apt-get update && apt-get install -y --no-install-recommends \
-    cuda-cudart-11-2=11.2.152-1 \
-    cuda-compat-11-2 \
-    && ln -s cuda-11.2 /usr/local/cuda && \
+    cuda-cudart-12-6 \
+    cuda-compat-12-6 \
+    && ln -s /usr/local/cuda-12.6 /usr/local/cuda && \
     rm -rf /var/lib/apt/lists/* && \
     # Cleanup - cannot use cleanup script here, otherwise too much is removed
     apt-get clean && \
@@ -40,28 +42,25 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 RUN echo "/usr/local/nvidia/lib" >> /etc/ld.so.conf.d/nvidia.conf \
     && echo "/usr/local/nvidia/lib64" >> /etc/ld.so.conf.d/nvidia.conf
 
-ENV PATH /usr/local/nvidia/bin:/usr/local/cuda/bin:${PATH}
-ENV LD_LIBRARY_PATH /usr/local/nvidia/lib:/usr/local/nvidia/lib64
+ENV PATH=/usr/local/nvidia/bin:/usr/local/cuda/bin:${PATH}
+ENV LD_LIBRARY_PATH=/usr/local/nvidia/lib:/usr/local/nvidia/lib64
 
 # nvidia-container-runtime
 # https://github.com/NVIDIA/nvidia-container-runtime#environment-variables-oci-spec
-# nvidia-container-runtime
-ENV NVIDIA_VISIBLE_DEVICES all
-ENV NVIDIA_DRIVER_CAPABILITIES compute,utility
-ENV NVIDIA_REQUIRE_CUDA "cuda>=11.2 brand=tesla,driver>=418,driver<419 brand=tesla,driver>=440,driver<441 driver>=450"
+ENV NVIDIA_VISIBLE_DEVICES=all
+ENV NVIDIA_DRIVER_CAPABILITIES=compute,utility
+# CUDA 12.6 requires NVIDIA driver >=560.28.03 on Linux
+ENV NVIDIA_REQUIRE_CUDA="cuda>=12.6 driver>=560"
 
 ### CUDA RUNTIME ###
-# https://gitlab.com/nvidia/container-images/cuda/-/blob/master/dist/11.2.2/ubuntu20.04-x86_64/runtime/Dockerfile
-
-ENV NCCL_VERSION 2.8.4
 
 RUN apt-get update && apt-get install -y --no-install-recommends \
-    cuda-libraries-11-2=11.2.2-1 \
-    libnpp-11-2=11.3.2.152-1 \
-    cuda-nvtx-11-2=11.2.152-1 \
-    libcublas-11-2=11.4.1.1043-1 \
-    libcusparse-11-2=11.4.1.1152-1 \
-    libnccl2=$NCCL_VERSION-1+cuda11.2 \
+    cuda-libraries-12-6 \
+    libnpp-12-6 \
+    cuda-nvtx-12-6 \
+    libcublas-12-6 \
+    libcusparse-12-6 \
+    libnccl2 \
     && rm -rf /var/lib/apt/lists/* \
     # Cleanup - cannot use cleanup script here, otherwise too much is removed
     && apt-get clean \
@@ -69,23 +68,23 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     && rm -rf /tmp/* \
     && rm -rf /var/lib/apt/lists/*
 
-RUN apt-mark hold libcublas-11-2 libnccl2
+RUN apt-mark hold libcublas-12-6 libnccl2
 
 ### END CUDA RUNTIME ###
 
 ### CUDA DEVEL ###
-# https://gitlab.com/nvidia/container-images/cuda/-/blob/master/dist/11.2.2/ubuntu20.04-x86_64/devel/Dockerfile
 RUN apt-get update && apt-get install -y --no-install-recommends \
-    libtinfo5 libncursesw5 \
-    cuda-cudart-dev-11-2=11.2.152-1 \
-    cuda-command-line-tools-11-2=11.2.2-1 \
-    cuda-minimal-build-11-2=11.2.2-1 \
-    cuda-libraries-dev-11-2=11.2.2-1 \
-    cuda-nvml-dev-11-2=11.2.152-1 \
-    libnpp-dev-11-2=11.3.2.152-1 \
-    libnccl-dev=2.8.4-1+cuda11.2 \
-    libcublas-dev-11-2=11.4.1.1043-1 \
-    libcusparse-dev-11-2=11.4.1.1152-1 && \
+    # libtinfo5/libncursesw5 were only needed for cuda-gdb's ncurses ABI on older Ubuntu releases;
+    # Ubuntu 24.04's own base packages already ship the ncurses6 ABI CUDA 12.6's tools link against.
+    cuda-cudart-dev-12-6 \
+    cuda-command-line-tools-12-6 \
+    cuda-minimal-build-12-6 \
+    cuda-libraries-dev-12-6 \
+    cuda-nvml-dev-12-6 \
+    libnpp-dev-12-6 \
+    libnccl-dev \
+    libcublas-dev-12-6 \
+    libcusparse-dev-12-6 && \
     # Cleanup - cannot use cleanup script here, otherwise too much is removed
     apt-get clean && \
     rm -rf $HOME/.cache/* && \
@@ -93,99 +92,73 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     rm -rf /var/lib/apt/lists/*
 
 # apt from auto upgrading the cublas package. See https://gitlab.com/nvidia/container-images/cuda/-/issues/88
-RUN apt-mark hold libcublas-dev-11-2 libnccl-dev
-ENV LIBRARY_PATH /usr/local/cuda/lib64/stubs
+RUN apt-mark hold libcublas-dev-12-6 libnccl-dev
+ENV LIBRARY_PATH=/usr/local/cuda/lib64/stubs
 
 ### END CUDA DEVEL ###
 
-### CUDANN8 DEVEL ###
-# https://gitlab.com/nvidia/container-images/cuda/-/blob/master/dist/11.2.2/ubuntu20.04-x86_64/devel/cudnn8/Dockerfile
+### CUDNN9 DEVEL ###
 
-ENV CUDNN_VERSION 8.1.1.33
-LABEL com.nvidia.cudnn.version="${CUDNN_VERSION}"
-
+# cudnn9-cuda-12-6 (the CUDA-12.6-suffixed meta-package) stopped being updated past 9.6.0.74-1
+# and now pulls in a since-removed exact sub-package version, making it uninstallable. The
+# unsuffixed cudnn9-cuda-12 meta-package (ABI-compatible across CUDA 12.x minor versions) is the
+# one NVIDIA keeps current.
 RUN apt-get update && apt-get install -y --no-install-recommends \
-    libcudnn8=$CUDNN_VERSION-1+cuda11.2 \
-    libcudnn8-dev=$CUDNN_VERSION-1+cuda11.2 \
-    && apt-mark hold libcudnn8 && \
+    cudnn9-cuda-12 \
+    && apt-mark hold cudnn9-cuda-12 && \
     # Cleanup
     apt-get clean && \
     rm -rf /root/.cache/* && \
     rm -rf /tmp/* && \
     rm -rf /var/lib/apt/lists/*
 
-### END CUDANN8 ###
+### END CUDNN9 ###
 
 # Link Cupti:
-ENV LD_LIBRARY_PATH ${LD_LIBRARY_PATH}:/usr/local/cuda/extras/CUPTI/lib64
+ENV LD_LIBRARY_PATH=${LD_LIBRARY_PATH}:/usr/local/cuda/extras/CUPTI/lib64
 
 ### GPU DATA SCIENCE LIBRARIES ###
 
 RUN \
     apt-get update && \
-    apt-get install -y libomp-dev libopenblas-base && \
-    # Install pytorch gpu
-    # uninstall cpu only packages via conda
-    conda remove --force -y pytorch cpuonly && \
+    # libopenblas-base was split into per-threading-backend packages (libopenblas0-pthread etc.)
+    # behind the libopenblas0 metapackage on modern Ubuntu; the old name is gone.
+    apt-get install -y libomp-dev libopenblas0 && \
+    # Install pytorch gpu - uninstall cpu only build first
+    pip uninstall -y torch torchvision torchaudio && \
     # https://pytorch.org/get-started/locally/
-    conda install cudatoolkit=11.2 -c pytorch -c nvidia && \
-    pip install --no-cache-dir torch==1.9.0+cu111 torchvision==0.10.0+cu111 torchaudio==0.9.0 -f https://download.pytorch.org/whl/torch_stable.html && \
-    # Install cupy: https://cupy.chainer.org/
-    pip install --no-cache-dir cupy-cuda112 && \
+    pip install --no-cache-dir torch==2.13.* torchvision torchaudio --index-url https://download.pytorch.org/whl/cu126 && \
+    # Install cupy: https://cupy.dev/ - cupy-cuda12x covers the whole CUDA 12.x line
+    pip install --no-cache-dir cupy-cuda12x && \
     # Install pycuda: https://pypi.org/project/pycuda
     pip install --no-cache-dir pycuda && \
     # Install gpu utils libs
-    pip install --no-cache-dir gpustat py3nvml gputil && \
-    # Install scikit-cuda: https://scikit-cuda.readthedocs.io/en/latest/install.html
-    pip install --no-cache-dir scikit-cuda && \
-    # Install tensorflow gpu
+    pip install --no-cache-dir gpustat nvidia-ml-py gputil && \
+    # Install tensorflow gpu. Modern TensorFlow bundles GPU support into the plain 'tensorflow'
+    # package (the old separate 'tensorflow-gpu' package was discontinued after TF 2.1); the
+    # [and-cuda] extra pulls in TensorFlow's own pip-packaged CUDA/cuDNN runtime, so it works
+    # independently of the exact system CUDA toolkit version installed above.
     pip uninstall -y tensorflow tensorflow-cpu intel-tensorflow && \
-    pip install --no-cache-dir tensorflow-gpu==2.5.0 && \
+    pip install --no-cache-dir 'tensorflow[and-cuda]==2.21.*' && \
     # Install ONNX GPU Runtime
     pip uninstall -y onnxruntime && \
-    pip install --no-cache-dir onnxruntime-gpu==1.8.0 onnxruntime-training==1.8.0 && \
-    # Install faiss gpu - TODO: to large?
-    # conda remove --force -y faiss-cpu && \
-    # conda install -y faiss-gpu -c pytorch && \
-    # Update mxnet to gpu edition
-    pip uninstall -y mxnet-mkl && \
-    # cuda111 -> >= 11.1
-    pip install --no-cache-dir mxnet-cu112 && \
-    # install jax: https://github.com/google/jax#pip-installation
-    pip install --upgrade jax[cuda111] -f https://storage.googleapis.com/jax-releases/jax_releases.html && \
-    # Install pygpu - Required for theano: http://deeplearning.net/software/libgpuarray/
-    conda install -y pygpu && \
-    # Install lightgbm
+    pip install --no-cache-dir onnxruntime-gpu && \
+    # Install jax with CUDA 12 support: https://github.com/jax-ml/jax#installation
+    pip install --no-cache-dir -U "jax[cuda12]" && \
+    # Install lightgbm with GPU support (the old pip --install-option flags were removed from pip;
+    # this is the current scikit-build-core based way to select the GPU backend)
     pip uninstall -y lightgbm && \
-    pip install lightgbm --install-option=--gpu --install-option="--opencl-include-dir=/usr/local/cuda/include/" --install-option="--opencl-library=/usr/local/cuda/lib64/libOpenCL.so"  && \
-    # nvidia python ml lib
-    pip install --upgrade --force-reinstall nvidia-ml-py3 && \
-    # SpeedTorch: https://github.com/Santosh-Gupta/SpeedTorch
-    pip install --no-cache-dir SpeedTorch && \
+    pip install --no-cache-dir lightgbm --config-settings=cmake.define.USE_GPU=ON && \
     # Ipyexperiments - fix memory leaks
     pip install --no-cache-dir ipyexperiments && \
     # Cleanup
     clean-layer.sh
 
-# TODO install DALI: https://docs.nvidia.com/deeplearning/dali/user-guide/docs/installation.html#dali-and-ngc
-# TODO: if > Ubuntu 19.04 -> install nvtop: https://github.com/Syllo/nvtop
-# TODO: Install Arrrayfire: https://arrayfire.com/download/ pip install --no-cache-dir arrayfire && \
-# TODO Nvidia Apex: https://github.com/NVIDIA/apex
-
-# cd $RESOURCES_PATH && \
-# git clone https://github.com/NVIDIA/apex && \
-# cd apex  && \
-# # Surpress output - if there is a problem remove to see logs &> /dev/null
-# pip install -v --disable-pip-version-check --no-cache-dir --global-option="--cpp_ext" --global-option="--cuda_ext" ./ && \
-# rm -rf apex && \
-
-# https://www.anaconda.com/getting-started-with-gpu-computing-in-anaconda/
-
 # By default, the majority of GPU memory will be allocated by the first
 # execution of a TensorFlow graph. While this behavior can be desirable for
 # production pipelines, it is less desirable for interactive use. Set
 # TF_FORCE_GPU_ALLOW_GROWTH to change this default behavior as if the user had
-ENV TF_FORCE_GPU_ALLOW_GROWTH true
+ENV TF_FORCE_GPU_ALLOW_GROWTH=true
 
 ### END DATA SCIENCE LIBRARIES ###
 
@@ -193,13 +166,27 @@ ENV TF_FORCE_GPU_ALLOW_GROWTH true
 
 ### END GPU TOOLS ###
 
+# The base image's docker.conf runs dockerd with --storage-driver=fuse-overlayfs to fix nested
+# Docker-in-Docker on the CPU flavor (see resources/supervisor/programs/docker.conf) - but
+# fuse-overlayfs conflicts with the NVIDIA container runtime's device/library injection hooks,
+# breaking `docker run --gpus ...` inside this GPU flavor. Swap it for vfs instead of just
+# dropping it: vfs copies each layer to disk rather than union-mounting, so it sidesteps the
+# overlay-on-overlay kernel limitation entirely (unlike plain overlay2) without fuse-overlayfs's
+# hook conflict - this flavor needs BOTH ordinary nested `docker run`/`compose` AND nested
+# `docker run --gpus ...` to work, not just one. Tradeoff: no layer sharing/caching inside the
+# nested dockerd, so nested image pulls/builds use more disk and are slower than fuse-overlayfs
+# or overlay2. The --bip/--default-address-pool flags (fixing a separate docker0-subnet
+# collision with the host) stay, since those aren't storage-driver-related.
+RUN sed -i 's/--storage-driver=fuse-overlayfs/--storage-driver=vfs/' /etc/supervisor/conf.d/docker.conf
+
 ### CONFIGURATION ###
 
 #TODO: tests are currently empty COPY resources/tests/ /resources/tests
 
-# argument needs to be initalized again
+# arguments declared before FROM go out of scope after it - need to be re-declared to use below
 ARG ARG_WORKSPACE_VERSION="latest"
 ENV WORKSPACE_VERSION=$ARG_WORKSPACE_VERSION
+ARG ARG_WORKSPACE_BASE_IMAGE
 
 # Overwrite & add Labels
 ARG ARG_BUILD_DATE="unknown"
@@ -215,4 +202,3 @@ LABEL \
     "org.label-schema.version"=$WORKSPACE_VERSION \
     "org.label-schema.vcs-ref"=$ARG_VCS_REF \
     "org.label-schema.build-date"=$ARG_BUILD_DATE
-

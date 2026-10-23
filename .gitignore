@@ -95,3 +95,11 @@ hs_err_pid*
 *.swo
 temp/*
 .DS_Store
+
+# Contains deployment-specific registry paths / credentials - not meant to be committed
+docker-compose.yml
+docker-compose.gpu.yml
+.env
+ml-workspace.yaml
+user-new.yaml
+user-new.yaml

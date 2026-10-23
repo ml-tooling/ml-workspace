@@ -10,8 +10,11 @@ from subprocess import call
 
 import git
 import tornado
-from notebook.base.handlers import IPythonHandler
-from notebook.utils import url_path_join
+# notebook.base.handlers.IPythonHandler / notebook.utils.url_path_join were Notebook 6 APIs;
+# jupyter_server.base.handlers.JupyterHandler is their modern equivalent under Notebook 7 /
+# Jupyter Server 2.x.
+from jupyter_server.base.handlers import JupyterHandler as IPythonHandler
+from jupyter_server.utils import url_path_join
 from tornado import web
 
 try:

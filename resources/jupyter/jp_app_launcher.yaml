@@ -1,0 +1,52 @@
+# Restores launcher tiles for the workspace's other tools (VS Code, VNC, etc.) using
+# jupyter_app_launcher, since the old custom "Open Tools" widget (classic Notebook 6 nbextension)
+# doesn't work under JupyterLab 4. Opens each tool in a new browser tab rather than embedding it in
+# an iframe, since several of these (code-server's webviews, noVNC's canvas) don't play well nested
+# inside another page's iframe.
+- title: VS Code
+  description: Visual Studio Code webapp
+  source: /tools/vscode/
+  type: url
+  catalog: Workspace Tools
+  args:
+      createNewWindow: true
+
+- title: VNC
+  description: Desktop GUI for the workspace
+  source: /tools/vnc/?password=vncpassword
+  type: url
+  catalog: Workspace Tools
+  args:
+      createNewWindow: true
+
+- title: Ungit
+  description: Interactive Git interface
+  source: /tools/ungit/#/repository?path=%2Fworkspace
+  type: url
+  catalog: Workspace Tools
+  args:
+      createNewWindow: true
+
+- title: Filebrowser
+  description: Browse and manage workspace files
+  source: /shared/filebrowser/files/workspace/?token=admin
+  type: url
+  catalog: Workspace Tools
+  args:
+      createNewWindow: true
+
+- title: Netdata
+  description: Monitor hardware resources
+  source: /tools/netdata/
+  type: url
+  catalog: Workspace Tools
+  args:
+      createNewWindow: true
+
+- title: Glances
+  description: Monitor hardware resources
+  source: /tools/glances/
+  type: url
+  catalog: Workspace Tools
+  args:
+      createNewWindow: true

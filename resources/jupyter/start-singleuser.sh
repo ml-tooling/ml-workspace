@@ -4,6 +4,15 @@
 
 set -e
 
+# JupyterHub tells the single-user server where to listen via JUPYTERHUB_SERVICE_URL, and
+# jupyterhub-singleuser applies it over any config file or --port. The hub points it at this
+# container's main port (8080), which belongs to sslh here (8080 sslh -> 8092 nginx -> 8090
+# Jupyter): Jupyter then dies with "port 8080 is not available" and the spawn times out. Move
+# Jupyter to the internal port nginx proxies to - the hub still reaches it through sslh/nginx.
+if [[ -n "$JUPYTERHUB_SERVICE_URL" ]]; then
+  export JUPYTERHUB_SERVICE_URL="http://127.0.0.1:8090${JUPYTERHUB_SERVICE_PREFIX:-/}"
+fi
+
 # set default ip to 0.0.0.0
 if [[ "$NOTEBOOK_ARGS $@" != *"--ip="* ]]; then
   NOTEBOOK_ARGS="--ip=0.0.0.0 $NOTEBOOK_ARGS"
